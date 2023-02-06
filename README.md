@@ -1,6 +1,6 @@
-# Nuxt 3 Minimal Starter
+# RAILS
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A Reservation And Inventory Laboratory System (RAILS) for the Philippine Science High School - Eastern Visayas Campus (PSHS-EVC) Science Research Assistant (SRA) office 
 
 ## Setup
 
@@ -38,5 +38,3 @@ Locally preview production build:
 ```bash
 npm run preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
