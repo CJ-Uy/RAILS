@@ -1,4 +1,5 @@
 ##### --- NUXT default template ---- #####
+
 node_modules
 *.log*
 .nuxt

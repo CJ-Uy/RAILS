@@ -7,14 +7,7 @@ A Reservation And Inventory Laboratory System (RAILS) for the Philippine Science
 Make sure to install the dependencies:
 
 ```bash
-# yarn
-yarn install
-
-# npm
 npm install
-
-# pnpm
-pnpm install
 ```
 
 ## Development Server
@@ -38,3 +31,13 @@ Locally preview production build:
 ```bash
 npm run preview
 ```
+
+## Local Database Initialization
+
+Create a local ```MySQL``` database then create a ```.env``` file based off of the ```.env.example``` file
+
+When creating changes to the database schema through the ```schema.prisma``` file push changes with the command:
+```bash
+npx prisma db push
+```
+Further Prisma documentation found at https://www.prisma.io/docs
