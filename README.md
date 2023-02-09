@@ -2,13 +2,19 @@
 
 A Reservation And Inventory Laboratory System (RAILS) for the Philippine Science High School - Eastern Visayas Campus (PSHS-EVC) Science Research Assistant (SRA) office 
 
+
 ## Setup
 
-Make sure to install the dependencies:
+**Be sure to install [Node.js](https://nodejs.org/en/download/) to continue**
+
+---
+
+Install the dependencies:
 
 ```bash
 npm install
 ```
+Create a ```.env``` file by following the instructions on the ```.env.example``` 
 
 ## Development Server
 
@@ -34,10 +40,7 @@ npm run preview
 
 ## Local Database Initialization
 
-Create a local ```MySQL``` database then create a ```.env``` file based off of the ```.env.example``` file
-
 When creating changes to the database schema through the ```schema.prisma``` file push changes with the command:
 ```bash
 npx prisma db push
 ```
-Further Prisma documentation found at https://www.prisma.io/docs
