@@ -1,6 +1,6 @@
 # RAILS
 
-A Reservation And Inventory Laboratory System (RAILS) for the Philippine Science High School - Eastern Visayas Campus (PSHS-EVC) Science Research Assistant (SRA) office 
+Reservation and Inventory for Laboratory Systems for the Philippine Science Highschool - Eastern Visayas (PSHS-EVC) Laboratory Unit 
 
 
 ## Setup
