@@ -1,3 +1,4 @@
+USE rails_db;
 CREATE TABLE `Admins` (
   `Admin_Id` Int,
   `Admin_Email` varchar(255),
@@ -5,6 +6,64 @@ CREATE TABLE `Admins` (
   `Admin_Lastname` varchar(255),
   `Admin_Signature` Int,
   PRIMARY KEY (`Admin_Id`)
+);
+
+CREATE TABLE `Grade_Section` (
+  `GradeSection_ID` int,
+  `Grade` int,
+  `Section` varchar(255),
+  PRIMARY KEY (`GradeSection_ID`)
+);
+
+CREATE TABLE `Students` (
+  `Student_Id` Int,
+  `Student_Email` varchar(255),
+  `Student_Firstname` varchar(255),
+  `Student_Lastname` varchar(255),
+  `Student_GradeSection_ID` int,
+  PRIMARY KEY (`Student_Id`),
+  FOREIGN KEY (`Student_GradeSection_ID`) REFERENCES `Grade_Section`(`GradeSection_ID`)
+);
+
+CREATE TABLE `Teachers` (
+  `Teacher_Id` Int,
+  `Teacher_Email` varchar(255),
+  `Teacher_Firstname` varchar(255),
+  `Teacher_Lastname` varchar(255),
+  `Teacher_Signature` Int,
+  PRIMARY KEY (`Teacher_Id`)
+);
+
+CREATE TABLE `Laboratory_Requests` (
+  `Request_Id` Int,
+  `Requestor_Id` Int,
+  `Control_Number` varchar(255),
+  `School_Year` varchar(255),
+  `For_Subject` varchar(255),
+  `Concurrent_Topic` varchar(255),
+  `Unit` varchar(255),
+  `Teacher_In_Charge` Int,
+  `Materials_Needed` Int,
+  `Equipment_Needed` Int,
+  `Reagents_Needed` Int,
+  `Laboratory_Reservation` Int,
+  `Other_Group_Members` Int,
+  `Is_Signed_By_Teacher` boolean,
+  `Is_Signed _By_Admin` boolean,
+  `Signed_Teacher` Int,
+  `Signed_Admin` Int,
+  PRIMARY KEY (`Request_Id`),
+  FOREIGN KEY (`Requestor_Id`) REFERENCES `Students`(`Student_Id`),
+  FOREIGN KEY (`Signed_Teacher`) REFERENCES `Teachers`(`Teacher_Id`),
+  FOREIGN KEY (`Signed_Admin`) REFERENCES `Admins`(`Admin_Id`),
+  FOREIGN KEY (`Teacher_In_Charge`) REFERENCES `Teachers`(`Teacher_Id`)
+);
+
+CREATE TABLE `Materials_Request` (
+  `Materials_Request_Id` Int,
+  `Requested_Materials` Int,
+  PRIMARY KEY (`Materials_Request_Id`)
+  #FOREIGN KEY (`Materials_Request_Id`) REFERENCES `Laboratory_Requests`(`Materials_Needed`)
 );
 
 CREATE TABLE `Locations` (
@@ -51,17 +110,8 @@ CREATE TABLE `Laboratory_to_Equipment_Bridge` (
   `Date_Equipment_Added` DateTime,
   `Date_Equipment_Removed` DateTime,
   PRIMARY KEY (`Laboratory_to_Equipment_Bridge_Id`),
-  FOREIGN KEY (`Laboratory_Equipment_Id`) REFERENCES `Laboratory_Equipment_Inventory`(`Laboratory_Equipment_Id`),
-  FOREIGN KEY (`Laboratory_Id`) REFERENCES `Laboratories`(`Laboratory_Id`)
-);
-
-CREATE TABLE `Teachers` (
-  `Teacher_Id` Int,
-  `Teacher_Email` varchar(255),
-  `Teacher_Firstname` varchar(255),
-  `Teacher_Lastname` varchar(255),
-  `Teacher_Signature` Int,
-  PRIMARY KEY (`Teacher_Id`)
+  FOREIGN KEY (`Laboratory_Id`) REFERENCES `Laboratories`(`Laboratory_Id`),
+  FOREIGN KEY (`Laboratory_Equipment_Id`) REFERENCES `Laboratory_Equipment_Inventory`(`Laboratory_Equipment_Id`)
 );
 
 CREATE TABLE `Teacher_Signatures` (
@@ -71,55 +121,11 @@ CREATE TABLE `Teacher_Signatures` (
   PRIMARY KEY (`Teacher_Signature_Id`)
 );
 
-CREATE TABLE `Grade_Section` (
-  `GradeSection_ID` int,
-  `Grade` int,
-  `Section` varchar(255),
-  PRIMARY KEY (`GradeSection_ID`)
-);
-
-CREATE TABLE `Students` (
-  `Student_Id` Int,
-  `Student_Email` varchar(255),
-  `Student_Firstname` varchar(255),
-  `Student_Lastname` varchar(255),
-  `Student_GradeSection_ID` int,
-  PRIMARY KEY (`Student_Id`),
-  FOREIGN KEY (`Student_GradeSection_ID`) REFERENCES `Grade_Section`(`GradeSection_ID`)
-);
-
-CREATE TABLE `Laboratory_Requests` (
-  `Request_Id` Int,
-  `Requestor_Id` Int,
-  `Control_Number` varchar(255),
-  `School_Year` varchar(255),
-  `For_Subject` varchar(255),
-  `Concurrent_Topic` varchar(255),
-  `Unit` varchar(255),
-  `Teacher_In_Charge` Int,
-  `Materials_Needed` Int,
-  `Equipment_Needed` Int,
-  `Reagents_Needed` Int,
-  `Laboratory_Reservation` Int,
-  `Other_Group_Members` Int,
-  `Is_Signed_By_Teacher` boolean,
-  `Is_Signed _By_Admin` boolean,
-  `Signed_Teacher` Int,
-  `Signed_Admin` Int,
-  PRIMARY KEY (`Request_Id`),
-  FOREIGN KEY (`Signed_Teacher`) REFERENCES `Teachers`(`Teacher_Id`),
-  FOREIGN KEY (`Signed_Admin`) REFERENCES `Admins`(`Admin_Id`),
-  FOREIGN KEY (`Teacher_In_Charge`) REFERENCES `Teachers`(`Teacher_Id`),
-  FOREIGN KEY (`Requestor_Id`) REFERENCES `Students`(`Student_Id`)
-);
-
------------- STARTING HERE ------------
-
 CREATE TABLE `Equipment_Request` (
   `Equipment_Request_Id` Int,
   `Requested_Equipment` Int,
-  PRIMARY KEY (`Equipment_Request_Id`),
-  FOREIGN KEY (`Equipment_Request_Id`) REFERENCES `Laboratory_Requests`(`Equipment_Needed`)
+  PRIMARY KEY (`Equipment_Request_Id`)
+  #FOREIGN KEY (`Equipment_Request_Id`) REFERENCES `Laboratory_Requests`(`Equipment_Needed`)
 );
 
 CREATE TABLE `Equipment_Request_Bridge` (
@@ -137,6 +143,15 @@ CREATE TABLE `Admin_Signatures` (
   `Teacher` int,
   `Teacher_Signature` BLOB,
   PRIMARY KEY (`Admin_Siganture_Id`)
+);
+
+CREATE TABLE `Materials_Request_Bridge` (
+  `Requested_Materials_Bridge_Id` Int,
+  `Requested_Material` Int,
+  `Quantity` Int,
+  `Description` varchar(511),
+  PRIMARY KEY (`Requested_Materials_Bridge_Id`),
+  FOREIGN KEY (`Requested_Materials_Bridge_Id`) REFERENCES `Materials_Request`(`Requested_Materials`)
 );
 
 CREATE TABLE `Laboratory_Chemical_inventory` (
@@ -173,30 +188,16 @@ CREATE TABLE `Reagent_Requests` (
   FOREIGN KEY (`Reagent_Request_Id`) REFERENCES `Laboratory_Requests`(`Reagents_Needed`)
 );
 
+# Starting here error 1824 both tables
+
 CREATE TABLE `Reagent_Request_Bridge` (
   `Requested_Reagents_Bridge_Id` Int,
   `Requested_Reagent` Int,
   `Amount_of_Reagent` Float,
   `Unit_used_for_Amount` varchar(255),
   PRIMARY KEY (`Requested_Reagents_Bridge_Id`),
-  FOREIGN KEY (`Requested_Reagent`) REFERENCES `Laboratory_Chemical_inventory`(`Reagent_Id`),
-  FOREIGN KEY (`Requested_Reagents_Bridge_Id`) REFERENCES `Reagent_Requests`(`Requested_Reagents`)
-);
-
-CREATE TABLE `Materials_Request` (
-  `Materials_Request_Id` Int,
-  `Requested_Materials` Int,
-  PRIMARY KEY (`Materials_Request_Id`),
-  FOREIGN KEY (`Materials_Request_Id`) REFERENCES `Laboratory_Requests`(`Materials_Needed`)
-);
-
-CREATE TABLE `Materials_Request_Bridge` (
-  `Requested_Materials_Bridge_Id` Int,
-  `Requested_Material` Int,
-  `Quantity` Int,
-  `Description` varchar(511),
-  PRIMARY KEY (`Requested_Materials_Bridge_Id`),
-  FOREIGN KEY (`Requested_Materials_Bridge_Id`) REFERENCES `Materials_Request`(`Materials_Request_Id`)
+  FOREIGN KEY (`Requested_Reagent`) REFERENCES `Laboratory_Chemical_inventory`(`Reagent_Id`)
+  #FOREIGN KEY (`Requested_Reagents_Bridge_Id`) REFERENCES `Reagent_Requests`(`Requested_Reagents`)
 );
 
 CREATE TABLE `Inventory_of_Supplies` (
@@ -229,3 +230,4 @@ CREATE TABLE `Laboratory_ Reservations` (
   PRIMARY KEY (`Laboratory_Reservation_Id`),
   FOREIGN KEY (`Laboratory_Id`) REFERENCES `Laboratories`(`Laboratory_Id`)
 );
+

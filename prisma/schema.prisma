@@ -7,8 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//TODO: add the autoincrements to the IDs and Table Equipment Request Failed
-
 model admins {
   Admin_Id            Int                   @id
   Admin_Email         String?               @db.VarChar(255)
@@ -16,6 +14,11 @@ model admins {
   Admin_Lastname      String?               @db.VarChar(255)
   Admin_Signature     Int?
   laboratory_requests laboratory_requests[]
+}
+
+model equipment_request {
+  Equipment_Request_Id Int  @id
+  Requested_Equipment  Int?
 }
 
 model grade_section {
@@ -75,10 +78,10 @@ model laboratory_requests {
   Is_Signed__By_Admin                                      Boolean?  @map("Is_Signed _By_Admin")
   Signed_Teacher                                           Int?
   Signed_Admin                                             Int?
-  teachers_laboratory_requests_Signed_TeacherToteachers    teachers? @relation("laboratory_requests_Signed_TeacherToteachers", fields: [Signed_Teacher], references: [Teacher_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_requests_ibfk_1")
-  admins                                                   admins?   @relation(fields: [Signed_Admin], references: [Admin_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_requests_ibfk_2")
-  teachers_laboratory_requests_Teacher_In_ChargeToteachers teachers? @relation("laboratory_requests_Teacher_In_ChargeToteachers", fields: [Teacher_In_Charge], references: [Teacher_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_requests_ibfk_3")
-  students                                                 students? @relation(fields: [Requestor_Id], references: [Student_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_requests_ibfk_4")
+  students                                                 students? @relation(fields: [Requestor_Id], references: [Student_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_requests_ibfk_1")
+  teachers_laboratory_requests_Signed_TeacherToteachers    teachers? @relation("laboratory_requests_Signed_TeacherToteachers", fields: [Signed_Teacher], references: [Teacher_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_requests_ibfk_2")
+  admins                                                   admins?   @relation(fields: [Signed_Admin], references: [Admin_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_requests_ibfk_3")
+  teachers_laboratory_requests_Teacher_In_ChargeToteachers teachers? @relation("laboratory_requests_Teacher_In_ChargeToteachers", fields: [Teacher_In_Charge], references: [Teacher_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_requests_ibfk_4")
 
   @@index([Requestor_Id], map: "Requestor_Id")
   @@index([Signed_Admin], map: "Signed_Admin")
@@ -92,8 +95,8 @@ model laboratory_to_equipment_bridge {
   Laboratory_Equipment_Id           Int?
   Date_Equipment_Added              DateTime?                       @db.DateTime(0)
   Date_Equipment_Removed            DateTime?                       @db.DateTime(0)
-  laboratory_equipment_inventory    laboratory_equipment_inventory? @relation(fields: [Laboratory_Equipment_Id], references: [Laboratory_Equipment_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_to_equipment_bridge_ibfk_1")
-  laboratories                      laboratories?                   @relation(fields: [Laboratory_Id], references: [Laboratory_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_to_equipment_bridge_ibfk_2")
+  laboratories                      laboratories?                   @relation(fields: [Laboratory_Id], references: [Laboratory_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_to_equipment_bridge_ibfk_1")
+  laboratory_equipment_inventory    laboratory_equipment_inventory? @relation(fields: [Laboratory_Equipment_Id], references: [Laboratory_Equipment_Id], onDelete: NoAction, onUpdate: NoAction, map: "laboratory_to_equipment_bridge_ibfk_2")
 
   @@index([Laboratory_Equipment_Id], map: "Laboratory_Equipment_Id")
   @@index([Laboratory_Id], map: "Laboratory_Id")
@@ -107,6 +110,11 @@ model locations {
   Date_Location_Removed          DateTime?                        @db.DateTime(0)
   laboratories                   laboratories[]
   laboratory_equipment_inventory laboratory_equipment_inventory[]
+}
+
+model materials_request {
+  Materials_Request_Id Int  @id
+  Requested_Materials  Int?
 }
 
 model students {
