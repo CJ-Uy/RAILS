@@ -3,8 +3,10 @@
   "scripts": {
     "dev": "nuxt dev",
     "server": "nodemon server/index.js",
-    "db push": "npx prisma db push",
-    "db pull": "npx prisma db pull",
+    "dbpush": "npx prisma db push",
+    "dbpull": "npx prisma db pull",
+    "dbmigrate": "npx prisma migrate dev",
+    "dbgenerate": "npx prisma generate",
     "build": "nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
