@@ -42,5 +42,5 @@ npm run preview
 
 When creating changes to the database schema through the ```schema.prisma``` file push changes with the command:
 ```bash
-npx prisma db push
+npm run dbmigrate
 ```
