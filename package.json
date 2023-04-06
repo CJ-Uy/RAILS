@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt dev",
-    "server": "nodemon server/index.js",
+    "server": "nodemon server/index.ts",
     "dbgenerate": "npx prisma generate",
     "dbgui": "npx prisma studio",
     "start": "npx parallelshell \"npm run dbgenerate\" \"npm run dbgui\" \"npm run dev\" \"npm run server\" ",
@@ -25,6 +25,7 @@
     "nodemon": "^2.0.22",
     "nuxt": "^3.3.3",
     "parallelshell": "3.0.1",
+    "playwright": "^1.32.2",
     "postcss": "^8.4.21",
     "prisma": "^4.12.0",
     "tailwindcss": "^3.3.1",
