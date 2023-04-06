@@ -15,6 +15,7 @@ model admins {
   Email           String
   Firstname       String
   Lastname        String
+  Picture_Link    String?
   Signature       Bytes?                @db.Blob
   Date_Created    DateTime              @default(now())
   signed_requests laboratory_requests[]
@@ -25,6 +26,7 @@ model teachers {
   Email                        String
   Firstname                    String
   Lastname                     String
+  Picture_Link                 String?
   Signature                    Bytes?                @db.Blob
   Date_Created                 DateTime              @default(now())
   Received_Laboratory_Requests laboratory_requests[] @relation("teacher_in_charge") //TODO rearrange this when i get to requests
@@ -32,14 +34,16 @@ model teachers {
 }
 
 model students {
-  Id           Int      @id @default(autoincrement())
+  Id           Int     @id @default(autoincrement())
   Email        String
-  Firtname     String
-  LastName     String
+  Firstname     String
+  Lastname     String
+  Photo_Link String?
+
   Date_Created DateTime @default(now())
 
-  GradeSection_Id   grade_section @relation(fields: [GradeSection_Code], references: [GradeSection_Id])
-  GradeSection_Code Int
+  GradeSection_Id   grade_section? @relation(fields: [GradeSection_Code], references: [Id])
+  GradeSection_Code Int?
 
   Grade   Int?
   Section String?
@@ -48,7 +52,7 @@ model students {
 }
 
 model grade_section {
-  GradeSection_Id Int        @id @default(autoincrement())
+  Id Int        @id @default(autoincrement())
   Grade           Int
   Section         String
   students        students[]
@@ -78,11 +82,11 @@ model laboratory_locations {
   Date_Location_Added                           DateTime                @default(now())
   Date_Location_Removed                         DateTime?
   laboratories                                  laboratories[]
-  inventory_of_materials                        inventory_of_materials? @relation(fields: [inventory_of_materialsSupply_Id], references: [Supply_Id])
+  inventory_of_materials                        inventory_of_materials? @relation(fields: [inventory_of_materialsSupply_Id], references: [Id])
   inventory_of_materialsSupply_Id               Int?
-  inventory_of_equipment                        inventory_of_equipment? @relation(fields: [inventory_of_equipmentLaboratory_Equipment_Id], references: [Laboratory_Equipment_Id])
+  inventory_of_equipment                        inventory_of_equipment? @relation(fields: [inventory_of_equipmentLaboratory_Equipment_Id], references: [Id])
   inventory_of_equipmentLaboratory_Equipment_Id Int?
-  inventory_of_reagents                         inventory_of_reagents?  @relation(fields: [inventory_of_reagentsReagent_Id], references: [Reagent_Id])
+  inventory_of_reagents                         inventory_of_reagents?  @relation(fields: [inventory_of_reagentsReagent_Id], references: [Id])
   inventory_of_reagentsReagent_Id               Int?
 }
 
@@ -99,8 +103,8 @@ model laboratory_reservations {
 // INVENTORY //
 // -------------------- //
 model inventory_of_materials {
-  //materials refer to small devices for experiments (such as breakers and test tubes) and supplies of the Laboratory Unit (Cleaning Supplies etc..) //TODO Clarify this later
-  Supply_Id                     Int                    @id @default(autoincrement())
+  //Materials refer to small devices for experiments (such as breakers and test tubes) and supplies of the Laboratory Unit (Cleaning Supplies etc..) //TODO Clarify this later
+  Id                            Int                    @id @default(autoincrement())
   Item_Name                     String
   Description                   String
   Additional_Purchase           Int?
@@ -118,13 +122,13 @@ model inventory_of_materials {
   Location                      laboratory_locations[]
   laboratories                  laboratories?          @relation(fields: [laboratoriesId], references: [Id])
   laboratoriesId                Int?
-  laboratory_requests           laboratory_requests?   @relation(fields: [laboratory_requestsRequest_Id], references: [Request_Id])
+  laboratory_requests           laboratory_requests?   @relation(fields: [laboratory_requestsRequest_Id], references: [Id])
   laboratory_requestsRequest_Id Int?
 }
 
 model inventory_of_equipment {
-  //Equipment refer to 
-  Laboratory_Equipment_Id       Int                    @id @default(autoincrement())
+  //Equipment refer to the large devices that may not be easily moved from one location to another
+  Id       Int                    @id @default(autoincrement())
   Equipment_Code                String
   Equipment_Name                String
   Serial_Number                 String?
@@ -141,13 +145,13 @@ model inventory_of_equipment {
   Status                        String?
   laboratories                  laboratories?          @relation(fields: [laboratoriesId], references: [Id])
   laboratoriesId                Int?
-  laboratory_requests           laboratory_requests?   @relation(fields: [laboratory_requestsRequest_Id], references: [Request_Id])
+  laboratory_requests           laboratory_requests?   @relation(fields: [laboratory_requestsRequest_Id], references: [Id])
   laboratory_requestsRequest_Id Int?
 }
 
 model inventory_of_reagents {
   //Reagents refer to all the chemicals (solid or liquid) students can request for
-  Reagent_Id                    Int                    @id @default(autoincrement())
+  Id                    Int                    @id @default(autoincrement())
   Item_Number                   String?
   Cas_Number                    String?
   Chemical_Name                 String
@@ -168,7 +172,7 @@ model inventory_of_reagents {
   Location                      laboratory_locations[]
   laboratories                  laboratories?          @relation(fields: [laboratoriesId], references: [Id])
   laboratoriesId                Int?
-  laboratory_requests           laboratory_requests?   @relation(fields: [laboratory_requestsRequest_Id], references: [Request_Id])
+  laboratory_requests           laboratory_requests?   @relation(fields: [laboratory_requestsRequest_Id], references: [Id])
   laboratory_requestsRequest_Id Int?
 }
 
@@ -176,7 +180,7 @@ model inventory_of_reagents {
 // REQUESTS AND RESERVATIONS //
 // -------------------- //
 model laboratory_requests {
-  Request_Id                Int                      @id
+  Id                Int                      @id
   Requestor                 students                 @relation(fields: [Requestor_Id], references: [Id])
   Requestor_Id              Int
   Control_Number            String?
