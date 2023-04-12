@@ -38,7 +38,7 @@ model students {
   Email        String
   Firstname     String
   Lastname     String
-  Photo_Link String?
+  Photo_Link   String?
 
   Date_Created DateTime @default(now())
 

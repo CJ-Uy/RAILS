@@ -15,7 +15,7 @@
 export default defineComponent({
   methods: {
     google_login() {
-      window.location.href = "localhost:4000/auth/google";
+      window.location.href = "localhost:5000/auth/google";
     }
   }
 });
