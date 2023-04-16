@@ -8,9 +8,11 @@ LINKS:
     PSHS-00-F-CID-20-Ver02-Rev1 Laboratory Request and Equipment Accountability Form
         https://docs.google.com/spreadsheets/d/13WUsQQ7xN4PSLwWVHSjuI5sf5F_qufMv/edit?usp=drive_web&ouid=108593051934579297280&rtpof=true
 
+*I tried doing to PDF to html but it spits out blocks of text which is hard to parse
+
 STANDARD STYLING:
     Accountability
         Font: Calibri
         Font size: 11px
-        cell width: 0.27 inches
-        cell height: 0.21 inches 
+        cell width: 0.27 inches ?
+        cell height: 0.21 inches ?
