@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+campus = "EASTERN VISAYAS";
+controlNo = "22-23-0001";
+schoolYear = "2022-2023";
+gradeSection = "11-C";
+
+html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -76,3 +81,6 @@
     
 </body>
 </html>
+`;
+
+module.exports = html;
