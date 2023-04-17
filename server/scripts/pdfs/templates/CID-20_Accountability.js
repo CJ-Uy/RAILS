@@ -1,20 +1,45 @@
 campus = "EASTERN VISAYAS";
 controlNo = "22-23-0001";
 schoolYear = "2022-2023";
-gradeSection = "11-C";
-numStudents = "30";
-subject = "Physics";
+gradeSection = "11-B";
+numStudents = "5";
+subject = "Chemisty";
 concurrentTopic = "Light";
 unit = "3";
-teacherInCharge = "Mr. John Doe";
-venue = "Lab 3";
+teacherInCharge = "Maam Herma";
+venue = "BioLab 3";
 dates = "Tomorrow";
 timeOfUse = "9:00am";
 
-quantity = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", " ", " "]
-item = ["microscope", "bunsen burner", "petri dish", "test tube", "beaker", "pipette", "test tube rack", "test tube holder", "test tube brush", "test tube clamp", "", ""]
-description = ["to observe", "to heat", "to observe", "to observe", "to observe", "to measure", "to hold", "to hold", "to clean", "to hold", "", ""]
-returned = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", " ", " "]
+quantity = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", " ", " "];
+item = [
+	"microscope",
+	"bunsen burner",
+	"petri dish",
+	"test tube",
+	"beaker",
+	"pipette",
+	"test tube rack",
+	"test tube holder",
+	"test tube brush",
+	"test tube clamp",
+	"",
+	""
+];
+description = [
+	"to observe",
+	"to heat",
+	"to observe",
+	"to observe",
+	"to observe",
+	"to measure",
+	"to hold",
+	"to hold",
+	"to clean",
+	"to hold",
+	"",
+	""
+];
 issued = [
 	"good",
 	"good",
@@ -29,8 +54,35 @@ issued = [
 	" ",
 	" "
 ];
-returned = ["good", "good", "good", "good", "good", "good", "good", "good", "good", "good", " ", " "];
+returned = [
+	"good",
+	"good",
+	"good",
+	"good",
+	"good",
+	"good",
+	"good",
+	"good",
+	"good",
+	"good",
+	" ",
+	" "
+];
 
+studentName = "Charles Joshua Uy"
+dateRequested = "Today"
+
+groupmates = [
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+]
+
+endorser = "Maam"
+approver = "You"
+formCode = "00001"
 
 
 html = `<!DOCTYPE html>
@@ -84,7 +136,7 @@ html = `<!DOCTYPE html>
             margin-bottom: 0.23in;
         }
         .input {
-            border-bottom: 0.5px solid black;
+            border-bottom: 2px solid black;
         }
         table {
             width: 100%;
@@ -101,7 +153,7 @@ html = `<!DOCTYPE html>
             float: right;
         }
         .expander {
-            border-bottom: 0.5px solid black;
+            border-bottom: 2px solid black;
         }
         .remove-botB {
             border-bottom: 3px solid white;
@@ -116,6 +168,17 @@ html = `<!DOCTYPE html>
         }
         .request-header {
             vertical-align: top;
+        }
+        .return {
+            vertical-align: top;
+            text-align: left;
+            height: 1.05in;
+        }
+        ul {
+            margin-left: 0.25in;
+        }
+        .italics {
+            font-style: italic;
         }
     </style>
 </head>
@@ -263,9 +326,74 @@ html = `<!DOCTYPE html>
                 <td>${issued[11]}</td>
                 <td>${returned[11]}</td>
             </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="return">Received by:</td>
+                <td class="return">Received and<br>Inspected by:</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="return">Date:</td>
+                <td class="return">Date:</td>
+            </tr>
         </table>
+        <ul class="italics">
+            <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
+            <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
+        </ul>
+        
+        <table id="sigs-table">
+            <tr>
+                <td>Requested By:</td>
+                <td>${studentName}</td>
+                <td>Date Requested:</td> 
+                <td>${dateRequested}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Teacher/Student</td>
+            </tr>
+        </table>
+        <p class="italics">
+            If user of the lab is a group, list down the names of students.
+        </p>
+        <table class="groupmates">
+            <tr>
+                <td>${groupmates[0]}</td>
+            </tr>
+            <tr>
+                <td>${groupmates[1]}</td>
+            </tr>
+            <tr>
+                <td>${groupmates[2]}</td>
+            </tr>
+            <tr>
+                <td>${groupmates[3]}</td>
+            </tr>
+            <tr>
+                <td>${groupmates[4]}</td>
+            </tr>
+        </table>
+        <table id="sigs-table">
+            <tr>
+                <td>Endorsed By:</td>
+                <td>${endorser}</td>
+                <td>Approved By:</td> 
+                <td>${approver}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Subject Teacher/Unit Head</td>
+                <td></td>
+                <td>SRS/SRA</td>
+            </tr>
+        </table>
+        <h2>${formCode}</h2>
     </div>
-
 </body>
 </html>
 `;

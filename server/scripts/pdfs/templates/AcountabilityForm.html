@@ -82,6 +82,17 @@
         .request-header {
             vertical-align: top;
         }
+        .return {
+            vertical-align: top;
+            text-align: left;
+            height: 1.05in;
+        }
+        ul {
+            margin-left: 0.25in;
+        }
+        .italics {
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -228,8 +239,73 @@
                 <td>${issued[11]}</td>
                 <td>${returned[11]}</td>
             </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="return">Received by:</td>
+                <td class="return">Received and<br>Inspected by:</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="return">Date:</td>
+                <td class="return">Date:</td>
+            </tr>
         </table>
+        <ul class="italics">
+            <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
+            <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
+        </ul>
+        
+        <table id="sigs-table">
+            <tr>
+                <td>Requested By:</td>
+                <td>${studentName}</td>
+                <td>Date Requested:</td> 
+                <td>${dateRequested}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Teacher/Student</td>
+            </tr>
+        </table>
+        <p class="italics">
+            If user of the lab is a group, list down the names of students.
+        </p>
+        <table class="groupmates">
+            <tr>
+                <td>${groupmates[0]}</td>
+            </tr>
+            <tr>
+                <td>${groupmates[1]}</td>
+            </tr>
+            <tr>
+                <td>${groupmates[2]}</td>
+            </tr>
+            <tr>
+                <td>${groupmates[3]}</td>
+            </tr>
+            <tr>
+                <td>${groupmates[4]}</td>
+            </tr>
+        </table>
+        <table id="sigs-table">
+            <tr>
+                <td>Endorsed By:</td>
+                <td>${endorser}</td>
+                <td>Approved By:</td> 
+                <td>${dateRequested}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Subject Teacher/Unit Head</td>
+                <td></td>
+                <td>SRS/SRA</td>
+            </tr>
+        </table>
+        <h2>${formCode}</h2>
     </div>
-
 </body>
 </html>
