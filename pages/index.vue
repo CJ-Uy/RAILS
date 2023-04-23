@@ -3,21 +3,23 @@
     <h1 class="text-3xl font-bold text-green-500">
       Installed Tailwind CSS in Nuxt 3
     </h1>
-    <h2> {{ data }}</h2>
     <br>
-
-    <nuxt-link to="/login">
-      <button class="login-button">
+      <button class="login-button" @click="googleLogin">
         Login with Google
       </button>
-    </nuxt-link>
-
   </div>
 </template>
 
 
 <script setup>
-
+const googleLogin = async () => {
+  try {
+    const user = await useFetch('/api/auth/google')
+    console.log(user)
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 
