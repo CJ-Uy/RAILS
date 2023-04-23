@@ -10,18 +10,19 @@ const port = process.env.SERVER_PORT // The server port number is taken from the
 
 const app = express() // Create the express app
 
-app.use(
-	session({
-		secret: "Your Secret Key",
-		resave: true,
-		saveUninitialized: true
-	}) // TODO: Read the express-session documentation to fix deprecated issues
-)
+// app.use(
+// 	session({
+// 		secret: "Your Secret Key",
+// 		resave: true,
+// 		saveUninitialized: true
+// 	}) // TODO: Read the express-session documentation to fix deprecated issues
+// )
+
 app.use(passport.initialize())
 app.use(passport.session())
 
 // Importing other scripts
-require("./scripts/auth.js")
+require("./auth.js")
 // --- END OF IMPORTS --- //
 
 // --- BASE SERVER SETUP --- //

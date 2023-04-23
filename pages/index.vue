@@ -3,22 +3,21 @@
     <h1 class="text-3xl font-bold text-green-500">
       Installed Tailwind CSS in Nuxt 3
     </h1>
+    <h2> {{ data }}</h2>
     <br>
-    <button class="login-button" @click="google_login">
-      Login with Google
-    </button>
+
+    <nuxt-link to="/login">
+      <button class="login-button">
+        Login with Google
+      </button>
+    </nuxt-link>
+
   </div>
 </template>
 
 
-<script>
-export default defineComponent({
-  methods: {
-    google_login() {
-      window.location.href = "localhost:5000/auth/google";
-    }
-  }
-});
+<script setup>
+
 </script>
 
 

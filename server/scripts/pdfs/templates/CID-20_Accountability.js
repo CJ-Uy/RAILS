@@ -3,11 +3,11 @@ controlNo = "22-23-0001";
 schoolYear = "2022-2023";
 gradeSection = "11-B";
 numStudents = "5";
-subject = "Chemisty";
-concurrentTopic = "Light";
+subject = "P6";
+concurrentTopic = "Relativity";
 unit = "3";
-teacherInCharge = "Maam Herma";
-venue = "BioLab 3";
+teacherInCharge = "weihojrvbkef";
+venue = "Physics lab 3";
 dates = "Tomorrow";
 timeOfUse = "9:00am";
 
@@ -69,7 +69,7 @@ returned = [
 	" "
 ];
 
-studentName = "Charles Joshua Uy"
+studentName = "Troyann"
 dateRequested = "Today"
 
 groupmates = [
@@ -129,7 +129,7 @@ html = `<!DOCTYPE html>
             font-weight: bold;
         }
         #heading > h1 {
-            margin-bottom: 0.02in; 
+            margin-bottom: 0.05in; 
         }
         #title {
             margin-top: 0.21in;
@@ -166,8 +166,12 @@ html = `<!DOCTYPE html>
             white-space: pre-wrap; /* allow wrapping of white space */
             word-wrap: break-word; /* break long words */
         }
+        #request td:first-child {
+            border-bottom: 1px solid black !important;
+        }
         .request-header {
             vertical-align: top;
+            border: 1px solid black;
         }
         .return {
             vertical-align: top;
@@ -186,7 +190,7 @@ html = `<!DOCTYPE html>
     <div id="content">
         <div id="heading">
             <h1>PHILIPPINE SCIENCE HIGH SCHOOL SYSTEM</h1>
-            <h1>CAMPUS: &nbsp;&nbsp; <span class="input">${campus}</span> </h1>
+            <h1>CAMPUS: &nbsp;&nbsp;&nbsp; <span class="input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${campus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> </h1>
         </div>
 
         <h2 id="title">LABORATORY REQUEST AND EQUIPMENT ACCOUNTABILITY FORM</h2>
@@ -194,37 +198,37 @@ html = `<!DOCTYPE html>
         <table id="basic-info">
             <tr id="basic-info-1">
                 <td>
-                    Control No: <span class="input">${controlNo}</span> &nbsp;&nbsp;&nbsp;
-                    SY: <span class="input">${schoolYear}</span>
+                    Control No: <span class="input">&nbsp;&nbsp;&nbsp;${controlNo}&nbsp;&nbsp;&nbsp;</span> 
+                    SY: <span class="input">&nbsp;&nbsp;&nbsp;${schoolYear}&nbsp;&nbsp;&nbsp;</span>
                 </td>
             </tr>
             <tr class="expander">
                 <td>
-                    <span class="remove-botB">Grade Level and Section: </span><span class="input">${gradeSection}</span>
-                    <span class="right-side-basic-info"> <span class="remove-botB">&nbsp;Number of Students: </span><span class="input">${numStudents} </span></span>
+                    <span class="remove-botB">Grade Level and Section: </span><span class="input">&nbsp;&nbsp;&nbsp;${gradeSection}</span>
+                    <span class="right-side-basic-info"> <span class="remove-botB">&nbsp;Number of Students: </span><span class="input">&nbsp;&nbsp;&nbsp;${numStudents}&nbsp;&nbsp;&nbsp;</span></span>
                 </td>
             </tr>
             <tr class="expander">
                 <td>
-                    <span class="remove-botB">Subject: </span><span class="input">${subject}</span>
-                    <span class="right-side-basic-info"><span class="remove-botB">&nbsp;Concurrent Topic: </span><span class="input">${concurrentTopic}</span> </span>
+                    <span class="remove-botB">Subject: </span><span class="input">&nbsp;&nbsp;&nbsp;${subject}</span>
+                    <span class="right-side-basic-info"><span class="remove-botB">&nbsp;Concurrent Topic: </span><span class="input">&nbsp;&nbsp;&nbsp;${concurrentTopic}&nbsp;&nbsp;&nbsp;</span> </span>
                 </td>
             </tr>
             <tr class="expander">
                 <td>
-                    <span class="remove-botB">Unit: </span><span class="input">${unit}</span>
-                    <span class="right-side-basic-info"><span class="remove-botB">&nbsp;Teacher-In-Charge: </span><span class="input">${teacherInCharge}</span> </span>
+                    <span class="remove-botB">Unit: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="input">&nbsp;&nbsp;&nbsp;${unit}</span>
+                    <span class="right-side-basic-info"><span class="remove-botB">&nbsp;Teacher-In-Charge: </span><span class="input">&nbsp;&nbsp;&nbsp;${teacherInCharge}&nbsp;&nbsp;&nbsp;</span> </span>
                 </td>
             </tr>
             <tr class="expander">
                 <td>
-                    <span class="remove-botB">Venue of Experiment: </span><span class="input">${venue}</span>
+                    <span class="remove-botB">Venue of Experiment: </span><span class="input">&nbsp;&nbsp;&nbsp;${venue}</span>
                 </td>
             </tr>
             <tr>
                 <td class="expander">
-                    <span class="remove-botB">Date/Inclusive Dates: </span><span class="input">${dates}</span>
-                    <span class="right-side-basic-info"><span class="remove-botB">Inclusive Time of Use: </span><span class="input">${timeOfUse}</span> </span>
+                    <span class="remove-botB">Date/Inclusive Dates: </span><span class="input">&nbsp;&nbsp;&nbsp;${dates}</span>
+                    <span class="right-side-basic-info"><span class="remove-botB">Inclusive Time of Use: </span><span class="input">&nbsp;&nbsp;&nbsp;${timeOfUse}&nbsp;&nbsp;&nbsp;</span></span>
                 </td>
             </tr>
         </table>
@@ -349,9 +353,9 @@ html = `<!DOCTYPE html>
         <table id="sigs-table">
             <tr>
                 <td>Requested By:</td>
-                <td>${studentName}</td>
+                <td>&nbsp;&nbsp;&nbsp;${studentName}&nbsp;&nbsp;&nbsp;</td>
                 <td>Date Requested:</td> 
-                <td>${dateRequested}</td>
+                <td>&nbsp;&nbsp;&nbsp;${dateRequested}&nbsp;&nbsp;&nbsp;</td>
             </tr>
             <tr>
                 <td></td>
@@ -363,27 +367,27 @@ html = `<!DOCTYPE html>
         </p>
         <table class="groupmates">
             <tr>
-                <td>${groupmates[0]}</td>
+                <td>&nbsp;&nbsp;&nbsp;${groupmates[0]}</td>
             </tr>
             <tr>
-                <td>${groupmates[1]}</td>
+                <td>&nbsp;&nbsp;&nbsp;${groupmates[1]}</td>
             </tr>
             <tr>
-                <td>${groupmates[2]}</td>
+                <td>&nbsp;&nbsp;&nbsp;${groupmates[2]}</td>
             </tr>
             <tr>
-                <td>${groupmates[3]}</td>
+                <td>&nbsp;&nbsp;&nbsp;${groupmates[3]}</td>
             </tr>
             <tr>
-                <td>${groupmates[4]}</td>
+                <td>&nbsp;&nbsp;&nbsp;${groupmates[4]}</td>
             </tr>
         </table>
         <table id="sigs-table">
             <tr>
                 <td>Endorsed By:</td>
-                <td>${endorser}</td>
+                <td>&nbsp;&nbsp;&nbsp;${endorser}</td>
                 <td>Approved By:</td> 
-                <td>${approver}</td>
+                <td>&nbsp;&nbsp;&nbsp;${approver}</td>
             </tr>
             <tr>
                 <td></td>
