@@ -4,7 +4,7 @@ require("dotenv").config() // This allows the env file to be read
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 const express = require("express")
-const session = require("express-session")
+// const session = require("express-session")
 const passport = require("passport")
 const port = process.env.SERVER_PORT // The server port number is taken from the .env file
 
@@ -22,7 +22,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // Importing other scripts
-require("./auth.js")
+require("./scripts/auth.js")
 // --- END OF IMPORTS --- //
 
 // --- BASE SERVER SETUP --- //

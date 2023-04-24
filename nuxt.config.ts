@@ -8,4 +8,5 @@ export default defineNuxtConfig({
 			autoprefixer: {}
 		}
 	},
+	modules: ["@sidebase/nuxt-auth"]
 });
