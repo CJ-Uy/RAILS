@@ -1,9 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
+    //"@nuxtjs/eslint-module", //https://nuxt.com/modules/eslint
     "@sidebase/nuxt-auth", //https://nuxt.com/modules/nuxt-auth
     "@nuxtjs/tailwindcss", //https://nuxt.com/modules/tailwindcss
-    "@nuxtjs/eslint-module", //https://nuxt.com/modules/eslint
   ],
   auth: {
     isEnabled: true, // The module is enabled. Change this to disable the module

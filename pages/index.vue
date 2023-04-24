@@ -1,7 +1,7 @@
 <template>
-    <h1>GOOGLE SIGN IN</h1>
-    <button v-if="!isSignedIn" @click="handleSignIn">Sign In</button>
-    <button v-else @click="handleSignOut">Sign Out</button>
+        <h1 class="text-3xl font-bold text-green-500">GOOGLE SIGN IN</h1>
+        <button v-if="!isSignedIn" @click="handleSignIn">Sign In</button>
+        <button v-else @click="handleSignOut">Sign Out</button>
 </template>
 
 <script setup lang="ts">
