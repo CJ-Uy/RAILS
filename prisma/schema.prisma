@@ -1,0 +1,205 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// -------------------- // 
+// USER ACCOUNTS //
+// -------------------- //
+model admins {
+  Id              Int                   @id @default(autoincrement())
+  Email           String
+  Firstname       String
+  Lastname        String
+  Picture_Link    String?
+  Signature       Bytes?                @db.Blob
+  Date_Created    DateTime              @default(now())
+  signed_requests laboratory_requests[]
+}
+
+model teachers {
+  Id                           Int                   @id @default(autoincrement())
+  Email                        String
+  Firstname                    String
+  Lastname                     String
+  Picture_Link                 String?
+  Signature                    Bytes?                @db.Blob
+  Date_Created                 DateTime              @default(now())
+  Received_Laboratory_Requests laboratory_requests[] @relation("teacher_in_charge") //TODO rearrange this when i get to requests
+  Signed_Laboratory_Requests   laboratory_requests[] @relation("signed_teacher")
+}
+
+model students {
+  Id           Int     @id @default(autoincrement())
+  Email        String
+  Firstname     String
+  Lastname     String
+  Photo_Link   String?
+
+  Date_Created DateTime @default(now())
+
+  GradeSection_Id   grade_section? @relation(fields: [GradeSection_Code], references: [Id])
+  GradeSection_Code Int?
+
+  Grade   Int?
+  Section String?
+
+  Laboratory_Requests laboratory_requests[]
+}
+
+model grade_section {
+  Id Int        @id @default(autoincrement())
+  Grade           Int
+  Section         String
+  students        students[]
+}
+
+// -------------------- //
+// LABORATORIES //
+// -------------------- //
+model laboratories {
+  Id          Int     @id @default(autoincrement())
+  Name        String
+  Description String?
+
+  Location    laboratory_locations @relation(fields: [Location_Id], references: [Id])
+  Location_Id Int
+
+  Supplies                inventory_of_materials[]
+  Equipment               inventory_of_equipment[]
+  Reagents                inventory_of_reagents[]
+  laboratory_reservations laboratory_reservations[]
+}
+
+model laboratory_locations {
+  Id                                            Int                     @id @default(autoincrement())
+  Name                                          String
+  Description                                   String?
+  Date_Location_Added                           DateTime                @default(now())
+  Date_Location_Removed                         DateTime?
+  laboratories                                  laboratories[]
+  inventory_of_materials                        inventory_of_materials? @relation(fields: [inventory_of_materialsSupply_Id], references: [Id])
+  inventory_of_materialsSupply_Id               Int?
+  inventory_of_equipment                        inventory_of_equipment? @relation(fields: [inventory_of_equipmentLaboratory_Equipment_Id], references: [Id])
+  inventory_of_equipmentLaboratory_Equipment_Id Int?
+  inventory_of_reagents                         inventory_of_reagents?  @relation(fields: [inventory_of_reagentsReagent_Id], references: [Id])
+  inventory_of_reagentsReagent_Id               Int?
+}
+
+model laboratory_reservations {
+  Id                  Int                   @id @default(autoincrement())
+  Laboratory_reserved laboratories          @relation(fields: [laboratoriesId], references: [Id])
+  Start_Time          DateTime
+  End_Time            DateTime
+  laboratoriesId      Int
+  laboratory_requests laboratory_requests[]
+}
+
+// -------------------- //
+// INVENTORY //
+// -------------------- //
+model inventory_of_materials {
+  //Materials refer to small devices for experiments (such as breakers and test tubes) and supplies of the Laboratory Unit (Cleaning Supplies etc..) //TODO Clarify this later
+  Id                            Int                    @id @default(autoincrement())
+  Item_Name                     String
+  Description                   String
+  Additional_Purchase           Int?
+  Make                          String?
+  Supplier                      String?
+  Date_Received                 DateTime?
+  Quantity                      Int                    @default(0)
+  Unit                          String //Unit of measurement like "mL", "mg", etc..
+  Unit_Cost                     Float?
+  Borrowed                      Int                    @default(0)
+  Returned                      Int                    @default(0)
+  Damage                        Int                    @default(0)
+  Balance_per_Card              Int?
+  Balance_per_Count             Int?
+  Location                      laboratory_locations[]
+  laboratories                  laboratories?          @relation(fields: [laboratoriesId], references: [Id])
+  laboratoriesId                Int?
+  laboratory_requests           laboratory_requests?   @relation(fields: [laboratory_requestsRequest_Id], references: [Id])
+  laboratory_requestsRequest_Id Int?
+}
+
+model inventory_of_equipment {
+  //Equipment refer to the large devices that may not be easily moved from one location to another
+  Id       Int                    @id @default(autoincrement())
+  Equipment_Code                String
+  Equipment_Name                String
+  Serial_Number                 String?
+  Model_No_or_Manufacturer      String?
+  Description                   String?
+  Quantity                      Int?
+  Unit                          String?
+  Unit_Cost                     Float?
+  Date_Received                 DateTime               @default(now())
+  Property_Number               String?
+  Acquisition_Type              String?
+  Supplier                      String?
+  Location                      laboratory_locations[]
+  Status                        String?
+  laboratories                  laboratories?          @relation(fields: [laboratoriesId], references: [Id])
+  laboratoriesId                Int?
+  laboratory_requests           laboratory_requests?   @relation(fields: [laboratory_requestsRequest_Id], references: [Id])
+  laboratory_requestsRequest_Id Int?
+}
+
+model inventory_of_reagents {
+  //Reagents refer to all the chemicals (solid or liquid) students can request for
+  Id                    Int                    @id @default(autoincrement())
+  Item_Number                   String?
+  Cas_Number                    String?
+  Chemical_Name                 String
+  Manufacturer_Name             String?
+  Supplier                      String?
+  Max_Quantity                  String?
+  DG_Class                      String?
+  Sub_Risk                      String?
+  PG                            String?
+  Risk_Phrase                   String?
+  Haz_Sub                       Boolean
+  Poison_Schedule               String?
+  Current_SDS                   DateTime?
+  Date_Received                 DateTime?
+  Expiry_Date                   DateTime?
+  Date_Opened                   DateTime?
+  Status                        String?
+  Location                      laboratory_locations[]
+  laboratories                  laboratories?          @relation(fields: [laboratoriesId], references: [Id])
+  laboratoriesId                Int?
+  laboratory_requests           laboratory_requests?   @relation(fields: [laboratory_requestsRequest_Id], references: [Id])
+  laboratory_requestsRequest_Id Int?
+}
+
+// -------------------- //
+// REQUESTS AND RESERVATIONS //
+// -------------------- //
+model laboratory_requests {
+  Id                Int                      @id
+  Requestor                 students                 @relation(fields: [Requestor_Id], references: [Id])
+  Requestor_Id              Int
+  Control_Number            String?
+  School_Year               String?
+  For_Subject               String?
+  Concurrent_Topic          String?
+  Unit                      String?
+  Teacher_In_Charge         teachers                 @relation("teacher_in_charge", fields: [Teacher_In_Charge_Id], references: [Id])
+  Teacher_In_Charge_Id      Int
+  Materials_Needed          inventory_of_materials[]
+  Equipment_Needed          inventory_of_equipment[]
+  Reagents_Needed           inventory_of_reagents[]
+  Laboratory_Reservation    laboratory_reservations  @relation(fields: [Laboratory_Reservation_Id], references: [Id])
+  Laboratory_Reservation_Id Int
+  Other_Group_Members       Json
+  Is_Signed_By_Teacher      Boolean                  @default(false)
+  Is_Signed__By_Admin       Boolean                  @default(false)
+  Signed_Teacher            teachers                 @relation("signed_teacher", fields: [Signed_Teacher_Id], references: [Id])
+  Signed_Teacher_Id         Int
+  Signed_Admin              admins                   @relation(fields: [Signed_Admin_Id], references: [Id])
+  Signed_Admin_Id           Int
+}
