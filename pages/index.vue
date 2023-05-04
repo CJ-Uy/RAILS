@@ -15,5 +15,4 @@ async function handleSignIn() {
 async function handleSignOut() {
     await signOut();
 }
-
 </script>
