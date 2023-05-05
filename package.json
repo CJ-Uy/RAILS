@@ -1,6 +1,7 @@
 {
   "name": "nuxt-app",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -27,6 +28,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "googleapis": "^118.0.0",
     "html-pdf": "^3.0.1",
     "nodemailer": "^6.9.1",
     "pdfkit": "^0.13.0",

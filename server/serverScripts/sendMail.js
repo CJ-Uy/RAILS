@@ -1,6 +1,5 @@
-require("dotenv").config();
-const nodemailer = require("nodemailer");
-const { google } = require("googleapis");
+import nodemailer from "nodemailer";
+import { google } from "googleapis";
 const OAuth2 = google.auth.OAuth2;
 
 const OAuth2_client = new OAuth2(
@@ -12,7 +11,8 @@ OAuth2_client.setCredentials({
   refresh_token: process.env.GMAIL_REFRESH_TOKEN,
 });
 
-function send_mail(name, recipient) {
+export function sendMail(mailOptions) {
+  //mailOptions{from, to, subject, html}
   const accessToken = OAuth2_client.getAccessToken();
 
   const transport = nodemailer.createTransport({
@@ -30,14 +30,7 @@ function send_mail(name, recipient) {
     },
   });
 
-  const mail_options = {
-    from: `PSHS-EVC Laboratory Unit <${process.env.GMAIL_USER}>`,
-    to: recipient,
-    subject: get_subject(),
-    html: get_html_message(name),
-  };
-
-  transport.sendMail(mail_options, function (error, result) {
+  transport.sendMail(mailOptions, function (error, result) {
     if (error) {
       console.log("ERROR", error);
     } else {
@@ -46,13 +39,3 @@ function send_mail(name, recipient) {
     transport.close();
   });
 }
-
-function get_subject() {
-  return "Test Email";
-}
-
-function get_html_message(name) {
-  return `<h1>Hello 2 ${name}</h1>`;
-}
-
-send_mail("Tempest", "charlesjoshuauy@gmail.com");
