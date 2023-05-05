@@ -4,7 +4,13 @@ export default defineNuxtConfig({
     //"@nuxtjs/eslint-module", //https://nuxt.com/modules/eslint
     "@sidebase/nuxt-auth", //https://nuxt.com/modules/nuxt-auth
     "@nuxtjs/tailwindcss", //https://nuxt.com/modules/tailwindcss
+    "nuxt-mailer", //https://github.com/jurassicjs/nuxt-mailer
   ],
+  runtimeConfig: {
+    mailerUser: '',
+    mailerPass: '',
+    mailerLog: '',
+  },
   auth: {
     isEnabled: true, // The module is enabled. Change this to disable the module
     origin: "http://localhost:3000", // The origin is set to the development origin. Change this when deploying to production by setting `origin` in this config before build-time or by exporting `AUTH_ORIGIN` by running `export AUTH_ORIGIN=...`
