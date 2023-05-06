@@ -10,7 +10,17 @@ type SendMail = {
 
 export async function sendGmail(request: SendMail) {
   const mailService = useMailer();
-  const gmailTransporter = mailService.gmailTransporter();
+
+  const gmailTransporter = mailService.customTransporter({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: String(process.env.NUXT_MAILER_USER),
+      pass: String(process.env.NUXT_MAILER_PASS),
+    },
+  });
 
   return await mailService.sendMail({
     requestId: "test-key",
