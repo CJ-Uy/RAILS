@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
-    //"@nuxtjs/eslint-module", //https://nuxt.com/modules/eslint
     "@sidebase/nuxt-auth", //https://nuxt.com/modules/nuxt-auth
     "@nuxtjs/tailwindcss", //https://nuxt.com/modules/tailwindcss
     "nuxt-mailer", //https://github.com/jurassicjs/nuxt-mailer
