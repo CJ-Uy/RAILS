@@ -10,7 +10,22 @@
             EMAIL:
             {{ token.user.email }}
         </p>
-        <button v-if="isSignedIn" @click="sendEmail" class="bg-green-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Send Email</button>
+        <div v-if="isSignedIn">
+            <button @click="sendEmail" class="bg-green-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Send Email</button>
+            <div v-if="gmailRes" class="min">
+            Gmail Respose:
+                <div>
+                    {{ gmailRes }}
+                </div>
+            </div>
+            <div v-if="errors" class="min">
+                Error:
+                <div>
+                    {{ errors }}
+                </div>
+            </div>
+        </div>
+        
     </div>
 </template>
 
@@ -29,8 +44,20 @@ async function handleSignOut() {
     await signOut();
 }
 
+const gmailRes = ref()
+const errors = ref()
 async function sendEmail() {
-    await useFetch("/api/send-email/test-email");
+    const { data } = await useFetch("/api/me")
+    
+    gmailRes.value = "Loading... This may take a minute or 2"
+
+    gmailRes.value = await useFetch("/api/send-email/test", {
+        method: "POST",
+        body: {
+            name: String(data.value.user.name),
+            email: String(data.value.user.email),
+        }
+    })
 }
 
 </script>
