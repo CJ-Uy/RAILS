@@ -47,8 +47,16 @@ async function handleSignOut() {
 const gmailRes = ref()
 const errors = ref()
 async function sendEmail() {
-    gmailRes.value = await $fetch('/api/send-email/test').catch((err) => {
-        errors.value = err
+    const { data } = await useFetch("/api/me")
+    
+    gmailRes.value = "Loading... This may take a minute or 2"
+
+    gmailRes.value = await useFetch("/api/send-email/test", {
+        method: "POST",
+        body: {
+            name: String(data.value.user.name),
+            email: String(data.value.user.email),
+        }
     })
 }
 

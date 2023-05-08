@@ -1,11 +1,8 @@
 import testEmailTemplate from "./templates/testEmailTemplate";
 import { sendGmail } from "./gmailSender";
-const { data: token } = await useFetch("/api/me");
 
-export default async function sendTestEmail(email: string) {
-  const template = testEmailTemplate(
-    String(token.user.name)
-  );
+export default async function sendTestEmail(name: string, email: string) {
+  const template = testEmailTemplate(name);
   return await sendGmail({
     template,
     to: email,

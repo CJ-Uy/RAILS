@@ -7,9 +7,9 @@ export default defineNuxtConfig({
     "nuxt-mailer", //https://github.com/jurassicjs/nuxt-mailer
   ],
   runtimeConfig: {
-    mailerUser: '',
-    mailerPass: '',
-    mailerLog: '',
+    mailerUser: "",
+    mailerPass: "",
+    mailerLog: "",
   },
   auth: {
     isEnabled: true, // The module is enabled. Change this to disable the module
