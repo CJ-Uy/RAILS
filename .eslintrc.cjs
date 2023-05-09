@@ -13,5 +13,6 @@ module.exports = {
   plugins: [],
   rules: {
     "prettier/prettier": ["error", { endOfLine: "auto" }],
+    indent: "off",
   },
 };
