@@ -14,31 +14,34 @@ export default NuxtAuthHandler({
                 "https://www.googleapis.com/auth/userinfo.email",
                 "https://www.googleapis.com/auth/user.birthday.read",
             ],
-            timeout: 10000,
         }),
     ],
     callbacks: {
-        async signIn(user) {
-            console.log("user:", user); // TODO: Figure out why this can't be accessed anywhere except here (maybe put database code here instead of in me.get.ts)
-            return true; // Return `true` to allow sign in
+        async signIn({ account, profile }) {
+            if (account.provider === "google") {
+                return (
+                    profile.email_verified &&
+                    profile.email.endsWith("@evc.pshs.edu.ph")
+                );
+            }
+            return true; // Do different verification for other providers that don't have `email_verified`
         },
-        // // Callback when the JWT is created / updated, see https://next-auth.js.org/configuration/callbacks#jwt-callback
-        // jwt: async ({ token, user }) => {
-        //     // eslint-disable-next-line no-unneeded-ternary
-        //     const isSignIn = user ? true : false;
-        //     if (isSignIn) {
-        //         token.id = user ? user.user.id || "" : "";
-        //         token.family_name = user ? (user as any).user.family_name || "" : "";
-        //         token.given_name = user ? (user as any).user.given_name || "" : "";
-        //     }
-        //     return Promise.resolve(token);
-        // },
-        // // Callback whenever session is checked, see https://next-auth.js.org/configuration/callbacks#session-callback
-        // session: async ({ session, token }) => {
-        //     (session as any).id = token.id;
-        //     (session as any).family_name = token.family_name;
-        //     (session as any).given_name = token.given_name;
-        //     return Promise.resolve(session);
-        // },
+        // Callback when the JWT is created / updated, see https://next-auth.js.org/configuration/callbacks#jwt-callback
+        jwt: async ({ token, user, profile }) => {
+            // eslint-disable-next-line no-unneeded-ternary
+            const isSignIn = user ? true : false;
+            if (isSignIn) {
+                token.family_name = profile.family_name;
+                token.given_name = profile.given_name;
+            }
+            return Promise.resolve(token);
+        },
+        // Callback whenever session is checked, see https://next-auth.js.org/configuration/callbacks#session-callback
+        session: async ({ session, token }) => {
+            (session as any).id = token.id;
+            (session as any).family_name = token.family_name;
+            (session as any).given_name = token.given_name;
+            return Promise.resolve(session);
+        },
     },
 });
