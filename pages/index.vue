@@ -3,25 +3,25 @@
         <h1 class="text-3xl font-bold text-green-500">GOOGLE SIGN IN</h1>
         <button
             v-if="!isSignedIn"
-            @click="handleSignIn"
             class="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+            @click="handleSignIn"
         >
             Sign In
         </button>
         <button
             v-else
-            @click="handleSignOut"
             class="rounded bg-gray-500 px-4 py-2 font-bold text-white hover:bg-gray-700"
+            @click="handleSignOut"
         >
             Sign Out
         </button>
         <p v-if="isSignedIn">
-            {{ token }}
+            {{ data }}
         </p>
         <div v-if="isSignedIn">
             <button
-                @click="sendEmail"
                 class="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-gray-700"
+                @click="sendEmail"
             >
                 Send Email
             </button>
@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 const { status, signIn, signOut } = useAuth();
-const { data: token } = await useFetch("/api/token");
+const { data } = await useFetch("/api/user/token");
 
 const isSignedIn = computed(() => status.value === "authenticated"); // authenticated, loading, or unauthenticated ONLY
 
@@ -59,9 +59,9 @@ async function handleSignOut() {
 const gmailRes = ref();
 const errors = ref();
 async function sendEmail() {
-    const { data } = await useFetch("/api/me");
+    const { data } = await useFetch("/api/user/token");
 
-    gmailRes.value = "Loading... This may take a minute or 2";
+    gmailRes.value = `Loading...Sending Email to ${data.value.email} This may take a minute or 2`;
 
     gmailRes.value = await useFetch("/api/send-email/test", {
         method: "POST",
