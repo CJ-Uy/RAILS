@@ -1,14 +1,14 @@
 import { getServerSession } from "#auth";
 
 export default eventHandler(async (event) => {
-  const session = await getServerSession(event);
+    const session = await getServerSession(event);
 
-  if (!session) {
-    return { status: "unauthenticated" };
-  }
+    if (!session) {
+        return { status: "unauthenticated" };
+    }
 
-  const user = session.user;
-  // Insert database login and stuff ?
+    const user = session.user;
+    // Insert database login and stuff ?
 
-  return user;
+    return user;
 });
