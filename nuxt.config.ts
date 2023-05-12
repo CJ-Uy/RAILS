@@ -4,7 +4,6 @@ export default defineNuxtConfig({
         "@sidebase/nuxt-auth", // https://nuxt.com/modules/nuxt-auth
         "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss
         "nuxt-mailer", // https://github.com/jurassicjs/nuxt-mailer
-        "@sidebase/nuxt-pdf", // https://sidebase.io/nuxt-pdf
     ],
     runtimeConfig: {
         mailerUser: "",
