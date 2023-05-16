@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 
-export default async function convertHtmlToPdf(htmlContent,outputPath) {
+export default async function convertHtmlToPdf(htmlContent, outputPath) {
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
     await page.setContent(htmlContent);
