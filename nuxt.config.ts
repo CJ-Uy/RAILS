@@ -4,7 +4,16 @@ export default defineNuxtConfig({
         "@sidebase/nuxt-auth", // https://nuxt.com/modules/nuxt-auth
         "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss
         "nuxt-mailer", // https://github.com/jurassicjs/nuxt-mailer
+        "@nuxtjs/fontaine", // https://nuxt.com/modules/fontaine
     ],
+    /*
+    If you are using a Google font or you don't have a @font-face declaration
+    for a font you're using, you can declare them here. In most cases this is not necessary.
+
+    fontMetrics: {
+        fonts: ['Inter', { family: 'Some Custom Font', src: '/path/to/custom/font.woff2' }],
+    }, 
+    */
     runtimeConfig: {
         mailerUser: "",
         mailerPass: "",

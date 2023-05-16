@@ -1,3 +1,4 @@
+<!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup></script>
 
 <template>

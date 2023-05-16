@@ -1,42 +1,45 @@
 {
-  "name": "nuxt-app",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "dbgenerate": "npx prisma generate",
-    "dbgui": "npx prisma studio",
-    "dbmigrate": "npx prisma migrate dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "check-updates": "npm-check-updates"
-  },
-  "devDependencies": {
-    "@nuxtjs/eslint-config-typescript": "^12.0.0",
-    "@nuxtjs/tailwindcss": "^6.6.8",
-    "@prisma/client": "^4.14.0",
-    "@sidebase/nuxt-auth": "^0.6.0-beta.0",
-    "@types/node": "^20.1.2",
-    "@typescript-eslint/parser": "^5.59.5",
-    "eslint": "^8.40.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "nodemon": "^2.0.22",
-    "nuxt": "^3.4.3",
-    "playwright": "^1.33.0",
-    "prettier": "^2.8.8",
-    "prettier-plugin-tailwindcss": "^0.2.8",
-    "prisma": "^4.14.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "googleapis": "^118.0.0",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1",
-    "nuxt-mailer": "^0.11.0",
-    "signature_pad": "^4.1.5"
-  }
+    "name": "nuxt-app",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "dbgenerate": "npx prisma generate",
+        "dbgui": "npx prisma studio",
+        "dbmigrate": "npx prisma migrate dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare",
+        "check-updates": "npm-check-updates"
+    },
+    "devDependencies": {
+        "@nuxtjs/eslint-config-typescript": "^12.0.0",
+        "@nuxtjs/fontaine": "^0.2.5",
+        "@nuxtjs/tailwindcss": "^6.6.8",
+        "@prisma/client": "^4.14.0",
+        "@sidebase/nuxt-auth": "^0.6.0-beta.0",
+        "@types/node": "^20.1.2",
+        "@typescript-eslint/parser": "^5.59.5",
+        "eslint": "^8.40.0",
+        "eslint-config-prettier": "^8.8.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "nodemon": "^2.0.22",
+        "nuxt": "^3.4.3",
+        "playwright": "^1.33.0",
+        "prettier": "^2.8.8",
+        "prettier-plugin-tailwindcss": "^0.2.8",
+        "prisma": "^4.14.0",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.0.4"
+    },
+    "dependencies": {
+        "@vueuse/core": "^10.1.2",
+        "googleapis": "^118.0.0",
+        "html2canvas": "^1.4.1",
+        "jspdf": "^2.5.1",
+        "nuxt-mailer": "^0.11.0",
+        "puppeteer": "^20.2.0",
+        "signature_pad": "^4.1.5"
+    }
 }
