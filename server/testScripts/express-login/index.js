@@ -15,7 +15,7 @@ const app = express(); // Create the express app
 // 		secret: "Your Secret Key",
 // 		resave: true,
 // 		saveUninitialized: true
-// 	}) // TODO: Read the express-session documentation to fix deprecated issues
+// 	})
 // )
 
 app.use(passport.initialize());
@@ -61,7 +61,7 @@ app.get(
 app.get("/dashboard", isLoggedIn, (req, res) => {
   res.send("<h1>SUCCESS</h1>");
   const { displayName, family_name, given_name, email, photos } = req.user;
-  const photo = photos[0].value; // TODO: Find what to do if no photo
+  const photo = photos[0].value;
 
   // Create a new Student in the database
   create_student(email, given_name, family_name, photo)
@@ -82,7 +82,6 @@ app.get("/auth/failure", (req, res) => {
 // --- END OF GOOGLE OAUTH LOGIN --- //
 
 // --- CREATING NEW STUDENT USER --- //
-// TODO: Only allow the evc emails
 async function create_student(email, firstname, lastname, photo) {
   await prisma.students.create({
     data: {

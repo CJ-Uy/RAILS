@@ -13,7 +13,6 @@ passport.use(
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function (request, accessToken, refreshToken, profile, done) {
-      // TODO: save user to database
       return done(null, profile);
     }
   )
