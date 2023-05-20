@@ -6,9 +6,6 @@ export default eventHandler(async (event) => {
     if (!session) {
         return { status: "unauthenticated" };
     }
-
-    const user = session.user;
     // Insert database login and stuff ?
-
-    return user;
+    return session;
 });
