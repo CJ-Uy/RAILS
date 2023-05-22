@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({middleware: "auth"})
+definePageMeta({ middleware: "auth" });
 
-const headers = useRequestHeaders(["cookie"]) as HeadersInit
-const {data: token} = await useFetch("/api/token", {headers})
+const headers = useRequestHeaders(["cookie"]) as HeadersInit;
+const { data: token } = await useFetch("/api/token", { headers });
 </script>

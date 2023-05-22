@@ -58,6 +58,11 @@ model grade_section {
   students        students[]
 }
 
+model units {
+  Id          Int     @id @default(autoincrement())
+  Name        String
+}
+
 // -------------------- //
 // LABORATORIES //
 // -------------------- //

@@ -1,72 +1,72 @@
 campus = "EASTERN VISAYAS";
 controlNo = "22-23-0001";
 schoolYear = "2022-2023";
-gradeSection = "11-B";
+gradeSection = "11-C";
 numStudents = "5";
-subject = "P6";
+subject = "Physics";
 concurrentTopic = "Relativity";
-unit = "3";
-teacherInCharge = "weihojrvbkef";
+unit = "Physics Unit";
+teacherInCharge = "Xavier Delos Reyes";
 venue = "Physics lab 3";
-dates = "Tomorrow";
-timeOfUse = "9:00am";
+dates = "01/23/45";
+timeOfUse = "9:00am - 10:00am";
 
 quantity = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", " ", " "];
 item = [
-  "microscope",
-  "bunsen burner",
-  "petri dish",
-  "test tube",
-  "beaker",
-  "pipette",
-  "test tube rack",
-  "test tube holder",
-  "test tube brush",
-  "test tube clamp",
-  "",
-  "",
+    "microscope",
+    "bunsen burner",
+    "petri dish",
+    "test tube",
+    "beaker",
+    "pipette",
+    "test tube rack",
+    "test tube holder",
+    "test tube brush",
+    "test tube clamp",
+    "",
+    "",
 ];
 description = [
-  "to observe",
-  "to heat",
-  "to observe",
-  "to observe",
-  "to observe",
-  "to measure",
-  "to hold",
-  "to hold",
-  "to clean",
-  "to hold",
-  "",
-  "",
+    "to observe",
+    "to heat",
+    "to observe",
+    "to observe",
+    "to observe",
+    "to measure",
+    "to hold",
+    "to hold",
+    "to clean",
+    "to hold",
+    "",
+    "",
 ];
 issued = [
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  " ",
-  " ",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    " ",
+    " ",
 ];
 returned = [
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  "good",
-  " ",
-  " ",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    "good",
+    " ",
+    " ",
 ];
 
 studentName = "Troyann";
