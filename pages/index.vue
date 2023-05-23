@@ -13,7 +13,7 @@ const isSignedIn = computed(() => status.value === "authenticated"); // authenti
 
 async function handleSignIn() {
     // Custom Sign In pages: https://sidebase.io/nuxt-auth/application-side/custom-sign-in-page
-    await signIn("Google");
+    await signIn("google");
 }
 
 async function handleSignOut() {
