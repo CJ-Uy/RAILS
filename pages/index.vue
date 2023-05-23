@@ -1,4 +1,11 @@
 <script setup lang="ts">
+definePageMeta({
+    auth: {
+        unauthenticatedOnly: false,
+        navigateAuthenticatedTo: "/",
+    },
+});
+
 const { status, signIn, signOut } = useAuth();
 const { data } = await useFetch("/api/user/me");
 
@@ -6,7 +13,7 @@ const isSignedIn = computed(() => status.value === "authenticated"); // authenti
 
 async function handleSignIn() {
     // Custom Sign In pages: https://sidebase.io/nuxt-auth/application-side/custom-sign-in-page
-    await signIn("google");
+    await signIn("Google");
 }
 
 async function handleSignOut() {
@@ -33,7 +40,8 @@ async function sendEmail() {
 <template>
     <div class="absolute bg-gray-50">
         <h1 class="text-3xl font-bold text-green-500">GOOGLE SIGN IN</h1>
-        <button
+        <NuxtLink to="/login">LOGIN</NuxtLink>
+        <!-- <button
             v-if="!isSignedIn"
             class="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
             @click="handleSignIn"
@@ -70,6 +78,6 @@ async function sendEmail() {
                     {{ errors }}
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
