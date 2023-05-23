@@ -4,6 +4,10 @@ import GoogleProvider from "next-auth/providers/google";
 import { NuxtAuthHandler } from "#auth";
 
 export default NuxtAuthHandler({
+    pages: {
+        // Change the default behavior to use "/login" as the path for the sign-in page
+        signIn: "/login",
+    },
     providers: [
         // @ts-ignore
         GoogleProvider.default({
@@ -25,6 +29,14 @@ export default NuxtAuthHandler({
                 );
             }
             return true; // Do different verification for other providers that don't have `email_verified`
+        },
+        async redirect({ url, baseUrl }) {
+            // Add a custom callback URL logic here
+            if (url.startsWith(baseUrl)) {
+                return url;
+            } else {
+                return baseUrl;
+            }
         },
         // Callback when the JWT is created / updated, see https://next-auth.js.org/configuration/callbacks#jwt-callback
         jwt: async ({ token, user, profile }) => {
