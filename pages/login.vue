@@ -2,7 +2,7 @@
 definePageMeta({
     auth: {
         unauthenticatedOnly: true,
-        navigateAuthenticatedTo: "/protected",
+        navigateAuthenticatedTo: "/protected", // This does not work for some reason
     },
 });
 
