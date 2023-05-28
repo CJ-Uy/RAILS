@@ -21,6 +21,9 @@ export default NuxtAuthHandler({
         }),
     ],
     callbacks: {
+        /*
+        TODO: REMOVE COMMENT TO VERIFY THE EMAIL DURING PRODUCTION
+
         async signIn({ account, profile }) {
             if (account.provider === "google") {
                 return (
@@ -30,6 +33,7 @@ export default NuxtAuthHandler({
             }
             return true; // Do different verification for other providers that don't have `email_verified`
         },
+        */
         async redirect({ url, baseUrl }) {
             // Add a custom callback URL logic here
             if (url.startsWith(baseUrl)) {
