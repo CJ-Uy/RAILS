@@ -23,6 +23,16 @@ Start the development server on http://localhost:3000
 ```bash
 npm run dev
 ```
+## Local Database Initialization
+
+When starting the project for the first time, generate the database by running run
+```bash
+npm run dbgenerate
+```
+When creating changes to the database schema through the ```schema.prisma``` file push changes with the command:
+```bash
+npm run dbmigrate
+```
 
 ## Production
 
@@ -38,9 +48,3 @@ Locally preview production build:
 npm run preview
 ```
 
-## Local Database Initialization
-
-When creating changes to the database schema through the ```schema.prisma``` file push changes with the command:
-```bash
-npm run dbmigrate
-```
