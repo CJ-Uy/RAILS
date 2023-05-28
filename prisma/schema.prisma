@@ -20,40 +20,52 @@ datasource db {
 // -------------------- // 
 // USER ACCOUNTS //
 // -------------------- //
-model Admins {
-  id             Int                  @id @default(autoincrement())
-  email          String
-  firstName      String
-  lastName       String
-  imageLink      String?
-  signature      Bytes?               @db.Blob
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  signedRequests LaboratoryRequests[]
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
 }
 
-model Teachers {
-  id                         Int                  @id @default(autoincrement())
-  email                      String
-  firstName                  String
-  lastName                   String
-  imageLink                  String?
-  Signature                  Bytes?               @db.Blob
-  createdAt                  DateTime             @default(now())
-  updatedAt                  DateTime             @updatedAt
-  receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge") //TODO rearrange this when i get to requests
-  signedLaboratoryRequests   LaboratoryRequests[] @relation("signed_teacher")
-}
-
-model Students {
+model Users {
   id        Int     @id @default(autoincrement())
-  email     String
+  email     String  @unique
   firstName String
   lastName  String
+  role      Role    @default(STUDENT)
   imageLink String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  students   Students? @relation(fields: [studentsId], references: [id])
+  teachers   Teachers? @relation(fields: [teachersId], references: [id])
+  admins     Admins?   @relation(fields: [adminsId], references: [id])
+  studentsId Int?
+  teachersId Int?
+  adminsId   Int?
+}
+
+model Admins {
+  id             Int                  @id @default(autoincrement())
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  signature      Bytes?               @db.Blob
+  signedRequests LaboratoryRequests[]
+  userProfile    Users[]
+}
+
+model Teachers {
+  id                         Int                  @id @default(autoincrement())
+  signature                  Bytes?               @db.Blob
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+  receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge") //TODO rearrange this when i get to requests
+  signedLaboratoryRequests   LaboratoryRequests[] @relation("signed_teacher")
+  userProfile                Users[]
+}
+
+model Students {
+  id Int @id @default(autoincrement())
 
   gradeSectionId   GradeSection? @relation(fields: [gradeSectionCode], references: [id])
   gradeSectionCode Int?
@@ -62,6 +74,7 @@ model Students {
   section String?
 
   laboratoryRequests LaboratoryRequests[]
+  userProfile        Users[]
 }
 
 model GradeSection {
