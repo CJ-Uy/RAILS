@@ -8,6 +8,7 @@ export default defineNuxtConfig({
         "@nuxt/content", // https://content.nuxtjs.org/
         "@nuxtjs/device", // https://nuxt.com/modules/device
         "@nuxt/image-edge", // https://v1.image.nuxtjs.org/
+        "@formkit/nuxt", // https://formkit.com/
     ],
 
     /*

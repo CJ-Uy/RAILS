@@ -36,6 +36,7 @@
         "typescript": "^5.0.4"
     },
     "dependencies": {
+        "@formkit/nuxt": "^0.17.2",
         "@prisma/client": "^4.14.1",
         "@vueuse/core": "^10.1.2",
         "googleapis": "^118.0.0",
