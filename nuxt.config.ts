@@ -9,9 +9,11 @@ export default defineNuxtConfig({
         "@nuxtjs/device", // https://nuxt.com/modules/device
         "@nuxt/image-edge", // https://v1.image.nuxtjs.org/
         "@formkit/nuxt", // https://formkit.com/
+        "@invictus.codes/nuxt-vuetify", // https://nuxt.com/modules/nuxt-vuetify AND https://vuetifyjs.com/en/
     ],
 
     /*
+    FONTAINE CONFIGURATION
         If you are using a Google font or you don't have a @font-face declaration
         for a font you're using, you can declare them here. In most cases this is not necessary.
 
@@ -20,12 +22,30 @@ export default defineNuxtConfig({
         }, 
     */
 
+    // VUETIFY CONFIGURATION
+    vuetify: {
+        /* vuetify options */
+        vuetifyOptions: {
+            // @TODO: list all vuetify options
+        },
+        moduleOptions: {
+            /* nuxt-vuetify module options */
+            treeshaking: true,
+            useIconCDN: true,
+            /* vite-plugin-vuetify options */
+            styles: true,
+            autoImport: true,
+        },
+    },
+
+    // NUXT-MAILER CONFIGURATION
     runtimeConfig: {
         mailerUser: "",
         mailerPass: "",
         mailerLog: "",
     },
 
+    // NUXT-AUTH CONFIGURATION
     auth: {
         isEnabled: true, // The module is enabled. Change this to disable the module
 
@@ -48,6 +68,7 @@ export default defineNuxtConfig({
         // enableSessionRefreshOnWindowFocus: true, // Whether to refresh the session whenever a window focus event happens, i.e, when your user refocuses the window. Set this to `false` to turn this off
     },
 
+    // NUXT-DEVTOOLS CONGIGURATION
     devtools: {
         enabled: true,
     },
