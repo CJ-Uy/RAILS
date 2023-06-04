@@ -3,24 +3,35 @@
 
 <template>
     <div>
-        <h1>Choose a Form</h1>
-        <div class="text-blue-500">
-            <NuxtLink to="/protected/forms/CID20">
-                <h2 class="hover:underline active:text-green-500">
-                    CID-20 Laboratory Request and Equipment Accountability Form
-                </h2>
-            </NuxtLink>
-            <NuxtLink to="/protected/forms/CID19">
-                <h2 class="hover:underline active:text-green-500">
-                    CID-19 Reagent Request Form
-                </h2>
-            </NuxtLink>
-            <NuxtLink to="/protected/forms/CID05">
-                <h2 class="hover:underline active:text-green-500">
-                    CID-05 Laboratory Request Reservation Form
-                </h2>
-            </NuxtLink>
-        </div>
+        <h1>LABORATORY REQUESTS</h1>
+        <NuxtLink
+            to="/protected"
+            class="text-blue-500 hover:underline active:text-green-500"
+            >RETURN</NuxtLink
+        >
+
+        <FormKit type="form" :actions="false">
+            <FormKit type="multi-step" tab-style="progress">
+                <FormKit type="step" name="basicInfo">
+                    <FormsBasicInfo />
+                </FormKit>
+
+                <FormKit type="step" name="materialsRequest">
+                    <!-- component for example brevity. -->
+                    <FormsMaterialsRequest />
+                </FormKit>
+
+                <FormKit type="step" name="reagentRequest">
+                    <!-- component for example brevity. -->
+                    <FormsSummarize />
+
+                    <!-- using step slot for submit button-->
+                    <template #stepNext>
+                        <FormKit type="submit" />
+                    </template>
+                </FormKit>
+            </FormKit>
+        </FormKit>
     </div>
 </template>
 

@@ -38,6 +38,10 @@ export default defineNuxtConfig({
         },
     },
 
+    formkit: {
+        configFile: "./formkit.config.js",
+    },
+
     // NUXT-MAILER CONFIGURATION
     runtimeConfig: {
         mailerUser: "",

@@ -39,6 +39,7 @@
     "dependencies": {
         "@formkit/addons": "^0.17.2",
         "@formkit/nuxt": "^0.17.2",
+        "@formkit/themes": "^0.17.2",
         "@prisma/client": "^4.15.0",
         "@vueuse/core": "^10.1.2",
         "googleapis": "^118.0.0",
