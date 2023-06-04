@@ -1,4 +1,6 @@
 <script setup lang="ts">
+definePageMeta({ auth: false });
+
 const { status, signOut } = useAuth();
 const { data } = await useFetch("/api/user/me");
 
