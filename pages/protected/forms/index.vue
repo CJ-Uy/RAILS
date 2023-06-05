@@ -16,13 +16,19 @@
                     <FormsBasicInfo />
                 </FormKit>
 
-                <FormKit type="step" name="materialsRequest">
-                    <!-- component for example brevity. -->
+                <FormKit type="step" name="venue">
+                    <FormsLaboratoryReservation />
+                </FormKit>
+
+                <FormKit type="step" name="materials">
                     <FormsMaterialsRequest />
                 </FormKit>
 
-                <FormKit type="step" name="reagentRequest">
-                    <!-- component for example brevity. -->
+                <FormKit type="step" name="reagents">
+                    <FormsReagentsRequest />
+                </FormKit>
+
+                <FormKit type="step" name="summary">
                     <FormsSummarize />
 
                     <!-- using step slot for submit button-->
@@ -34,5 +40,3 @@
         </FormKit>
     </div>
 </template>
-
-<style scoped></style>
