@@ -1,5 +1,11 @@
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
-<script setup></script>
+<script setup>
+const submitted = ref(false);
+const submitHandler = async () => {
+    console.log("attempting to submit");
+    submitted.value = true;
+};
+</script>
 
 <template>
     <div>
@@ -10,33 +16,39 @@
             >RETURN</NuxtLink
         >
 
-        <FormKit type="form" :actions="false">
-            <FormKit type="multi-step" tab-style="progress">
-                <FormKit type="step" name="basicInfo">
-                    <FormsBasicInfo />
-                </FormKit>
+        <FormKit
+            type="multi-step"
+            tab-style="progress"
+            #default="{ disabled }"
+            @submit="submitHandler"
+        >
+            <FormKit type="step" name="basicInfo">
+                <FormsBasicInfo />
+            </FormKit>
 
-                <FormKit type="step" name="venue">
-                    <FormsLaboratoryReservation />
-                </FormKit>
+            <FormKit type="step" name="venue">
+                <FormsLaboratoryReservation />
+            </FormKit>
 
-                <FormKit type="step" name="materials">
-                    <FormsMaterialsRequest />
-                </FormKit>
+            <FormKit type="step" name="materials">
+                <FormsMaterialsRequest />
+            </FormKit>
 
-                <FormKit type="step" name="reagents">
-                    <FormsReagentsRequest />
-                </FormKit>
+            <FormKit type="step" name="reagents">
+                <FormsReagentsRequest />
+            </FormKit>
 
-                <FormKit type="step" name="summary">
-                    <FormsSummarize />
+            <FormKit type="step" name="summary">
+                <FormsSummarize />
 
-                    <!-- using step slot for submit button-->
-                    <template #stepNext>
-                        <FormKit type="submit" />
-                    </template>
-                </FormKit>
+                <!-- using step slot for submit button-->
+                <template #stepNext>
+                    <FormKit type="submit" :disabled="disabled" />
+                </template>
             </FormKit>
         </FormKit>
+        <div v-if="submitted">
+            <h2>Submission successful!</h2>
+        </div>
     </div>
 </template>
