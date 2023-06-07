@@ -3,6 +3,7 @@
 const submitted = ref(false);
 const submitHandler = async () => {
     console.log("attempting to submit");
+    console.log(value);
     submitted.value = true;
 };
 </script>
@@ -19,9 +20,12 @@ const submitHandler = async () => {
         <FormKit
             type="multi-step"
             tab-style="progress"
-            #default="{ disabled }"
+            #default="{ value }"
             @submit="submitHandler"
         >
+            <pre>
+                {{ value }}
+            </pre>
             <FormKit type="step" name="basicInfo">
                 <FormsBasicInfo />
             </FormKit>

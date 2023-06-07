@@ -1,4 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const { data } = await useFetch("/api/user/me");
+const accountEmail = useEmail();
+const accountFirstName = useFirstName();
+const accountLastName = useLastName();
+const accountName = useName();
+
+accountEmail.value = data.value.user.email;
+accountFirstName.value = data.value.given_name;
+accountLastName.value = data.value.family_name;
+accountName.value = data.value.user.name;
+</script>
 
 <template>
     <div>
@@ -9,5 +20,11 @@
                 GO TO FORMS
             </h1>
         </NuxtLink>
+        <p>
+            {{ accountEmail }}
+            {{ accountFirstName }}
+            {{ accountLastName }}
+            {{ accountName }}
+        </p>
     </div>
 </template>
