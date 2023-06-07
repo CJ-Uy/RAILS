@@ -1,15 +1,14 @@
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
 const submitted = ref(false);
-const isFormValid = async (value) => {
-    console.log("checking form");
-    return true;
-};
+const requestStatus = ref("Loading...");
 
-const submitHandler = async (value) => {
-    submitted.value = true;
-    console.log("submitting...");
-};
+async function submitHandler(formValues) {
+    requestStatus.value = await useFetch("/api/forms/process-request", {
+        method: "POST",
+        body: formValues,
+    });
+}
 </script>
 
 <template>
@@ -20,43 +19,41 @@ const submitHandler = async (value) => {
             class="text-blue-500 hover:underline active:text-green-500"
             >RETURN</NuxtLink
         >
-
-        <FormKit v-slot="{ value }" type="multi-step" tab-style="progress">
-            <pre>
+        <FormKit type="form" :actions="false" @submit="submitHandler">
+            <FormKit v-slot="{ value }" type="multi-step" tab-style="progress">
+                <pre>
                 {{ value }}
-            </pre>
-            <FormKit type="step" name="basicInfo">
-                <FormsBasicInfo />
-            </FormKit>
+            </pre
+                >
 
-            <FormKit type="step" name="laboratorySetting">
-                <FormsLaboratoryReservation />
-            </FormKit>
+                <FormKit type="step" name="basicInfo">
+                    <FormsBasicInfo />
+                </FormKit>
 
-            <FormKit type="step" name="materials">
-                <FormsMaterialsRequest />
-            </FormKit>
+                <FormKit type="step" name="laboratorySetting">
+                    <FormsLaboratoryReservation />
+                </FormKit>
 
-            <FormKit type="step" name="reagents">
-                <FormsReagentsRequest />
-            </FormKit>
+                <FormKit type="step" name="materials">
+                    <FormsMaterialsRequest />
+                </FormKit>
 
-            <FormKit type="step" name="summary">
-                <FormsSummarize />
+                <FormKit type="step" name="reagents">
+                    <FormsReagentsRequest />
+                </FormKit>
 
-                <!-- using step slot for submit button-->
-                <template #stepNext>
-                    <FormKit
-                        type="submit"
-                        label="Submit"
-                        :disabled="!isFormValid(value)"
-                        @click="submitHandler(value)"
-                    />
-                </template>
+                <FormKit type="step" name="summary">
+                    <FormsSummarize />
+
+                    <!-- using step slot for submit button-->
+                    <template #stepNext>
+                        <FormKit type="submit" label="Submit" />
+                    </template>
+                </FormKit>
             </FormKit>
         </FormKit>
         <div v-if="submitted">
-            <h2>Submission successful!</h2>
+            <h2>{{ requestStatus }}</h2>
         </div>
     </div>
 </template>
