@@ -1,10 +1,14 @@
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
 const submitted = ref(false);
-const submitHandler = async () => {
-    console.log("attempting to submit");
-    console.log(value);
+const isFormValid = async (value) => {
+    console.log("checking form");
+    return true;
+};
+
+const submitHandler = async (value) => {
     submitted.value = true;
+    console.log("submitting...");
 };
 </script>
 
@@ -17,12 +21,7 @@ const submitHandler = async () => {
             >RETURN</NuxtLink
         >
 
-        <FormKit
-            type="multi-step"
-            tab-style="progress"
-            #default="{ value }"
-            @submit="submitHandler"
-        >
+        <FormKit v-slot="{ value }" type="multi-step" tab-style="progress">
             <pre>
                 {{ value }}
             </pre>
@@ -30,7 +29,7 @@ const submitHandler = async () => {
                 <FormsBasicInfo />
             </FormKit>
 
-            <FormKit type="step" name="venue">
+            <FormKit type="step" name="laboratorySetting">
                 <FormsLaboratoryReservation />
             </FormKit>
 
@@ -47,7 +46,12 @@ const submitHandler = async () => {
 
                 <!-- using step slot for submit button-->
                 <template #stepNext>
-                    <FormKit type="submit" :disabled="disabled" />
+                    <FormKit
+                        type="submit"
+                        label="Submit"
+                        :disabled="!isFormValid(value)"
+                        @click="submitHandler(value)"
+                    />
                 </template>
             </FormKit>
         </FormKit>
