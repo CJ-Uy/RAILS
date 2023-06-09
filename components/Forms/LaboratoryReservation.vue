@@ -1,6 +1,8 @@
 <script setup>
 const labResStatus = ref(true);
 const showLabRes = computed(() => labResStatus.value === "false"); // Manual ! sign idk why it doesn't work
+
+const requestDates = ref();
 </script>
 
 <template>
@@ -15,6 +17,15 @@ const showLabRes = computed(() => labResStatus.value === "false"); // Manual ! s
                 false: 'I do NOT have a Laboratory Reservation yet',
             }"
             help="If this is for a class activity select the first option"
+        />
+        <!-- TODO: Add icons https://vue3datepicker.com/slots/icons/#icons currently the default ones are invisible (idk why) -->
+        <VueDatePicker
+            v-model="requestDates"
+            multi-dates
+            :enable-time-picker="false"
+            placeholder="Select Dates of Activity"
+            auto-apply
+            :close-on-auto-apply="false"
         />
         <FormKit
             type="time"
