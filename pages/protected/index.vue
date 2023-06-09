@@ -28,7 +28,7 @@ const date = ref();
             {{ accountLastName }}
             {{ accountName }}
         </p>
-        <VueDatePicker v-model="date" range />
+        <VueDatePicker v-model="date" multi-dates />
         <pre>
             {{ date }}
         </pre>
