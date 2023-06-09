@@ -17,13 +17,6 @@ const showLabRes = computed(() => labResStatus.value === "false"); // Manual ! s
             help="If this is for a class activity select the first option"
         />
         <FormKit
-            type="date"
-            label="Date of Activity"
-            help="Enter the date of the activity"
-            name="dateOfActivity"
-            validation="required"
-        />
-        <FormKit
             type="time"
             label="Time of START of Activity"
             name="timeStartOfActivity"
@@ -40,6 +33,7 @@ const showLabRes = computed(() => labResStatus.value === "false"); // Manual ! s
             <FormKit
                 type="text"
                 label="Laboratory Room"
+                name="LaboratoryVenue"
                 validation="required"
             />
         </div>

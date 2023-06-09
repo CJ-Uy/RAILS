@@ -22,6 +22,10 @@ export default defineNuxtConfig({
         }, 
     */
 
+    build: {
+        transpile: ["@vuepic/vue-datepicker"], // https://vue3datepicker.com/
+    },
+
     // VUETIFY CONFIGURATION
     vuetify: {
         /* vuetify options */
