@@ -2,7 +2,7 @@
 const labResStatus = ref(true);
 const showLabRes = computed(() => labResStatus.value === "false"); // Manual ! sign idk why it doesn't work
 
-const requestDates = ref();
+const requestDates = ref([]);
 </script>
 
 <template>
@@ -19,24 +19,20 @@ const requestDates = ref();
             help="If this is for a class activity select the first option"
         />
         <!-- TODO: Add icons https://vue3datepicker.com/slots/icons/#icons currently the default ones are invisible (idk why) -->
-        <VueDatePicker
-            v-model="requestDates"
-            multi-dates
-            :enable-time-picker="false"
-            placeholder="Select Dates of Activity"
-            auto-apply
-            :close-on-auto-apply="false"
-        />
         <FormKit
-            type="time"
-            label="Time of START of Activity"
-            name="timeStartOfActivity"
+            v-model="requestDates"
+            type="calendarDatePicker"
+            label="Date/s of Activity"
+            name="reqestDates"
             validation="required"
         />
+        <pre>
+            {{ requestDates }}
+        </pre>
         <FormKit
-            type="time"
-            label="Time of END of Activity"
-            name="timeEndOfActivity"
+            type="timeDatePicker"
+            label="Inclusive Time of Use"
+            name="inclusiveTimeOfUse"
             validation="required"
         />
         <div v-if="showLabRes">

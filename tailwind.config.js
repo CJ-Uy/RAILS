@@ -1,4 +1,4 @@
-import formKitTailwind from "@formkit/themes/tailwindcss";
+import FormKitVariants from "@formkit/themes/tailwindcss";
 
 module.exports = {
     content: [
@@ -8,10 +8,11 @@ module.exports = {
         "./plugins/**/*.{js,ts}",
         "./nuxt.config.{js,ts}",
         "./app.vue",
-        "./formkit.config.js",
+        "./src/**/*.{html,js,vue}",
+        "./node_modules/@formkit/themes/dist/tailwindcss/genesis/index.cjs",
     ],
     theme: {
         extend: {},
     },
-    plugins: [formKitTailwind],
+    plugins: [FormKitVariants],
 };

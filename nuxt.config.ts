@@ -30,7 +30,7 @@ export default defineNuxtConfig({
     vuetify: {
         /* vuetify options */
         vuetifyOptions: {
-            // @TODO: list all vuetify options
+            // TODO: list all vuetify options
         },
         moduleOptions: {
             /* nuxt-vuetify module options */
