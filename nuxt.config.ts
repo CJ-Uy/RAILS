@@ -1,15 +1,24 @@
+/*
+This is the nuxt config file. Here the configuration for the nuxt app and its modules is set.
+
+*/
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     modules: [
-        "@sidebase/nuxt-auth", // https://nuxt.com/modules/nuxt-auth
-        "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss
-        "nuxt-mailer", // https://github.com/jurassicjs/nuxt-mailer
-        "@nuxtjs/fontaine", // https://nuxt.com/modules/fontaine
-        "@nuxt/content", // https://content.nuxtjs.org/
-        "@nuxtjs/device", // https://nuxt.com/modules/device
-        "@nuxt/image-edge", // https://v1.image.nuxtjs.org/
-        "@formkit/nuxt", // https://formkit.com/
-        "@invictus.codes/nuxt-vuetify", // https://nuxt.com/modules/nuxt-vuetify AND https://vuetifyjs.com/en/
+        "@sidebase/nuxt-auth", // https://nuxt.com/modules/nuxt-auth (Next-auth wrapper for user authentication)
+        "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
+        "nuxt-mailer", // https://github.com/jurassicjs/nuxt-mailer (Nodemailer wrapper for email functionality)
+        "@nuxtjs/fontaine", // https://nuxt.com/modules/fontaine (Optimized font fallbacks to keep layout consistent)
+        "@nuxt/image-edge", // https://v1.image.nuxtjs.org/ (Image loading optimization)
+        "@formkit/nuxt", // https://formkit.com/ (Vue forms framework)
+
+        // Useful but not yet used modules
+        "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
+        "@invictus.codes/nuxt-vuetify", // https://nuxt.com/modules/nuxt-vuetify AND https://vuetifyjs.com/en/ (UI Library) [maybe try daisy UI instead]
+        "@nuxt/content", // https://content.nuxtjs.org/ (parses markdown and other files for content)
+        "@nuxtjs/device", // https://nuxt.com/modules/device (Device type detection)
+        // Add website optimizations (https://nuxt.com/modules?category=Performance)
+        // Add SEO [search engine optimizations] when complete (https://nuxt.com/modules/seo-kit)
     ],
 
     /*
@@ -23,7 +32,7 @@ export default defineNuxtConfig({
     */
 
     build: {
-        transpile: ["@vuepic/vue-datepicker"], // https://vue3datepicker.com/
+        transpile: ["@vuepic/vue-datepicker"], // https://vue3datepicker.com/ (datepicker calendar and time vue components)
     },
 
     // VUETIFY CONFIGURATION
@@ -46,7 +55,7 @@ export default defineNuxtConfig({
         configFile: "./formkit.config.js",
     },
 
-    // NUXT-MAILER CONFIGURATION
+    // NUXT-MAILER CONFIGURATION [DONT'T REMOVE]
     runtimeConfig: {
         mailerUser: "",
         mailerPass: "",

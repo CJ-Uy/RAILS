@@ -1,6 +1,7 @@
 <script setup lang="ts">
-definePageMeta({ auth: false });
+definePageMeta({ auth: false }); // This allows the page to be seen by "Authenticated" and "Unauthenticated" users
 
+// AUTH FUNCTIONS
 const { status, signOut } = useAuth();
 const { data } = await useFetch("/api/user/me");
 
@@ -9,7 +10,9 @@ const isSignedIn = computed(() => status.value === "authenticated"); // authenti
 async function handleSignOut() {
     await signOut();
 }
+// AUTH FUNCTIONS END
 
+// EMAIL FUNCTIONS
 const gmailRes = ref();
 const errors = ref();
 async function sendEmail() {
@@ -25,11 +28,14 @@ async function sendEmail() {
         },
     });
 }
+// EMAIL FUNCTIONS ENDD
 </script>
 
 <template>
     <div class="absolute bg-gray-50">
         <h1 class="text-3xl font-bold text-green-500">GOOGLE SIGN IN</h1>
+
+        <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE -->
         <NuxtLink v-if="!isSignedIn" to="/login">
             <button
                 class="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
@@ -48,6 +54,9 @@ async function sendEmail() {
             DATA:
             {{ data }}
         </p>
+        <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE END -->
+
+        <!-- EMAIL COMPONENT EXAMPLE -->
         <div v-if="isSignedIn">
             <button
                 class="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-gray-700"
@@ -68,5 +77,7 @@ async function sendEmail() {
                 </div>
             </div>
         </div>
+        <!-- EMAIL COMPONENT EXAMPLE END-->
+
     </div>
 </template>
