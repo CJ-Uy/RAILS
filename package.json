@@ -10,13 +10,14 @@
         "dbmigrate": "npx prisma migrate dev",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
-        "postinstall": "nuxt prepare"
+        "postinstall": "nuxt prepare",
+        "check-updates": "npm-check-updates"
     },
     "devDependencies": {
         "@invictus.codes/nuxt-vuetify": "^0.2.20",
         "@nuxt/content": "^2.7.0",
         "@nuxt/devtools": "^0.6.0",
-        "@nuxt/image-edge": "^1.0.0-rc.1-28110023.6b8ab9c",
+        "@nuxt/image-edge": "^1.0.0-rc.1-28112642.b1c2038",
         "@nuxtjs/device": "^3.1.0",
         "@nuxtjs/eslint-config-typescript": "^12.0.0",
         "@nuxtjs/fontaine": "^0.4.0",

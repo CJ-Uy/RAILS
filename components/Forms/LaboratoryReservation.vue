@@ -12,6 +12,7 @@ const requestDates = ref([]);
             v-model="labResStatus"
             type="radio"
             label="Laboratory Reservation Status"
+            name="hasLaboratoryReservation"
             :options="{
                 true: 'I already have a Laboratory Reservation for this activity',
                 false: 'I do NOT have a Laboratory Reservation yet',
@@ -26,9 +27,6 @@ const requestDates = ref([]);
             name="reqestDates"
             validation="required"
         />
-        <pre>
-            {{ requestDates }}
-        </pre>
         <FormKit
             type="timeDatePicker"
             label="Inclusive Time of Use"
@@ -36,12 +34,17 @@ const requestDates = ref([]);
             validation="required"
         />
         <div v-if="showLabRes">
-            <h2>Laboratory Reservation</h2>
+            <h2>Reserve a Laboratory</h2>
             <FormKit
-                type="text"
-                label="Laboratory Room"
-                name="LaboratoryVenue"
+                type="select"
+                label="Preferred Laboratory Room"
+                name="preferredLaboRoom"
                 validation="required"
+                :options="[
+                    { label: 'Biology Laboratory', value: 'BioLab' },
+                    { label: 'Chemistry Laboratory', value: 'ChemLab' },
+                    { label: 'Physics Laboratory', value: 'PhysLab' },
+                ]"
             />
         </div>
     </div>

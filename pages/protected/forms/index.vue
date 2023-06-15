@@ -23,8 +23,7 @@ async function submitHandler(formValues) {
             <FormKit v-slot="{ value }" type="multi-step" tab-style="progress">
                 <pre>
                 {{ value }}
-            </pre
-                >
+                </pre>
 
                 <FormKit type="step" name="basicInfo">
                     <FormsBasicInfo />
