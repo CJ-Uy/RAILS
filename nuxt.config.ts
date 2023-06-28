@@ -9,7 +9,7 @@ export default defineNuxtConfig({
         "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
         "nuxt-mailer", // https://github.com/jurassicjs/nuxt-mailer (Nodemailer wrapper for email functionality)
         "@nuxtjs/fontaine", // https://nuxt.com/modules/fontaine (Optimized font fallbacks to keep layout consistent)
-        "@nuxt/image-edge", // https://v1.image.nuxtjs.org/ (Image loading optimization)
+        "@nuxt/image", // https://v1.image.nuxtjs.org/ (Image loading optimization)
         "@formkit/nuxt", // https://formkit.com/ (Vue forms framework)
 
         // Useful but not yet used modules
