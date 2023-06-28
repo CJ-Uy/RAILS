@@ -1,7 +1,7 @@
 <script setup>
 import { FormKitIcon } from "@formkit/vue";
 const accountName = useName();
-const todos = ref([accountName.value]);
+const students = ref([accountName.value]);
 </script>
 
 <template>
@@ -9,22 +9,22 @@ const todos = ref([accountName.value]);
     <div>
         <FormKit
             v-slot="{ items }"
-            v-model="todos"
+            v-model="students"
             type="list"
             name="nameOfStudents"
             dynamic
         >
-            <button id="addStudent" type="button" @click="todos.unshift('')">
+            <button id="addStudent" type="button" @click="students.unshift('')">
                 + Add a Student
             </button>
-            <div v-for="(item, index) in items" :key="item" class="todo">
+            <div v-for="(item, index) in items" :key="item" class="student">
                 <FormKit type="text" :index="index" />
                 <ul class="controls">
                     <li>
                         <button
                             type="button"
                             class="button close"
-                            @click="todos.splice(index, 1)"
+                            @click="students.splice(index, 1)"
                         >
                             <FormKitIcon icon="close" />
                         </button>
@@ -50,12 +50,12 @@ h1 {
     text-decoration: none;
     cursor: pointer;
 }
-.todo {
+.student {
     display: flex;
     align-items: center;
     margin-bottom: 0.5rem;
 }
-.todo:deep(.formkit-outer) {
+.student:deep(.formkit-outer) {
     margin-bottom: 0;
     flex-grow: 1;
 }
