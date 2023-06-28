@@ -29,11 +29,5 @@ accountName.value = data.value?.user.name;
                 GO TO FORMS
             </h1>
         </NuxtLink>
-        <p>
-            {{ accountEmail }}
-            {{ accountFirstName }}
-            {{ accountLastName }}
-            {{ accountName }}
-        </p>
     </div>
 </template>

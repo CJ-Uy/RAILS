@@ -20,7 +20,11 @@ async function submitHandler(formValues) {
             >RETURN</NuxtLink
         >
         <FormKit type="form" :actions="false" @submit="submitHandler">
-            <FormKit v-slot="{ value }" type="multi-step" tab-style="progress">
+            <FormKit
+                #default="{ value }"
+                type="multi-step"
+                tab-style="progress"
+            >
                 <pre>
                 {{ value }}
                 </pre>
