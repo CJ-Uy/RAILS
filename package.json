@@ -11,7 +11,8 @@
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare",
-        "check-updates": "npm-check-updates",
+        "check-updates": "ncu \"/^(?!@formkit).*$/\"",
+        "update": "ncu \"/^(?!@formkit).*$/\" -u",
         "audit": "better-npm-audit audit"
     },
     "devDependencies": {
