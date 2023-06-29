@@ -19,16 +19,18 @@ async function submitHandler(formValues) {
             class="text-blue-500 hover:underline active:text-green-500"
             >RETURN</NuxtLink
         >
-        <FormKit type="form" :actions="false" @submit="submitHandler">
+        <FormKit
+            type="form"
+            :actions="false"
+            name="requestData"
+            @submit="submitHandler"
+        >
             <FormKit
-                #default="{ value }"
+                v-slot="{ value }"
                 type="multi-step"
                 tab-style="progress"
+                name="requestData"
             >
-                <pre>
-                {{ value }}
-                </pre>
-
                 <FormKit type="step" name="basicInfo">
                     <FormsBasicInfo />
                 </FormKit>
@@ -46,7 +48,9 @@ async function submitHandler(formValues) {
                 </FormKit>
 
                 <FormKit type="step" name="summary">
-                    <FormsSummarize />
+                    <pre>
+                        {{ value }}
+                    </pre>
 
                     <!-- using step slot for submit button-->
                     <template #stepNext>

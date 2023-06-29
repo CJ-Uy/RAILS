@@ -5,7 +5,7 @@
  -->
 <script setup>
 import { FormKitIcon } from "@formkit/vue";
-const students = ref([""]);
+const students = ref({});
 </script>
 
 <template>
