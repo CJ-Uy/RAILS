@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import puppeteer from "puppeteer";
 
 export default async function convertHtmlToPdf(htmlContent, outputPath) {
@@ -33,8 +34,6 @@ const item = [
     "test tube holder",
     "test tube brush",
     "test tube clamp",
-    "",
-    "",
 ];
 const description = [
     "to observe",
@@ -47,69 +46,20 @@ const description = [
     "to hold",
     "to clean",
     "to hold",
-    "",
-    "",
-];
-const issued = [
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    " ",
-    " ",
-];
-const returned = [
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    "good",
-    " ",
-    " ",
 ];
 
 const studentName = "Charles";
 const dateRequested = "Today";
 
-const groupmates = [
-    "me",
-    "myself",
-    "and",
-    "I",
-    "you",
-    "myself",
-    "and",
-    "I",
-    "you",
-    "myself",
-    "and",
-    "I",
-    "you",
-    "myself",
-    "and",
-    "I",
-    "you",
-    "myself",
-    "and",
-    "I",
-    "you",
-];
+const groupmates = ["me", "myself", "me", "myself"];
 
 const endorser = "Maam";
 const approver = "Admin 1";
 
-let html = `<!DOCTYPE html>
+// ----- Start of basic info header ----- //
+// This adds the basic info of the request
+let basicInfoHeader = `
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -139,7 +89,7 @@ let html = `<!DOCTYPE html>
             @bottom-right {
                 margin-right:  0.73in;
                 font-weight: bold;
-                content: 'page ' counter(page); /* ' of ' counter(pages) [Not working returns 0 BUT did return correctly once]*/
+                content: 'page ' counter(page); /* ' of ' counter(pages) [inconsistently working]*/
             }
         }
         @media print {
@@ -195,7 +145,7 @@ let html = `<!DOCTYPE html>
             border-bottom: 1px solid black;
         }
         .remove-botB {
-            border-bottom: 1px solid white;
+            border-bottom: 2px solid white;
         }
         #request {
             text-align: center;
@@ -294,7 +244,12 @@ let html = `<!DOCTYPE html>
                 </td>
             </tr>
         </table>
+`;
+// ----- End of basic info header ----- //
 
+// ----- Start of requested items table ----- //
+// This adds the rows of what the requested items
+let requestedItemsTable = `
         <span class="italics"> Materials/Equipment Needed: </span>
         <table id="request">
             <tr class="request-header">
@@ -308,90 +263,18 @@ let html = `<!DOCTYPE html>
                 <td>Condition/Remarks</td>
                 <td>Condition/Remarks</td>
             </tr>
+`;
+for (let i = 0; i < quantity.length; i++) {
+    requestedItemsTable += `
             <tr>
-                <td>${quantity[0]}</td>
-                <td>${item[0]}</td>
-                <td>${description[0]}</td>
-                <td>${issued[0]}</td>
-                <td>${returned[0]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[1]}</td>
-                <td>${item[1]}</td>
-                <td>${description[1]}</td>
-                <td>${issued[1]}</td>
-                <td>${returned[1]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[2]}</td>
-                <td>${item[2]}</td>
-                <td>${description[2]}</td>
-                <td>${issued[2]}</td>
-                <td>${returned[2]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[3]}</td>
-                <td>${item[3]}</td>
-                <td>${description[3]}</td>
-                <td>${issued[3]}</td>
-                <td>${returned[3]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[4]}</td>
-                <td>${item[4]}</td>
-                <td>${description[4]}</td>
-                <td>${issued[4]}</td>
-                <td>${returned[4]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[5]}</td>
-                <td>${item[5]}</td>
-                <td>${description[5]}</td>
-                <td>${issued[5]}</td>
-                <td>${returned[5]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[6]}</td>
-                <td>${item[6]}</td>
-                <td>${description[6]}</td>
-                <td>${issued[6]}</td>
-                <td>${returned[6]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[7]}</td>
-                <td>${item[7]}</td>
-                <td>${description[7]}</td>
-                <td>${issued[7]}</td>
-                <td>${returned[7]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[8]}</td>
-                <td>${item[8]}</td>
-                <td>${description[8]}</td>
-                <td>${issued[8]}</td>
-                <td>${returned[8]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[9]}</td>
-                <td>${item[9]}</td>
-                <td>${description[9]}</td>
-                <td>${issued[9]}</td>
-                <td>${returned[9]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[10]}</td>
-                <td>${item[10]}</td>
-                <td>${description[10]}</td>
-                <td>${issued[10]}</td>
-                <td>${returned[10]}</td>
-            </tr>
-            <tr>
-                <td>${quantity[11]}</td>
-                <td>${item[11]}</td>
-                <td>${description[11]}</td>
-                <td>${issued[11]}</td>
-                <td>${returned[11]}</td>
-            </tr>
+                <td>${quantity[i]}</td>
+                <td>${item[i]}</td>
+                <td>${description[i]}</td>
+                <td></td>
+                <td></td>
+            </tr>`;
+}
+requestedItemsTable += `
             <tr>
                 <td></td>
                 <td></td>
@@ -407,6 +290,12 @@ let html = `<!DOCTYPE html>
                 <td style="text-align: left;">&nbsp;Date:</td>
             </tr>
         </table>
+`;
+// ----- End of requested items table ----- //
+
+// ----- Start of requested by ----- //
+// This adds the instructions and terms and conditions as well as requestor and date requested
+let requestedBy = `
         <ul class="italics">
             <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
             <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
@@ -428,12 +317,17 @@ let html = `<!DOCTYPE html>
                 <td></td>
             </tr>
         </table>
+`;
+// ----- End of requested by ----- //
+
+// ----- Start of groupmates list ----- //
+// Dynamically add all the groupmates in a list
+let groupmatesList = `
         <p class="italics">
             If user of the lab is a group, list down the names of students.
         </p>
-        <table class="groupmates">`;
-
-let groupmatesList = "";
+        <table class="groupmates">
+`;
 for (let i = 0; i < groupmates.length; i++) {
     groupmatesList += `
             <tr>
@@ -441,11 +335,12 @@ for (let i = 0; i < groupmates.length; i++) {
                 <td class="input">&nbsp;&nbsp;${groupmates[i]}</td>
             </tr>`;
 }
+groupmatesList += `</table>`;
+// ----- End of groupmates list ----- //
 
-html +=
-    groupmatesList +
-    `
-        </table>
+// ----- Start of notarization ----- //
+// Endorser and Approver are placed here
+let notarization = `
         <table class="sigs-table">
             <tr>
                 <td class="sigs-who">Endorsed By:</td>
@@ -466,5 +361,14 @@ html +=
 </body>
 </html>
 `;
+// ----- End of notarization ----- //
 
-convertHtmlToPdf(html, "./assets/pdftests/test.pdf");
+// ---- Creating the Accountability Form ---- //
+let accountabilityForm =
+    basicInfoHeader +
+    requestedItemsTable +
+    requestedBy +
+    groupmatesList +
+    notarization;
+
+convertHtmlToPdf(accountabilityForm, "./assets/pdftests/test.pdf");
