@@ -13,6 +13,7 @@ export default defineNuxtConfig({
         "@formkit/nuxt", // https://formkit.com/ (Vue forms framework)
 
         // Useful but not yet used modules
+        "nuxt-icon", // https://nuxt.com/modules/icon (Icons from iconify)
         "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
         "@invictus.codes/nuxt-vuetify", // https://nuxt.com/modules/nuxt-vuetify AND https://vuetifyjs.com/en/ (UI Library) [maybe try daisy UI instead]
         "@nuxt/content", // https://content.nuxtjs.org/ (parses markdown and other files for content)
