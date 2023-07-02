@@ -49,7 +49,7 @@
         "@formkit/themes": "0.17.2",
         "@formkit/vue": "0.17.2",
         "@prisma/client": "^4.16.2",
-        "@vuepic/vue-datepicker": "^5.3.0",
+        "@vuepic/vue-datepicker": "^5.4.0",
         "@vueuse/nuxt": "^10.2.1",
         "googleapis": "^120.0.0",
         "jspdf": "^2.5.1",
