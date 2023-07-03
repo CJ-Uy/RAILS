@@ -38,7 +38,7 @@ const requestDates = ref([]);
             <FormKit
                 type="select"
                 label="Preferred Laboratory Room"
-                name="preferredLaboRoom"
+                name="venue"
                 validation="required"
                 :options="[
                     { label: 'Biology Laboratory', value: 'BioLab' },
