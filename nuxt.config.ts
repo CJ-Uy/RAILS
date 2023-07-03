@@ -11,9 +11,9 @@ export default defineNuxtConfig({
         "@nuxtjs/fontaine", // https://nuxt.com/modules/fontaine (Optimized font fallbacks to keep layout consistent)
         "@nuxt/image", // https://v1.image.nuxtjs.org/ (Image loading optimization)
         "@formkit/nuxt", // https://formkit.com/ (Vue forms framework)
+        "nuxt-icon", // https://nuxt.com/modules/icon (Icons from iconify) [DATASET: https://icones.js.org/]
 
         // Useful but not yet used modules
-        "nuxt-icon", // https://nuxt.com/modules/icon (Icons from iconify)
         "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
         "@invictus.codes/nuxt-vuetify", // https://nuxt.com/modules/nuxt-vuetify AND https://vuetifyjs.com/en/ (UI Library) [maybe try daisy UI instead]
         "@nuxt/content", // https://content.nuxtjs.org/ (parses markdown and other files for content)
