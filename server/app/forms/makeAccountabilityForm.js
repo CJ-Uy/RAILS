@@ -24,24 +24,47 @@ export default function makeAccountabilityForm(data) {
     } = data.requestData.basicInfo;
     const { venue } = data.requestData.laboratorySetting.venue;
 
-    let dates = data.requestData.laboratorySetting.requestDates;
+    let dates = [];
     // eslint-disable-next-line prettier/prettier
-    // for (let i = 0; i < 6; i++) {
-    //     dates.push(
-    //         // eslint-disable-next-line prettier/prettier
-    //         `${data.requestData.laboratorySetting.requestDates[i].slice(8, 10)}` +
-    //             // eslint-disable-next-line prettier/prettier
-    //         `/${data.requestData.laboratorySetting.requestDates[i].slice(5, 7)}` +
-    //             // eslint-disable-next-line prettier/prettier
-    //         `/${data.requestData.laboratorySetting.requestDates[i].slice(0, 4)}`
-    //     );
-    // }
+    for (
+        let i = 0;
+        i < data.requestData.laboratorySetting.requestDates.length;
+        i++
+    ) {
+        dates.push(
+            // eslint-disable-next-line prettier/prettier
+            `${data.requestData.laboratorySetting.requestDates[i].slice(
+                8,
+                10
+            )}` +
+                // eslint-disable-next-line prettier/prettier
+                `/${data.requestData.laboratorySetting.requestDates[i].slice(
+                    5,
+                    7
+                )}` +
+                // eslint-disable-next-line prettier/prettier
+                `/${data.requestData.laboratorySetting.requestDates[i].slice(
+                    0,
+                    4
+                )}`
+        );
+    }
+    dates = dates.join(", ");
 
     const timeOfUse =
-        `${data.requestData.laboratorySetting.inclusiveTimeOfUse[0].hours}:${data.requestData.laboratorySetting.inclusiveTimeOfUse[0].minutes}` +
-        ` to ${data.requestData.laboratorySetting.inclusiveTimeOfUse[1].hours}:${data.requestData.laboratorySetting.inclusiveTimeOfUse[1].minutes}`;
+        `${
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[0].hours
+        }:${String(
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[0].minutes
+        ).padStart(2, "0")}` +
+        ` to ` +
+        `${
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[1].hours
+        }:${String(
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[1].minutes
+        ).padStart(2, "0")}`;
 
-    const studentName = `${data.requestData.basicInfo.firstName} ${data.requestData.basicInfo.lastName}`;
+    const studentName = `${data.requestData.basicInfo.firstname} ${data.requestData.basicInfo.lastname}`;
 
     const dateRequested = getDateToday();
 
@@ -50,20 +73,7 @@ export default function makeAccountabilityForm(data) {
     const approver = "Admin 1";
 
     // TODO: Fix this with custom components like a shopping cart
-    const quantity = [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        " ",
-        " ",
-    ];
+    const quantity = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
     const item = [
         "microscope",
         "bunsen burner",

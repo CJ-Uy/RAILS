@@ -24,7 +24,7 @@ const requestDates = ref([]);
             v-model="requestDates"
             type="calendarDatePicker"
             label="Date/s of Activity"
-            name="reqestDates"
+            name="requestDates"
             validation="required"
         />
         <FormKit

@@ -64,9 +64,9 @@ const schoolYear = useSchoolYear();
         placeholder="Select the Unit the subject/teacher is under"
         validation="required"
         :options="[
-            { label: 'Chemistry Unit', value: 'chemUnit' },
-            { label: 'Reasearch Unit', value: 'resUnit' },
-            { label: 'Physics Unit', value: 'physUnit' },
+            { label: 'Chemistry Unit', value: 'Chemistry Unit' },
+            { label: 'Reasearch Unit', value: 'Research Unit' },
+            { label: 'Physics Unit', value: 'Physics Unit' },
         ]"
     />
     <FormKit type="text" label="Subject" name="subject" validation="required" />
