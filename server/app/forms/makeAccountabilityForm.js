@@ -1,4 +1,10 @@
 /* eslint-disable prefer-const */
+import fs from "fs";
+const pageScript = fs.readFileSync(
+    "./server/app/forms/addPageNumbers/page.polyfill.txt",
+    "utf8"
+);
+
 export default function makeAccountabilityForm(data) {
     // sourcery skip: avoid-function-declarations-in-blocks
     function getDateToday() {
@@ -22,7 +28,7 @@ export default function makeAccountabilityForm(data) {
         unit,
         teacherInCharge,
     } = data.requestData.basicInfo;
-    const { venue } = data.requestData.laboratorySetting.venue;
+    const { venue } = data.requestData.laboratorySetting;
 
     let dates = [];
     // eslint-disable-next-line prettier/prettier
@@ -101,7 +107,8 @@ export default function makeAccountabilityForm(data) {
 
     // ----- Start of basic info header ----- //
     // This adds the basic info of the request
-    let basicInfoHeader = `
+    let basicInfoHeader =
+        `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,7 +116,9 @@ export default function makeAccountabilityForm(data) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PSHS-00-F-CID-20-Ver02-Rev1 Laboratory Request and Equipment Accountability Form</title>
-    <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script> <!-- Paged.js polyfill (see if there's a way to do this locally loading from /app/forms/addPageNummbers/page.polyfill.js) -->
+    <script>` +
+        pageScript +
+    `</script>
     <style>
         * {
             font-family: "Calibri";
@@ -132,7 +141,7 @@ export default function makeAccountabilityForm(data) {
             @bottom-right {
                 margin-right:  0.73in;
                 font-weight: bold;
-                content: 'page ' counter(page); /* ' of ' counter(pages) [inconsistently working]*/
+                content: 'page ' counter(page); /* ' of ' counter(pages) [inconsistently working] */
             }
         }
         @media print {

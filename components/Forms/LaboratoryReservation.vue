@@ -19,7 +19,26 @@ const requestDates = ref([]);
             }"
             help="If this is for a class activity select the first option"
         />
+        <div v-if="showLabRes">
+            <h2>
+                NOTICE: We will now automatically add a Laboratory Reservation
+                to your request
+            </h2>
+        </div>
+        <br />
+        <br />
         <!-- TODO: Add icons https://vue3datepicker.com/slots/icons/#icons currently the default ones are invisible (idk why) -->
+        <FormKit
+            type="select"
+            label="Preferred Laboratory Room"
+            name="venue"
+            validation="required"
+            :options="[
+                { label: 'Biology Laboratory', value: 'Biology Laboratory' },
+                { label: 'Chemistry Laboratory', value: 'Chemistry Laboratory' },
+                { label: 'Physics Laboratory', value: 'Physics Laboratory' },
+            ]"
+        />
         <FormKit
             v-model="requestDates"
             type="calendarDatePicker"
@@ -33,19 +52,5 @@ const requestDates = ref([]);
             name="inclusiveTimeOfUse"
             validation="required"
         />
-        <div v-if="showLabRes">
-            <h2>Reserve a Laboratory</h2>
-            <FormKit
-                type="select"
-                label="Preferred Laboratory Room"
-                name="venue"
-                validation="required"
-                :options="[
-                    { label: 'Biology Laboratory', value: 'BioLab' },
-                    { label: 'Chemistry Laboratory', value: 'ChemLab' },
-                    { label: 'Physics Laboratory', value: 'PhysLab' },
-                ]"
-            />
-        </div>
     </div>
 </template>
