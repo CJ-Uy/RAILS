@@ -21,8 +21,8 @@ module.exports = {
                 xl: "1280px",
             },
             colors: {
-                primary: "#0083f7",
-                secondary: "#22397d",
+                primary: "#22397d",
+                secondary: "#0083f7",
                 offWhite: "#f8f9fe",
                 important: "#d93558",
                 clearGreen: "#5cb388",

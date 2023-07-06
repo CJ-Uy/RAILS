@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "build": "nuxt build",
-        "dev": "npx nuxi cleanup && nuxt dev",
+        "dev": "nuxt dev",
         "dbgenerate": "npx prisma generate",
         "dbgui": "npx prisma studio",
         "dbmigrate": "npx prisma migrate dev",
