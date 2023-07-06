@@ -4,10 +4,11 @@
     "type": "module",
     "scripts": {
         "build": "nuxt build",
-        "dev": "nuxt dev",
+        "dev": "npx nuxi cleanup && nuxt dev",
         "dbgenerate": "npx prisma generate",
         "dbgui": "npx prisma studio",
         "dbmigrate": "npx prisma migrate dev",
+        "clean": "npx nuxi cleanup",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare",
