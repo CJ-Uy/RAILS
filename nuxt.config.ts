@@ -36,6 +36,19 @@ export default defineNuxtConfig({
         transpile: ["@vuepic/vue-datepicker"], // https://vue3datepicker.com/ (datepicker calendar and time vue components)
     },
 
+    tailwindcss: {
+        // Default Options
+        cssPath: "~/assets/css/tailwind.css",
+        configPath: "tailwind.config",
+        exposeConfig: false,
+        exposeLevel: 2,
+        injectPosition: "first",
+        viewer: true,
+        config: {
+            /* Extend the Tailwind config here */
+        },
+    },
+
     // VUETIFY CONFIGURATION
     vuetify: {
         /* vuetify options */
