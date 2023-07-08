@@ -12,9 +12,9 @@
                 </div>
                 <!-- Menu items -->
                 <div class="hidden md:flex space-x-6 text-offWhite">
-                    <NuxtLink 
-                        to="/" 
-                        class="hover:text-secondary-100 cursor-pointer" 
+                    <NuxtLink
+                        to="/"
+                        class="hover:text-secondary-100 cursor-pointer"
                         >HOME</NuxtLink
                     >
                     <NuxtLink
@@ -54,10 +54,10 @@
 }
 
 .router-link-active {
-    color: #3AA671;
-    font-weight: bold;
+    color: #3aa671; 
 }
+
 .router-link-active:hover {
-    color: #3AA671;
+    color: #3aa671;
 }
 </style>

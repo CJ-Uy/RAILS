@@ -7,6 +7,10 @@
         font-family: "Gilroy";
         src: url("~/assets/fonts/Gilroy-Light.otf");
     }
+    @font-face {
+        font-family: "Gilroy-ExtraBold";
+        src: url("~/assets/fonts/Gilroy-ExtraBold.otf");
+    }
     body {
         font-family: "Gilroy";
     }
