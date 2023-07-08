@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: "Gilroy";
+        src: url("~/assets/fonts/Gilroy-Light.otf");
+    }
+    body {
+        font-family: "Gilroy";
+    }
+}

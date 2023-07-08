@@ -55,6 +55,7 @@
 
 .router-link-active {
     color: #3AA671;
+    font-weight: bold;
 }
 .router-link-active:hover {
     color: #3AA671;
