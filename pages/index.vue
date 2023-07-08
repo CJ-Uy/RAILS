@@ -1,5 +1,11 @@
 <script setup lang="ts">
+// PAGE META
+useHead({
+  title: "PSHS-EVC LABS | Home",
+})
+
 definePageMeta({ auth: false }); // This allows the page to be seen by "Authenticated" and "Unauthenticated" users
+// PAGE META END
 
 // AUTH FUNCTIONS
 const { status, signOut } = useAuth();
@@ -28,11 +34,13 @@ async function sendEmail() {
         },
     });
 }
-// EMAIL FUNCTIONS ENDD
+// EMAIL FUNCTIONS END
 </script>
 
 <template>
-    <div class="absolute bg-gray-50">
+    <div>
+        <LandingNavbar />
+        
         <h1 class="text-3xl font-bold text-green-500">GOOGLE SIGN IN</h1>
 
         <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE -->
@@ -50,10 +58,6 @@ async function sendEmail() {
         >
             Sign Out
         </button>
-        <p v-if="isSignedIn">
-            DATA:
-            {{ data }}
-        </p>
         <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE END -->
 
         <!-- EMAIL COMPONENT EXAMPLE -->

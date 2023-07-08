@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useHead({
+  title: "PSHS-EVC LABS | Login",
+})
+
 definePageMeta({
     auth: {
         unauthenticatedOnly: true,

@@ -12,6 +12,7 @@ export default defineNuxtConfig({
         "@nuxt/image", // https://v1.image.nuxtjs.org/ (Image loading optimization)
         "@formkit/nuxt", // https://formkit.com/ (Vue forms framework)
         "nuxt-icon", // https://nuxt.com/modules/icon (Icons from iconify) [DATASET: https://icones.js.org/]
+        "nuxt-icons", // https://nuxt.com/modules/icons Automatically import SVG icons from assets/icons
 
         // Useful but not yet used modules
         "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)

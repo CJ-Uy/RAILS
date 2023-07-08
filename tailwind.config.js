@@ -14,18 +14,18 @@ module.exports = {
     theme: {
         extend: {
             screens: {
-                xs: "614px",
-                sm: "1002px",
-                md: "1022px",
-                lg: "1092px",
-                xl: "1280px",
+                sm: "480px",
+                md: "768px",
+                lg: "976px",
+                xl: "1440px",
             },
             colors: {
-                primary: "#22397d",
-                secondary: "#0083f7",
-                offWhite: "#f8f9fe",
-                important: "#d93558",
-                clearGreen: "#5cb388",
+                primary: "#23397D",
+                primaryDark: "#1B2B65",
+                secondary: "#017EFA",
+                offWhite: "#F8F9FF",
+                warningRed: "#CF3A59",
+                clearGreen: "#3AA671",
             },
         },
     },
