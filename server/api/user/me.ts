@@ -10,6 +10,11 @@ export default eventHandler(async (event) => {
     }
 
     // Database logic
+    /*
+        TODO: Check if the email already exists but is under a different name if so change the email of the previous account and store the new one
+        TODO: Check for the ROLE of the user here or on auth metaheads (add ROLE to the return of session)
+        TODO: Add the secret button to login page to allow admins to login through username and password
+    */
     const user = await prisma.users.upsert({
         where: {
             email: session.user.email,
@@ -22,6 +27,6 @@ export default eventHandler(async (event) => {
             lastName: session.family_name,
         },
     });
-    console.log(`${session.user?.name} has logged in!`);
-    return session;
+    // console.log(`${JSON.stringify(user)}`);
+    return user;
 });

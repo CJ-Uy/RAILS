@@ -24,13 +24,13 @@ const errors = ref();
 async function sendEmail() {
     const { data } = await useFetch("/api/user/me");
 
-    gmailRes.value = `Loading...Sending Email to ${data.value.user.email} This may take a minute or 2`;
+    gmailRes.value = `Loading...Sending Email to ${data.value.email} This may take a minute or 2`;
 
     gmailRes.value = await useFetch("/api/send-email/test", {
         method: "POST",
         body: {
-            name: String(data.value.user.name),
-            email: String(data.value.user.email),
+            name: String(data.value.firstName).concat(" ", data.value.lastName),
+            email: String(data.value.email),
         },
     });
 }
@@ -58,6 +58,9 @@ async function sendEmail() {
         >
             Sign Out
         </button>
+        <h1>
+            {{ data }}
+        </h1>
         <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE END -->
 
         <!-- EMAIL COMPONENT EXAMPLE -->
