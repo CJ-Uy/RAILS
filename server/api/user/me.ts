@@ -27,6 +27,6 @@ export default eventHandler(async (event) => {
             lastName: session.family_name,
         },
     });
-    // console.log(`${JSON.stringify(user)}`);
+    // console.log(`${JSON.stringify(user)}`); printing user only shows [Object object]
     return user;
 });

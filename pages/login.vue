@@ -6,7 +6,7 @@ useHead({
 definePageMeta({
     auth: {
         unauthenticatedOnly: true,
-        navigateAuthenticatedTo: "/protected", // TODO: Find a way to redirect to different pages based on the user's ROLE
+        navigateAuthenticatedTo: "/redirect",
     },
 });
 

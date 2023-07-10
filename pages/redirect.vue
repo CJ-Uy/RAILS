@@ -3,7 +3,6 @@
 const accountEmail = useEmail();
 const accountFirstName = useFirstName();
 const accountLastName = useLastName();
-const accountName = useName();
 
 // Get user identity
 /*
@@ -14,20 +13,26 @@ const { data } = await useFetch("/api/user/me");
 
 // Set state variables based on user identity, this is so it can auto populate forms but still be changeable
 // Don't mind the errors regarding interface mismatch
-accountEmail.value = data.value?.user.email;
-accountFirstName.value = data.value?.given_name;
-accountLastName.value = data.value?.family_name;
-accountName.value = data.value?.user.name;
+accountEmail.value = data.value?.email;
+accountFirstName.value = data.value?.firstName;
+accountLastName.value = data.value?.lastName;
+
+switch (String(data.value?.role)) {
+    case "STUDENT":
+        await navigateTo("/student");
+        break;
+    case "TEACHER":
+        await navigateTo("/teacher");
+        break;
+    case "ADMIN":
+        await navigateTo("/admin");
+        break;
+}
 </script>
 
 <template>
     <div>
-        <h1>Protected Page</h1>
-        <p>This page is protected by auth middleware.</p>
-        <NuxtLink to="/protected/forms">
-            <h1 class="text-cyan-800 hover:underline active:text-green-500">
-                GO TO FORMS
-            </h1>
-        </NuxtLink>
+        <h1>Redirecting...</h1>
+        <p>Please wait</p>
     </div>
 </template>
