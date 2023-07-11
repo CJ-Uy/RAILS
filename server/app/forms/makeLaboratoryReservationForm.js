@@ -1,12 +1,12 @@
 /* eslint-disable prefer-const */
 import fs from "fs";
-const pageScript = fs.readFileSync(
-    "./server/app/forms/addPageNumbers/page.polyfill.txt",
-    "utf8"
-);
 
 export default function makeLaboratoryReservationForm(data) {
-    // sourcery skip: avoid-function-declarations-in-blocks
+    const pageScript = fs.readFileSync(
+        "./server/app/forms/addPageNumbers/page.polyfill.txt",
+        "utf8",
+    );
+
     function getDateToday() {
         let today = new Date();
         let month = String(today.getMonth() + 1).padStart(2, "0");
@@ -39,18 +39,18 @@ export default function makeLaboratoryReservationForm(data) {
             // eslint-disable-next-line prettier/prettier
             `${data.requestData.laboratorySetting.requestDates[i].slice(
                 8,
-                10
+                10,
             )}` +
                 // eslint-disable-next-line prettier/prettier
                 `/${data.requestData.laboratorySetting.requestDates[i].slice(
                     5,
-                    7
+                    7,
                 )}` +
                 // eslint-disable-next-line prettier/prettier
                 `/${data.requestData.laboratorySetting.requestDates[i].slice(
                     0,
-                    4
-                )}`
+                    4,
+                )}`,
         );
     }
     dates = dates.join(", ");
@@ -59,13 +59,13 @@ export default function makeLaboratoryReservationForm(data) {
         `${
             data.requestData.laboratorySetting.inclusiveTimeOfUse[0].hours
         }:${String(
-            data.requestData.laboratorySetting.inclusiveTimeOfUse[0].minutes
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[0].minutes,
         ).padStart(2, "0")}` +
         ` to ` +
         `${
             data.requestData.laboratorySetting.inclusiveTimeOfUse[1].hours
         }:${String(
-            data.requestData.laboratorySetting.inclusiveTimeOfUse[1].minutes
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[1].minutes,
         ).padStart(2, "0")}`;
 
     const studentName = `${data.requestData.basicInfo.firstname} ${data.requestData.basicInfo.lastname}`;
@@ -89,7 +89,7 @@ export default function makeLaboratoryReservationForm(data) {
     <title>PSHS-00-F-CID-20-Ver02-Rev1 Laboratory Request and Equipment Accountability Form</title>
     <script>` +
         pageScript +
-    `</script>
+        `</script>
     <style>
         * {
             font-family: "Calibri";

@@ -135,7 +135,7 @@ model LaboratoryReservations {
 // INVENTORY //
 // -------------------- //
 model InventoryOfMaterials {
-  //Materials refer to small devices for experiments (such as breakers and test tubes) and supplies of the Laboratory Unit (Cleaning Supplies etc..) //TODO Clarify this later
+  //Materials refer to small devices for experiments (such as breakers and test tubes) and supplies of the Laboratory Unit (Cleaning Supplies etc..)
   id                 Int                   @id @default(autoincrement())
   itemName           String
   description        String

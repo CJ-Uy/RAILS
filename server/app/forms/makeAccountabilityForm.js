@@ -1,12 +1,12 @@
 /* eslint-disable prefer-const */
 import fs from "fs";
-const pageScript = fs.readFileSync(
-    "./server/app/forms/addPageNumbers/page.polyfill.txt",
-    "utf8"
-);
 
 export default function makeAccountabilityForm(data) {
-    // sourcery skip: avoid-function-declarations-in-blocks
+    const pageScript = fs.readFileSync(
+        "./server/app/forms/addPageNumbers/page.polyfill.txt",
+        "utf8",
+    );
+
     function getDateToday() {
         let today = new Date();
         let month = String(today.getMonth() + 1).padStart(2, "0");
@@ -118,7 +118,7 @@ export default function makeAccountabilityForm(data) {
     <title>PSHS-00-F-CID-20-Ver02-Rev1 Laboratory Request and Equipment Accountability Form</title>
     <script>` +
         pageScript +
-    `</script>
+        `</script>
     <style>
         * {
             font-family: "Calibri";
@@ -135,7 +135,7 @@ export default function makeAccountabilityForm(data) {
             @bottom-left {
                 margin-left:  0.73in;
                 font-weight: bold;
-                content: 'PSHS-00-F-CID-20-Ver02-Rev0-02/01/20';
+                content: 'PSHS-00-F-CID-19-Ver02-Rev0-02/01/20';
             }
 
             @bottom-right {
