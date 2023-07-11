@@ -9,7 +9,7 @@ function toggleMenu() {
 <template>
     <div>
         <!-- Navigation Bar -->
-        <nav class="relative container min-w-full p-6 bg-primary-100 ml-0">
+        <nav class="container relative ml-0 min-w-full bg-primary-100 p-6">
             <!-- Flex box container -->
             <div class="flex items-center justify-between">
                 <!-- Logo -->
@@ -19,41 +19,89 @@ function toggleMenu() {
                     </NuxtLink>
                 </div>
                 <!-- Menu items -->
-                <div class="hidden md:flex space-x-6 text-offWhite">
-                    <NuxtLink to="/" class="hover:text-secondary-100 cursor-pointer">HOME</NuxtLink>
-                    <NuxtLink to="/about" class="hover:text-secondary-100 cursor-pointer">ABOUT</NuxtLink>
-                    <NuxtLink to="/services" class="hover:text-secondary-100 cursor-pointer">SERVICES</NuxtLink>
-                    <NuxtLink to="/contact" class="hover:text-secondary-100 cursor-pointer">CONTACT US</NuxtLink>
+                <div class="hidden space-x-6 text-offWhite md:flex">
+                    <NuxtLink
+                        to="/"
+                        class="cursor-pointer hover:text-secondary-100"
+                        >HOME</NuxtLink
+                    >
+                    <NuxtLink
+                        to="/about"
+                        class="cursor-pointer hover:text-secondary-100"
+                        >ABOUT</NuxtLink
+                    >
+                    <NuxtLink
+                        to="/services"
+                        class="cursor-pointer hover:text-secondary-100"
+                        >SERVICES</NuxtLink
+                    >
+                    <NuxtLink
+                        to="/contact"
+                        class="cursor-pointer hover:text-secondary-100"
+                        >CONTACT US</NuxtLink
+                    >
                 </div>
                 <!-- Sign in Button -->
                 <NuxtLink to="/login" class="p-3 px-6 pt-2">
                     <button
-                        class="rounded bg-secondary-100 px-4 py-2 font-bold text-white hover:bg-blue-600 hidden md:flex">
+                        class="hidden rounded bg-secondary-100 px-4 py-2 font-bold text-white hover:bg-blue-600 md:flex"
+                    >
                         Go to Dashboard
                     </button>
                 </NuxtLink>
 
                 <!-- Hamburger Icon -->
-                <div id="menu-btn" class="block md:hidden focus:outline-none ml-auto" @click="toggleMenu">
+                <div
+                    id="menu-btn"
+                    class="ml-auto block focus:outline-none md:hidden"
+                    @click="toggleMenu"
+                >
                     <div :class="{ hidden: isMenuOpen }">
-                        <Icon name="icon-park-outline:hamburger-button" class="input-slot-image" />
+                        <Icon
+                            name="icon-park-outline:hamburger-button"
+                            class="input-slot-image"
+                        />
                     </div>
                     <div :class="{ hidden: !isMenuOpen }">
-                        <Icon name="ic:twotone-close" class="input-slot-image" />
+                        <Icon
+                            name="ic:twotone-close"
+                            class="input-slot-image"
+                        />
                     </div>
                 </div>
 
                 <!-- Mobile Menu -->
                 <div class="md:hidden">
-                    <div id="menu" :class="{ hidden: !isMenuOpen }"
-                        class="absolute flex flex-col items-center self-end py-8 mt-10 space-y-6 font-bold bg-white sm:w-auto sm:self-center left-6 right-6 drop-shadow-md">
-                        <NuxtLink to="/" class="hover:text-secondary-100 cursor-pointer">HOME</NuxtLink>
-                        <NuxtLink to="/about" class="hover:text-secondary-100 cursor-pointer">ABOUT</NuxtLink>
-                        <NuxtLink to="/services" class="hover:text-secondary-100 cursor-pointer">SERVICES</NuxtLink>
-                        <NuxtLink to="/contact" class="hover:text-secondary-100 cursor-pointer">CONTACT US</NuxtLink>
+                    <div
+                        id="menu"
+                        :class="{ hidden: !isMenuOpen }"
+                        class="absolute left-6 right-6 mt-10 flex flex-col items-center space-y-6 self-end bg-white py-8 font-bold drop-shadow-md sm:w-auto sm:self-center"
+                    >
+                        <NuxtLink
+                            to="/"
+                            class="cursor-pointer hover:text-secondary-100"
+                            >HOME</NuxtLink
+                        >
+                        <NuxtLink
+                            to="/about"
+                            class="cursor-pointer hover:text-secondary-100"
+                            >ABOUT</NuxtLink
+                        >
+                        <NuxtLink
+                            to="/services"
+                            class="cursor-pointer hover:text-secondary-100"
+                            >SERVICES</NuxtLink
+                        >
+                        <NuxtLink
+                            to="/contact"
+                            class="cursor-pointer hover:text-secondary-100"
+                            >CONTACT US</NuxtLink
+                        >
                         <!-- Sign in Button -->
                         <NuxtLink to="/login" class="p-3 px-6 pt-2">
-                            <button class="font-bold rounded bg-secondary-100 px-4 py-2 text-white hover:bg-blue-600">
+                            <button
+                                class="rounded bg-secondary-100 px-4 py-2 font-bold text-white hover:bg-blue-600"
+                            >
                                 Go to Dashboard
                             </button>
                         </NuxtLink>
