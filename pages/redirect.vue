@@ -12,7 +12,6 @@ const accountLastName = useLastName();
 const { data } = await useFetch("/api/user/me");
 
 // Set state variables based on user identity, this is so it can auto populate forms but still be changeable
-// Don't mind the errors regarding interface mismatch
 accountEmail.value = data.value?.email;
 accountFirstName.value = data.value?.firstName;
 accountLastName.value = data.value?.lastName;
