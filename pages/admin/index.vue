@@ -1,4 +1,7 @@
 <script setup>
+useHead({
+    title: "EVC LABS Admin | Dashboard",
+});
 const { data } = await useFetch("/api/user/me");
 if (data.value.role == "STUDENT"){
     await navigateTo("/student");

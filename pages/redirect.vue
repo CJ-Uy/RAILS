@@ -1,4 +1,7 @@
 <script setup lang="ts">
+useHead({
+    title: "Redirecting...",
+});
 // Initialize state variables
 const accountEmail = useEmail();
 const accountFirstName = useFirstName();
