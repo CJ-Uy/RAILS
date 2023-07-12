@@ -1,5 +1,5 @@
 <template>
     <div>
-        <h1>THIS IS SOME ART</h1>
+        <h1 class="text-white">THIS IS SOME ART</h1>
     </div>
 </template>

@@ -15,7 +15,7 @@ function toggleMenu() {
                 <!-- Logo -->
                 <div class="pt-2">
                     <NuxtLink to="/">
-                        <nuxt-icon name="logo" filled class="cursor-pointer" />
+                        <nuxt-icon name="Logo" filled class="logo cursor-pointer" />
                     </NuxtLink>
                 </div>
                 <!-- Menu items -->
@@ -113,12 +113,10 @@ function toggleMenu() {
 </template>
 
 <style>
-.nuxt-icon svg {
+.logo svg {
     height: 45px;
-    width: 46px;
-    margin: 0;
+    width: 46px; 
 }
-
 .router-link-active {
     color: #3aa671;
 }

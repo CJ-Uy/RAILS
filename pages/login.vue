@@ -1,7 +1,7 @@
 <script setup lang="ts">
 useHead({
-  title: "PSHS-EVC LABS | Login",
-})
+    title: "PSHS-EVC LABS | Login",
+});
 
 definePageMeta({
     auth: {
@@ -14,21 +14,26 @@ const { signIn } = useAuth();
 </script>
 
 <template>
-    <div class="bg-offWhite">
-        <LoginLeftSide />
-        <div class="bg-slate-500">
-            <h1 class="font-bold">SIGN IN PAGE</h1>
-            <div class="align-center min-w-500 flex h-12 w-1/6">
-                <div class="align-center h-12 w-1/6 bg-white text-center">
-                    <Icon class="ml-2 mr-2 mt-3 h-6" name="logos:google-icon" />
-                </div>
-                <button
-                    class="h-12 w-5/6 flex-auto bg-primary text-offWhite"
-                    @click="signIn('google')"
-                >
-                    Sign In With Google
-                </button>
-            </div>
+    <div class="flex h-screen flex-row">
+        <div
+            class="flex basis-[60%] items-center justify-center bg-primary-100"
+        >
+            <LoginLeftSide />
+        </div>
+        <div
+            class="flex w-[40%] basis-auto flex-col items-center justify-center bg-white"
+        >
+            <h1 class="font-bold">SIGN IN</h1>
+            <button
+                @click="signIn('google')"
+                class="flex h-[8%] w-[40%] items-center justify-center rounded border-2 border-secondary-100 bg-primary-100 text-white hover:bg-primary-200"
+            >
+                <Icon
+                    class="h-[100%] w-[30%] bg-white p-3"
+                    name="logos:google-icon"
+                />
+                <div class="w-[70%] p-2">Sign In with EVC</div>
+            </button>
         </div>
     </div>
 </template>

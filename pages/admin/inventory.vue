@@ -13,7 +13,7 @@ if (data.value.role == "STUDENT"){
             <UserAdminNavbar />
         </div>
         <div class="basis-auto">
-            <h1>ADMIN DASHBOARD PAGE</h1>
+            <h1>ADMIN INVENTORY PAGE</h1>
         </div>
     </div>
 </template>
