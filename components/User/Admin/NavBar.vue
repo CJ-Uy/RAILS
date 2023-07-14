@@ -1,6 +1,6 @@
 <script setup>
 const { data } = await useFetch("/api/user/me");
-const profileImageSrc = data.value.imageLink;
+const profileImageSrc = ref(data.value.imageLink);
 </script>
 
 <template>

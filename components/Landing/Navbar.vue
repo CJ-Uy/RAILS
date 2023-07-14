@@ -56,13 +56,13 @@ function toggleMenu() {
                     class="ml-auto block focus:outline-none md:hidden"
                     @click="toggleMenu"
                 >
-                    <div :class="{ hidden: isMenuOpen }">
+                    <div v-if="!isMenuOpen">
                         <Icon
                             name="icon-park-outline:hamburger-button"
                             class="input-slot-image"
                         />
                     </div>
-                    <div :class="{ hidden: !isMenuOpen }">
+                    <div v-else>
                         <Icon
                             name="ic:twotone-close"
                             class="input-slot-image"
@@ -71,11 +71,11 @@ function toggleMenu() {
                 </div>
 
                 <!-- Mobile Menu -->
-                <div class="md:hidden">
+                <div v-auto-animate class="md:hidden">
                     <div
                         id="menu"
-                        :class="{ hidden: !isMenuOpen }"
-                        class="absolute left-6 right-6 mt-10 flex flex-col items-center space-y-6 self-end bg-white py-8 font-bold drop-shadow-md sm:w-auto sm:self-center"
+                        v-if="isMenuOpen"
+                        class="fixed left-6 right-6 mt-10 flex flex-col items-center space-y-6 self-end bg-white py-8 font-bold drop-shadow-md sm:w-auto sm:self-center"
                     >
                         <NuxtLink
                             to="/"
