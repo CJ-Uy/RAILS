@@ -1,6 +1,6 @@
 <script setup>
 useHead({
-    title: "EVC LABS Admin | Inventory",
+    title: "EVC LABS | Admin Inventory",
 });
 const { data } = await useFetch("/api/user/me");
 if (data.value.role == "STUDENT"){

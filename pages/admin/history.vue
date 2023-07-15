@@ -1,6 +1,6 @@
 <script setup>
 useHead({
-    title: "EVC LABS | Admin Dashboard",
+    title: "EVC LABS | Admin History",
 });
 const { data } = await useFetch("/api/user/me");
 if (data.value.role == "STUDENT"){
@@ -16,7 +16,7 @@ if (data.value.role == "STUDENT"){
             <UserAdminNavbar />
         </div>
         <div class="basis-auto">
-            <h1>ADMIN DASHBOARD PAGE</h1>
+            <h1>ADMIN HISTORY PAGE</h1>
         </div>
     </div>
 </template>

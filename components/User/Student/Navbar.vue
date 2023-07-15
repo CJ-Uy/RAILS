@@ -7,7 +7,6 @@ const profileImageSrc = ref(data.value.imageLink);
     <div class="flex h-screen flex-col bg-primary-100">
         <!-- User profile info -->
         <div>
-            <!-- TODO: Check if loaded because it keeps not loading sometimes -->
             <img :src="profileImageSrc" alt="Google Profile's Image" />
         </div>
 
@@ -17,7 +16,7 @@ const profileImageSrc = ref(data.value.imageLink);
             <div>
                 <h3 class="text-secondary-100">Main Menu</h3>
                 <NuxtLink
-                    to="/admin"
+                    to="/student"
                     class="flex cursor-pointer items-center hover:text-secondary-100"
                 >
                     <nuxt-icon
@@ -33,7 +32,7 @@ const profileImageSrc = ref(data.value.imageLink);
             <div class="flex flex-col">
                 <h3 class="text-secondary-100">Workspace</h3>
                 <NuxtLink
-                    to="/admin/calendar"
+                    to="/student/calendar"
                     class="flex cursor-pointer items-center hover:text-secondary-100"
                 >
                     <nuxt-icon
@@ -44,7 +43,7 @@ const profileImageSrc = ref(data.value.imageLink);
                     CALENDAR</NuxtLink
                 >
                 <NuxtLink
-                    to="/admin/inventory"
+                    to="/student/inventory"
                     class="flex cursor-pointer items-center hover:text-secondary-100"
                 >
                     <nuxt-icon
@@ -72,7 +71,7 @@ const profileImageSrc = ref(data.value.imageLink);
                     NEW REQUEST</NuxtLink
                 >
                 <NuxtLink
-                    to="/admin/history"
+                    to="/student/history"
                     class="flex cursor-pointer items-center hover:text-secondary-100"
                 >
                     <nuxt-icon
@@ -81,22 +80,6 @@ const profileImageSrc = ref(data.value.imageLink);
                         class="cursor-pointer"
                     />
                     HISTORY</NuxtLink
-                >
-            </div>
-
-            <!-- Views -->
-            <div class="flex flex-col">
-                <h3 class="text-secondary-100">Other Views</h3>
-                <NuxtLink
-                    to="/student"
-                    class="flex cursor-pointer items-center hover:text-secondary-100"
-                >
-                    STUDENT</NuxtLink
-                >
-                <NuxtLink
-                    to="/teacher"
-                    class="flex cursor-pointer items-center hover:text-secondary-100"
-                    >TEACHER</NuxtLink
                 >
             </div>
         </div>

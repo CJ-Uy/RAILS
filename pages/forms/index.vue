@@ -15,7 +15,7 @@ async function submitHandler(formValues) {
     <div>
         <h1>LABORATORY REQUESTS</h1>
         <NuxtLink
-            to="/protected"
+            to="/redirect"
             class="text-blue-500 hover:underline active:text-green-500"
             >RETURN</NuxtLink
         >

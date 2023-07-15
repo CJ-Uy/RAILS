@@ -1,11 +1,9 @@
 <script setup>
 useHead({
-    title: "EVC LABS | Admin Dashboard",
+    title: "EVC LABS | Past Requests",
 });
 const { data } = await useFetch("/api/user/me");
-if (data.value.role == "STUDENT"){
-    await navigateTo("/student");
-} else if (data.value.role == "TEACHER") {
+if (data.value.role == "TEACHER"){
     await navigateTo("/teacher");
 }
 </script>
@@ -13,10 +11,10 @@ if (data.value.role == "STUDENT"){
 <template>
     <div class="flex flex-row">
         <div class="basis-[15.276146%]"> <!-- Taken from figma 260/1702-->
-            <UserAdminNavbar />
+            <UserStudentNavbar />
         </div>
         <div class="basis-auto">
-            <h1>ADMIN DASHBOARD PAGE</h1>
+            <h1>STUDENT CALENDAR VIEW</h1>
         </div>
     </div>
 </template>
