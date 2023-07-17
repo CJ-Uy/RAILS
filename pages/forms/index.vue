@@ -1,13 +1,47 @@
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
-const submitted = ref(false);
-const requestStatus = ref("Loading...");
-
 async function submitHandler(formValues) {
-    requestStatus.value = await useFetch("/api/forms/process-request", {
-        method: "POST",
-        body: formValues,
-    });
+    try {
+        const pdfBuffers_rawData = await useFetch(
+            "/api/forms/process-request",
+            {
+                method: "POST",
+                body: formValues,
+            }
+        );
+
+        const pdfBuffers = pdfBuffers_rawData.data.value;
+
+        try {
+            console.log("Trying to donwload pdfs...");
+            for (let i = 0; i < pdfBuffers.length; i++) {
+                let buffer = pdfBuffers[i].data;
+                console.log(buffer);
+
+                const url = window.URL.createObjectURL(
+                    new Blob([new Uint8Array(buffer).buffer])
+                );
+                const link = document.createElement("a");
+                link.href = url;
+                const filename = `request${i}.pdf`;
+                link.setAttribute("download", filename);
+                document.body.appendChild(link);
+                link.click();
+
+            }
+        } catch (error) {
+            console.error("PDF generation failed:", error);
+        }
+
+        // await navigateTo({
+        //     path: "/forms/success",
+        // });
+    } catch (error) {
+        requestStatus.value = "ERROR";
+        console.error("Error submitting form: ", error);
+
+        await navigateTo({ path: "/forms/error", query: { error: error } });
+    }
 }
 </script>
 
@@ -59,8 +93,5 @@ async function submitHandler(formValues) {
                 </FormKit>
             </FormKit>
         </FormKit>
-        <div v-if="submitted">
-            <h2>{{ requestStatus }}</h2>
-        </div>
     </div>
 </template>

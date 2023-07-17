@@ -4,15 +4,21 @@ import makeAccountabilityForm from "../../app/forms/makeAccountabilityForm.js";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    console.log("BODY: ", body);
+
+    let pdfBuffers = [];
+    let pdfBuffer;
+
+    // Make CID 19
     if (body.requestData.laboratorySetting.hasLaboratoryReservation == "false") {
-        convertHtmlToPdf(
-            makeLaboratoryReservationForm(body),
-            "assets/pdftests/CID19.pdf"
-        );
+        pdfBuffer = await convertHtmlToPdf(makeLaboratoryReservationForm(body));
         console.log("CREATED CID19.pdf at assets/pdftests/CID19.pdf");
+        pdfBuffers.push(pdfBuffer);
     }
-    convertHtmlToPdf(makeAccountabilityForm(body), "assets/pdftests/CID20.pdf");
+
+    // Make CID 20
+    pdfBuffer = await convertHtmlToPdf(makeAccountabilityForm(body));
+    pdfBuffers.push(pdfBuffer);
     console.log("CREATED CID20.pdf at assets/pdftests/CID20.pdf");
-    return "Completed";
+
+    return pdfBuffers;
 });
