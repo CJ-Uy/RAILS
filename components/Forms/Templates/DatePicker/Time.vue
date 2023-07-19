@@ -7,9 +7,14 @@ const props = defineProps({
 </script>
 
 <template>
+    <!-- 
+        For the time picker with "enable-time-range-validation" it makes sure that the first time is before the second time
+        However, it does not tell the end user that the times are invalid andd simply does not change making it feel buggy.
+        TODO: figure out how to do validation on this
+     -->
     <VueDatePicker
         time-picker
-        enable-time-range-validation
+        disable-time-range-validation
         range
         auto-apply
         placeholder="Select Time"
@@ -20,7 +25,7 @@ const props = defineProps({
             <Icon
                 id="left-icon"
                 name="ic:round-access-time"
-                class="input-slot-image"
+                class="vue-date-picker-icons"
             />
         </template>
 
@@ -28,7 +33,7 @@ const props = defineProps({
             <Icon
                 id="right-icon"
                 name="ic:round-close"
-                class="input-slot-image"
+                class="vue-date-picker-icons"
                 @click="clear"
             />
         </template>
@@ -36,7 +41,7 @@ const props = defineProps({
 </template>
 
 <style>
-.input-slot-image {
+.vue-date-picker-icons {
     height: 20px;
     width: auto;
 }

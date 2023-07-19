@@ -20,7 +20,7 @@ const props = defineProps({
             <Icon
                 id="left-icon"
                 name="ic:baseline-calendar-today"
-                class="input-slot-image"
+                class="vue-date-picker-icons"
             />
         </template>
 
@@ -28,7 +28,7 @@ const props = defineProps({
             <Icon
                 id="right-icon"
                 name="ic:round-close"
-                class="input-slot-image"
+                class="vue-date-picker-icons"
                 @click="clear"
             />
         </template>
@@ -36,7 +36,7 @@ const props = defineProps({
 </template>
 
 <style>
-.input-slot-image {
+.vue-date-picker-icons {
     height: 20px;
     width: auto;
 }

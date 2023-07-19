@@ -1,46 +1,58 @@
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
 async function submitHandler(formValues) {
-    try {
-        const pdfBuffers_rawData = await useFetch(
-            "/api/forms/process-request",
-            {
-                method: "POST",
-                body: formValues,
-            }
-        );
+    // Saving Pdfs to database
+    // TODO: Create this function
 
-        const pdfBuffers = pdfBuffers_rawData.data.value;
+    // Emailing pdfs
+    if (formValues.requestData.submission.email) {
+        // TODO: Make it so they send the info to their email
+    }
 
+    // Downloaing pdfs
+    if (formValues.requestData.submission.download) {
         try {
-            console.log("Trying to donwload pdfs...");
-            for (let i = 0; i < pdfBuffers.length; i++) {
-                let buffer = pdfBuffers[i].data;
-                console.log(buffer);
+            const pdfBuffers_rawData = await useFetch(
+                "/api/forms/create-pdf-buffers",
+                {
+                    method: "POST",
+                    body: formValues,
+                }
+            );
+            const pdfBuffers = pdfBuffers_rawData.data.value;
 
-                const url = window.URL.createObjectURL(
-                    new Blob([new Uint8Array(buffer).buffer])
+            try {
+                downloadRequests(
+                    pdfBuffers,
+                    formValues.requestData.basicInfo.lastname
                 );
-                const link = document.createElement("a");
-                link.href = url;
-                const filename = `request${i}.pdf`;
-                link.setAttribute("download", filename);
-                document.body.appendChild(link);
-                link.click();
-
+            } catch (error) {
+                console.error(
+                    "There was an error downloading the pdf: ",
+                    error
+                );
             }
+
         } catch (error) {
-            console.error("PDF generation failed:", error);
+            console.error("There was an error creating the pdf: ", error);
         }
+    }
 
-        // await navigateTo({
-        //     path: "/forms/success",
-        // });
-    } catch (error) {
-        requestStatus.value = "ERROR";
-        console.error("Error submitting form: ", error);
+}
 
-        await navigateTo({ path: "/forms/error", query: { error: error } });
+function downloadRequests(pdfBuffers, lastname) {
+    for (const property in pdfBuffers) {
+        let buffer = pdfBuffers[property].data;
+        const url = window.URL.createObjectURL(
+            new Blob([new Uint8Array(buffer).buffer])
+        );
+        const link = document.createElement("a");
+        link.href = url;
+        const filename = `${lastname}-${property}-Request.pdf`;
+
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
     }
 }
 </script>
@@ -81,10 +93,27 @@ async function submitHandler(formValues) {
                     <FormsReagentsRequest />
                 </FormKit>
 
-                <FormKit type="step" name="summary">
+                <FormKit type="step" name="submission">
                     <pre>
                         {{ value }}
                     </pre>
+                    <!-- TODO: Maybe add something to show the progress of each request if it succeede or failed and if its loading -->
+                    <h2>NOTE: Selecting more options may increase your wait time</h2>
+                    <FormKit
+                        value="false"
+                        type="checkbox"
+                        label="Download a copy of my request"
+                        name="download"
+                        validation-visibility="dirty"
+                    />
+
+                    <FormKit
+                        value="false"
+                        type="checkbox"
+                        label="Email a copy of my request"
+                        name="email"
+                        validation-visibility="dirty"
+                    />
 
                     <!-- using step slot for submit button-->
                     <template #stepNext>
