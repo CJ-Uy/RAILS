@@ -85,7 +85,7 @@ const profileImageSrc = ref(data.value.imageLink);
         </div>
 
         <!-- Closing -->
-        <div>
+        <div class="flex flex-col">
             <!-- Back to Landing Page -->
             <NuxtLink to="/" class="p-3 px-6 pt-2">
                 <button
@@ -94,6 +94,7 @@ const profileImageSrc = ref(data.value.imageLink);
                     Back to Landing
                 </button>
             </NuxtLink>
+            <NuxtLink to="/student/settings">Settings</NuxtLink>
         </div>
     </div>
 </template>

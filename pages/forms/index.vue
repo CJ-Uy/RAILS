@@ -6,17 +6,22 @@ useHead({
     title: "EVC LABS | New Request",
 });
 
+const { data } = await useFetch("/api/user/me");
+
 async function submitHandler(formValues) {
     // Saving Pdfs to database
-    // TODO: Create this function
+    const requestSaveStatus = await useFetch("/api/forms/save-requests", {
+        method: "POST",
+        body: { ...data.value, ...formValues },
+    });
 
     // Emailing pdfs
-    if (formValues.requestData.submission.email) {
+    if (formValues.requestData.submission.email === "true") {
         // TODO: Make it so they send the info to their email
     }
 
     // Downloaing pdfs
-    if (formValues.requestData.submission.download) {
+    if (formValues.requestData.submission.download === "true") {
         try {
             const pdfBuffers_rawData = await useFetch(
                 "/api/forms/create-pdf-buffers",
