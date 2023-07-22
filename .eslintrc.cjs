@@ -1,5 +1,4 @@
 module.exports = {
-    // https://dev.to/tao/adding-eslint-and-prettier-to-nuxt-3-2023-5bg
     root: true,
     env: {
         browser: true,
@@ -15,7 +14,12 @@ module.exports = {
     ],
     plugins: [],
     rules: {
-        "prettier/prettier": ["error", { endOfLine: "auto" }],
-        indent: "off",
+        // Allow Prettier to throw errors via ESLint
+        "prettier/prettier": [
+            "error",
+            {
+                endOfLine: "auto",
+            },
+        ],
     },
 };

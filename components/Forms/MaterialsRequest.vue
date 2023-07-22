@@ -97,4 +97,3 @@ h1 {
     color: var(--fk-color-danger);
 }
 </style>
-

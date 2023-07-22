@@ -3,9 +3,9 @@ useHead({
     title: "EVC LABS | Admin Dashboard",
 });
 const { data } = await useFetch("/api/user/me");
-if (data.value.role == "STUDENT"){
+if (data.value.role === "STUDENT") {
     await navigateTo("/student");
-} else if (data.value.role == "TEACHER") {
+} else if (data.value.role === "TEACHER") {
     await navigateTo("/teacher");
 }
 
@@ -22,7 +22,8 @@ accountLastName.value = data.value?.lastName;
 
 <template>
     <div class="flex flex-row">
-        <div class="basis-[15.276146%]"> <!-- Taken from figma 260/1702-->
+        <div class="basis-[15.276146%]">
+            <!-- Taken from figma 260/1702-->
             <UserAdminNavbar />
         </div>
         <div class="basis-auto">
@@ -31,6 +32,4 @@ accountLastName.value = data.value?.lastName;
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

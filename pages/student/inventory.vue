@@ -3,14 +3,15 @@ useHead({
     title: "EVC LABS | Inventory",
 });
 const { data } = await useFetch("/api/user/me");
-if (data.value.role == "TEACHER"){
+if (data.value.role === "TEACHER") {
     await navigateTo("/teacher");
 }
 </script>
 
 <template>
     <div class="flex flex-row">
-        <div class="basis-[15.276146%]"> <!-- Taken from figma 260/1702-->
+        <div class="basis-[15.276146%]">
+            <!-- Taken from figma 260/1702-->
             <UserStudentNavbar />
         </div>
         <div class="basis-auto">
@@ -19,6 +20,4 @@ if (data.value.role == "TEACHER"){
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

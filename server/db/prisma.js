@@ -4,7 +4,7 @@ const { PrismaClient } = Prisma;
 
 const prisma = new PrismaClient();
 
-export { prisma }
+export { prisma };
 
 /*
     Doing this is important because it allows us to use the same instance of 

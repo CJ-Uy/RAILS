@@ -1,9 +1,4 @@
-// https://nuxt.com/docs/guide/concepts/typescript
 {
-    "extends": "./.nuxt/tsconfig.json",
-    "compilerOptions": {
-        "target": "es2017",
-        "module": "esnext"
-    },
-    "ts-node": { "esm": true }
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json"
 }

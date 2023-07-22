@@ -35,7 +35,10 @@ const requestDates = ref([]);
             validation="required"
             :options="[
                 { label: 'Biology Laboratory', value: 'Biology Laboratory' },
-                { label: 'Chemistry Laboratory', value: 'Chemistry Laboratory' },
+                {
+                    label: 'Chemistry Laboratory',
+                    value: 'Chemistry Laboratory',
+                },
                 { label: 'Physics Laboratory', value: 'Physics Laboratory' },
             ]"
         />

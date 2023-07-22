@@ -1,69 +1,38 @@
-/*
-This is the nuxt config file. Here the configuration for the nuxt app and its modules is set.
-
-*/
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    devtools: { enabled: true },
     modules: [
-        "@sidebase/nuxt-auth", // https://nuxt.com/modules/nuxt-auth (Next-auth wrapper for user authentication)
-        "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
         "nuxt-mailer", // https://github.com/jurassicjs/nuxt-mailer (Nodemailer wrapper for email functionality)
         "@nuxtjs/fontaine", // https://nuxt.com/modules/fontaine (Optimized font fallbacks to keep layout consistent)
-        "@nuxt/image", // https://v1.image.nuxtjs.org/ (Image loading optimization)
-        "@formkit/nuxt", // https://formkit.com/ (Vue forms framework)
+        "@sidebase/nuxt-auth", // https://nuxt.com/modules/nuxt-auth (Next-auth wrapper for user authentication)
+
+        // CSS and styling modules
+        "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
+        "@nuxtjs/color-mode", // https://nuxt.com/modules/color-mode (dark mode and other themes)
+
+        // Optimization modules
+        "@nuxt/image-edge", // https://v1.image.nuxtjs.org/ (Image loading optimization)
         "nuxt-icon", // https://nuxt.com/modules/icon (Icons from iconify) [DATASET: https://icones.js.org/]
         "nuxt-icons", // https://nuxt.com/modules/icons Automatically import SVG icons from assets/icons
 
+        // Forms framework
+        "@formkit/nuxt", // https://formkit.com/ (Vue forms framework)
+
         // Useful but not yet used modules
-        "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
-        "@invictus.codes/nuxt-vuetify", // https://nuxt.com/modules/nuxt-vuetify AND https://vuetifyjs.com/en/ (UI Library) [maybe try daisy UI instead]
-        "@nuxt/content", // https://content.nuxtjs.org/ (parses markdown and other files for content)
-        "@nuxtjs/device", // https://nuxt.com/modules/device (Device type detection)
+        // "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
+        // "@invictus.codes/nuxt-vuetify", // https://nuxt.com/modules/nuxt-vuetify AND https://vuetifyjs.com/en/ (UI Library) [maybe try daisy UI instead]
+        // "@nuxt/content", // https://content.nuxtjs.org/ (parses markdown and other files for content)
+        // "@nuxtjs/device", // https://nuxt.com/modules/device (Device type detection)
         // Add website optimizations (https://nuxt.com/modules?category=Performance)
         // Add SEO [search engine optimizations] when complete (https://nuxt.com/modules/seo-kit)
     ],
-
-    /*
-    FONTAINE CONFIGURATION
-        If you are using a Google font or you don't have a @font-face declaration
-        for a font you're using, you can declare them here. In most cases this is not necessary.
-
-        fontMetrics: {
-            fonts: ['Inter', { family: 'Some Custom Font', src: '/path/to/custom/font.woff2' }],
-        }, 
-    */
 
     build: {
         transpile: ["@vuepic/vue-datepicker"], // https://vue3datepicker.com/ (datepicker calendar and time vue components)
     },
 
-    tailwindcss: {
-        // Default Options
-        cssPath: "~/assets/css/tailwind.css",
-        configPath: "tailwind.config",
-        exposeConfig: false,
-        exposeLevel: 2,
-        injectPosition: "first",
-        viewer: true,
-        config: {
-            /* Extend the Tailwind config here */
-        },
-    },
-
-    // VUETIFY CONFIGURATION
-    vuetify: {
-        /* vuetify options */
-        vuetifyOptions: {
-            // TODO: list all vuetify options
-        },
-        moduleOptions: {
-            /* nuxt-vuetify module options */
-            treeshaking: true,
-            useIconCDN: true,
-            /* vite-plugin-vuetify options */
-            styles: true,
-            autoImport: true,
-        },
+    colorMode: {
+        classSuffix: "",
     },
 
     formkit: {
@@ -102,10 +71,5 @@ export default defineNuxtConfig({
         // enableSessionRefreshPeriodically: false, // Whether to periodically refresh the session. Change this to `true` for a refresh every seconds or set this to a number like `5000` for a refresh every 5000 milliseconds (aka: 5 seconds)
         // enableSessionRefreshOnWindowFocus: true, // Whether to refresh the session whenever a window focus event happens, i.e, when your user refocuses the window. Set this to `false` to turn this off
         */
-    },
-
-    // NUXT-DEVTOOLS CONGIGURATION
-    devtools: {
-        enabled: true,
     },
 });

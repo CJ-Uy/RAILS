@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // PAGE META
 useHead({
-  title: "PSHS-EVC LABS | Home",
-})
+    title: "PSHS-EVC LABS | Home",
+});
 
 definePageMeta({ auth: false }); // This allows the page to be seen by "Authenticated" and "Unauthenticated" users
 // PAGE META END
@@ -40,7 +40,7 @@ async function sendEmail() {
 <template>
     <div>
         <LandingNavbar />
-        
+
         <h1 class="text-3xl font-bold text-green-500">GOOGLE SIGN IN</h1>
 
         <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE -->
@@ -85,6 +85,5 @@ async function sendEmail() {
             </div>
         </div>
         <!-- EMAIL COMPONENT EXAMPLE END-->
-
     </div>
 </template>

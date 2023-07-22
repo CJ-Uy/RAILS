@@ -1,3 +1,4 @@
+<!-- eslint-disable camelcase -->
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
 async function submitHandler(formValues) {
@@ -17,34 +18,32 @@ async function submitHandler(formValues) {
                 {
                     method: "POST",
                     body: formValues,
-                }
+                },
             );
             const pdfBuffers = pdfBuffers_rawData.data.value;
 
             try {
                 downloadRequests(
                     pdfBuffers,
-                    formValues.requestData.basicInfo.lastname
+                    formValues.requestData.basicInfo.lastname,
                 );
             } catch (error) {
                 console.error(
                     "There was an error downloading the pdf: ",
-                    error
+                    error,
                 );
             }
-
         } catch (error) {
             console.error("There was an error creating the pdf: ", error);
         }
     }
-
 }
 
 function downloadRequests(pdfBuffers, lastname) {
     for (const property in pdfBuffers) {
-        let buffer = pdfBuffers[property].data;
+        const buffer = pdfBuffers[property].data;
         const url = window.URL.createObjectURL(
-            new Blob([new Uint8Array(buffer).buffer])
+            new Blob([new Uint8Array(buffer).buffer]),
         );
         const link = document.createElement("a");
         link.href = url;
@@ -72,7 +71,7 @@ function downloadRequests(pdfBuffers, lastname) {
             @submit="submitHandler"
         >
             <FormKit
-                v-slot="{ value }"
+                v-model="value"
                 type="multi-step"
                 tab-style="progress"
                 name="requestData"
@@ -98,7 +97,9 @@ function downloadRequests(pdfBuffers, lastname) {
                         {{ value }}
                     </pre>
                     <!-- TODO: Maybe add something to show the progress of each request if it succeede or failed and if its loading -->
-                    <h2>NOTE: Selecting more options may increase your wait time</h2>
+                    <h2>
+                        NOTE: Selecting more options may increase your wait time
+                    </h2>
                     <FormKit
                         value="false"
                         type="checkbox"
