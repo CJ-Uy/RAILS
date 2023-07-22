@@ -4,7 +4,7 @@ const profileImageSrc = ref(data.value.imageLink);
 </script>
 
 <template>
-    <div class="flex h-screen flex-col bg-primary-100">
+    <div class="flex h-screen flex-col bg-light-primary">
         <!-- User profile info -->
         <div>
             <!-- TODO: Check if loaded because it keeps not loading sometimes -->
@@ -15,10 +15,10 @@ const profileImageSrc = ref(data.value.imageLink);
         <div class="text-white">
             <!-- Main Menu -->
             <div>
-                <h3 class="text-secondary-100">Main Menu</h3>
+                <h3 class="text-light-accent">Main Menu</h3>
                 <NuxtLink
                     to="/admin"
-                    class="flex cursor-pointer items-center hover:text-secondary-100"
+                    class="flex cursor-pointer items-center hover:text-light-accent"
                 >
                     <nuxt-icon
                         name="Chart_fill"
@@ -31,10 +31,10 @@ const profileImageSrc = ref(data.value.imageLink);
 
             <!-- Workspace -->
             <div class="flex flex-col">
-                <h3 class="text-secondary-100">Workspace</h3>
+                <h3 class="text-light-accent">Workspace</h3>
                 <NuxtLink
                     to="/admin/calendar"
-                    class="flex cursor-pointer items-center hover:text-secondary-100"
+                    class="flex cursor-pointer items-center hover:text-light-accent"
                 >
                     <nuxt-icon
                         name="Calendar"
@@ -45,7 +45,7 @@ const profileImageSrc = ref(data.value.imageLink);
                 >
                 <NuxtLink
                     to="/admin/inventory"
-                    class="flex cursor-pointer items-center hover:text-secondary-100"
+                    class="flex cursor-pointer items-center hover:text-light-accent"
                 >
                     <nuxt-icon
                         name="Search_alt"
@@ -58,10 +58,10 @@ const profileImageSrc = ref(data.value.imageLink);
 
             <!-- Requests -->
             <div class="flex flex-col">
-                <h3 class="text-secondary-100">Requests</h3>
+                <h3 class="text-light-accent">Requests</h3>
                 <NuxtLink
                     to="/forms"
-                    class="flex cursor-pointer items-center hover:text-secondary-100"
+                    class="flex cursor-pointer items-center hover:text-light-accent"
                 >
                     <!-- TODO: Make this icon conisstent with the others -->
                     <nuxt-icon
@@ -73,7 +73,7 @@ const profileImageSrc = ref(data.value.imageLink);
                 >
                 <NuxtLink
                     to="/admin/history"
-                    class="flex cursor-pointer items-center hover:text-secondary-100"
+                    class="flex cursor-pointer items-center hover:text-light-accent"
                 >
                     <nuxt-icon
                         name="Folder_alt"
@@ -86,16 +86,16 @@ const profileImageSrc = ref(data.value.imageLink);
 
             <!-- Views -->
             <div class="flex flex-col">
-                <h3 class="text-secondary-100">Other Views</h3>
+                <h3 class="text-light-accent">Other Views</h3>
                 <NuxtLink
                     to="/student"
-                    class="flex cursor-pointer items-center hover:text-secondary-100"
+                    class="flex cursor-pointer items-center hover:text-light-accent"
                 >
                     STUDENT</NuxtLink
                 >
                 <NuxtLink
                     to="/teacher"
-                    class="flex cursor-pointer items-center hover:text-secondary-100"
+                    class="flex cursor-pointer items-center hover:text-light-accent"
                     >TEACHER</NuxtLink
                 >
             </div>
@@ -106,7 +106,7 @@ const profileImageSrc = ref(data.value.imageLink);
             <!-- Back to Landing Page -->
             <NuxtLink to="/" class="p-3 px-6 pt-2">
                 <button
-                    class="hidden rounded bg-secondary-100 px-4 py-2 font-bold text-white hover:bg-blue-600 md:flex"
+                    class="hidden rounded bg-light-accent px-4 py-2 font-bold text-white hover:bg-blue-600 md:flex"
                 >
                     Back to Landing
                 </button>

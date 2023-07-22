@@ -2,14 +2,13 @@
 const isMenuOpen = ref(false);
 function toggleMenu() {
     isMenuOpen.value = !isMenuOpen.value;
-    console.log(isMenuOpen.value);
 }
 </script>
 
 <template>
     <div>
         <!-- Navigation Bar -->
-        <nav class="container relative ml-0 min-w-full bg-primary-100 p-6">
+        <nav class="container relative ml-0 min-w-full bg-light-primary p-6">
             <!-- Flex box container -->
             <div class="flex items-center justify-between">
                 <!-- Logo -->
@@ -23,32 +22,32 @@ function toggleMenu() {
                     </NuxtLink>
                 </div>
                 <!-- Menu items -->
-                <div class="hidden space-x-6 text-offWhite md:flex">
+                <div class="hidden space-x-6 text-dark-text md:flex">
                     <NuxtLink
                         to="/"
-                        class="cursor-pointer hover:text-secondary-100"
+                        class="cursor-pointer hover:text-light-accent"
                         >HOME</NuxtLink
                     >
                     <NuxtLink
                         to="/about"
-                        class="cursor-pointer hover:text-secondary-100"
+                        class="cursor-pointer hover:text-light-accent"
                         >ABOUT</NuxtLink
                     >
                     <NuxtLink
                         to="/services"
-                        class="cursor-pointer hover:text-secondary-100"
+                        class="cursor-pointer hover:text-light-accent"
                         >SERVICES</NuxtLink
                     >
                     <NuxtLink
                         to="/contact"
-                        class="cursor-pointer hover:text-secondary-100"
+                        class="cursor-pointer hover:text-light-accent"
                         >CONTACT US</NuxtLink
                     >
                 </div>
                 <!-- Sign in Button -->
                 <NuxtLink to="/login" class="p-3 px-6 pt-2">
                     <button
-                        class="hidden rounded bg-secondary-100 px-4 py-2 font-bold text-white hover:bg-blue-600 md:flex"
+                        class="hidden rounded bg-light-accent px-4 py-2 font-bold text-white hover:bg-blue-600 md:flex"
                     >
                         Go to Dashboard
                     </button>
@@ -83,28 +82,28 @@ function toggleMenu() {
                     >
                         <NuxtLink
                             to="/"
-                            class="cursor-pointer hover:text-secondary-100"
+                            class="cursor-pointer hover:text-light-accent"
                             >HOME</NuxtLink
                         >
                         <NuxtLink
                             to="/about"
-                            class="cursor-pointer hover:text-secondary-100"
+                            class="cursor-pointer hover:text-light-accent"
                             >ABOUT</NuxtLink
                         >
                         <NuxtLink
                             to="/services"
-                            class="cursor-pointer hover:text-secondary-100"
+                            class="cursor-pointer hover:text-light-accent"
                             >SERVICES</NuxtLink
                         >
                         <NuxtLink
                             to="/contact"
-                            class="cursor-pointer hover:text-secondary-100"
+                            class="cursor-pointer hover:text-light-accent"
                             >CONTACT US</NuxtLink
                         >
                         <!-- Sign in Button -->
                         <NuxtLink to="/login" class="p-3 px-6 pt-2">
                             <button
-                                class="rounded bg-secondary-100 px-4 py-2 font-bold text-white hover:bg-blue-600"
+                                class="rounded bg-light-accent px-4 py-2 font-bold text-white hover:bg-blue-600"
                             >
                                 Go to Dashboard
                             </button>

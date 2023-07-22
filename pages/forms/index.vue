@@ -1,6 +1,11 @@
 <!-- eslint-disable camelcase -->
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
+// PAGE META
+useHead({
+    title: "EVC LABS | New Request",
+});
+
 async function submitHandler(formValues) {
     // Saving Pdfs to database
     // TODO: Create this function
