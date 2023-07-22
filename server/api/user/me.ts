@@ -24,6 +24,7 @@ export default eventHandler(async (event) => {
             imageLink: session.user?.image,
             firstName: session.given_name,
             lastName: session.family_name,
+            studentProfile: { create: {} },
         },
     });
     // console.log(`${JSON.stringify(user)}`); printing user only shows [Object object]

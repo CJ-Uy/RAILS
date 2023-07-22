@@ -37,12 +37,12 @@ model Users {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  students   Students? @relation(fields: [studentsId], references: [id])
-  teachers   Teachers? @relation(fields: [teachersId], references: [id])
-  admins     Admins?   @relation(fields: [adminsId], references: [id])
-  studentsId Int?
-  teachersId Int?
-  adminsId   Int?
+  studentProfile Students? @relation(fields: [studentsId], references: [id])
+  teacherProfile Teachers? @relation(fields: [teachersId], references: [id])
+  adminProfile   Admins?   @relation(fields: [adminsId], references: [id])
+  studentsId     Int?
+  teachersId     Int?
+  adminsId       Int?
 }
 
 model Admins {

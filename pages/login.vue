@@ -16,7 +16,7 @@ const { signIn } = useAuth();
 <template>
     <div class="flex h-screen flex-row">
         <div
-            class="flex basis-[60%] items-center justify-center bg-primary-100"
+            class="flex basis-[60%] items-center justify-center bg-light-primary"
         >
             <LoginLeftSide />
         </div>
@@ -25,8 +25,8 @@ const { signIn } = useAuth();
         >
             <h1 class="font-bold">SIGN IN</h1>
             <button
+                class="flex h-[8%] w-[40%] items-center justify-center rounded border-2 border-light-secondary bg-light-primary text-white hover:bg-light-accent"
                 @click="signIn('google')"
-                class="flex h-[8%] w-[40%] items-center justify-center rounded border-2 border-secondary-100 bg-primary-100 text-white hover:bg-primary-200"
             >
                 <Icon
                     class="h-[100%] w-[30%] bg-white p-3"
