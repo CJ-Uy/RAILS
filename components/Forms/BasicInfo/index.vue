@@ -3,6 +3,18 @@ const accountEmail = useEmail();
 const accountFirstName = useFirstName();
 const accountLastName = useLastName();
 const schoolYear = useSchoolYear();
+
+// Dynamic Lists
+let key;
+// Grade Sections
+const gradeSections = await useFetch("/api/db/getAllGradeSections");
+const gradeSectionsOptions = ref([]);
+for (key in gradeSections.data.value) {
+    gradeSectionsOptions.value.push({
+        label: gradeSections.data.value[key],
+        value: gradeSections.data.value[key],
+    });
+}
 </script>
 
 <template>
@@ -51,11 +63,7 @@ const schoolYear = useSchoolYear();
         name="gradeSection"
         placeholder="Select a Grade and Section"
         validation="required"
-        :options="[
-            { label: 'G7 - Diamond', value: '7-Diamond' },
-            { label: 'G7 - Emerald', value: '7-Emerald' },
-            { label: 'G7 - Ruby', value: '7-Ruby' },
-        ]"
+        :options="gradeSectionsOptions"
     />
     <FormKit
         type="select"
