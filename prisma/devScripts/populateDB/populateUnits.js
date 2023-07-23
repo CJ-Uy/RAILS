@@ -3,10 +3,10 @@ const prisma = new PrismaClient();
 
 const createUnits = await prisma.Units.createMany({
     data: [
+        { name: "Research Unit" },
         { name: "Chemistry Unit" },
         { name: "Biology Unit" },
         { name: "Physics Unit" },
-        { name: "Research Unit" },
         { name: "Computer Science Unit" },
         { name: "Math Unit" },
         { name: "Social Science Unit" },
