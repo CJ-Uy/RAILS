@@ -4,16 +4,23 @@ const accountFirstName = useFirstName();
 const accountLastName = useLastName();
 const schoolYear = useSchoolYear();
 
-// Dynamic Lists
-let key;
+// ----- Dynamic Selections -----
 // Grade Sections
 const gradeSections = await useFetch("/api/db/getAllGradeSections");
-const gradeSectionsOptions = ref([]);
-for (key in gradeSections.data.value) {
-    gradeSectionsOptions.value.push({
-        label: gradeSections.data.value[key],
-        value: gradeSections.data.value[key],
-    });
+const gradeSectionsOptions = ref(makeSelectionOptions(gradeSections));
+
+const units = await useFetch("/api/db/getAllUnits");
+const unitsOptions = ref(makeSelectionOptions(units));
+
+function makeSelectionOptions(response) {
+    const options = [];
+    for (let key in response.data.value) {
+        options.push({
+            label: response.data.value[key],
+            value: response.data.value[key],
+        });
+    }
+    return options;
 }
 </script>
 
@@ -71,11 +78,7 @@ for (key in gradeSections.data.value) {
         name="unit"
         placeholder="Select the Unit the subject/teacher is under"
         validation="required"
-        :options="[
-            { label: 'Chemistry Unit', value: 'Chemistry Unit' },
-            { label: 'Reasearch Unit', value: 'Research Unit' },
-            { label: 'Physics Unit', value: 'Physics Unit' },
-        ]"
+        :options="unitsOptions"
     />
     <FormKit type="text" label="Subject" name="subject" validation="required" />
     <FormKit

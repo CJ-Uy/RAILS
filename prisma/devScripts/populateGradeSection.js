@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const createGradeSection = await prisma.gradeSection.createMany({
+const createGradeSection = await prisma.GradeSection.createMany({
     data: [
         // Grade 7
         { grade: 7, section: "Diamond" },
