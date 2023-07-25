@@ -41,7 +41,15 @@ export default eventHandler(async (event) => {
                 },
             });
         }
-    } else {
+
+        // Return the current existing user if their first and last names match
+        else {
+            return userInDatabase;
+        }
+    }
+
+    // Completely new user (no conflicting emails)
+    else {
         // Create a new user
         return await prisma.users.create({
             data: {
@@ -53,6 +61,4 @@ export default eventHandler(async (event) => {
             },
         });
     }
-
-    return userInDatabase;
 });
