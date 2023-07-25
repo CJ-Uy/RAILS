@@ -1,6 +1,6 @@
 import fs from "fs";
 import { prisma } from "~/server/db/prisma.js";
-    
+
 export default async function makeAccountabilityForm(data) {
     const pageScript = fs.readFileSync(
         "./server/app/forms/addPageNumbers/page.polyfill.txt",
@@ -8,10 +8,10 @@ export default async function makeAccountabilityForm(data) {
     );
 
     function getDateToday() {
-        let today = new Date();
-        let month = String(today.getMonth() + 1).padStart(2, "0");
-        let day = String(today.getDate()).padStart(2, "0");
-        let year = today.getFullYear();
+        const today = new Date();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        const year = today.getFullYear();
         return `${month} /${day}/${year}`;
     }
 
@@ -29,7 +29,7 @@ export default async function makeAccountabilityForm(data) {
         unit,
         teacherInCharge,
     } = data.requestData.basicInfo;
-    
+
     const { venue } = data.requestData.laboratorySetting;
 
     // ----- Get from database ---- //
@@ -49,45 +49,41 @@ export default async function makeAccountabilityForm(data) {
 
     // ----- Get the dates ---- //
     let dates = [];
-    // eslint-disable-next-line prettier/prettier
+
     for (
         let i = 0;
         i < data.requestData.laboratorySetting.requestDates.length;
         i++
     ) {
         dates.push(
-            // eslint-disable-next-line prettier/prettier
             `${data.requestData.laboratorySetting.requestDates[i].slice(
                 8,
-                10
+                10,
             )}` +
-                // eslint-disable-next-line prettier/prettier
                 `/${data.requestData.laboratorySetting.requestDates[i].slice(
                     5,
-                    7
+                    7,
                 )}` +
-                // eslint-disable-next-line prettier/prettier
                 `/${data.requestData.laboratorySetting.requestDates[i].slice(
                     0,
-                    4
-                )}`
+                    4,
+                )}`,
         );
     }
     dates = dates.join(", ");
     // ----- Endd of Getting the Dates ---- //
 
-    
     const timeOfUse =
         `${
             data.requestData.laboratorySetting.inclusiveTimeOfUse[0].hours
         }:${String(
-            data.requestData.laboratorySetting.inclusiveTimeOfUse[0].minutes
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[0].minutes,
         ).padStart(2, "0")}` +
         ` to ` +
         `${
             data.requestData.laboratorySetting.inclusiveTimeOfUse[1].hours
         }:${String(
-            data.requestData.laboratorySetting.inclusiveTimeOfUse[1].minutes
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[1].minutes,
         ).padStart(2, "0")}`;
 
     const studentName = `${data.requestData.basicInfo.firstname} ${data.requestData.basicInfo.lastname}`;
@@ -125,7 +121,7 @@ export default async function makeAccountabilityForm(data) {
 
     // ----- Start of basic info header ----- //
     // This adds the basic info of the request
-    let basicInfoHeader =
+    const basicInfoHeader =
         `
 <!DOCTYPE html>
 <html lang="en">
@@ -365,7 +361,7 @@ export default async function makeAccountabilityForm(data) {
 
     // ----- Start of requested by ----- //
     // This adds the instructions and terms and conditions as well as requestor and date requested
-    let requestedBy = `
+    const requestedBy = `
         <ul class="italics">
             <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
             <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
@@ -410,7 +406,7 @@ export default async function makeAccountabilityForm(data) {
 
     // ----- Start of notarization ----- //
     // Endorser and Approver are placed here
-    let notarization = `
+    const notarization = `
         <table class="sigs-table">
             <tr>
                 <td class="sigs-who">Endorsed By:</td>
@@ -433,9 +429,10 @@ export default async function makeAccountabilityForm(data) {
 `;
 
     return String(
-            basicInfoHeader +
+        basicInfoHeader +
             requestedItemsTable +
             requestedBy +
             groupmatesList +
-            notarization);
+            notarization,
+    );
 }
