@@ -17,7 +17,7 @@ function makeSelectionOptions(response) {
     for (let key in response.data.value) {
         options.push({
             label: response.data.value[key],
-            value: response.data.value[key],
+            value: key,
         });
     }
     return options;

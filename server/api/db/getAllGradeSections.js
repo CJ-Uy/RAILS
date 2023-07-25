@@ -16,10 +16,10 @@ export default defineEventHandler(async () => {
 
     const sortedGradeSection = sortDataByGradeAndSection(allGradeSection);
 
-    const formatedGradeSection = [];
-    for (const { grade, section } of sortedGradeSection) {
+    const formatedGradeSection = {};
+    for (const { id, grade, section } of sortedGradeSection) {
         const gradeSection = `${grade}-${section}`;
-        formatedGradeSection.push(gradeSection);
+        formatedGradeSection[id] = gradeSection;
     }
 
     return formatedGradeSection;

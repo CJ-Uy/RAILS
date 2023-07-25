@@ -1,7 +1,7 @@
-/* eslint-disable prefer-const */
 import fs from "fs";
-
-export default function makeLaboratoryReservationForm(data) {
+import { prisma } from "~/server/db/prisma.js";
+    
+export default async function makeAccountabilityForm(data) {
     const pageScript = fs.readFileSync(
         "./server/app/forms/addPageNumbers/page.polyfill.txt",
         "utf8",
@@ -17,6 +17,7 @@ export default function makeLaboratoryReservationForm(data) {
 
     const controlNo = "INSERT CONTROL NUMBER"; // TODO: Write an algorithm for this (22-23-0001)
     const endorser = "INSERT TEACHER NAME HERE"; // TODO: Make an approval sending system
+    const approver = "";
 
     const {
         campus,
@@ -24,10 +25,22 @@ export default function makeLaboratoryReservationForm(data) {
         gradeSection,
         numberOfStudents,
         subject,
+        concurrentTopic,
+        unit,
         teacherInCharge,
     } = data.requestData.basicInfo;
+    
     const { venue } = data.requestData.laboratorySetting;
 
+    // ----- Get from database ---- //
+    let gradeSectionValue = await prisma.gradeSection.findUnique({
+        where: {
+            id: gradeSection,
+        },
+    });
+    gradeSectionValue = `${gradeSectionValue.grade}-${gradeSectionValue.section}`;
+
+    // ----- Get the dates ---- //
     let dates = [];
     // eslint-disable-next-line prettier/prettier
     for (
@@ -39,33 +52,35 @@ export default function makeLaboratoryReservationForm(data) {
             // eslint-disable-next-line prettier/prettier
             `${data.requestData.laboratorySetting.requestDates[i].slice(
                 8,
-                10,
+                10
             )}` +
                 // eslint-disable-next-line prettier/prettier
                 `/${data.requestData.laboratorySetting.requestDates[i].slice(
                     5,
-                    7,
+                    7
                 )}` +
                 // eslint-disable-next-line prettier/prettier
                 `/${data.requestData.laboratorySetting.requestDates[i].slice(
                     0,
-                    4,
-                )}`,
+                    4
+                )}`
         );
     }
     dates = dates.join(", ");
+    // ----- Endd of Getting the Dates ---- //
 
+    
     const timeOfUse =
         `${
             data.requestData.laboratorySetting.inclusiveTimeOfUse[0].hours
         }:${String(
-            data.requestData.laboratorySetting.inclusiveTimeOfUse[0].minutes,
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[0].minutes
         ).padStart(2, "0")}` +
         ` to ` +
         `${
             data.requestData.laboratorySetting.inclusiveTimeOfUse[1].hours
         }:${String(
-            data.requestData.laboratorySetting.inclusiveTimeOfUse[1].minutes,
+            data.requestData.laboratorySetting.inclusiveTimeOfUse[1].minutes
         ).padStart(2, "0")}`;
 
     const studentName = `${data.requestData.basicInfo.firstname} ${data.requestData.basicInfo.lastname}`;
@@ -74,7 +89,32 @@ export default function makeLaboratoryReservationForm(data) {
 
     const groupmates = data.requestData.basicInfo.nameOfStudents;
 
-    const approver = "Admin 1";
+    // TODO: Fix this with custom components like a shopping cart
+    const quantity = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+    const item = [
+        "microscope",
+        "bunsen burner",
+        "petri dish",
+        "test tube",
+        "beaker",
+        "pipette",
+        "test tube rack",
+        "test tube holder",
+        "test tube brush",
+        "test tube clamp",
+    ];
+    const description = [
+        "to observe",
+        "to heat",
+        "to observe",
+        "to observe",
+        "to observe",
+        "to measure",
+        "to hold",
+        "to hold",
+        "to clean",
+        "to hold",
+    ];
 
     // ----- Start of basic info header ----- //
     // This adds the basic info of the request
@@ -239,7 +279,7 @@ export default function makeLaboratoryReservationForm(data) {
             </tr>
             <tr class="expander">
                 <td>
-                    <span class="remove-botB">Grade Level and Section:</span><span class="input">&emsp;${gradeSection}&emsp;&emsp;&emsp;</span>
+                    <span class="remove-botB">Grade Level and Section:</span><span class="input">&emsp;${gradeSectionValue}&emsp;&emsp;&emsp;</span>
                     <span class="right-side-basic-info"><span class="remove-botB"> &emsp; Number of Students:</span><span class="input">&emsp;${numberOfStudents}&emsp;&emsp;&emsp;</span></span>
                 </td>
             </tr>
