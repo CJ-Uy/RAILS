@@ -28,7 +28,7 @@ enum Role {
 
 model Users {
   id        String  @id @default(uuid())
-  email     String 
+  email     String
   firstName String
   lastName  String
   role      Role    @default(STUDENT)
@@ -87,6 +87,8 @@ model GradeSection {
 model Units {
   id                 String               @id @default(uuid())
   name               String
+  frequencyRank      Int                  @default(autoincrement()) @unique
+  createdAt          DateTime             @default(now())
   LaboratoryRequests LaboratoryRequests[]
 }
 
@@ -111,8 +113,8 @@ model LaboratoryLocations {
   id                           String                @id @default(uuid())
   name                         String
   description                  String?
-  dateAdded                    DateTime              @default(now())
-  dateRemoved                  DateTime?
+  createdAt                    DateTime              @default(now())
+  removedAt                    DateTime?
   laboratories                 Laboratories[]
   inventoryOfMaterials         InventoryOfMaterials? @relation(fields: [inventoryOfMaterialsSupplyId], references: [id])
   inventoryOfMaterialsSupplyId String?

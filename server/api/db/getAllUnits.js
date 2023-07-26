@@ -1,12 +1,12 @@
 import { prisma } from "~/server/db/prisma";
 
 export default defineEventHandler(async () => {
-    const allUnits = await prisma.Units.findMany();
+    const allUnits = await prisma.units.findMany();
 
-    const formatedUnits = {};
-    for (const { id, name } of allUnits) {
-        formatedUnits[id] = name;
+    const sortedUnits = [];
+    for (const { id, name, frequencyRank } of allUnits) {
+        sortedUnits[frequencyRank - 1] = [id, name];
     }
 
-    return formatedUnits;
+    return Object.fromEntries(sortedUnits);
 });

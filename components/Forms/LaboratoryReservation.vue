@@ -3,6 +3,20 @@ const labResStatus = ref(true);
 const showLabRes = computed(() => labResStatus.value === "false"); // Manual ! sign idk why it doesn't work
 
 const requestDates = ref([]);
+
+const laboratories = await useFetch("/api/db/getAllLaboratories");
+const laboratoriesOptions = ref(makeSelectionOptions(laboratories));
+
+function makeSelectionOptions(response) {
+    const options = [];
+    for (const key in response.data.value) {
+        options.push({
+            label: response.data.value[key],
+            value: key,
+        });
+    }
+    return options;
+}
 </script>
 
 <template>
@@ -33,14 +47,8 @@ const requestDates = ref([]);
             label="Preferred Laboratory Room"
             name="venue"
             validation="required"
-            :options="[
-                { label: 'Biology Laboratory', value: 'Biology Laboratory' },
-                {
-                    label: 'Chemistry Laboratory',
-                    value: 'Chemistry Laboratory',
-                },
-                { label: 'Physics Laboratory', value: 'Physics Laboratory' },
-            ]"
+            placeholder="Select Your Laboratory Room"
+            :options="laboratoriesOptions"
         />
         <FormKit
             v-model="requestDates"

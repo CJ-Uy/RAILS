@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const createUnits = await prisma.Units.createMany({
+const createUnits = await prisma.units.createMany({
     data: [
         { name: "Research Unit" },
         { name: "Chemistry Unit" },

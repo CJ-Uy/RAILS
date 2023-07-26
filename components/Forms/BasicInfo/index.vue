@@ -14,7 +14,7 @@ const unitsOptions = ref(makeSelectionOptions(units));
 
 function makeSelectionOptions(response) {
     const options = [];
-    for (let key in response.data.value) {
+    for (const key in response.data.value) {
         options.push({
             label: response.data.value[key],
             value: key,
