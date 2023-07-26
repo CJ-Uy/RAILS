@@ -1,7 +1,2 @@
-let object = {}
-
-object["hello"] = "World";
-
-for(const property in object) {
-    console.log(`${property}: ${object[property]}`);
-}
+let arr = [{ lmao: "hello" }, { lmao2: "hello2" }];
+console.log(Object.assign({}, ...arr));

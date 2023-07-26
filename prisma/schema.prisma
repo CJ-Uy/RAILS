@@ -27,8 +27,8 @@ enum Role {
 }
 
 model Users {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
+  id        String  @id @default(uuid())
+  email     String
   firstName String
   lastName  String
   role      Role    @default(STUDENT)
@@ -40,13 +40,13 @@ model Users {
   studentProfile Students? @relation(fields: [studentsId], references: [id])
   teacherProfile Teachers? @relation(fields: [teachersId], references: [id])
   adminProfile   Admins?   @relation(fields: [adminsId], references: [id])
-  studentsId     Int?
-  teachersId     Int?
-  adminsId       Int?
+  studentsId     String?
+  teachersId     String?
+  adminsId       String?
 }
 
 model Admins {
-  id             Int                  @id @default(autoincrement())
+  id             String               @id @default(uuid())
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
   signature      Bytes?               @db.Blob
@@ -55,7 +55,7 @@ model Admins {
 }
 
 model Teachers {
-  id                         Int                  @id @default(autoincrement())
+  id                         String               @id @default(uuid())
   signature                  Bytes?               @db.Blob
   createdAt                  DateTime             @default(now())
   updatedAt                  DateTime             @updatedAt
@@ -65,10 +65,10 @@ model Teachers {
 }
 
 model Students {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
 
-  gradeSectionId   GradeSection? @relation(fields: [gradeSectionCode], references: [id])
-  gradeSectionCode Int?
+  gradeSection   GradeSection? @relation(fields: [gradeSectionId], references: [id])
+  gradeSectionId String?
 
   grade   Int?
   section String?
@@ -78,15 +78,17 @@ model Students {
 }
 
 model GradeSection {
-  id       Int        @id @default(autoincrement())
+  id       String     @id @default(uuid())
   grade    Int
   section  String
   students Students[]
 }
 
 model Units {
-  id                 Int                  @id @default(autoincrement())
+  id                 String               @id @default(uuid())
   name               String
+  frequencyRank      Int                  @default(autoincrement()) @unique
+  createdAt          DateTime             @default(now())
   LaboratoryRequests LaboratoryRequests[]
 }
 
@@ -94,12 +96,12 @@ model Units {
 // LABORATORIES //
 // -------------------- //
 model Laboratories {
-  id          Int     @id @default(autoincrement())
+  id          String  @id @default(uuid())
   name        String
   description String?
 
   location   LaboratoryLocations @relation(fields: [locationId], references: [id])
-  locationId Int
+  locationId String
 
   supplies               InventoryOfMaterials[]
   equipment              InventoryOfEqupiment[]
@@ -108,26 +110,27 @@ model Laboratories {
 }
 
 model LaboratoryLocations {
-  id                           Int                   @id @default(autoincrement())
+  id                           String                @id @default(uuid())
   name                         String
   description                  String?
-  dateAdded                    DateTime              @default(now())
-  dateRemoved                  DateTime?
+  createdAt                    DateTime              @default(now())
+  removedAt                    DateTime?
   laboratories                 Laboratories[]
   inventoryOfMaterials         InventoryOfMaterials? @relation(fields: [inventoryOfMaterialsSupplyId], references: [id])
-  inventoryOfMaterialsSupplyId Int?
+  inventoryOfMaterialsSupplyId String?
   inventoryOfEqupiment         InventoryOfEqupiment? @relation(fields: [equipmentId], references: [id])
-  equipmentId                  Int?
+  equipmentId                  String?
   inventoryOfReagents          InventoryOfReagents?  @relation(fields: [reagentId], references: [id])
-  reagentId                    Int?
+  reagentId                    String?
 }
 
 model LaboratoryReservations {
-  id                 Int                  @id @default(autoincrement())
-  laboratoryReserved Laboratories         @relation(fields: [laboratoriesId], references: [id])
+  id                 String       @id @default(uuid())
+  laboratoryReserved Laboratories @relation(fields: [laboratoryId], references: [id])
+  laboratoryId       String
   startTime          DateTime
   endTime            DateTime
-  laboratoriesId     Int
+
   laboratoryRequests LaboratoryRequests[]
 }
 
@@ -136,7 +139,7 @@ model LaboratoryReservations {
 // -------------------- //
 model InventoryOfMaterials {
   //Materials refer to small devices for experiments (such as breakers and test tubes) and supplies of the Laboratory Unit (Cleaning Supplies etc..)
-  id                 Int                   @id @default(autoincrement())
+  id                 String                @id @default(uuid())
   itemName           String
   description        String
   additionalPurchase Int?
@@ -153,14 +156,14 @@ model InventoryOfMaterials {
   balancePerCount    Int?
   location           LaboratoryLocations[]
   laboratories       Laboratories?         @relation(fields: [laboratoriesId], references: [id])
-  laboratoriesId     Int?
+  laboratoriesId     String?
   laboratoryRequests LaboratoryRequests?   @relation(fields: [requestId], references: [id])
   requestId          Int?
 }
 
 model InventoryOfEqupiment {
   //Equipment refer to the large devices that may not be easily moved from one location to another
-  id                    Int                   @id @default(autoincrement())
+  id                    String                @id @default(uuid())
   equipmentCode         String
   equipmentName         String
   serialNumber          String?
@@ -176,14 +179,14 @@ model InventoryOfEqupiment {
   location              LaboratoryLocations[]
   status                String?
   laboratories          Laboratories?         @relation(fields: [laboratoriesId], references: [id])
-  laboratoriesId        Int?
+  laboratoriesId        String?
   laboratoryRequests    LaboratoryRequests?   @relation(fields: [requestId], references: [id])
   requestId             Int?
 }
 
 model InventoryOfReagents {
   //Reagents refer to all the chemicals (solid or liquid) Students can request for
-  id                 Int                   @id @default(autoincrement())
+  id                 String                @id @default(uuid())
   itemNumber         String?
   casNumber          String?
   chemicalName       String
@@ -203,7 +206,7 @@ model InventoryOfReagents {
   status             String?
   location           LaboratoryLocations[]
   laboratories       Laboratories?         @relation(fields: [laboratoriesId], references: [id])
-  laboratoriesId     Int?
+  laboratoriesId     String?
   laboratoryRequests LaboratoryRequests?   @relation(fields: [requestId], references: [id])
   requestId          Int?
 }
@@ -214,30 +217,30 @@ model InventoryOfReagents {
 model LaboratoryRequests {
   id              Int      @id
   requestor       Students @relation(fields: [requestorId], references: [id])
-  requestorId     Int
+  requestorId     String
   controlNumber   String?
   schoolYear      String?
   forSubject      String?
   concurrentTopic String?
 
-  unit   Units @relation(fields: [unitId], references: [id])
-  unitId Int
+  unit   Units  @relation(fields: [unitId], references: [id])
+  unitId String
 
   teacherInCharge   Teachers @relation("teacher_in_charge", fields: [teacherInChargeId], references: [id])
-  teacherInChargeId Int
+  teacherInChargeId String
 
   materialsNeeded InventoryOfMaterials[]
   equipmentNeeded InventoryOfEqupiment[]
   Reagents_Needed InventoryOfReagents[]
 
   Laboratory_Reservation    LaboratoryReservations @relation(fields: [Laboratory_Reservation_Id], references: [id])
-  Laboratory_Reservation_Id Int
+  Laboratory_Reservation_Id String
 
   otherGroupMembers Json?
   isSignedByTeacher Boolean  @default(false)
   isSignedByAdmin   Boolean  @default(false)
   signedTeacher     Teachers @relation("signed_teacher", fields: [signedTeacherId], references: [id])
-  signedTeacherId   Int
+  signedTeacherId   String
   signedAdmin       Admins   @relation(fields: [signedAdminId], references: [id])
-  signedAdminId     Int
+  signedAdminId     String
 }

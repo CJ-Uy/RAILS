@@ -1,22 +1,23 @@
-/* eslint-disable prefer-const */
 import fs from "fs";
+import { prisma } from "~/server/db/prisma.js";
 
-export default function makeLaboratoryReservationForm(data) {
+export default async function makeAccountabilityForm(data) {
     const pageScript = fs.readFileSync(
         "./server/app/forms/addPageNumbers/page.polyfill.txt",
         "utf8",
     );
 
     function getDateToday() {
-        let today = new Date();
-        let month = String(today.getMonth() + 1).padStart(2, "0");
-        let day = String(today.getDate()).padStart(2, "0");
-        let year = today.getFullYear();
+        const today = new Date();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        const year = today.getFullYear();
         return `${month} /${day}/${year}`;
     }
 
     const controlNo = "INSERT CONTROL NUMBER"; // TODO: Write an algorithm for this (22-23-0001)
     const endorser = "INSERT TEACHER NAME HERE"; // TODO: Make an approval sending system
+    const approver = "";
 
     const {
         campus,
@@ -26,27 +27,34 @@ export default function makeLaboratoryReservationForm(data) {
         subject,
         teacherInCharge,
     } = data.requestData.basicInfo;
+
     const { venue } = data.requestData.laboratorySetting;
 
+    // ----- Get from database ---- //
+    let gradeSectionValue = await prisma.gradeSection.findUnique({
+        where: {
+            id: gradeSection,
+        },
+    });
+    gradeSectionValue = `${gradeSectionValue.grade}-${gradeSectionValue.section}`;
+
+    // ----- Get the dates ---- //
     let dates = [];
-    // eslint-disable-next-line prettier/prettier
+
     for (
         let i = 0;
         i < data.requestData.laboratorySetting.requestDates.length;
         i++
     ) {
         dates.push(
-            // eslint-disable-next-line prettier/prettier
             `${data.requestData.laboratorySetting.requestDates[i].slice(
                 8,
                 10,
             )}` +
-                // eslint-disable-next-line prettier/prettier
                 `/${data.requestData.laboratorySetting.requestDates[i].slice(
                     5,
                     7,
                 )}` +
-                // eslint-disable-next-line prettier/prettier
                 `/${data.requestData.laboratorySetting.requestDates[i].slice(
                     0,
                     4,
@@ -54,6 +62,7 @@ export default function makeLaboratoryReservationForm(data) {
         );
     }
     dates = dates.join(", ");
+    // ----- Endd of Getting the Dates ---- //
 
     const timeOfUse =
         `${
@@ -74,11 +83,9 @@ export default function makeLaboratoryReservationForm(data) {
 
     const groupmates = data.requestData.basicInfo.nameOfStudents;
 
-    const approver = "Admin 1";
-
     // ----- Start of basic info header ----- //
     // This adds the basic info of the request
-    let basicInfoHeader =
+    const basicInfoHeader =
         `
 <!DOCTYPE html>
 <html lang="en">
@@ -239,7 +246,7 @@ export default function makeLaboratoryReservationForm(data) {
             </tr>
             <tr class="expander">
                 <td>
-                    <span class="remove-botB">Grade Level and Section:</span><span class="input">&emsp;${gradeSection}&emsp;&emsp;&emsp;</span>
+                    <span class="remove-botB">Grade Level and Section:</span><span class="input">&emsp;${gradeSectionValue}&emsp;&emsp;&emsp;</span>
                     <span class="right-side-basic-info"><span class="remove-botB"> &emsp; Number of Students:</span><span class="input">&emsp;${numberOfStudents}&emsp;&emsp;&emsp;</span></span>
                 </td>
             </tr>
@@ -266,7 +273,7 @@ export default function makeLaboratoryReservationForm(data) {
 
     // ----- Start of requested by ----- //
     // This adds the instructions and terms and conditions as well as requestor and date requested
-    let requestedBy = `
+    const requestedBy = `
         <ul class="italics">
             <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
             <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
@@ -311,7 +318,7 @@ export default function makeLaboratoryReservationForm(data) {
 
     // ----- Start of notarization ----- //
     // Endorser and Approver are placed here
-    let notarization = `
+    const notarization = `
         <table class="sigs-table">
             <tr>
                 <td class="sigs-who">Endorsed By:</td>
@@ -333,7 +340,7 @@ export default function makeLaboratoryReservationForm(data) {
 </html>
 `;
 
-    let laboratoryReservation =
+    const laboratoryReservation =
         basicInfoHeader + requestedBy + groupmatesList + notarization;
 
     return laboratoryReservation;

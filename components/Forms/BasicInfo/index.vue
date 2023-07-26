@@ -3,6 +3,25 @@ const accountEmail = useEmail();
 const accountFirstName = useFirstName();
 const accountLastName = useLastName();
 const schoolYear = useSchoolYear();
+
+// ----- Dynamic Selections -----
+// Grade Sections
+const gradeSections = await useFetch("/api/db/getAllGradeSections");
+const gradeSectionsOptions = ref(makeSelectionOptions(gradeSections));
+
+const units = await useFetch("/api/db/getAllUnits");
+const unitsOptions = ref(makeSelectionOptions(units));
+
+function makeSelectionOptions(response) {
+    const options = [];
+    for (const key in response.data.value) {
+        options.push({
+            label: response.data.value[key],
+            value: key,
+        });
+    }
+    return options;
+}
 </script>
 
 <template>
@@ -51,11 +70,7 @@ const schoolYear = useSchoolYear();
         name="gradeSection"
         placeholder="Select a Grade and Section"
         validation="required"
-        :options="[
-            { label: 'G7 - Diamond', value: '7-Diamond' },
-            { label: 'G7 - Emerald', value: '7-Emerald' },
-            { label: 'G7 - Ruby', value: '7-Ruby' },
-        ]"
+        :options="gradeSectionsOptions"
     />
     <FormKit
         type="select"
@@ -63,11 +78,7 @@ const schoolYear = useSchoolYear();
         name="unit"
         placeholder="Select the Unit the subject/teacher is under"
         validation="required"
-        :options="[
-            { label: 'Chemistry Unit', value: 'Chemistry Unit' },
-            { label: 'Reasearch Unit', value: 'Research Unit' },
-            { label: 'Physics Unit', value: 'Physics Unit' },
-        ]"
+        :options="unitsOptions"
     />
     <FormKit type="text" label="Subject" name="subject" validation="required" />
     <FormKit

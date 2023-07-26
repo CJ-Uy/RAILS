@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-
 const prisma = new PrismaClient();
 
 const createGradeSection = await prisma.gradeSection.createMany({
@@ -10,8 +9,8 @@ const createGradeSection = await prisma.gradeSection.createMany({
         { grade: 7, section: "Ruby" },
         // Grade 8
         { grade: 8, section: "Camia" },
-        { grade: 8, section: "Camia" },
-        { grade: 8, section: "Camia" },
+        { grade: 8, section: "Jasmine" },
+        { grade: 8, section: "Sampaguita" },
         // Grade 9
         { grade: 9, section: "Potassium" },
         { grade: 9, section: "Rubidium" },

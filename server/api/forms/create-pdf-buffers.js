@@ -12,13 +12,13 @@ export default defineEventHandler(async (event) => {
     if (
         body.requestData.laboratorySetting.hasLaboratoryReservation === "false"
     ) {
-        pdfBuffer = await convertHtmlToPdf(makeLaboratoryReservationForm(body));
+        pdfBuffer = await convertHtmlToPdf(await makeLaboratoryReservationForm(body));
         console.log("CREATED CID19.pdf at assets/pdftests/CID19.pdf");
         pdfBuffers.CID19 = pdfBuffer;
     }
 
     // Make CID 20
-    pdfBuffer = await convertHtmlToPdf(makeAccountabilityForm(body));
+    pdfBuffer = await convertHtmlToPdf(String(await makeAccountabilityForm(body)));
     pdfBuffers.CID20 = pdfBuffer;
     console.log("CREATED CID20.pdf at assets/pdftests/CID20.pdf");
 
