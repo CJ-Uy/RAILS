@@ -13,7 +13,6 @@ const createUnits = await prisma.Units.createMany({
         { name: "Filipino Unit" },
         { name: "English Unit" },
         { name: "PEHM Unit" },
-        
     ],
     skipDuplicates: true,
 });
