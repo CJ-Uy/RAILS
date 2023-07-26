@@ -33,7 +33,7 @@ When creating changes to the database schema through the ```schema.prisma``` fil
 ```bash
 npm run dbmigrate
 ```
-Finally, run all the files inside ```./prisma/devScripts/populateDB``` to populate the database with data used in some of the functionality such as the options in the forms.
+Finally, run all the files inside ```./prisma/devScripts/populateDB``` in the correct order to populate the database with data used in some of the functionality such as the options in the forms.
 
 ## Production
 
