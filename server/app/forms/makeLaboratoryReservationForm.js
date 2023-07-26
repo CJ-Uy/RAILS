@@ -29,6 +29,13 @@ export default async function makeAccountabilityForm(data) {
     } = data.requestData.basicInfo;
 
     const { venue } = data.requestData.laboratorySetting;
+    const venueValue = (
+        await prisma.laboratories.findUnique({
+            where: {
+                id: venue,
+            },
+        })
+    ).name;
 
     // ----- Get from database ---- //
     let gradeSectionValue = await prisma.gradeSection.findUnique({
@@ -264,7 +271,7 @@ export default async function makeAccountabilityForm(data) {
             </tr>
             <tr class="expander">
                 <td>
-                    <span class="remove-botB">Venue of Experiment: </span><span class="input">&emsp;${venue}&emsp;</span>
+                    <span class="remove-botB">Venue of Experiment: </span><span class="input">&emsp;${venueValue}&emsp;</span>
                 </td>
             </tr>
         </table>
