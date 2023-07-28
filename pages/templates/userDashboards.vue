@@ -1,10 +1,14 @@
+<!-- NOTES -->
+<!-- Maybe use Layouts in nuxt instead -->
+<!-- For the manual role auth maybe use a function you can import if it is not supported in layouts -->
+
 <script setup>
 // Import statements
 useHead({
     title: "EVC LABS | Name of Page",
 });
 
-// Manual Role Auth (maybe make it a function and import it?)
+// Manual Role Auth
 const { data } = await useFetch("/api/user/me");
 // STUDENT Role
 // if (data.value.role === "TEACHER") {
