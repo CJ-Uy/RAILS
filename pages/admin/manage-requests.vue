@@ -6,6 +6,7 @@ useHead({
 });
 
 const canvasRef = ref(null);
+
 let signaturePad;
 onMounted(() => {
     signaturePad = new SignaturePad(canvasRef.value);
@@ -23,17 +24,33 @@ function save() {
 </script>
 
 <template>
-    <div class="flex flex-row">
+    <div class="flex w-screen flex-row">
         <div class="basis-[15.276146%]">
             <!-- Taken from figma 260/1702-->
             <UserAdminNavbar />
         </div>
-        <div class="basis-auto">
-            <h1>ADMIN REQUEST MANAGEMENT</h1>
+        <div class="flex basis-[84.723854%] flex-col">
             <div>
-                <canvas ref="canvasRef"></canvas>
-                <button @click="clear">Clear</button>
-                <button @click="save">Save</button>
+                <h1>ADMIN REQUEST MANAGEMENT</h1>
+            </div>
+            <div class="flex flex-col items-center justify-center p-2">
+                <div class="rounded border-2 border-black">
+                    <canvas ref="canvasRef"></canvas>
+                </div>
+                <div class="p-2">
+                    <button
+                        class="mx-1 w-20 rounded bg-gray-400 p-1.5"
+                        @click="clear"
+                    >
+                        Clear
+                    </button>
+                    <button
+                        class="mx-1 w-20 rounded bg-light-accent p-1.5"
+                        @click="save"
+                    >
+                        Save
+                    </button>
+                </div>
             </div>
         </div>
     </div>
