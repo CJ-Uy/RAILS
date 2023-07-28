@@ -4,6 +4,7 @@ import {
     createAutoHeightTextareaPlugin,
     createFloatingLabelsPlugin,
     createMultiStepPlugin,
+    createLocalStoragePlugin,
 } from "@formkit/addons";
 
 import "@formkit/addons/css/multistep";
@@ -18,6 +19,16 @@ const config = defaultConfig({
         createAutoHeightTextareaPlugin(),
         createFloatingLabelsPlugin(),
         createMultiStepPlugin(),
+        createLocalStoragePlugin({
+            // plugin defaults:
+            prefix: "formkit",
+            key: undefined,
+            control: undefined,
+            maxAge: 3600000, // 1 hour
+            debounce: 200,
+            beforeSave: undefined,
+            beforeLoad: undefined,
+        }),
     ],
     theme: "genesis",
     inputs: {
@@ -27,5 +38,3 @@ const config = defaultConfig({
 });
 
 export default config;
-
-// Maybe add local storage saving too: https://formkit.com/plugins/local-storage

@@ -80,6 +80,7 @@ function downloadRequests(pdfBuffers, lastname) {
             type="form"
             :actions="false"
             name="requestData"
+            use-local-storage
             @submit="submitHandler"
         >
             <FormKit
