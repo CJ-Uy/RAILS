@@ -72,6 +72,17 @@ const profileImageSrc = ref(data.value.imageLink);
                     NEW REQUEST</NuxtLink
                 >
                 <NuxtLink
+                    to="/admin/manage-requests"
+                    class="flex cursor-pointer items-center hover:text-light-accent"
+                >
+                    <!-- TODO: Make this icon conisstent with the others -->
+                    <Icon
+                        name="material-symbols:manage-search"
+                        class="cursor-pointer"
+                    />
+                    MANAGE REQUESTS</NuxtLink
+                >
+                <NuxtLink
                     to="/admin/history"
                     class="flex cursor-pointer items-center hover:text-light-accent"
                 >
