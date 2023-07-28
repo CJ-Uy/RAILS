@@ -28,7 +28,12 @@ function clear() {
 function save() {
     const signature = signaturePad.toDataURL();
     console.log(signature);
-    // Save signature to database or do something else with it
+    // Save signature to database
+    // 1. Make dataURL to svg with signaturePad.toSVG();
+    // 2. convert svg to base 64 svgFileData.toString()
+    // 3. save String to database
+    // 4. retrieve svg from string ¯\_(ツ)_/¯ (https://stackoverflow.com/questions/24107288/creating-an-svg-dom-element-from-a-string)
+
 }
 </script>
 
