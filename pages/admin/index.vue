@@ -9,6 +9,7 @@ if (data.value.role === "STUDENT") {
     await navigateTo("/teacher");
 }
 
+// TODO: remove these and just use the /api/user/me apply to forms too
 // Initialize state variables
 const accountEmail = useEmail();
 const accountFirstName = useFirstName();
@@ -26,7 +27,7 @@ accountLastName.value = data.value?.lastName;
             <!-- Taken from figma 260/1702-->
             <UserAdminNavbar />
         </div>
-        <div class="basis-auto">
+        <div class="flex basis-[84.723854%] flex-col">
             <h1>ADMIN DASHBOARD PAGE</h1>
         </div>
     </div>

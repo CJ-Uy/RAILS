@@ -14,7 +14,7 @@ if (data.value.role === "TEACHER") {
             <!-- Taken from figma 260/1702-->
             <UserStudentNavbar />
         </div>
-        <div class="basis-auto">
+        <div class="flex basis-[84.723854%] flex-col">
             <h1>STUDENT PAST REQUESTS</h1>
         </div>
     </div>

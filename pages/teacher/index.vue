@@ -3,7 +3,7 @@ useHead({
     title: "EVC LABS Teacher | Dashboard",
 });
 const { data } = await useFetch("/api/user/me");
-if (data.value.role == "STUDENT"){
+if (data.value.role == "STUDENT") {
     await navigateTo("/student");
 }
 

@@ -20,7 +20,7 @@ accountLastName.value = data.value?.lastName;
 
 <template>
     <div class="flex flex-row">
-        <div class="basis-[15.276146%]">
+        <div class="flex basis-[84.723854%] flex-col">
             <!-- Taken from figma 260/1702-->
             <UserStudentNavbar />
         </div>

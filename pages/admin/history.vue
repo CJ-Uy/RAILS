@@ -16,7 +16,7 @@ if (data.value.role === "STUDENT") {
             <!-- Taken from figma 260/1702-->
             <UserAdminNavbar />
         </div>
-        <div class="basis-auto">
+        <div class="flex basis-[84.723854%] flex-col">
             <h1>ADMIN HISTORY PAGE</h1>
         </div>
     </div>

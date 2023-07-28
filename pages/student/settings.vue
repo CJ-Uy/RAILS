@@ -4,7 +4,7 @@
             <!-- Taken from figma 260/1702-->
             <UserStudentNavbar />
         </div>
-        <div class="basis-auto">
+        <div class="flex basis-[84.723854%] flex-col">
             <h1>SETTINGS</h1>
             <h2>
                 If you are a teacher please send a request to change your role
