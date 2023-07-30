@@ -1,9 +1,17 @@
 <script setup>
+import { prisma } from "server/db/prisma";
 import SignaturePad from "signature_pad";
 
 useHead({
     title: "EVC LABS | Requests Management",
 });
+
+const { data } = await useFetch("/api/user/me");
+if (data.value.role === "STUDENT") {
+    await navigateTo("/student");
+} else if (data.value.role === "TEACHER") {
+    await navigateTo("/teacher");
+}
 
 const saveNewSignature = ref(false);
 const canvasRef = ref(null);
@@ -25,8 +33,20 @@ function clear() {
     signaturePad.clear();
 }
 
-function save() {
+async function save() {
     const signature = signaturePad.toSVG();
+    await prisma.users.update({
+        where: {
+            id: data.value.id,
+        },
+        data: {
+            adminProfile: {
+                update: {
+                    signature: signature.toString(),
+                },
+            },
+        },
+    });
     console.log(signature.toString());
     // Save signature to database
     // 1. Make dataURL to svg with signaturePad.toSVG();

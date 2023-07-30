@@ -4,13 +4,13 @@ useHead({
     title: "PSHS-EVC LABS | About",
 });
 
-definePageMeta({ auth: false }); // This allows the page to be seen by "Authenticated" and "Unauthenticated" users
+// [auth: false] allows the page to be seen by "Authenticated" and "Unauthenticated" users
+definePageMeta({ auth: false, layout: "landing-pages" }); 
 // PAGE META END
 </script>
 
 <template>
     <div>
-        <LandingNavbar />
         <h1>This is the about Page</h1>
     </div>
 </template>

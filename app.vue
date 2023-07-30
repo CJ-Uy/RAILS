@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <!-- Add page meta tags here (SEO optimizations needed) -->
+    <NuxtLayout>
         <NuxtPage />
-    </div>
+    </NuxtLayout>
 </template>

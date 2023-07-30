@@ -9,33 +9,39 @@ const students = ref([]);
 </script>
 
 <template>
-    <h1>MATERIALS REQUEST</h1>
     <div>
-        <FormKit
-            v-slot="{ items }"
-            v-model="students"
-            type="list"
-            name="nameOfStudents"
-            dynamic
-        >
-            <button id="addStudent" type="button" @click="students.unshift('')">
-                + Add a Reagent
-            </button>
-            <div v-for="(item, index) in items" :key="item" class="student">
-                <FormKit type="text" :index="index" />
-                <ul class="controls">
-                    <li>
-                        <button
-                            type="button"
-                            class="button close"
-                            @click="students.splice(index, 1)"
-                        >
-                            <FormKitIcon icon="close" />
-                        </button>
-                    </li>
-                </ul>
-            </div>
-        </FormKit>
+        <h1>Reagent REQUEST</h1>
+        <div>
+            <FormKit
+                v-slot="{ items }"
+                v-model="students"
+                type="list"
+                name="nameOfStudents"
+                dynamic
+            >
+                <button
+                    id="addStudent"
+                    type="button"
+                    @click="students.unshift('')"
+                >
+                    + Add a Reagent
+                </button>
+                <div v-for="(item, index) in items" :key="item" class="student">
+                    <FormKit type="text" :index="index" />
+                    <ul class="controls">
+                        <li>
+                            <button
+                                type="button"
+                                class="button close"
+                                @click="students.splice(index, 1)"
+                            >
+                                <FormKitIcon icon="close" />
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </FormKit>
+        </div>
     </div>
 </template>
 
@@ -97,4 +103,3 @@ h1 {
     color: var(--fk-color-danger);
 }
 </style>
-

@@ -2,10 +2,10 @@
 useHead({
     title: "EVC LABS Teacher | Dashboard",
 });
-const { data } = await useFetch("/api/user/me");
-if (data.value.role == "STUDENT") {
-    await navigateTo("/student");
-}
+
+// authentication and the navbar is addedd through the layout
+definePageMeta({ layout: "teacher-pages" });
+const user = inject("user");
 
 // Initialize state variables
 const accountEmail = useEmail();
@@ -13,9 +13,9 @@ const accountFirstName = useFirstName();
 const accountLastName = useLastName();
 
 // Set state variables based on user identity, this is so it can auto populate forms but still be changeable
-accountEmail.value = data.value?.email;
-accountFirstName.value = data.value?.firstName;
-accountLastName.value = data.value?.lastName;
+accountEmail.value = user.email;
+accountFirstName.value = user.firstName;
+accountLastName.value = user.lastName;
 </script>
 
 <template>

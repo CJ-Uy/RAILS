@@ -4,7 +4,8 @@ useHead({
     title: "PSHS-EVC LABS | Home",
 });
 
-definePageMeta({ auth: false }); // This allows the page to be seen by "Authenticated" and "Unauthenticated" users
+// [auth: false] allows the page to be seen by "Authenticated" and "Unauthenticated" users
+definePageMeta({ auth: false, layout: "landing-pages" }); 
 // PAGE META END
 
 // AUTH FUNCTIONS
@@ -39,8 +40,6 @@ async function sendEmail() {
 
 <template>
     <div>
-        <LandingNavbar />
-
         <h1 class="text-3xl font-bold text-green-500">GOOGLE SIGN IN</h1>
 
         <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE -->
