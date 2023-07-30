@@ -26,8 +26,8 @@ function clear() {
 }
 
 function save() {
-    const signature = signaturePad.toDataURL();
-    console.log(signature);
+    const signature = signaturePad.toSVG();
+    console.log(signature.toString());
     // Save signature to database
     // 1. Make dataURL to svg with signaturePad.toSVG();
     // 2. convert svg to base 64 svgFileData.toString()
