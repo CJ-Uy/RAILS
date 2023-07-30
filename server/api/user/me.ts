@@ -62,3 +62,7 @@ export default eventHandler(async (event) => {
         });
     }
 });
+
+// import { getToken } from "#auth";
+
+// export default eventHandler((event) => getToken({ event }));
