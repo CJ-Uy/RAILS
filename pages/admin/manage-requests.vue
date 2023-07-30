@@ -7,6 +7,7 @@ useHead({
 
 // authentication and the navbar is addedd through the layout
 definePageMeta({ layout: "admin-pages" });
+const user = inject("user");
 
 const saveNewSignature = ref(false);
 const canvasRef = ref(null);
@@ -29,25 +30,15 @@ function clear() {
 }
 
 async function save() {
-    const signature = signaturePad.toSVG();
-    await prisma.users.update({
-        where: {
-            id: data.value.id,
-        },
-        data: {
-            adminProfile: {
-                update: {
-                    signature: signature.toString(),
-                },
-            },
+    const signature = signaturePad.toSVG().toString();
+    const saveSignature = await useFetch("/api/db/saveSignature", {
+        method: "POST",
+        body: {
+            user: user,
+            signature: signature,
         },
     });
-    console.log(signature.toString());
-    // Save signature to database
-    // 1. Make dataURL to svg with signaturePad.toSVG();
-    // 2. convert svg to base 64 svgFileData.toString()
-    // 3. save String to database
-    // 4. retrieve svg from string ¯\_(ツ)_/¯ (https://stackoverflow.com/questions/24107288/creating-an-svg-dom-element-from-a-string)
+    // TODO: Figure out how to retrieve svg from string ¯\_(ツ)_/¯ (https://stackoverflow.com/questions/24107288/creating-an-svg-dom-element-from-a-string)
 }
 </script>
 
