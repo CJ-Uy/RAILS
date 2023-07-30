@@ -49,14 +49,14 @@ model Admins {
   id             String               @id @default(uuid())
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
-  signature      String?
+  signature      String?              @db.MediumText
   signedRequests LaboratoryRequests[]
   userProfile    Users[]
 }
 
 model Teachers {
   id                         String               @id @default(uuid())
-  signature                  String?
+  signature                  String?              @db.MediumText
   createdAt                  DateTime             @default(now())
   updatedAt                  DateTime             @updatedAt
   receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge") //TODO rearrange this when i get to requests
