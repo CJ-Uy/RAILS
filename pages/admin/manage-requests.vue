@@ -1,5 +1,4 @@
 <script setup>
-import { prisma } from "~/server/db/prisma";
 import SignaturePad from "signature_pad";
 
 useHead({

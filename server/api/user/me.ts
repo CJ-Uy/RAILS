@@ -1,4 +1,4 @@
-import { prisma } from "~/server/db/prisma";
+import prisma from "~/server/db/prisma";
 import { getServerSession } from "#auth";
 
 export default eventHandler(async (event) => {
