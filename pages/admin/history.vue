@@ -2,23 +2,14 @@
 useHead({
     title: "EVC LABS | Admin History",
 });
-const { data } = await useFetch("/api/user/me");
-if (data.value.role === "STUDENT") {
-    await navigateTo("/student");
-} else if (data.value.role === "TEACHER") {
-    await navigateTo("/teacher");
-}
+
+// authentication and the navbar is addedd through the layout
+definePageMeta({ layout: "admin-pages" });
 </script>
 
 <template>
-    <div class="flex flex-row">
-        <div class="basis-[15.276146%]">
-            <!-- Taken from figma 260/1702-->
-            <UserAdminNavbar />
-        </div>
-        <div class="basis-auto">
-            <h1>ADMIN HISTORY PAGE</h1>
-        </div>
+    <div>
+        <h1>ADMIN HISTORY PAGE</h1>
     </div>
 </template>
 

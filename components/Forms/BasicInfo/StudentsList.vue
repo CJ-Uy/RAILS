@@ -5,33 +5,39 @@ const students = ref([accountName.value]);
 </script>
 
 <template>
-    <h1>Name of Students</h1>
     <div>
-        <FormKit
-            v-slot="{ items }"
-            v-model="students"
-            type="list"
-            name="nameOfStudents"
-            dynamic
-        >
-            <button id="addStudent" type="button" @click="students.unshift('')">
-                + Add a Student
-            </button>
-            <div v-for="(item, index) in items" :key="item" class="student">
-                <FormKit type="text" :index="index" />
-                <ul class="controls">
-                    <li>
-                        <button
-                            type="button"
-                            class="button close"
-                            @click="students.splice(index, 1)"
-                        >
-                            <FormKitIcon icon="close" />
-                        </button>
-                    </li>
-                </ul>
-            </div>
-        </FormKit>
+        <h1>Name of Students</h1>
+        <div>
+            <FormKit
+                v-slot="{ items }"
+                v-model="students"
+                type="list"
+                name="nameOfStudents"
+                dynamic
+            >
+                <button
+                    id="addStudent"
+                    type="button"
+                    @click="students.unshift('')"
+                >
+                    + Add a Student
+                </button>
+                <div v-for="(item, index) in items" :key="item" class="student">
+                    <FormKit type="text" :index="index" />
+                    <ul class="controls">
+                        <li>
+                            <button
+                                type="button"
+                                class="button close"
+                                @click="students.splice(index, 1)"
+                            >
+                                <FormKitIcon icon="close" />
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </FormKit>
+        </div>
     </div>
 </template>
 

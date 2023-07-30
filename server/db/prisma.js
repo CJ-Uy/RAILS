@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export { prisma };
+export default prisma;
 
 /*
     Doing this is important because it allows us to use the same instance of 

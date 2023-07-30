@@ -1,5 +1,5 @@
 import fs from "fs";
-import { prisma } from "~/server/db/prisma.js";
+import prisma from "~/server/db/prisma.js";
 
 export default async function makeAccountabilityForm(data) {
     const pageScript = fs.readFileSync(

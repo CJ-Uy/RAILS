@@ -1,4 +1,4 @@
-import { prisma } from "~/server/db/prisma";
+import prisma from "~/server/db/prisma";
 
 function sortDataByGradeAndSection(arr) {
     return arr.sort((a, b) => {

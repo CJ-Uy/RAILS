@@ -21,17 +21,17 @@
         "@nuxt/eslint-config": "^0.1.1",
         "@nuxtjs/color-mode": "^3.3.0",
         "@nuxtjs/eslint-config-typescript": "^12.0.0",
-        "@nuxtjs/fontaine": "^0.4.0",
+        "@nuxtjs/fontaine": "^0.4.1",
         "@nuxtjs/tailwindcss": "^6.8.0",
         "@sidebase/nuxt-auth": "^0.5.0",
-        "@types/node": "^18.16.19",
-        "@typescript-eslint/parser": "^5.62.0",
+        "@types/node": "^20.4.5",
+        "@typescript-eslint/parser": "^6.2.0",
         "better-npm-audit": "^3.7.3",
-        "eslint": "^8.45.0",
-        "eslint-config-prettier": "^8.8.0",
+        "eslint": "^8.46.0",
+        "eslint-config-prettier": "^8.9.0",
         "eslint-plugin-prettier": "^5.0.0",
         "nodemon": "^3.0.1",
-        "npm-check-updates": "^16.10.16",
+        "npm-check-updates": "^16.10.17",
         "nuxt": "^3.6.5",
         "nuxt-icon": "^0.4.2",
         "nuxt-icons": "^3.2.1",
@@ -48,6 +48,8 @@
         "@prisma/client": "^5.0.0",
         "@vuepic/vue-datepicker": "^5.4.0",
         "nuxt-mailer": "^0.11.0",
-        "puppeteer": "^20.9.0"
+        "puppeteer": "^20.9.0",
+        "signature_pad": "^4.1.6",
+        "vue-simple-calendar": "^6.3.1"
     }
 }
