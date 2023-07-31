@@ -27,6 +27,13 @@ enum Role {
   ADMIN
 }
 
+model SchoolYear {
+  id        String  @id @default(uuid())
+  yearStart Int
+  yearEnd   Int
+  createdAt DateTime @default(now())
+}
+
 model Users {
   id        String  @id @default(uuid())
   email     String
