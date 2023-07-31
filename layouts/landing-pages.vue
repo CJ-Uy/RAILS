@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <LandingNavbar />
+            <LandingNavBar />
         </div>
         <div>
             <slot />
