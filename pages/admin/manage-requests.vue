@@ -40,6 +40,8 @@ async function save() {
     });
     // TODO: Figure out how to retrieve svg from string ¯\_(ツ)_/¯ (https://stackoverflow.com/questions/24107288/creating-an-svg-dom-element-from-a-string)
 }
+
+const isOpen = ref(false);
 </script>
 
 <template>
@@ -48,6 +50,11 @@ async function save() {
             <h1>ADMIN REQUEST MANAGEMENT</h1>
         </div>
         <div>
+            <UButton label="NEW SIGNATURE" @click="isOpen = true" color="primary" />
+
+            <UModal v-model="isOpen">
+                <h1>HELLO WORLD</h1>
+            </UModal>
             <button
                 v-if="!saveNewSignature"
                 class="rounded bg-light-primary p-2 text-dark-text"
