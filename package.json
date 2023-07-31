@@ -46,7 +46,6 @@
         "@formkit/nuxt": "^0.17.5",
         "@nuxt/image-edge": "^1.0.0-rc.1-28164352.ad7c010",
         "@prisma/client": "^5.0.0",
-        "@s3rver/nuxt-modal": "^1.1.5",
         "@vuepic/vue-datepicker": "^5.4.0",
         "nuxt-mailer": "^0.11.0",
         "puppeteer": "^20.9.0",
