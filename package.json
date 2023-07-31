@@ -25,7 +25,7 @@
         "@nuxtjs/fontaine": "^0.4.1",
         "@sidebase/nuxt-auth": "^0.5.0",
         "@types/node": "^20.4.5",
-        "@typescript-eslint/parser": "^6.2.0",
+        "@typescript-eslint/parser": "^6.2.1",
         "better-npm-audit": "^3.7.3",
         "eslint": "^8.46.0",
         "eslint-config-prettier": "^8.9.0",
@@ -44,7 +44,7 @@
     "dependencies": {
         "@formkit/addons": "^0.17.5",
         "@formkit/nuxt": "^0.17.5",
-        "@nuxt/image-edge": "^1.0.0-rc.1-28164352.ad7c010",
+        "@nuxt/image-edge": "^1.0.0-rc.1-28180077.d51e794",
         "@prisma/client": "^5.0.0",
         "@vuepic/vue-datepicker": "^5.4.0",
         "nuxt-mailer": "^0.11.0",
