@@ -9,7 +9,7 @@
 // -------------------- // 
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"] // https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
 }
 
@@ -28,7 +28,7 @@ enum Role {
 }
 
 model SchoolYear {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   yearStart Int
   yearEnd   Int
   createdAt DateTime @default(now())
@@ -51,6 +51,8 @@ model Users {
   studentsId     String?
   teachersId     String?
   adminsId       String?
+
+  changeRoleRequest ChangeRoleRequests[]
 }
 
 model Admins {
@@ -83,6 +85,18 @@ model Students {
 
   laboratoryRequests LaboratoryRequests[]
   userProfile        Users[]
+}
+
+model ChangeRoleRequests {
+  id String @id @default(uuid())
+
+  user   Users  @relation(fields: [userId], references: [id])
+  userId String
+
+  wantedRole Role
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model GradeSection {
