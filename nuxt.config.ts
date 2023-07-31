@@ -7,8 +7,9 @@ export default defineNuxtConfig({
         "@sidebase/nuxt-auth", // https://nuxt.com/modules/nuxt-auth (Next-auth wrapper for user authentication)
 
         // CSS and styling modules
-        "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
-        "@nuxtjs/color-mode", // https://nuxt.com/modules/color-mode (dark mode and other themes)
+        // "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
+        // "@nuxtjs/color-mode", // https://nuxt.com/modules/color-mode (dark mode and other themes)
+        "@nuxthq/ui", // https://ui.nuxtlabs.com/getting-started (Component Library)
 
         // Optimization modules
         "@nuxt/image-edge", // https://v1.image.nuxtjs.org/ (Image loading optimization)
@@ -31,8 +32,13 @@ export default defineNuxtConfig({
         transpile: ["@vuepic/vue-datepicker"], // https://vue3datepicker.com/ (datepicker calendar and time vue components)
     },
 
+    ui: {
+        global: true,
+        icons: "all",
+    },
+
     colorMode: {
-        classSuffix: "",
+        preference: "light",
     },
 
     formkit: {
