@@ -14,10 +14,13 @@ const totalItems = ref();
 
 // Searching Rows
 //const { pendingm, data: allChangeRoleRequests } = await useLazyAsyncData("allChangeRoleRequests", () => $fetch("/api/db/getAllRoleChangeRequests"));
-const allChangeRoleRequests = await useFetch(
-    "/api/db/getAllRoleChangeRequests",
-);
+const allChangeRoleRequests = await useFetch("/api/db/manageRoles/getAll");
 const allChangeRoleRequestsData = ref(allChangeRoleRequests.data);
+
+async function updateTable() {
+    let updatedValues = await useFetch("/api/db/manageRoles/getAll");
+    allChangeRoleRequestsData.value = updatedValues.data.value;
+}
 
 const searchQuery = ref("");
 const filteredRows = computed(() => {
@@ -55,6 +58,18 @@ function selectRow(row) {
 }
 
 const selectedRequests = ref([]);
+
+// Deleting
+async function delteRequest() {
+    // TODO: Add confirmation modal
+    for (const request of selectedRequests.value) {
+        await useFetch("/api/db/manageRoles/delete", {
+            method: "POST",
+            body: request.id,
+        });
+    }
+    updateTable();
+}
 </script>
 
 <template>
@@ -65,26 +80,29 @@ const selectedRequests = ref([]);
             </template>
 
             <div>
-                <!-- Search and Filter -->
-                <div class="w-[150px]">
-                    <UInput
-                        v-model="searchQuery"
-                        placeholder="Search..."
-                        size="sm"
-                        icon="i-heroicons-magnifying-glass-20-solid"
-                        :ui="{ icon: { trailing: { pointer: '' } } }"
-                    >
-                        <template #trailing>
-                            <UButton
-                                v-show="searchQuery !== ''"
-                                color="gray"
-                                variant="link"
-                                icon="i-heroicons-x-mark-20-solid"
-                                :padded="false"
-                                @click="searchQuery = ''"
-                            />
-                        </template>
-                    </UInput>
+                <div class="flex flex-row">
+                    <UButton icon="i-material-symbols-refresh" @click="updateTable" class="mr-2" />
+                    <!-- Search and Filter -->
+                    <div class="w-[150px]">
+                        <UInput
+                            v-model="searchQuery"
+                            placeholder="Search..."
+                            size="sm"
+                            icon="i-heroicons-magnifying-glass-20-solid"
+                            :ui="{ icon: { trailing: { pointer: '' } } }"
+                        >
+                            <template #trailing>
+                                <UButton
+                                    v-show="searchQuery !== ''"
+                                    color="gray"
+                                    variant="link"
+                                    icon="i-heroicons-x-mark-20-solid"
+                                    :padded="false"
+                                    @click="searchQuery = ''"
+                                />
+                            </template>
+                        </UInput>
+                    </div>
                 </div>
 
                 <!-- Table of Values -->
@@ -108,7 +126,7 @@ const selectedRequests = ref([]);
 
             <template #footer>
                 <!-- Action Buttons -->
-                <UButton label="DELETE" />
+                <UButton label="DELETE" @click="delteRequest" class="mr-3" />
                 <UButton label="APPROVE" />
             </template>
         </UCard>
