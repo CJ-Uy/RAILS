@@ -20,6 +20,6 @@ accountLastName.value = user.lastName;
 
 <template>
     <div>
-        <h1>STUDENT DASHBOARD PAGE</h1>
+        <UserDashboardHeader title="DASHBOARD" />
     </div>
 </template>

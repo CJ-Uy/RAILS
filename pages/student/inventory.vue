@@ -9,7 +9,7 @@ definePageMeta({ layout: "student-pages" });
 
 <template>
     <div>
-        <h1>STUDENT INVENTORY VIEW</h1>
+        <UserDashboardHeader title="INVENTORY" />
     </div>
 </template>
 

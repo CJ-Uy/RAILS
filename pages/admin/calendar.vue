@@ -9,7 +9,7 @@ definePageMeta({ layout: "admin-pages" });
 
 <template>
     <div>
-        <h1>ADMIN CALENDAR PAGE</h1>
+        <UserDashboardHeader title="ADMIN | CALENDAR" />
     </div>
 </template>
 

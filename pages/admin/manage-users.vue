@@ -1,16 +1,15 @@
 <script setup>
 useHead({
-    title: "EVC LABS | Admin History",
+    title: "EVC LABS | Requests Management",
 });
 
 // authentication and the navbar is addedd through the layout
 definePageMeta({ layout: "admin-pages" });
+const user = inject("user");
 </script>
 
 <template>
     <div>
-        <UserDashboardHeader title="ADMIN | HISTORY" />
+        <UserDashboardHeader title="ADMIN | USER MANAGEMENT" />
     </div>
 </template>
-
-<style scoped></style>

@@ -1,4 +1,6 @@
 <script setup>
+import SignaturePad from "signature_pad";
+
 const saveNewSignature = ref(false);
 const canvasRef = ref(null);
 

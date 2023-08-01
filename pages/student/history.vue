@@ -9,7 +9,7 @@ definePageMeta({ layout: "student-pages" });
 
 <template>
     <div>
-        <h1>STUDENT PAST REQUESTS</h1>
+        <UserDashboardHeader title="HISTORY" />
     </div>
 </template>
 

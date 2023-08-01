@@ -9,8 +9,8 @@ definePageMeta({ layout: "student-pages" });
 
 <template>
     <div>
+        <UserDashboardHeader title="SETTINGS" />
         <UContainer>
-            <h1>SETTINGS</h1>
             <h2>
                 If you are a teacher please send a request to change your role
                 by clicking the button below

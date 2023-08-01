@@ -1,6 +1,4 @@
 <script setup>
-import SignaturePad from "signature_pad";
-
 useHead({
     title: "EVC LABS | Requests Management",
 });
@@ -13,11 +11,7 @@ const user = inject("user");
 
 <template>
     <div>
-        <UContainer class="mb-12 mt-5">
-            <h1 class="border-primary border-b-4 p-4 text-3xl font-bold">
-                ADMIN | REQUEST MANAGEMENT
-            </h1>
-        </UContainer>
+        <UserDashboardHeader title="ADMIN | REQUEST MANAGEMENT" />
 
         <UContainer class="w-auto md:w-1/2">
             <UCard>

@@ -9,7 +9,7 @@ definePageMeta({ layout: "admin-pages" });
 
 <template>
     <div>
-        <h1>ADMIN INVENTORY PAGE</h1>
+        <UserDashboardHeader title="ADMIN | INVENTORY" />
     </div>
 </template>
 

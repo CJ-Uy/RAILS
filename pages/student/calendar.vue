@@ -9,7 +9,7 @@ definePageMeta({ layout: "student-pages" });
 
 <template>
     <div>
-        <h1>STUDENT CALENDAR VIEW</h1>
+       <UserDashboardHeader title="CALENDAR" />
     </div>
 </template>
 

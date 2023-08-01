@@ -21,6 +21,6 @@ accountLastName.value = user.lastName;
 
 <template>
     <div>
-        <h1>ADMIN DASHBOARD PAGE</h1>
+        <UserDashboardHeader title="ADMIN | DASHBOARD" />
     </div>
 </template>
