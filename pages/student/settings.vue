@@ -9,11 +9,13 @@ definePageMeta({ layout: "student-pages" });
 
 <template>
     <div>
-        <h1>SETTINGS</h1>
-        <h2>
-            If you are a teacher please send a request to change your role by
-            clicking the button below
-        </h2>
-        <button>Request Role Change</button>
+        <UContainer>
+            <h1>SETTINGS</h1>
+            <h2>
+                If you are a teacher please send a request to change your role
+                by clicking the button below
+            </h2>
+            <UserStudentRoleRequestChange />
+        </UContainer>
     </div>
 </template>

@@ -9,7 +9,6 @@ useHead({
 definePageMeta({ layout: "admin-pages" });
 const user = inject("user");
 
-const isOpen = ref(false);
 </script>
 
 <template>
@@ -20,11 +19,6 @@ const isOpen = ref(false);
             </h1>
         </UContainer>
 
-        <!-- Modals -->
-        <!-- <UButton label="NEW SIGNATURE" @click="isOpen = true" />
-            <UModal v-model="isOpen">
-                <h1>HELLO WORLD</h1>
-            </UModal> -->
         <UContainer class="w-auto md:w-1/2">
             <UCard>
                 <template #header>
