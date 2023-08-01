@@ -62,10 +62,28 @@ const selectedRequests = ref([]);
 // Deleting
 async function delteRequest() {
     // TODO: Add confirmation modal
+    // TODO : Add error handling
     for (const request of selectedRequests.value) {
         await useFetch("/api/db/manageRoles/delete", {
             method: "POST",
             body: request.id,
+        });
+    }
+    updateTable();
+}
+
+// Approving
+async function approveRequest() {
+    // TODO: Add confirmation modal
+    // TODO : Add error handling
+    for (const request of selectedRequests.value) {
+        await useFetch("/api/db/manageRoles/approve", {
+            method: "POST",
+            body: {
+                id: request.id,
+                userId: request.userId,
+                newRole: request.wantedRole,
+            },
         });
     }
     updateTable();
@@ -127,7 +145,7 @@ async function delteRequest() {
             <template #footer>
                 <!-- Action Buttons -->
                 <UButton label="DELETE" @click="delteRequest" class="mr-3" />
-                <UButton label="APPROVE" />
+                <UButton label="APPROVE" @click="approveRequest" />
             </template>
         </UCard>
     </div>
