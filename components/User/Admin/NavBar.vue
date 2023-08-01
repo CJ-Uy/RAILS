@@ -88,7 +88,7 @@ const profileImageSrc = ref(data.value.imageLink);
                 >
                     <!-- TODO: Make this icon conisstent with the others -->
                     <Icon
-                        name="material-symbols:manage-search"
+                        name="mdi:user-search"
                         class="cursor-pointer"
                     />
                     MANAGE USERS</NuxtLink
