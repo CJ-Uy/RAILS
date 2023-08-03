@@ -15,7 +15,7 @@ const user = inject("user");
             <div>
                 <UserAdminManageUsersRoleChangeRequests />
             </div>
-            <div>
+            <div class="mt-5">
                 <UserAdminManageUsersAllUsers />
             </div>
         </UContainer>
