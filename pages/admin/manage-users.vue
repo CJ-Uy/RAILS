@@ -12,7 +12,12 @@ const user = inject("user");
     <div>
         <UserDashboardHeader title="ADMIN | USER MANAGEMENT" />
         <UContainer>
-            <UserAdminManageRoleChangeRequests />
+            <div>
+                <UserAdminManageUsersRoleChangeRequests />
+            </div>
+            <div>
+                <UserAdminManageUsersAllUsers />
+            </div>
         </UContainer>
     </div>
 </template>
