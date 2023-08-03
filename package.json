@@ -47,6 +47,7 @@
         "@nuxt/image-edge": "^1.0.0-rc.1-28180077.d51e794",
         "@prisma/client": "^5.0.0",
         "@vuepic/vue-datepicker": "^5.4.0",
+        "dayjs": "^1.11.9",
         "nuxt-mailer": "^0.11.0",
         "puppeteer": "^20.9.0",
         "signature_pad": "^4.1.6",

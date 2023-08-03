@@ -1,4 +1,5 @@
 import prisma from "~/server/db/prisma";
+import dayjs from "dayjs";
 
 export default defineEventHandler(async () => {
     let allRoleRequests = await prisma.changeRoleRequests.findMany();
@@ -17,7 +18,7 @@ export default defineEventHandler(async () => {
 
         roleRequest.name = `${user.lastName}, ${user.firstName}`;
         roleRequest.currentRole = user.role;
-        roleRequest.createdAt = roleRequest.createdAt.toISOString();
+        roleRequest.createdAt = dayjs(roleRequest.createdAt).format("MMMM D, YYYY - HH:mm:ss");
     }
     return allRoleRequests;
 });

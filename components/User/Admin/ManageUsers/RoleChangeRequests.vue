@@ -13,13 +13,19 @@ const pageCount = 5;
 const totalItems = ref();
 
 // Searching Rows
-//const { pendingm, data: allChangeRoleRequests } = await useLazyAsyncData("allChangeRoleRequests", () => $fetch("/api/db/getAllRoleChangeRequests"));
-const allChangeRoleRequests = await useFetch("/api/db/manageRoles/getAll");
-const allChangeRoleRequestsData = ref(allChangeRoleRequests.data);
+const { pending, data: allChangeRoleRequests } = await useLazyFetch(
+    "/api/db/manageRoles/getAll",
+);
+
+const allChangeRoleRequestsData = ref(allChangeRoleRequests);
+
+watch(allChangeRoleRequests, (updatedValues) => {
+    allChangeRoleRequestsData.value = updatedValues;
+});
 
 async function updateTable() {
-    let updatedValues = await useFetch("/api/db/manageRoles/getAll");
-    allChangeRoleRequestsData.value = updatedValues.data.value;
+    const allChangeRoleRequests = await useFetch("/api/db/manageRoles/getAll");
+    allChangeRoleRequestsData.value = allChangeRoleRequests.data.value;
 }
 
 const searchQuery = ref("");
@@ -99,7 +105,11 @@ async function approveRequest() {
 
             <div>
                 <div class="flex flex-row">
-                    <UButton icon="i-material-symbols-refresh" @click="updateTable" class="mr-2" />
+                    <UButton
+                        icon="i-material-symbols-refresh"
+                        @click="updateTable"
+                        class="mr-2"
+                    />
                     <!-- Search and Filter -->
                     <div class="w-[150px]">
                         <UInput
@@ -130,6 +140,7 @@ async function approveRequest() {
                     :rows="filteredRows"
                     :sort="{ column: 'title' }"
                     @select="selectRow"
+                    :loading="pending"
                 />
 
                 <!-- Pagination -->
