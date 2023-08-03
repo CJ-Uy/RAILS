@@ -32,7 +32,9 @@ provide("user", user.data.value);
         <div class="hidden md:flex md:flex-row">
             <div class="flex basis-[15.276146%] flex-col md:block">
                 <!-- Taken from figma 260/1702-->
-                <UserAdminNavBar />
+                <div class="sticky top-0">
+                    <UserAdminNavBar />
+                </div>
             </div>
             <div class="basis-[84.723854%]">
                 <slot v-if="user.data.value" />
