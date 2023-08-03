@@ -1,10 +1,12 @@
 <script setup>
+const user = inject("user");
+
 // Set Coulmns of the table
 const columns = [
-    { key: "lastName", label: "Last Name", sortable: true, },
-    { key: "firstName", label: "First Name", sortable: true, },
-    { key: "role", label: "Role", sortable: true, },
-    { key: "email", label: "Email", sortable: true, },
+    { key: "lastName", label: "Last Name", sortable: true },
+    { key: "firstName", label: "First Name", sortable: true },
+    { key: "role", label: "Role", sortable: true },
+    { key: "email", label: "Email", sortable: true },
 ];
 
 // Pagination
@@ -49,10 +51,12 @@ const filteredRows = computed(() => {
     return filtered.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
 
-// Seclection
+// Seclection and User Modal
 const selectedUser = ref();
-function OpenUserModal() {
-    console.log("HELLO");
+const userModalIsOpen = ref(false);
+function OpenUserModal(user) {
+    selectedUser.value = user;
+    userModalIsOpen.value = true;
 }
 </script>
 
@@ -96,12 +100,11 @@ function OpenUserModal() {
 
             <!-- DATA TABLE -->
             <UTable
-                v-model="selectedUser"
                 @select="OpenUserModal"
                 :columns="columns"
                 :rows="filteredRows"
                 :loading="pending"
-                :ui = "{ tr: { active: 'hover:bg-gray-200' } }"
+                :ui="{ tr: { active: 'hover:bg-gray-200' } }"
             />
 
             <div class="flex w-[100%] items-center justify-end">
@@ -112,5 +115,51 @@ function OpenUserModal() {
                 />
             </div>
         </UCard>
+
+        <!-- User Modals -->
+        <UModal v-model="userModalIsOpen" prevent-close>
+            <UCard
+                :ui="{
+                    ring: '',
+                    divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                }"
+            >
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3
+                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                        >
+                            {{ selectedUser.lastName }},
+                            {{ selectedUser.firstName }} - User Record
+                        </h3>
+                        <UButton
+                            color="gray"
+                            variant="ghost"
+                            icon="i-heroicons-x-mark-20-solid"
+                            class="-my-1"
+                            @click="userModalIsOpen = false"
+                        />
+                    </div>
+                </template>
+
+                <pre>
+                    {{ selectedUser }}
+                </pre>
+
+                <UButton
+                    color="red"
+                    variant="soft"
+                    icon="i-material-symbols-delete-outline"
+                    label="DELETE USER"
+                    class="mr-3"
+                />
+                <template #footer>
+                    <!-- Action Buttons -->
+                    <div class="flex w-full items-center justify-end">
+                        <UButton variant="solid" icon="i-material-symbols-save" label="SAVE CHANGES" @click="approveRequest" />
+                    </div>
+                </template>
+            </UCard>
+        </UModal>
     </div>
 </template>
