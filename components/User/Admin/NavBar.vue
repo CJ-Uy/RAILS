@@ -1,145 +1,133 @@
 <script setup>
-const { data } = await useFetch("/api/user/me");
-const profileImageSrc = ref(data.value.imageLink);
+const user = inject("user");
+
+const links = [
+    {
+        label: `${user.firstName} ${user.lastName}\n${user.email}`,
+        avatar: {
+            src: user.imageLink,
+            alt: `${user.firstName} ${user.lastName}`,
+        },
+    },
+    {
+        label: "Main Menu",
+        children: [
+            {
+                label: "DASHBOARD",
+                to: "/admin",
+                icon: "i-heroicons-chart-bar",
+            },
+        ],
+    },
+    {
+        label: "Workspace",
+        children: [
+            {
+                label: "REQUESTS",
+                to: "/admin/requests",
+                icon: "i-material-symbols-manage-search",
+            },
+            {
+                label: "CALENDAR",
+                to: "/admin/calendar",
+                icon: "i-material-symbols-calendar-today",
+            },
+            {
+                label: "INVENTORY",
+                to: "/admin/inventory",
+                icon: "i-material-symbols-database",
+            },
+        ],
+    },
+    {
+        label: "Management",
+        children: [
+            {
+                label: "EDIT REQUEST FORM",
+                to: "/admin/manage-requests",
+                icon: "i-mdi-clipboard-edit-outline",
+            },
+            {
+                label: "MANAGE USERS",
+                to: "/admin/manage-users",
+                icon: "i-mdi-account-search",
+            },
+        ],
+    },
+    {
+        label: "Role Views",
+        children: [
+            {
+                label: "ADMIN",
+                to: "/admin",
+                icon: "i-eos-icons-admin",
+            },
+            {
+                label: "TEACHER",
+                to: "/teacher",
+                icon: "i-ph-chalkboard-teacher-fill",
+            },
+            {
+                label: "STUDENT",
+                to: "/student",
+                icon: "i-ph-student",
+            },
+        ],
+    },
+];
 </script>
 
 <template>
-    <div class="flex h-screen flex-col bg-light-primary">
-        <!-- User profile info -->
-        <div>
-            <!-- TODO: Check if loaded because it keeps not loading sometimes -->
-            <img :src="profileImageSrc" alt="Google Profile's Image" />
-        </div>
+    <div>
+        <UVerticalNavigation
+            :links="links"
+            class="h-screen bg-main"
+            :ui="{
+                inactive: 'hover:before:bg-primary-500 text-white',
+                avatar: {
+                    size: 'md',
+                    base: 'rounded-lg',
+                },
+            }"
+        >
+            <template #default="{ link }">
+                <!-- Parent Header -->
+                <div class="group relative w-full text-left text-white">
+                    <!-- Catch if its the profile -->
+                    <div
+                        v-if="
+                            link.label ==
+                            `${user.firstName} ${user.lastName}\n${user.email}`
+                        "
+                        class="my-5"
+                    >
+                        {{ link.label }}
+                    </div>
+                    <div v-else class="mb-2">
+                        {{ link.label }}
+                    </div>
 
-        <!-- Links -->
-        <div class="text-white">
-            <!-- Main Menu -->
-            <div>
-                <h3 class="text-light-accent">Main Menu</h3>
-                <NuxtLink
-                    to="/admin"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <nuxt-icon
-                        name="Chart_fill"
-                        filled
-                        class="cursor-pointer"
-                    />
-                    DASHBOARD</NuxtLink
-                >
-            </div>
-
-            <!-- Workspace -->
-            <div class="flex flex-col">
-                <h3 class="text-light-accent">Workspace</h3>
-                <NuxtLink
-                    to="/admin/calendar"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <nuxt-icon
-                        name="Calendar"
-                        filled
-                        class="navbar-icon cursor-pointer"
-                    />
-                    CALENDAR</NuxtLink
-                >
-                <NuxtLink
-                    to="/admin/inventory"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <nuxt-icon
-                        name="Search_alt"
-                        filled
-                        class="cursor-pointer"
-                    />
-                    INVENTORY</NuxtLink
-                >
-            </div>
-
-            <!-- Requests -->
-            <div class="flex flex-col">
-                <h3 class="text-light-accent">Requests</h3>
-                <NuxtLink
-                    to="/forms"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <!-- TODO: Make this icon conisstent with the others -->
-                    <nuxt-icon
-                        name="New_request"
-                        filled
-                        class="cursor-pointer"
-                    />
-                    NEW REQUEST</NuxtLink
-                >
-                <NuxtLink
-                    to="/admin/manage-requests"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <!-- TODO: Make this icon conisstent with the others -->
-                    <Icon
-                        name="material-symbols:manage-search"
-                        class="cursor-pointer"
-                    />
-                    MANAGE REQUESTS</NuxtLink
-                >
-                <NuxtLink
-                    to="/admin/manage-users"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <!-- TODO: Make this icon conisstent with the others -->
-                    <Icon
-                        name="mdi:user-search"
-                        class="cursor-pointer"
-                    />
-                    MANAGE USERS</NuxtLink
-                >
-                <NuxtLink
-                    to="/admin/history"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <nuxt-icon
-                        name="Folder_alt"
-                        filled
-                        class="cursor-pointer"
-                    />
-                    HISTORY</NuxtLink
-                >
-            </div>
-
-            <!-- Views -->
-            <div class="flex flex-col">
-                <h3 class="text-light-accent">Other Views</h3>
-                <NuxtLink
-                    to="/student"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    STUDENT</NuxtLink
-                >
-                <NuxtLink
-                    to="/teacher"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                    >TEACHER</NuxtLink
-                >
-            </div>
-        </div>
-
-        <!-- Closing -->
-        <div>
-            <!-- Back to Landing Page -->
-            <NuxtLink to="/" class="p-3 px-6 pt-2">
-                <button
-                    class="hidden rounded bg-light-accent px-4 py-2 font-bold text-white hover:bg-blue-600 md:flex"
-                >
-                    Back to Landing
-                </button>
-            </NuxtLink>
-        </div>
+                    <UVerticalNavigation
+                        v-if="link.children"
+                        :links="link.children"
+                        :ui="{
+                            active: 'bg-primary-700 text-white',
+                            inactive: 'text-gray-300 hover:bg-primary-600',
+                            icon: {
+                                active: 'text-white',
+                                inactive: 'text-gray-300',
+                            },
+                        }"
+                    >
+                        <!-- Child Link -->
+                        <template #default="{ link }">
+                            <div>
+                                {{ link.label }}
+                            </div>
+                        </template>
+                    </UVerticalNavigation>
+                </div>
+            </template>
+        </UVerticalNavigation>
     </div>
 </template>
-
-<style>
-.navbar-icon svg {
-    height: 20px;
-    width: 20px;
-}
-</style>
