@@ -37,6 +37,11 @@ const links = [
                 to: "/admin/inventory",
                 icon: "i-material-symbols-database",
             },
+            {
+                label: "NEW REQUEST",
+                to: "/forms",
+                icon: "i-codicon-git-pull-request-new-changes"
+            },
         ],
     },
     {
@@ -71,6 +76,11 @@ const links = [
                 label: "STUDENT",
                 to: "/student",
                 icon: "i-ph-student",
+            },
+            {
+                label: "LANDING",
+                to: "/",
+                icon: "i-heroicons-home",
             },
         ],
     },

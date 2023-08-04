@@ -87,7 +87,7 @@ function downloadRequests(pdfBuffers, lastname) {
                 v-model="value"
                 type="multi-step"
                 tab-style="progress"
-                name="requestData"
+                name="data"
             >
                 <FormKit type="step" name="basicInfo">
                     <FormsBasicInfo />
