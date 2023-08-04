@@ -1,0 +1,16 @@
+Some Random Notes:
+- Make new navbar for teacher and students
+- Make the input for reagents and materials request
+
+- Redo the form templates (seperate forms for admins, teachers, and students [levels of authorization])
+
+- Add save and signed
+- Add signature signing
+- Admin UI to change values
+
+- Add prisma-backup
+- Dockerize the project
+
+- Add other common forms to download for convinience
+- Notification system
+- Add terms and conditions to each (signatures auto sign and admins can use it to make e-records)
