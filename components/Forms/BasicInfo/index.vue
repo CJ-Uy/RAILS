@@ -26,7 +26,7 @@ function makeSelectionOptions(response) {
 
 <template>
     <div>
-        <h1>BASIC INFORMATION</h1>
+        <h2 class="py-5 text-center text-lg font-bold">BASIC INFORMATION</h2>
 
         <FormKit
             type="text"
@@ -36,6 +36,8 @@ function makeSelectionOptions(response) {
             value="EASTERN VISAYAS CAMPUS"
             help="Enter the PSHS Campus"
         />
+        <!-- TODO: Make the School year dynamic based on database -->
+        <!-- You dodnt even need to send this just show it in the form -->
         <FormKit
             v-model="schoolYear"
             type="text"
@@ -94,7 +96,12 @@ function makeSelectionOptions(response) {
             validation="required"
         />
 
-        <!-- TODO: Make teacher in charge a select based on the current USERS with the role teacher -->
+        <h3 class="mb-2">
+            NOTE: if your teacher is not within the options below please fill
+            out a hardcopy form manually instead an go through the usual
+            process.
+        </h3>
+        <!-- TODO: Make the teachers list dynamic based on database -->
         <FormKit
             type="text"
             name="teacherInCharge"
