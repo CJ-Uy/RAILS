@@ -69,70 +69,105 @@ function downloadRequests(pdfBuffers, lastname) {
 </script>
 
 <template>
-    <div>
-        <h1>LABORATORY REQUESTS</h1>
-        <NuxtLink
-            to="/redirect"
-            class="text-blue-500 hover:underline active:text-green-500"
-            >RETURN</NuxtLink
-        >
-        <FormKit
-            type="form"
-            :actions="false"
-            name="requestData"
-            use-local-storage
-            @submit="submitHandler"
-        >
-            <FormKit
-                v-model="value"
-                type="multi-step"
-                tab-style="progress"
-                name="data"
+    <div class="flex w-full flex-col items-center justify-center">
+        <div class="fixed top-0 z-10 w-full bg-white text-center">
+            <h1 class="font-bold text-2xl mt-5">LABORATORY REQUESTS</h1>
+            <NuxtLink
+                to="/redirect"
+                class="text-blue-500 hover:underline active:text-green-500"
+                >RETURN</NuxtLink
             >
-                <FormKit type="step" name="basicInfo">
-                    <FormsBasicInfo />
-                </FormKit>
-
-                <FormKit type="step" name="laboratorySetting">
-                    <FormsLaboratoryReservation />
-                </FormKit>
-
-                <FormKit type="step" name="materials">
-                    <FormsMaterialsRequest />
-                </FormKit>
-
-                <FormKit type="step" name="reagents">
-                    <FormsReagentsRequest />
-                </FormKit>
-
-                <FormKit type="step" name="submission">
-                    <pre>
-                        {{ value }}
-                    </pre>
-                    <!-- TODO: Maybe add something to show the progress of each request if it succeede or failed and if its loading -->
-                    <h2>
-                        NOTE: Selecting more options may increase your wait time
-                    </h2>
+        </div>
+        <div class="mt-16 flex w-[80%] items-center justify-center">
+            <FormKit
+                type="form"
+                :actions="false"
+                name="requestData"
+                use-local-storage
+                @submit="submitHandler"
+            >
+                <FormKit
+                    v-model="value"
+                    type="multi-step"
+                    tab-style="progress"
+                    name="data"
+                >
                     <FormKit
-                        type="checkbox"
-                        label="Download a copy of my request"
-                        name="download"
-                        value="false"
-                    />
+                        type="step"
+                        name="basicInfo"
+                        :classes="{ step: 'w-1/2' }"
+                    >
+                        <FormsBasicInfo />
+                    </FormKit>
 
                     <FormKit
-                        type="checkbox"
-                        label="Email a copy of my request"
-                        name="email"
-                        value="false"
-                    />
+                        type="step"
+                        name="laboratorySetting"
+                        :classes="{ step: 'w-1/2' }"
+                    >
+                        <FormsLaboratoryReservation />
+                    </FormKit>
 
-                    <!-- using step slot for submit button-->
-                    <template #stepNext>
-                        <FormKit type="submit" label="Submit" />
-                    </template>
+                    <FormKit
+                        type="step"
+                        name="materials"
+                        :classes="{ step: 'w-full' }"
+                    >
+                        <FormsMaterialsRequest />
+                    </FormKit>
+
+                    <FormKit
+                        type="step"
+                        name="reagents"
+                        :classes="{ step: 'w-full' }"
+                    >
+                        <FormsReagentsRequest />
+                    </FormKit>
+
+                    <FormKit type="step" name="submission">
+                        <pre>
+                            {{ value }}
+                        </pre>
+                        <h2>
+                            NOTE: Selecting more options may increase your wait
+                            time
+                        </h2>
+                        <FormKit
+                            type="checkbox"
+                            label="Download a copy of my request"
+                            name="download"
+                            value="false"
+                        />
+
+                        <FormKit
+                            type="checkbox"
+                            label="Email a copy of my request"
+                            name="email"
+                            value="false"
+                        />
+
+                        <!-- using step slot for submit button-->
+                        <template #stepNext>
+                            <FormKit type="submit" label="Submit" />
+                        </template>
+                    </FormKit>
                 </FormKit>
             </FormKit>
-        </FormKit>
+        </div>
     </div>
 </template>
+
+<style>
+.formkit-outer[data-type="multi-step"] > .formkit-wrapper {
+    max-width: 100%;
+    width: 100%;
+}
+.formkit-form {
+    width: 100%;
+}
+
+.formkit-steps {
+    display: flex;
+    justify-content: center;
+}
+</style>
