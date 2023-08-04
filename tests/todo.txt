@@ -1,10 +1,16 @@
 Some Random Notes:
 - Make new navbar for teacher and students
-- Make the input for reagents and materials request
+
+- Finish the input for reagents and materials request
+    - Add Filter
+    - Add Pagination
+
+- Make all the lists dynamic to the database that need to be
+- Make population scripts for the materials and reagents
+- Save requests to the database
 
 - Redo the form templates (seperate forms for admins, teachers, and students [levels of authorization])
 
-- Add save and signed
 - Add signature signing
 - Admin UI to change values
 

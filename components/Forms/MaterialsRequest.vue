@@ -2,7 +2,9 @@
 // All materials selected
 const materials = ref([]);
 
-// TODO: olumns for the table
+// TODO: filter rows
+// TODO: add and subtract the objects from one list to the other make them "move" so no duplicates
+// TODO: columns for the table
 
 const rows = [
     {
