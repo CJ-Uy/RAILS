@@ -1,6 +1,6 @@
 <!-- 
     This is all just temporary
-        1. Need to create like a shopping cart expereince for the materials request and reagents
+        1. Need to create like a shopping cart expereince for the equipment request and reagents
 
  -->
 <script setup>

@@ -110,10 +110,10 @@ function downloadRequests(pdfBuffers, lastname) {
 
                     <FormKit
                         type="step"
-                        name="materials"
+                        name="equipment"
                         :classes="{ step: 'w-full' }"
                     >
-                        <FormsMaterialsRequest />
+                        <FormsEquipmentRequest />
                     </FormKit>
 
                     <FormKit

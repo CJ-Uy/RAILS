@@ -1,6 +1,4 @@
 Some Random Notes:
-- Make new navbar for teacher and students
-
 - Finish the input for reagents and materials request
     - Add Filter
     - Add Pagination

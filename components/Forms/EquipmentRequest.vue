@@ -1,11 +1,17 @@
 <script setup>
-// All materials selected
-const materials = ref([]);
+// All Equipment selected
+const requestedEquipment = ref([]);
 
 // TODO: filter rows
 // TODO: add and subtract the objects from one list to the other make them "move" so no duplicates
 // TODO: columns for the table
 
+// Pagination
+const page = ref(1);
+const pageCount = 10;
+const totalItems = ref();
+
+// Searching Rows
 const rows = [
     {
         name: "Item 1",
@@ -24,30 +30,69 @@ const rows = [
     },
 ];
 
+// Filter rows
+const searchQuery = ref("");
+
+
+
 function addItem(item) {
-    materials.value.push(item);
+    requestedEquipment.value.push(item);
 }
 
-function validateQuantity(material) {
-    if (material.quantity < 1) {
-        material.quantity = 1;
+function validateQuantity(equipment) {
+    if (equipment.quantity < 1) {
+        equipment.quantity = 1;
     }
 }
 </script>
 
 <template>
     <div class="w-full">
-        <h1 class="pb-5">MATERIALS REQUEST</h1>
+        <h1 class="pb-5">EQUIPMENT REQUEST</h1>
         <div class="mb-5 flex flex-row items-center justify-center">
-            <!-- Show all materials -->
+            <!-- Show all requestedEquipment -->
             <div>
                 <UCard>
                     <template #header>
                         <h2 class="text-center text-lg font-bold">
-                            Search For Materials
+                            Search For Equipment
                         </h2>
                     </template>
+
+                <!-- SEARCH TABLE -->
+                    <!-- Search bar filter -->
+                    <div class="w-[150px]">
+                        <UInput
+                            v-model="searchQuery"
+                            placeholder="Search..."
+                            size="sm"
+                            icon="i-heroicons-magnifying-glass-20-solid"
+                            :ui="{ icon: { trailing: { pointer: '' } } }"
+                        >
+                            <template #trailing>
+                                <UButton
+                                    v-show="searchQuery !== ''"
+                                    color="gray"
+                                    variant="link"
+                                    icon="i-heroicons-x-mark-20-solid"
+                                    :padded="false"
+                                    @click="searchQuery = ''"
+                                />
+                            </template>
+                        </UInput>
+                    </div>
+
+                    <!-- Table -->
                     <UTable :rows="rows" @select="addItem" />
+                    <!-- Pagination -->
+                    <div class="flex w-[100%] items-center justify-end">
+                        <UPagination
+                            v-model="page"
+                            :page-count="pageCount"
+                            :total="totalItems"
+                        />
+                    </div>
+
                 </UCard>
             </div>
 
@@ -56,30 +101,30 @@ function validateQuantity(material) {
                 <Icon name="ooui:arrow-next-ltr" />
             </div>
 
-            <!-- Final Requested Materials -->
+            <!-- Final Requested Equipment -->
             <div>
                 <UCard>
                     <template #header>
                         <h2 class="text-center text-lg font-bold">
-                            Selected Materials
+                            Selected Equipment
                         </h2>
                     </template>
                     <table class="w-full table-auto text-left">
                         <thead>
                             <tr>
-                                <th class="px-4 py-2 text-center">Materials</th>
+                                <th class="px-4 py-2 text-center">Equipment</th>
                                 <th class="px-4 py-2 text-center">Quantity</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr
-                                v-for="material in materials"
-                                :key="material.name"
+                                v-for="equipment in requestedEquipment"
+                                :key="equipment.name"
                             >
                                 <!-- Item -->
                                 <td class="border px-4 py-2">
-                                    {{ material.name }} -
-                                    {{ material.description }}
+                                    {{ equipment.name }} -
+                                    {{ equipment.description }}
                                 </td>
 
                                 <!-- Controls -->
@@ -94,8 +139,8 @@ function validateQuantity(material) {
                                             icon="i-material-symbols-remove-rounded"
                                             class="px-2"
                                             @click="
-                                                material.quantity > 1
-                                                    ? material.quantity--
+                                                equipment.quantity > 1
+                                                    ? equipment.quantity--
                                                     : null
                                             "
                                         />
@@ -103,12 +148,12 @@ function validateQuantity(material) {
                                         <!-- Input Quantity -->
                                         <div class="w-[85px] px-5">
                                             <UInput
-                                                v-model="material.quantity"
+                                                v-model="equipment.quantity"
                                                 class="text-center"
                                                 type="number"
                                                 min="1"
                                                 @blur="
-                                                    validateQuantity(material)
+                                                    validateQuantity(equipment)
                                                 "
                                             />
                                         </div>
@@ -119,7 +164,7 @@ function validateQuantity(material) {
                                             variant="soft"
                                             icon="i-material-symbols-add-rounded"
                                             class="px-2"
-                                            @click="material.quantity++"
+                                            @click="equipment.quantity++"
                                         />
                                     </div>
                                 </td>
@@ -131,8 +176,8 @@ function validateQuantity(material) {
                                             variant="outline"
                                             icon="i-material-symbols-delete-outline"
                                             @click="
-                                                materials.splice(
-                                                    materials.indexOf(material),
+                                                requestedEquipment.splice(
+                                                    requestedEquipment.indexOf(equipment),
                                                     1,
                                                 )
                                             "
@@ -144,7 +189,7 @@ function validateQuantity(material) {
                     </table>
 
                     <FormKit
-                        v-model="materials"
+                        v-model="requestedEquipment"
                         type="list"
                         name="details"
                         dynamic
