@@ -20,12 +20,12 @@ let links = [
             {
                 label: "STUDENT REQUESTS",
                 to: "/teacher/student-requests",
-                icon: "i-fa6-solid-code-pull-request",
+                icon: "i-material-symbols-manage-search",
             }
         ],
     },
     {
-        label: "Workspace",
+        label: "Laboratory",
         children: [
             {
                 label: "NEW REQUEST",

@@ -20,7 +20,7 @@ let links = [
         ],
     },
     {
-        label: "Workspace",
+        label: "Laboratory",
         children: [
             {
                 label: "NEW REQUEST",
