@@ -15,7 +15,7 @@ const links = [
             {
                 label: "DASHBOARD",
                 to: "/admin",
-                icon: "i-heroicons-chart-bar",
+                icon: "i-heroicons-chart-bar-solid",
             },
         ],
     },
@@ -75,7 +75,7 @@ const links = [
             {
                 label: "STUDENT",
                 to: "/student",
-                icon: "i-ph-student",
+                icon: "i-ph-student-fill",
             },
             {
                 label: "LANDING",

@@ -1,107 +1,141 @@
 <script setup>
-const { data } = await useFetch("/api/user/me");
-const profileImageSrc = ref(data.value.imageLink);
+const user = inject("user");
+
+let links = [
+    {
+        label: `${user.firstName} ${user.lastName}\n${user.email}`,
+        avatar: {
+            src: user.imageLink,
+            alt: `${user.firstName} ${user.lastName}`,
+        },
+    },
+    {
+        label: "Main Menu",
+        children: [
+            {
+                label: "DASHBOARD",
+                to: "/student",
+                icon: "i-heroicons-chart-bar-solid",
+            },
+        ],
+    },
+    {
+        label: "Workspace",
+        children: [
+            {
+                label: "NEW REQUEST",
+                to: "/forms",
+                icon: "i-codicon-git-pull-request-new-changes",
+            },
+            {
+                label: "CALENDAR",
+                to: "/student/calendar",
+                icon: "i-material-symbols-calendar-today",
+            },
+            {
+                label: "INVENTORY",
+                to: "/student/inventory",
+                icon: "i-material-symbols-database",
+            },
+        ],
+    },
+    {
+        label: "Settings",
+        children: [
+            {
+                label: "SETTINGS",
+                to: "/student/settings",
+                icon: "i-material-symbols-settings-rounded",
+            },
+            {
+                label: "BACK TO LANDING",
+                to: "/",
+                icon: "i-heroicons-home",
+            },
+        ],
+    },
+];
+
+if (user.role === "ADMIN") {
+    links.push({
+        label: "Role Views",
+        children: [
+            {
+                label: "ADMIN",
+                to: "/admin",
+                icon: "i-eos-icons-admin",
+            },
+            {
+                label: "TEACHER",
+                to: "/teacher",
+                icon: "i-ph-chalkboard-teacher-fill",
+            },
+            {
+                label: "STUDENT",
+                to: "/student",
+                icon: "i-ph-student-fill",
+            },
+            {
+                label: "LANDING",
+                to: "/",
+                icon: "i-heroicons-home",
+            },
+        ],
+    });
+}
 </script>
 
 <template>
-    <div class="flex h-screen flex-col bg-light-primary">
-        <!-- User profile info -->
-        <div>
-            <img :src="profileImageSrc" alt="Google Profile's Image" />
-        </div>
+    <div>
+        <UVerticalNavigation
+            :links="links"
+            class="h-screen bg-main"
+            :ui="{
+                inactive: 'hover:before:bg-primary-500 text-white',
+                avatar: {
+                    size: 'md',
+                    base: 'rounded-lg',
+                },
+            }"
+        >
+            <template #default="{ link }">
+                <!-- Parent Header -->
+                <div class="group relative w-full text-left text-white">
+                    <!-- Catch if its the profile -->
+                    <div
+                        v-if="
+                            link.label ==
+                            `${user.firstName} ${user.lastName}\n${user.email}`
+                        "
+                        class="my-5"
+                    >
+                        {{ link.label }}
+                    </div>
+                    <div v-else class="mb-2">
+                        {{ link.label }}
+                    </div>
 
-        <!-- Links -->
-        <div class="text-white">
-            <!-- Main Menu -->
-            <div>
-                <h3 class="text-light-accent">Main Menu</h3>
-                <NuxtLink
-                    to="/student"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <nuxt-icon
-                        name="Chart_fill"
-                        filled
-                        class="cursor-pointer"
-                    />
-                    DASHBOARD</NuxtLink
-                >
-            </div>
-
-            <!-- Workspace -->
-            <div class="flex flex-col">
-                <h3 class="text-light-accent">Workspace</h3>
-                <NuxtLink
-                    to="/student/calendar"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <nuxt-icon
-                        name="Calendar"
-                        filled
-                        class="navbar-icon cursor-pointer"
-                    />
-                    CALENDAR</NuxtLink
-                >
-                <NuxtLink
-                    to="/student/inventory"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <nuxt-icon
-                        name="Search_alt"
-                        filled
-                        class="cursor-pointer"
-                    />
-                    INVENTORY</NuxtLink
-                >
-            </div>
-
-            <!-- Requests -->
-            <div class="flex flex-col">
-                <h3 class="text-light-accent">Requests</h3>
-                <NuxtLink
-                    to="/forms"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <!-- TODO: Make this icon conisstent with the others -->
-                    <nuxt-icon
-                        name="New_request"
-                        filled
-                        class="cursor-pointer"
-                    />
-                    NEW REQUEST</NuxtLink
-                >
-                <NuxtLink
-                    to="/student/history"
-                    class="flex cursor-pointer items-center hover:text-light-accent"
-                >
-                    <nuxt-icon
-                        name="Folder_alt"
-                        filled
-                        class="cursor-pointer"
-                    />
-                    HISTORY</NuxtLink
-                >
-            </div>
-        </div>
-
-        <!-- Closing -->
-        <div class="flex flex-col">
-            <!-- Back to Landing Page -->
-            <NuxtLink to="/" class="p-3 px-6 pt-2">
-                <button
-                    class="hidden rounded bg-light-accent px-4 py-2 font-bold text-white hover:bg-blue-600 md:flex"
-                >
-                    Back to Landing
-                </button>
-            </NuxtLink>
-            <NuxtLink to="/student/settings">Settings</NuxtLink>
-        </div>
+                    <UVerticalNavigation
+                        v-if="link.children"
+                        :links="link.children"
+                        :ui="{
+                            active: 'bg-primary-700 text-white',
+                            inactive: 'text-gray-300 hover:bg-primary-600',
+                            icon: {
+                                active: 'text-white',
+                                inactive: 'text-gray-300',
+                            },
+                        }"
+                    >
+                        <!-- Child Link -->
+                        <template #default="{ link }">
+                            <div>
+                                {{ link.label }}
+                            </div>
+                        </template>
+                    </UVerticalNavigation>
+                </div>
+            </template>
+        </UVerticalNavigation>
     </div>
 </template>
-
-<style>
-.navbar-icon svg {
-    height: 20px;
-    width: 20px;
-}
-</style>
