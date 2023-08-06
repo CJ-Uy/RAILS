@@ -32,6 +32,10 @@ model SchoolYear {
   yearStart Int
   yearEnd   Int
   createdAt DateTime @default(now())
+
+  controlNumberCounter Int @default(0)
+
+  // TODO: List here also all the laboratory requests that are made in this school year
 }
 
 model Users {
@@ -186,15 +190,16 @@ model InventoryOfMaterials {
 model InventoryOfEqupiment {
   //Equipment refer to the large devices that may not be easily moved from one location to another
   id                    String                @id @default(uuid())
-  equipmentCode         String
+  equipmentCodeNumber   Int                   @unique @default(autoincrement()) // This is so we can have LE-1, LE-2, etc..
+  equipmentCode         String?
   equipmentName         String
   serialNumber          String?
   modelNoOrManufacturer String?
   description           String?
-  quantity              Int?
+  quantity              Int? // TODO: Double check if this matters as according to the table it will always be 1
   unit                  String?
   unitCost              Float?
-  dateReceived          DateTime              @default(now())
+  dateReceived          DateTime              @default(now()) // TODO: Change this
   propertyNumber        String?
   acquisitionType       String?
   supplier              String?
@@ -209,7 +214,7 @@ model InventoryOfEqupiment {
 model InventoryOfReagents {
   //Reagents refer to all the chemicals (solid or liquid) Students can request for
   id                 String                @id @default(uuid())
-  itemNumber         String?
+  itemNumber         String? // TODO: Inquire about the incrementing of this
   casNumber          String?
   chemicalName       String
   manufacturerName   String?

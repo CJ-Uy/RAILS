@@ -34,6 +34,7 @@ switch (String(data.value?.role)) {
 
 <template>
     <div>
+        <!-- TODO: Style and or add a loading screen animation -->
         <h1>Redirecting...</h1>
         <p>Please wait</p>
     </div>

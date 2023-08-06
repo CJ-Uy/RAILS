@@ -1,4 +1,15 @@
 -- CreateTable
+CREATE TABLE `SchoolYear` (
+    `id` VARCHAR(191) NOT NULL,
+    `yearStart` INTEGER NOT NULL,
+    `yearEnd` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `controlNumberCounter` INTEGER NOT NULL DEFAULT 0,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Users` (
     `id` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
@@ -20,7 +31,7 @@ CREATE TABLE `Admins` (
     `id` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
-    `signature` VARCHAR(191) NULL,
+    `signature` MEDIUMTEXT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -28,7 +39,7 @@ CREATE TABLE `Admins` (
 -- CreateTable
 CREATE TABLE `Teachers` (
     `id` VARCHAR(191) NOT NULL,
-    `signature` VARCHAR(191) NULL,
+    `signature` MEDIUMTEXT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -41,6 +52,17 @@ CREATE TABLE `Students` (
     `gradeSectionId` VARCHAR(191) NULL,
     `grade` INTEGER NULL,
     `section` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `ChangeRoleRequests` (
+    `id` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `wantedRole` ENUM('STUDENT', 'TEACHER', 'ADMIN') NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -125,7 +147,8 @@ CREATE TABLE `InventoryOfMaterials` (
 -- CreateTable
 CREATE TABLE `InventoryOfEqupiment` (
     `id` VARCHAR(191) NOT NULL,
-    `equipmentCode` VARCHAR(191) NOT NULL,
+    `equipmentCodeNumber` INTEGER NOT NULL AUTO_INCREMENT,
+    `equipmentCode` VARCHAR(191) NULL,
     `equipmentName` VARCHAR(191) NOT NULL,
     `serialNumber` VARCHAR(191) NULL,
     `modelNoOrManufacturer` VARCHAR(191) NULL,
@@ -141,6 +164,7 @@ CREATE TABLE `InventoryOfEqupiment` (
     `laboratoriesId` VARCHAR(191) NULL,
     `requestId` INTEGER NULL,
 
+    UNIQUE INDEX `InventoryOfEqupiment_equipmentCodeNumber_key`(`equipmentCodeNumber`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -201,6 +225,9 @@ ALTER TABLE `Users` ADD CONSTRAINT `Users_adminsId_fkey` FOREIGN KEY (`adminsId`
 
 -- AddForeignKey
 ALTER TABLE `Students` ADD CONSTRAINT `Students_gradeSectionId_fkey` FOREIGN KEY (`gradeSectionId`) REFERENCES `GradeSection`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ChangeRoleRequests` ADD CONSTRAINT `ChangeRoleRequests_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `Users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Laboratories` ADD CONSTRAINT `Laboratories_locationId_fkey` FOREIGN KEY (`locationId`) REFERENCES `LaboratoryLocations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
