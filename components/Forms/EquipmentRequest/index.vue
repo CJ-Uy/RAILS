@@ -1,6 +1,25 @@
 <script setup>
 // All Equipment selected
 const requestedEquipment = ref([]);
+provide("requestedEquipment", requestedEquipment)
+
+const tabsItems = [
+    {
+        slot: "selectEquipment",
+        label: "Select",
+    },
+    {
+        slot: "orderEquipment",
+        label: "Order",
+    },
+];
+
+const columns = [
+    { key: "equipmentName", label: "Name", sortable: true },
+    { key: "description", label: "Description" },
+    { key: "modelNoOrManufacturer", label: "Model" },
+    { key: "quantity", label: "Stock" },
+];
 
 // TODO: filter rows
 // TODO: add and subtract the objects from one list to the other make them "move" so no duplicates
@@ -12,15 +31,15 @@ const pageCount = 10;
 const totalItems = ref();
 
 // Searching Rows
-const { pending, data: allEquipment } = await useLazyFetch("/api/db/forms/getAllEquipment");
+const { pending, data: allEquipment } = await useLazyFetch(
+    "/api/db/forms/getAllEquipment",
+);
 
-let filteredRows = ref(allEquipment); 
+let filteredRows = ref(allEquipment);
 totalItems.value = filteredRows.value.length;
 
 // Filter rows
 const searchQuery = ref("");
-
-
 
 function addItem(item) {
     requestedEquipment.value.push(item);
@@ -36,7 +55,18 @@ function validateQuantity(equipment) {
 <template>
     <div class="w-full">
         <h1 class="pb-5">EQUIPMENT REQUEST</h1>
-        <div class="mb-5 flex flex-row items-center justify-center">
+
+        <!-- Tabs -->
+        <UTabs :items="tabsItems" class="w-full">
+            <template #selectEquipment>
+                <FormsEquipmentRequestSelection />
+            </template>
+            <template #orderEquipment>
+                <FormsEquipmentRequestOrder />
+            </template>
+        </UTabs>
+
+        <div class="mb-5 flex flex-col items-center justify-center">
             <!-- Show all requestedEquipment -->
             <div>
                 <UCard>
@@ -46,7 +76,7 @@ function validateQuantity(equipment) {
                         </h2>
                     </template>
 
-                <!-- SEARCH TABLE -->
+                    <!-- SEARCH TABLE -->
                     <!-- Search bar filter -->
                     <div class="w-[150px]">
                         <UInput
@@ -70,7 +100,12 @@ function validateQuantity(equipment) {
                     </div>
 
                     <!-- Table -->
-                    <UTable :rows="filteredRows" @select="addItem" :loading="pending" />
+                    <UTable
+                        :columns="columns"
+                        :rows="filteredRows"
+                        @select="addItem"
+                        :loading="pending"
+                    />
                     <!-- Pagination -->
                     <div class="flex w-[100%] items-center justify-end">
                         <UPagination
@@ -79,13 +114,7 @@ function validateQuantity(equipment) {
                             :total="totalItems"
                         />
                     </div>
-
                 </UCard>
-            </div>
-
-            <!-- Arrows -->
-            <div class="px-5 text-2xl">
-                <Icon name="ooui:arrow-next-ltr" />
             </div>
 
             <!-- Final Requested Equipment -->
@@ -96,7 +125,7 @@ function validateQuantity(equipment) {
                             Selected Equipment
                         </h2>
                     </template>
-                    <table class="w-full table-auto text-left">
+                    <table class="w-[100%] table-auto text-left">
                         <thead>
                             <tr>
                                 <th class="px-4 py-2 text-center">Equipment</th>
@@ -110,7 +139,7 @@ function validateQuantity(equipment) {
                             >
                                 <!-- Item -->
                                 <td class="border px-4 py-2">
-                                    {{ equipment.name }} -
+                                    {{ equipment.equipmentName }} -
                                     {{ equipment.description }}
                                 </td>
 
@@ -164,7 +193,9 @@ function validateQuantity(equipment) {
                                             icon="i-material-symbols-delete-outline"
                                             @click="
                                                 requestedEquipment.splice(
-                                                    requestedEquipment.indexOf(equipment),
+                                                    requestedEquipment.indexOf(
+                                                        equipment,
+                                                    ),
                                                     1,
                                                 )
                                             "
