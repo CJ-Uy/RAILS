@@ -46,13 +46,15 @@ const filteredRows = computed(() => {
         );
     }
     // filtering the rows
-    let filtered = filterSelectedEquipment(allEquipmentData.value.filter((item) => {
-        return Object.values(item).some((value) => {
-            return String(value)
-                .toLowerCase()
-                .includes(searchQuery.value.toLowerCase());
-        });
-    }));
+    let filtered = filterSelectedEquipment(
+        allEquipmentData.value.filter((item) => {
+            return Object.values(item).some((value) => {
+                return String(value)
+                    .toLowerCase()
+                    .includes(searchQuery.value.toLowerCase());
+            });
+        }),
+    );
     // Slice the values into pages
     totalItems.value = filtered.length;
     return filtered.slice((page.value - 1) * pageCount, page.value * pageCount);
@@ -65,6 +67,7 @@ function filterSelectedEquipment(arr) {
 }
 
 function addItem(item) {
+    item.requestedQuantity = 1;
     requestedEquipment.value.push(item);
 }
 </script>
@@ -75,7 +78,10 @@ function addItem(item) {
             <h2 class="text-lg font-bold text-main-500">
                 SELECT MATERIALS AND EQUIPMENT
             </h2>
-            <p>Finalize your requested materials and equipment here</p>
+            <p>
+                Select any materials or equipment you would like to add to this
+                request.
+            </p>
         </div>
         <!-- Equipment Search table -->
         <div class="my-7">

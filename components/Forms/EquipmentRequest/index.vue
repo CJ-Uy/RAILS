@@ -46,7 +46,12 @@ const tabsItems = [
 
 <template>
     <div class="w-full">
-        <h1 class="pb-5 text-center text-xl font-bold">EQUIPMENT REQUEST</h1>
+        <div class="pb-5 text-center">
+            <h1 class="text-xl font-bold">EQUIPMENT REQUEST</h1>
+            <p v-if="requestedEquipment.length > 0">
+                NOTE: A Materials an Equipment Request Form will be made
+            </p>
+        </div>
 
         <!-- Tabs -->
         <UTabs

@@ -2,27 +2,33 @@
 const requestedEquipment = inject("requestedEquipment");
 
 function validateQuantity(equipment) {
-    if (equipment.quantity < 1) {
-        equipment.quantity = 1;
+    if (equipment.requestedQuantity < 1) {
+        equipment.requestedQuantity = 1;
+    }
+    if (equipment.requestedQuantity > equipment.quantity) {
+        equipment.requestedQuantity = equipment.quantity;
     }
 }
 </script>
 
 <template>
     <div>
-        <h2>Search for and select your needed equipment and materials</h2>
+        <div class="mt-7 text-center">
+            <h2 class="text-lg font-bold text-main-500">
+                FINALIZE REQUESTED EQUIPMENT
+            </h2>
+            <p>Finalize your requested materials and equipment here</p>
+        </div>
+
         <!-- Final Requested Equipment -->
-        <div>
+        <div class="my-7">
             <UCard>
-                <template #header>
-                    <h2 class="text-center text-lg font-bold">
-                        Selected Equipment
-                    </h2>
-                </template>
                 <table class="w-[100%] table-auto text-left">
                     <thead>
                         <tr>
-                            <th class="px-4 py-2 text-center">Equipment</th>
+                            <th class="px-4 py-2 text-center">Name</th>
+                            <th class="px-4 py-2 text-center">Description</th>
+                            <th class="px-4 py-2 text-center">Stock</th>
                             <th class="px-4 py-2 text-center">Quantity</th>
                         </tr>
                     </thead>
@@ -30,11 +36,19 @@ function validateQuantity(equipment) {
                         <tr
                             v-for="equipment in requestedEquipment"
                             :key="equipment.name"
+                            class="text-center"
                         >
                             <!-- Item -->
                             <td class="border px-4 py-2">
-                                {{ equipment.equipmentName }} -
+                                {{ equipment.equipmentName }}
+                            </td>
+
+                            <td class="border px-4 py-2">
                                 {{ equipment.description }}
+                            </td>
+
+                            <td class="border px-4 py-2">
+                                {{ equipment.quantity }}
                             </td>
 
                             <!-- Controls -->
@@ -49,8 +63,8 @@ function validateQuantity(equipment) {
                                         icon="i-material-symbols-remove-rounded"
                                         class="px-2"
                                         @click="
-                                            equipment.quantity > 1
-                                                ? equipment.quantity--
+                                            equipment.requestedQuantity > 1
+                                                ? equipment.requestedQuantity--
                                                 : null
                                         "
                                     />
@@ -58,7 +72,9 @@ function validateQuantity(equipment) {
                                     <!-- Input Quantity -->
                                     <div class="w-[85px] px-5">
                                         <UInput
-                                            v-model="equipment.quantity"
+                                            v-model="
+                                                equipment.requestedQuantity
+                                            "
                                             class="text-center"
                                             type="number"
                                             min="1"
@@ -72,7 +88,12 @@ function validateQuantity(equipment) {
                                         variant="soft"
                                         icon="i-material-symbols-add-rounded"
                                         class="px-2"
-                                        @click="equipment.quantity++"
+                                        @click="
+                                            equipment.requestedQuantity <
+                                            equipment.quantity
+                                                ? equipment.requestedQuantity++
+                                                : null
+                                        "
                                     />
                                 </div>
                             </td>
