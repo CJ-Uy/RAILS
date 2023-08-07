@@ -1,5 +1,6 @@
 Some Random Notes:
 - Finish the input for reagents and materials request
+    - Add fetch server api request (same name and description get combined)
     - Add Filter
     - Add Pagination
 

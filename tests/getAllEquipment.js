@@ -1,6 +1,9 @@
-import prisma from "~/server/db/prisma";
+import { PrismaClient } from "@prisma/client";
 
-export default defineEventHandler(async () => {
+const prisma = new PrismaClient();
+
+async function main() {
+
     // TODO: set the quantity to the available quantity the day of the lab activity?
     const allEquipment = await prisma.InventoryOfEqupiment.findMany({
         where: {
@@ -35,6 +38,7 @@ export default defineEventHandler(async () => {
         }
     }, []);
 
-    return filteredEquipment;
+    console.log(filteredEquipment);
+}
 
-});
+main();

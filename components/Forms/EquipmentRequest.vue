@@ -12,23 +12,10 @@ const pageCount = 10;
 const totalItems = ref();
 
 // Searching Rows
-const rows = [
-    {
-        name: "Item 1",
-        description: "First",
-        quantity: 1,
-    },
-    {
-        name: "Item 2",
-        description: "Second",
-        quantity: 1,
-    },
-    {
-        name: "Item 3",
-        description: "Third",
-        quantity: 1,
-    },
-];
+const { pending, data: allEquipment } = await useLazyFetch("/api/db/forms/getAllEquipment");
+
+let filteredRows = ref(allEquipment); 
+totalItems.value = filteredRows.value.length;
 
 // Filter rows
 const searchQuery = ref("");
@@ -83,7 +70,7 @@ function validateQuantity(equipment) {
                     </div>
 
                     <!-- Table -->
-                    <UTable :rows="rows" @select="addItem" />
+                    <UTable :rows="filteredRows" @select="addItem" :loading="pending" />
                     <!-- Pagination -->
                     <div class="flex w-[100%] items-center justify-end">
                         <UPagination

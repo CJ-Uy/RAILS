@@ -185,6 +185,8 @@ model InventoryOfMaterials {
   laboratoriesId     String?
   laboratoryRequests LaboratoryRequests?   @relation(fields: [requestId], references: [id])
   requestId          Int?
+
+  available Boolean @default(true)
 }
 
 model InventoryOfEqupiment {
@@ -209,6 +211,8 @@ model InventoryOfEqupiment {
   laboratoriesId        String?
   laboratoryRequests    LaboratoryRequests?   @relation(fields: [requestId], references: [id])
   requestId             Int?
+
+  available Boolean @default(true)
 }
 
 model InventoryOfReagents {
@@ -236,6 +240,8 @@ model InventoryOfReagents {
   laboratoriesId     String?
   laboratoryRequests LaboratoryRequests?   @relation(fields: [requestId], references: [id])
   requestId          Int?
+
+  available Boolean @default(true)
 }
 
 // -------------------- //
