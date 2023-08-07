@@ -6,10 +6,10 @@ const schoolYear = useSchoolYear();
 
 // ----- Dynamic Selections -----
 // Grade Sections
-const gradeSections = await useFetch("/api/db/getAllGradeSections");
+const gradeSections = await useFetch("/api/db/forms/getAllGradeSections");
 const gradeSectionsOptions = ref(makeSelectionOptions(gradeSections));
 
-const units = await useFetch("/api/db/getAllUnits");
+const units = await useFetch("/api/db/forms/getAllUnits");
 const unitsOptions = ref(makeSelectionOptions(units));
 
 function makeSelectionOptions(response) {

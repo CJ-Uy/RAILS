@@ -4,7 +4,7 @@ const showLabRes = computed(() => labResStatus.value === "false"); // Manual ! s
 
 const requestDates = ref([]);
 
-const laboratories = await useFetch("/api/db/getAllLaboratories");
+const laboratories = await useFetch("/api/db/forms/getAllLaboratories");
 const laboratoriesOptions = ref(makeSelectionOptions(laboratories));
 
 function makeSelectionOptions(response) {
