@@ -17,7 +17,7 @@ const { pending, data: allChangeRoleRequests } = await useLazyFetch(
     "/api/db/manageRoles/getAll",
 );
 
-const allChangeRoleRequestsData = ref(allChangeRoleRequests);
+const allChangeRoleRequestsData = ref([]);
 
 watch(allChangeRoleRequests, (updatedValues) => {
     allChangeRoleRequestsData.value = updatedValues;

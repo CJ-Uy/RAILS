@@ -21,7 +21,7 @@ const totalItems = ref();
 const { pending, data: allEquipment } = await useLazyFetch(
     "/api/db/forms/getAllEquipment",
 );
-const allEquipmentData = ref(allEquipment);
+const allEquipmentData = ref([]);
 watch(allEquipment, (updatedValues) => {
     allEquipmentData.value = updatedValues;
 });

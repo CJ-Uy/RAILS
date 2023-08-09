@@ -18,7 +18,7 @@ const totalItems = ref();
 const { pending, data: allUsers } = await useLazyFetch(
     "/api/db/manageUsers/getAll",
 );
-const allUsersData = ref(allUsers);
+const allUsersData = ref([]);
 watch(allUsers, (updatedValues) => {
     allUsersData.value = updatedValues;
 });

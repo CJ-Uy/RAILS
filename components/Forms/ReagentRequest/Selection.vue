@@ -19,7 +19,7 @@ const totalItems = ref();
 const { pending, data: allReagents } = await useLazyFetch(
     "/api/db/forms/getAllReagents",
 );
-const allReagentsData = ref(allReagents);
+const allReagentsData = ref([]);
 watch(allReagents, (updatedValues) => {
     allReagentsData.value = updatedValues;
 });
