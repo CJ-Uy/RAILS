@@ -217,18 +217,27 @@ model InventoryOfEqupiment {
 
 model InventoryOfReagents {
   //Reagents refer to all the chemicals (solid or liquid) Students can request for
-  id                 String                @id @default(uuid())
-  itemNumber         String? // TODO: Inquire about the incrementing of this
-  casNumber          String?
-  chemicalName       String
-  manufacturerName   String?
-  supplier           String?
-  maxQuantity        String?
+
+  // Identification
+  id               String  @id @default(uuid())
+  itemNumber       String? // All chemicals with the same chemical name will have the same starting number arranged in alphabetical order then a letter for variant
+  casNumber        String?
+  chemicalName     String // Same name chemicals should be grouped together
+  description      String? // If chemicals are the same name but have a varation (ex: acetic acid - glacial an food grade) or are in differnet bottles(?)
+  manufacturerName String?
+  supplier         String?
+
+  // Quantities
+  currentQuantity Float?
+  maxQuantity     Float? // Assuming this means the max quantity someone can request for
+  unit            String? // Unit of measurement like "mL", "mg", etc..
+
   DGClass            String?
   subRisk            String?
   PG                 String?
   riskPhrase         String?
-  hazSub             Boolean
+  safetyPhrase       String?
+  hazSub             Boolean?
   poisonSchedule     String?
   currentSDS         DateTime?
   dateReceived       DateTime?

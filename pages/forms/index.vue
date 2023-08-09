@@ -121,7 +121,7 @@ function downloadRequests(pdfBuffers, lastname) {
                         name="reagents"
                         :classes="{ step: 'w-full' }"
                     >
-                        <FormsReagentsRequest />
+                        <FormsReagentRequest />
                     </FormKit>
 
                     <FormKit type="step" name="submission">

@@ -1,18 +1,18 @@
 <script setup>
-// All Equipment selected
-const requestedEquipment = ref([]);
-provide("requestedEquipment", requestedEquipment);
+// All Reagents selected
+const requestedReagents = ref([]);
+provide("requestedReagents", requestedReagents);
 
 // Tabs
 const items = computed(() => {
-    if (requestedEquipment.value.length == 0) {
+    if (requestedReagents.value.length == 0) {
         return [
             {
-                slot: "selectEquipment",
+                slot: "selectReagents",
                 label: "Select",
             },
             {
-                slot: "orderEquipment",
+                slot: "orderReagents",
                 label: `Orders`,
                 disabled: true,
             },
@@ -20,12 +20,12 @@ const items = computed(() => {
     } else {
         return [
             {
-                slot: "selectEquipment",
+                slot: "selectReagents",
                 label: "Select",
             },
             {
-                slot: "orderEquipment",
-                label: `Orders (${requestedEquipment.value.length})`,
+                slot: "orderReagents",
+                label: `Orders (${requestedReagents.value.length})`,
                 disabled: false,
             },
         ];
@@ -36,9 +36,9 @@ const items = computed(() => {
 <template>
     <div class="w-full">
         <div class="pb-5 text-center">
-            <h1 class="text-xl font-bold">EQUIPMENT REQUEST</h1>
-            <p v-if="requestedEquipment.length > 0">
-                NOTE: A Materials an Equipment Request Form will be made
+            <h1 class="text-xl font-bold">REAGENT REQUEST</h1>
+            <p v-if="requestedReagents.length > 0">
+                NOTE: A Materials an Reagents Request Form will be made
             </p>
         </div>
 
@@ -48,16 +48,16 @@ const items = computed(() => {
             class="w-full"
             :ui="{ list: { tab: { active: 'bg-white' } } }"
         >
-            <template #selectEquipment>
-                <FormsEquipmentRequestSelection />
+            <template #selectReagents>
+                <FormsReagentRequestSelection />
             </template>
-            <template #orderEquipment>
-                <FormsEquipmentRequestOrder />
+            <template #orderReagents>
+                <FormsReagentRequestOrder />
             </template>
         </UTabs>
 
         <FormKit
-            v-model="requestedEquipment"
+            v-model="requestedReagents"
             type="list"
             name="details"
             dynamic
