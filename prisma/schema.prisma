@@ -33,9 +33,13 @@ model SchoolYear {
   yearEnd   Int
   createdAt DateTime @default(now())
 
-  controlNumberCounter Int @default(0)
+  materialEquipmentRequestControlNumberCounter Int @default(0)
+  reagentRequestControlNumberCounter           Int @default(0)
+  laboratoryRequestControlNumberCounter        Int @default(0)
 
-  // TODO: List here also all the laboratory requests that are made in this school year
+  materialEquipmentRequests InventoryOfEqupiment[]
+  reagentRequests           InventoryOfReagents[]
+  laboratoryRequests        LaboratoryRequests[]
 }
 
 model Users {
@@ -212,7 +216,9 @@ model InventoryOfEqupiment {
   laboratoryRequests    LaboratoryRequests?   @relation(fields: [requestId], references: [id])
   requestId             Int?
 
-  available Boolean @default(true)
+  available    Boolean     @default(true)
+  schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
+  schoolYearId String?
 }
 
 model InventoryOfReagents {
@@ -250,7 +256,9 @@ model InventoryOfReagents {
   laboratoryRequests LaboratoryRequests?   @relation(fields: [requestId], references: [id])
   requestId          Int?
 
-  available Boolean @default(true)
+  available    Boolean     @default(true)
+  schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
+  schoolYearId String?
 }
 
 // -------------------- //
@@ -261,7 +269,6 @@ model LaboratoryRequests {
   requestor       Students @relation(fields: [requestorId], references: [id])
   requestorId     String
   controlNumber   String?
-  schoolYear      String?
   forSubject      String?
   concurrentTopic String?
 
@@ -279,10 +286,13 @@ model LaboratoryRequests {
   Laboratory_Reservation_Id String
 
   otherGroupMembers Json?
-  isSignedByTeacher Boolean  @default(false)
-  isSignedByAdmin   Boolean  @default(false)
-  signedTeacher     Teachers @relation("signed_teacher", fields: [signedTeacherId], references: [id])
+  isSignedByTeacher Boolean     @default(false)
+  isSignedByAdmin   Boolean     @default(false)
+  signedTeacher     Teachers    @relation("signed_teacher", fields: [signedTeacherId], references: [id])
   signedTeacherId   String
-  signedAdmin       Admins   @relation(fields: [signedAdminId], references: [id])
+  signedAdmin       Admins      @relation(fields: [signedAdminId], references: [id])
   signedAdminId     String
+  
+  schoolYear        SchoolYear? @relation(fields: [schoolYearId], references: [id])
+  schoolYearId      String?
 }

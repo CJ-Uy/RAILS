@@ -1,0 +1,3 @@
+Prisma studio in production:
+https://stackoverflow.com/questions/73335287/how-to-access-prisma-studio-when-the-app-is-already-deployed-on-heroku
+https://github.com/prisma/studio/issues/601

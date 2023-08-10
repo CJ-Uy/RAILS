@@ -9,16 +9,6 @@ useHead({
 */
 const { data } = await useFetch("/api/user/me");
 
-// Initialize state variables
-const accountEmail = useEmail();
-const accountFirstName = useFirstName();
-const accountLastName = useLastName();
-
-// Set state variables based on user identity, this is so it can auto populate forms but still be changeable
-accountEmail.value = data.value?.email;
-accountFirstName.value = data.value?.firstName;
-accountLastName.value = data.value?.lastName;
-
 switch (String(data.value?.role)) {
     case "STUDENT":
         await navigateTo("/student");

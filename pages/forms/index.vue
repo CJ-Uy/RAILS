@@ -6,7 +6,9 @@ useHead({
     title: "EVC LABS | New Request",
 });
 
-const { data } = await useFetch("/api/user/me");
+// authentication and the navbar is addedd through the layout
+definePageMeta({ layout: "forms-pages" });
+const user = inject("user");
 
 let value = ref();
 

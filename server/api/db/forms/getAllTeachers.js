@@ -3,7 +3,6 @@ import prisma from "~/server/db/prisma";
 export default defineEventHandler(async () => {
     const allTeachers = await prisma.teachers.findMany({
         select: {
-            id: true,
             userProfile: {
                 select: {
                     id: true,
@@ -14,6 +13,7 @@ export default defineEventHandler(async () => {
         },
     });
 
+    // Sort teachers alphabetically by first name, then last name
     const sortedTeachers = allTeachers.sort((a, b) => {
         if (a.userProfile[0].firstName < b.userProfile[0].firstName) {
             return -1;
@@ -30,10 +30,14 @@ export default defineEventHandler(async () => {
         return 0;
     });
 
-    // Return the sorted teachers as an object with the teacher id as the key
-    return sortedTeachers.reduce((acc, teacher) => {
-        acc[teacher.id] = teacher;
-        return acc;
-    }, {});
+    // Filter to only needed data
+    const filteredTeachers = {};
+    for (const teacher of sortedTeachers) {
+        filteredTeachers[
+            teacher.userProfile[0].id
+        ] = `${teacher.userProfile[0].firstName} ${teacher.userProfile[0].lastName}`;
+    }
 
+    // Return the sorted teachers as an object with the teacher id as the key
+    return filteredTeachers;
 });

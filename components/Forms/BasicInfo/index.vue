@@ -1,16 +1,20 @@
 <script setup>
-const accountEmail = useEmail();
-const accountFirstName = useFirstName();
-const accountLastName = useLastName();
 const schoolYear = useSchoolYear();
+
+const user = ref(inject("user"));
 
 // ----- Dynamic Selections -----
 // Grade Sections
 const gradeSections = await useFetch("/api/db/forms/getAllGradeSections");
 const gradeSectionsOptions = ref(makeSelectionOptions(gradeSections));
 
+// Units
 const units = await useFetch("/api/db/forms/getAllUnits");
 const unitsOptions = ref(makeSelectionOptions(units));
+
+// Teachers
+const teachers = await useFetch("/api/db/forms/getAllTeachers");
+const teachersOptions = ref(makeSelectionOptions(teachers));
 
 function makeSelectionOptions(response) {
     const options = [];
@@ -47,21 +51,21 @@ function makeSelectionOptions(response) {
             help="Enter the PSHS Campus"
         />
         <FormKit
-            v-model="accountLastName"
+            v-model="user.lastName"
             type="text"
             label="Lastname"
             name="lastname"
             validation="required"
         />
         <FormKit
-            v-model="accountFirstName"
+            v-model="user.firstName"
             type="text"
             label="Firstname"
             name="firstname"
             validation="required"
         />
         <FormKit
-            v-model="accountEmail"
+            v-model="user.email"
             type="email"
             label="Email"
             name="email"
@@ -103,10 +107,12 @@ function makeSelectionOptions(response) {
         </h3>
         <!-- TODO: Make the teachers list dynamic based on database -->
         <FormKit
-            type="text"
+            type="select"
             name="teacherInCharge"
             label="Teacher in Charge"
+            placeholder="Select a Teacher"
             validation="required"
+            :options="teachersOptions"
         />
 
         <FormKit

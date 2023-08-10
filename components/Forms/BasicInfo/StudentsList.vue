@@ -1,7 +1,6 @@
 <script setup>
 import { FormKitIcon } from "@formkit/vue";
-const accountName = useName();
-const students = ref([accountName.value]);
+const students = ref([]);
 </script>
 
 <template>
