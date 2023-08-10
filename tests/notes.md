@@ -24,4 +24,7 @@ signature       String?     @db.MediumText
 ### Prisma Full Text Search - [DOCS](https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search)
 Prisma Client supports full-text search for MySQL and PostgreSQL databases. Full-text search is a technique for searching text data efficiently. However, it is only efficient if the data you want to query from is super heavy as each search would be a new request. Instead since our daatabase is relatively small, we can query all of the daata then sort through it on the client side.
 
+### model SchoolYear
+For the school yaer table I set the counters for the control numbers instead of getting the length or number of requests there have been. This way it can retreive the control number quicker and therefore less likely to cause a dublicate control number. However, it is still possible for that to happen just now very very unlikely.
+
 ### Prisma Backup

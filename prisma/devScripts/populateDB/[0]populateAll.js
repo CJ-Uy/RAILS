@@ -3,3 +3,4 @@ import "./[2]populateUnits.js";
 import "./[3]populateLaboratories.js";
 import "./[4]populateEquipment.js";
 import "./[5]populateReagents.js";
+import "./[6]populateSchoolYear.js";

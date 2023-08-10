@@ -1,9 +1,10 @@
 <script setup>
-const schoolYear = useSchoolYear();
-
 const user = ref(inject("user"));
 
 // ----- Dynamic Selections -----
+const schoolYear = await useFetch("/api/db/forms/getCurrentSchoolYear");
+const schoolYearOptions = ref(makeSelectionOptions(schoolYear));
+
 // Grade Sections
 const gradeSections = await useFetch("/api/db/forms/getAllGradeSections");
 const gradeSectionsOptions = ref(makeSelectionOptions(gradeSections));
@@ -43,12 +44,14 @@ function makeSelectionOptions(response) {
         <!-- TODO: Make the School year dynamic based on database -->
         <!-- You dodnt even need to send this just show it in the form -->
         <FormKit
-            v-model="schoolYear"
-            type="text"
+            v-model="schoolYearOptions"
+            type="select"
             label="School Year"
             name="schoolYear"
             validation="required"
-            help="Enter the PSHS Campus"
+            help="If school year is wrong please inform the Laboratory Unit"
+            :options="schoolYearOptions"
+            :disabled="true"
         />
         <FormKit
             v-model="user.lastName"

@@ -28,10 +28,11 @@ enum Role {
 }
 
 model SchoolYear {
-  id        String   @id @default(uuid())
-  yearStart Int
-  yearEnd   Int
-  createdAt DateTime @default(now())
+  id                String   @id @default(uuid())
+  yearStart         Int
+  yearEnd           Int
+  createdAt         DateTime @default(now())
+  currentSchoolYear Boolean  @default(false)
 
   materialEquipmentRequestControlNumberCounter Int @default(0)
   reagentRequestControlNumberCounter           Int @default(0)
@@ -286,13 +287,13 @@ model LaboratoryRequests {
   Laboratory_Reservation_Id String
 
   otherGroupMembers Json?
-  isSignedByTeacher Boolean     @default(false)
-  isSignedByAdmin   Boolean     @default(false)
-  signedTeacher     Teachers    @relation("signed_teacher", fields: [signedTeacherId], references: [id])
+  isSignedByTeacher Boolean  @default(false)
+  isSignedByAdmin   Boolean  @default(false)
+  signedTeacher     Teachers @relation("signed_teacher", fields: [signedTeacherId], references: [id])
   signedTeacherId   String
-  signedAdmin       Admins      @relation(fields: [signedAdminId], references: [id])
+  signedAdmin       Admins   @relation(fields: [signedAdminId], references: [id])
   signedAdminId     String
-  
-  schoolYear        SchoolYear? @relation(fields: [schoolYearId], references: [id])
-  schoolYearId      String?
+
+  schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
+  schoolYearId String?
 }
