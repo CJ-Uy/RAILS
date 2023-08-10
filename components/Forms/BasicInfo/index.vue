@@ -103,12 +103,6 @@ function makeSelectionOptions(response) {
             validation="required"
         />
 
-        <h3 class="mb-2">
-            NOTE: if your teacher is not within the options below please fill
-            out a hardcopy form manually instead an go through the usual
-            process.
-        </h3>
-        <!-- TODO: Make the teachers list dynamic based on database -->
         <FormKit
             type="select"
             name="teacherInCharge"
@@ -116,6 +110,9 @@ function makeSelectionOptions(response) {
             placeholder="Select a Teacher"
             validation="required"
             :options="teachersOptions"
+            help="NOTE: if your teacher is not within the options below please fill
+            out a hardcopy form manually instead an go through the usual
+            process."
         />
 
         <FormKit
