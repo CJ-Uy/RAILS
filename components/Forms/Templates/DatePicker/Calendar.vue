@@ -10,8 +10,9 @@ const props = defineProps({
     <VueDatePicker
         multi-dates
         :enable-time-picker="false"
-        placeholder="Select Dates of Activity"
+        placeholder="Select Date(s)"
         auto-apply
+        :min-date="new Date()"
         :close-on-auto-apply="false"
         :model-value="context._value"
         @update:model-value="context.node.input($event)"

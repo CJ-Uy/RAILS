@@ -15,6 +15,7 @@ let value = ref();
 // TODO: Add error management
 async function submitHandler(formValues) {
     // Save response to database
+    // TODO: Format formValues to remove useless data (Lab Settings)
     const requestSaveStatus = await useFetch("/api/forms/save-requests", {
         method: "POST",
         body: { user: user, formValues: formValues},
