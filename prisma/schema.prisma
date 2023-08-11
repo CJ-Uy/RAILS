@@ -164,7 +164,8 @@ model LaboratoryReservations {
   startTime          DateTime
   endTime            DateTime
 
-  laboratoryRequests LaboratoryRequests[]
+  laboratoryRequest   LaboratoryRequests @relation(fields: [laboratoryRequestId], references: [id])
+  laboratoryRequestId String
 }
 
 // -------------------- //
@@ -191,7 +192,7 @@ model InventoryOfMaterials {
   laboratories       Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId     String?
   laboratoryRequests LaboratoryRequests?   @relation(fields: [requestId], references: [id])
-  requestId          Int?
+  requestId          String?
 
   available Boolean @default(true)
 }
@@ -217,7 +218,7 @@ model InventoryOfEqupiment {
   laboratories          Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId        String?
   laboratoryRequests    LaboratoryRequests?   @relation(fields: [requestId], references: [id])
-  requestId             Int?
+  requestId             String?
 
   available    Boolean     @default(true)
   schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
@@ -257,7 +258,7 @@ model InventoryOfReagents {
   laboratories       Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId     String?
   laboratoryRequests LaboratoryRequests?   @relation(fields: [requestId], references: [id])
-  requestId          Int?
+  requestId          String?
 
   available    Boolean     @default(true)
   schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
@@ -268,7 +269,7 @@ model InventoryOfReagents {
 // REQUESTS AND RESERVATIONS //
 // -------------------- //
 model LaboratoryRequests {
-  id              Int     @id
+  id              String  @id @default(uuid())
   requestor       Users   @relation(fields: [requestorId], references: [id])
   requestorId     String
   forSubject      String?
@@ -293,16 +294,15 @@ model LaboratoryRequests {
   reagentsRequestedControlNumber String?
   reagentsRequested              InventoryOfReagents[]
 
-  laboratoryReservation   LaboratoryReservations? @relation(fields: [laboratoryReservationId], references: [id])
-  laboratoryReservationId String?
+  laboratoryReservations LaboratoryReservations[]
 
   otherGroupMembers Json?
-  isSignedByTeacher Boolean  @default(false)
-  isSignedByAdmin   Boolean  @default(false)
-  signedTeacher     Teachers @relation("signed_teacher", fields: [signedTeacherId], references: [id])
-  signedTeacherId   String
-  signedAdmin       Admins   @relation(fields: [signedAdminId], references: [id])
-  signedAdminId     String
+  isSignedByTeacher Boolean   @default(false)
+  isSignedByAdmin   Boolean   @default(false)
+  signedTeacher     Teachers? @relation("signed_teacher", fields: [signedTeacherId], references: [id])
+  signedTeacherId   String?
+  signedAdmin       Admins?   @relation(fields: [signedAdminId], references: [id])
+  signedAdminId     String?
 
   schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
