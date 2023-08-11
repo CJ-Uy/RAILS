@@ -2,7 +2,7 @@
 // NAMING SCHEME 
 //  - Models      are PASCAL CASE           like datatypes i.e. DateTime
 //  - Fields      are regular CAMEL CASE    i.e. firstName
-//  - Relations   are SNAKE CASE            i.e. @relation("teacher_in_charge")
+//  - Relations   are SNAKE CASE            i.e. @relation("teacher_in_charge") [inconsistent remove maybe?]
 //  - Enumerations are ALL CAPS             i.e. enum Role { ADMIN, TEACHER, STUDENT }
 //  - Table Names are PLURAL                i.e. Students
 //  - Column Names are SINGULAR             i.e. firstName
@@ -61,6 +61,8 @@ model Users {
   teachersId     String?
   adminsId       String?
 
+  requests LaboratoryRequests[]
+
   changeRoleRequest ChangeRoleRequests[]
 }
 
@@ -92,8 +94,7 @@ model Students {
   grade   Int?
   section String?
 
-  laboratoryRequests LaboratoryRequests[]
-  userProfile        Users[]
+  userProfile Users[]
 }
 
 model ChangeRoleRequests {
@@ -109,10 +110,11 @@ model ChangeRoleRequests {
 }
 
 model GradeSection {
-  id       String     @id @default(uuid())
-  grade    Int
-  section  String
-  students Students[]
+  id                 String               @id @default(uuid())
+  grade              Int
+  section            String
+  students           Students[]
+  laboratoryRequests LaboratoryRequests[]
 }
 
 model Units {
@@ -120,7 +122,7 @@ model Units {
   name               String
   frequencyRank      Int                  @unique @default(autoincrement())
   createdAt          DateTime             @default(now())
-  LaboratoryRequests LaboratoryRequests[]
+  laboratoryRequests LaboratoryRequests[]
 }
 
 // -------------------- //
@@ -266,12 +268,14 @@ model InventoryOfReagents {
 // REQUESTS AND RESERVATIONS //
 // -------------------- //
 model LaboratoryRequests {
-  id              Int      @id
-  requestor       Students @relation(fields: [requestorId], references: [id])
+  id              Int     @id
+  requestor       Users   @relation(fields: [requestorId], references: [id])
   requestorId     String
-  controlNumber   String?
   forSubject      String?
   concurrentTopic String?
+
+  gradeSection   GradeSection @relation(fields: [gradeSectionId], references: [id])
+  gradeSectionId String
 
   unit   Units  @relation(fields: [unitId], references: [id])
   unitId String
@@ -279,12 +283,18 @@ model LaboratoryRequests {
   teacherInCharge   Teachers @relation("teacher_in_charge", fields: [teacherInChargeId], references: [id])
   teacherInChargeId String
 
-  materialsNeeded InventoryOfMaterials[]
-  equipmentNeeded InventoryOfEqupiment[]
-  Reagents_Needed InventoryOfReagents[]
+  // TODO: Clarify the materials requested an sample inventory
+  materialsRequestedControlNumber String?
+  materialsRequested              InventoryOfMaterials[]
 
-  Laboratory_Reservation    LaboratoryReservations @relation(fields: [Laboratory_Reservation_Id], references: [id])
-  Laboratory_Reservation_Id String
+  equipmentRequestedControlNumber String?
+  equipmentRequested              InventoryOfEqupiment[]
+
+  reagentsRequestedControlNumber String?
+  reagentsRequested              InventoryOfReagents[]
+
+  laboratoryReservation   LaboratoryReservations? @relation(fields: [laboratoryReservationId], references: [id])
+  laboratoryReservationId String?
 
   otherGroupMembers Json?
   isSignedByTeacher Boolean  @default(false)

@@ -49,7 +49,7 @@ const links = [
         children: [
             {
                 label: "EDIT REQUEST FORM",
-                to: "/admin/manage-requests",
+                to: "/admin/edit-forms",
                 icon: "i-mdi-clipboard-edit-outline",
             },
             {

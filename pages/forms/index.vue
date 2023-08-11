@@ -12,45 +12,46 @@ const user = inject("user");
 
 let value = ref();
 
+// TODO: Add error management
 async function submitHandler(formValues) {
     // Save response to database
-    // const requestSaveStatus = await useFetch("/api/forms/save-requests", {
-    //     method: "POST",
-    //     body: { ...data.value, ...formValues },
-    // });
+    const requestSaveStatus = await useFetch("/api/forms/save-requests", {
+        method: "POST",
+        body: { user: user, formValues: formValues},
+    });
 
-    // Emailing pdfs
-    if (formValues.requestData.submission.email) {
-        // TODO: Make it so they send the info to their email
-    }
+    // // Emailing pdfs
+    // if (formValues.data.submission.email) {
+    //     // TODO: Make it so they send the info to their email
+    // }
 
-    // Downloaing pdfs
-    if (formValues.requestData.submission.download) {
-        try {
-            const pdfBuffers_rawData = await useFetch(
-                "/api/forms/create-pdf-buffers",
-                {
-                    method: "POST",
-                    body: formValues,
-                },
-            );
-            const pdfBuffers = pdfBuffers_rawData.data.value;
+    // // Downloaing pdfs
+    // if (formValues.data.submission.download) {
+    //     try {
+    //         const pdfBuffers_rawData = await useFetch(
+    //             "/api/forms/create-pdf-buffers",
+    //             {
+    //                 method: "POST",
+    //                 body: formValues,
+    //             },
+    //         );
+    //         const pdfBuffers = pdfBuffers_rawData.data.value;
 
-            try {
-                downloadRequests(
-                    pdfBuffers,
-                    formValues.requestData.basicInfo.lastname,
-                );
-            } catch (error) {
-                console.error(
-                    "There was an error downloading the pdf: ",
-                    error,
-                );
-            }
-        } catch (error) {
-            console.error("There was an error creating the pdf: ", error);
-        }
-    }
+    //         try {
+    //             downloadRequests(
+    //                 pdfBuffers,
+    //                 formValues.requestData.basicInfo.lastname,
+    //             );
+    //         } catch (error) {
+    //             console.error(
+    //                 "There was an error downloading the pdf: ",
+    //                 error,
+    //             );
+    //         }
+    //     } catch (error) {
+    //         console.error("There was an error creating the pdf: ", error);
+    //     }
+    // }
 }
 
 function downloadRequests(pdfBuffers, lastname) {

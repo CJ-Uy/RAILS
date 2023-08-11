@@ -1,6 +1,6 @@
 <script setup>
 useHead({
-    title: "EVC LABS | Requests Management",
+    title: "EVC LABS | Edit Forms",
 });
 
 // authentication and the navbar is addedd through the layout
@@ -11,7 +11,7 @@ const user = inject("user");
 
 <template>
     <div>
-        <UserDashboardHeader title="ADMIN | REQUEST MANAGEMENT" />
+        <UserDashboardHeader title="ADMIN | EDIT FORMS" />
 
         <UContainer class="w-auto md:w-1/2">
             <UCard>
@@ -21,13 +21,16 @@ const user = inject("user");
 
                 <UserAdminSaveSignature />
             </UCard>
-            <UCard>
+            <UCard class="mt-5">
                 <template #header>
                     <h2>Form Input Settings</h2>
                 </template>
                 <p>
-                    Here the change for each value is placed like the section laboratories and stuff
+                    Change request form inputs in this section.
                 </p>
+                <div>
+                    <UserAdminEditForms />
+                </div>
             </UCard>
         </UContainer>
     </div>
