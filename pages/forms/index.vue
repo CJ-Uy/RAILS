@@ -15,7 +15,7 @@ let value = ref();
 // TODO: Add error management
 async function submitHandler(formValues) {
     // Save response to database
-    // TODO: Format formValues to remove useless data (Lab Settings)
+    // TODO: Format formValues to remove useless data (Lab Settings) - Add also a note that all their other requests will be duplicated for those days listed.
     const requestSaveStatus = await useFetch("/api/forms/save-requests", {
         method: "POST",
         body: { user: user, formValues: formValues},

@@ -73,13 +73,17 @@ function addItem(item) {
 <template>
     <div>
         <div class="mt-7 text-center">
-            <h2 class="text-lg font-bold text-main-500">
-                SELECT REAGENTS
-            </h2>
-            <p>
-                Select any reagent you would like to add to this
-                request.
-            </p>
+            <h2 class="text-lg font-bold text-main-500">SELECT REAGENTS</h2>
+            <p>Select any reagent you would like to add to this request.</p>
+            <div v-if="requestedReagents.length != 0">
+                <p class="text-red-600">
+                    Finalize Reagents Request in the
+                    <span class="font-bold"
+                        >Orders ({{ requestedReagents.length }})</span
+                    >
+                    tab
+                </p>
+            </div>
         </div>
         <!-- Equipment Search table -->
         <div class="my-7">

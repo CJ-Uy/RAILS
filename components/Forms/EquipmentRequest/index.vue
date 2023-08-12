@@ -37,9 +37,6 @@ const items = computed(() => {
     <div class="w-full">
         <div class="pb-5 text-center">
             <h1 class="text-xl font-bold">EQUIPMENT REQUEST</h1>
-            <p v-if="requestedEquipment.length > 0">
-                NOTE: A Materials an Equipment Request Form will be made
-            </p>
         </div>
 
         <!-- Tabs -->

@@ -19,7 +19,10 @@ function validateQuantity(reagent) {
             </h2>
             <p>
                 Finalize the quantity of the requested Reagents here. Be sure to
-                note the units you are requesting.
+                note the units you are requesting.<br />
+                <span class="font-semibold">
+                    A Regeant Request Form will automatically be created.
+                </span>
             </p>
         </div>
 
@@ -72,7 +75,9 @@ function validateQuantity(reagent) {
                                         class="px-2"
                                         @click="
                                             reagent.requestedQuantity > 5
-                                                ? (reagent.requestedQuantity = reagent.requestedQuantity - 5)
+                                                ? (reagent.requestedQuantity =
+                                                      reagent.requestedQuantity -
+                                                      5)
                                                 : null
                                         "
                                     />
@@ -97,7 +102,9 @@ function validateQuantity(reagent) {
                                         @click="
                                             reagent.requestedQuantity <
                                             reagent.maxQuantity
-                                                ? (reagent.requestedQuantity = reagent.requestedQuantity + 5)
+                                                ? (reagent.requestedQuantity =
+                                                      reagent.requestedQuantity +
+                                                      5)
                                                 : null
                                         "
                                     />

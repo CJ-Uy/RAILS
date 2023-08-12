@@ -82,6 +82,11 @@ function addItem(item) {
                 Select any materials or equipment you would like to add to this
                 request.
             </p>
+            <div v-if="requestedEquipment.length != 0">
+                <p class="text-red-600">
+                    Finalize Materials and Equipment Request in the <span class="font-bold">Orders ({{ requestedEquipment.length }})</span> tab
+                </p>
+            </div>
         </div>
         <!-- Equipment Search table -->
         <div class="my-7">

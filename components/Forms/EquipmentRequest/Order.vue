@@ -17,7 +17,13 @@ function validateQuantity(equipment) {
             <h2 class="text-lg font-bold text-main-500">
                 FINALIZE REQUESTED EQUIPMENT
             </h2>
-            <p>Finalize your requested materials and equipment here</p>
+            <p>
+                Finalize your requested materials and equipment here.<br />
+                <span class="font-semibold">
+                    A Laboratory Request and Equipment Accountability Form will
+                    automatically be created
+                </span>
+            </p>
         </div>
 
         <!-- Final Requested Equipment -->
