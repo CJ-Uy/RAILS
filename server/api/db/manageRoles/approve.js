@@ -30,31 +30,21 @@ export default defineEventHandler(async (event) => {
     });
 
     // Create their ROLE Profile
-    if (wantedRole === Role.TEACHER) {
-        await prisma.teachers.upsert({
-            where: { userProfileId: body.userId },
-            update: {},
-            create: {
+    const user = await prisma.users.findUnique({
+        where: { id: body.userId },
+        select: { teacherProfile: true, adminProfile: true },
+    });
+    if (wantedRole === Role.TEACHER && !user.teacherProfile) {
+        await prisma.teachers.create({
+            data: {
                 userProfile: {
                     connect: { id: body.userId },
                 },
             },
         });
-    } else if (wantedRole === Role.STUDENT) {
-        await prisma.students.upsert({
-            where: { userProfileId: body.userId },
-            update: {},
-            create: {
-                userProfile: {
-                    connect: { id: body.userId },
-                },
-            },
-        });
-    } else if (wantedRole === Role.ADMIN) {
-        await prisma.admins.upsert({
-            where: { userProfileId: body.userId },
-            update: {},
-            create: {
+    } else if ((wantedRole === Role.ADMIN) && !user.adminProfile) {
+        await prisma.admins.create({
+            data: {
                 userProfile: {
                     connect: { id: body.userId },
                 },
