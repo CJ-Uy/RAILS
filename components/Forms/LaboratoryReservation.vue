@@ -52,7 +52,6 @@ function removeDateTime(index) {
             </h2>
         </div>
         <br />
-        <!-- TODO: Add icons https://vue3datepicker.com/slots/icons/#icons currently the default ones are invisible (idk why) -->
         <FormKit
             type="select"
             label="Preferred Laboratory Room"
