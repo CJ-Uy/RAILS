@@ -63,8 +63,8 @@ function removeDateTime(index) {
         />
         <h3 class="font-bold">Add Date(s) and their Time Range</h3>
         <p>
-            For example if the 3 dates are chosen on a single calendar the time
-            range chosen beside it applies to all 3 dates as well
+            All Inclusive Time of Use applies to all dates selected in with
+            their respective calendar.
         </p>
         <br />
         <UButton
@@ -74,34 +74,43 @@ function removeDateTime(index) {
             class="mb-2"
         />
         <div class="mb-5">
-            <div
-                v-for="(dateTime, index) in dateTimes"
-                :key="index"
-                class="flex flex-row"
-            >
-                <div class="mr-2 w-[175px]">
-                    <FormKit
-                        v-model="dateTime.requestDates"
-                        type="calendarDatePicker"
-                        validation="required"
-                    />
-                </div>
-                <div class="mr-2 w-[175px]">
-                    <FormKit
-                        v-model="dateTime.inclusiveTimeOfUse"
-                        type="timeDatePicker"
-                        validation="required"
-                    />
-                </div>
-                <UButton
-                    v-if="index !== 0"
-                    color="red"
-                    variant="outline"
-                    icon="i-material-symbols-delete-outline"
-                    @click="removeDateTime(index)"
-                    class="h-[37px]"
-                />
-            </div>
+            <table>
+                <tr class="text-left">
+                    <th>Date(s)</th>
+                    <th>Inclusive Time of Use</th>
+                    <th></th>
+                </tr>
+                <tr v-for="(dateTime, index) in dateTimes" :key="index">
+                    <td>
+                        <div class="mr-2 w-[175px]">
+                            <FormKit
+                                v-model="dateTime.requestDates"
+                                type="calendarDatePicker"
+                                validation="required"
+                            />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="mr-2 w-[175px]">
+                            <FormKit
+                                v-model="dateTime.inclusiveTimeOfUse"
+                                type="timeDatePicker"
+                                validation="required"
+                            />
+                        </div>
+                    </td>
+                    <td class="flex items-center justify-center">
+                        <UButton
+                            v-if="index !== 0"
+                            color="red"
+                            variant="outline"
+                            icon="i-material-symbols-delete-outline"
+                            @click="removeDateTime(index)"
+                            class="h-[37px]"
+                        />
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <!-- Save all Date Times -->
