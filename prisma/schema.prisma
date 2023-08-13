@@ -38,9 +38,14 @@ model SchoolYear {
   reagentRequestControlNumberCounter           Int @default(0)
   laboratoryRequestControlNumberCounter        Int @default(0)
 
-  materialEquipmentRequests InventoryOfEqupiment[]
-  reagentRequests           InventoryOfReagents[]
-  laboratoryRequests        LaboratoryRequests[]
+  materialsAdded InventoryOfMaterials[]
+  equipmentAdded InventoryOfEqupiment[]
+  reagentsAdded  InventoryOfReagents[]
+
+  laboratoryRequests LaboratoryRequests[]
+  EquipmentRequests  EquipmentRequests[]
+  MaterialRequests   MaterialRequests[]
+  ReagentRequests    ReagentRequests[]
 }
 
 model Users {
@@ -77,16 +82,18 @@ model Admins {
 
 model Teachers {
   id                         String               @id @default(uuid())
-  signature                  String?              @db.MediumText
   createdAt                  DateTime             @default(now())
   updatedAt                  DateTime             @updatedAt
+  signature                  String?              @db.MediumText
   receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge") //TODO rearrange this when i get to requests
   signedLaboratoryRequests   LaboratoryRequests[] @relation("signed_teacher")
   userProfile                Users[]
 }
 
 model Students {
-  id String @id @default(uuid())
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   gradeSection   GradeSection? @relation(fields: [gradeSectionId], references: [id])
   gradeSectionId String?
@@ -98,19 +105,20 @@ model Students {
 }
 
 model ChangeRoleRequests {
-  id String @id @default(uuid())
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user   Users  @relation(fields: [userId], references: [id])
   userId String
 
   wantedRole Role
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model GradeSection {
   id                 String               @id @default(uuid())
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
   grade              Int
   section            String
   students           Students[]
@@ -119,9 +127,10 @@ model GradeSection {
 
 model Units {
   id                 String               @id @default(uuid())
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
   name               String
   frequencyRank      Int                  @unique @default(autoincrement())
-  createdAt          DateTime             @default(now())
   laboratoryRequests LaboratoryRequests[]
 }
 
@@ -129,7 +138,9 @@ model Units {
 // LABORATORIES //
 // -------------------- //
 model Laboratories {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   name        String
   description String?
 
@@ -144,10 +155,10 @@ model Laboratories {
 
 model LaboratoryLocations {
   id                           String                @id @default(uuid())
+  createdAt                    DateTime              @default(now())
+  updatedAt                    DateTime              @updatedAt
   name                         String
   description                  String?
-  createdAt                    DateTime              @default(now())
-  removedAt                    DateTime?
   laboratories                 Laboratories[]
   inventoryOfMaterials         InventoryOfMaterials? @relation(fields: [inventoryOfMaterialsSupplyId], references: [id])
   inventoryOfMaterialsSupplyId String?
@@ -159,11 +170,13 @@ model LaboratoryLocations {
 
 model LaboratoryReservations {
   id                 String       @id @default(uuid())
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
   controlNumber      String
   laboratoryReserved Laboratories @relation(fields: [laboratoryId], references: [id])
   laboratoryId       String
-  startTime          String       // Strings but stored in the DateTime format
-  endTime            String       // Strings but stored in the DateTime format
+  startTime          String // Strings but stored in the DateTime format
+  endTime            String // Strings but stored in the DateTime format
 
   laboratoryRequest   LaboratoryRequests @relation(fields: [laboratoryRequestId], references: [id])
   laboratoryRequestId String
@@ -175,6 +188,8 @@ model LaboratoryReservations {
 model InventoryOfMaterials {
   //Materials refer to small devices for experiments (such as breakers and test tubes) and supplies of the Laboratory Unit (Cleaning Supplies etc..)
   id                 String                @id @default(uuid())
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
   itemName           String
   description        String
   additionalPurchase Int?
@@ -192,15 +207,18 @@ model InventoryOfMaterials {
   location           LaboratoryLocations[]
   laboratories       Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId     String?
-  laboratoryRequests LaboratoryRequests?   @relation(fields: [requestId], references: [id])
-  requestId          String?
 
-  available Boolean @default(true)
+  requests     MaterialRequests[]
+  available    Boolean            @default(true)
+  schoolYear   SchoolYear?        @relation(fields: [schoolYearId], references: [id])
+  schoolYearId String?
 }
 
 model InventoryOfEqupiment {
   //Equipment refer to the large devices that may not be easily moved from one location to another
   id                    String                @id @default(uuid())
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
   equipmentCodeNumber   Int                   @unique @default(autoincrement()) // This is so we can have LE-1, LE-2, etc..
   equipmentCode         String?
   equipmentName         String
@@ -218,11 +236,10 @@ model InventoryOfEqupiment {
   status                String?
   laboratories          Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId        String?
-  laboratoryRequests    LaboratoryRequests?   @relation(fields: [requestId], references: [id])
-  requestId             String?
 
-  available    Boolean     @default(true)
-  schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
+  requests     EquipmentRequests[]
+  available    Boolean             @default(true)
+  schoolYear   SchoolYear?         @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 }
 
@@ -230,7 +247,9 @@ model InventoryOfReagents {
   //Reagents refer to all the chemicals (solid or liquid) Students can request for
 
   // Identification
-  id               String  @id @default(uuid())
+  id               String   @id @default(uuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
   itemNumber       String? // All chemicals with the same chemical name will have the same starting number arranged in alphabetical order then a letter for variant
   casNumber        String?
   chemicalName     String // Same name chemicals should be grouped together
@@ -243,35 +262,81 @@ model InventoryOfReagents {
   maxQuantity     Float? // Assuming this means the max quantity someone can request for
   unit            String? // Unit of measurement like "mL", "mg", etc..
 
-  DGClass            String?
-  subRisk            String?
-  PG                 String?
-  riskPhrase         String?
-  safetyPhrase       String?
-  hazSub             Boolean?
-  poisonSchedule     String?
-  currentSDS         DateTime?
-  dateReceived       DateTime?
-  expiryDate         DateTime?
-  dateOpened         DateTime?
-  status             String?
-  location           LaboratoryLocations[]
-  laboratories       Laboratories?         @relation(fields: [laboratoriesId], references: [id])
-  laboratoriesId     String?
-  laboratoryRequests LaboratoryRequests?   @relation(fields: [requestId], references: [id])
-  requestId          String?
+  DGClass        String?
+  subRisk        String?
+  PG             String?
+  riskPhrase     String?
+  safetyPhrase   String?
+  hazSub         Boolean?
+  poisonSchedule String?
+  currentSDS     DateTime?
+  dateReceived   DateTime?
+  expiryDate     DateTime?
+  dateOpened     DateTime?
+  status         String?
+  location       LaboratoryLocations[]
+  laboratories   Laboratories?         @relation(fields: [laboratoriesId], references: [id])
+  laboratoriesId String?
 
-  available    Boolean     @default(true)
-  schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
+  requests     ReagentRequests[]
+  available    Boolean           @default(true)
+  schoolYear   SchoolYear?       @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 }
 
 // -------------------- //
 // REQUESTS AND RESERVATIONS //
 // -------------------- //
+model EquipmentRequests {
+  id                    String                 @id @default(uuid())
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  quantity              Int
+  equipment             InventoryOfEqupiment[]
+  name                  String
+  description           String?
+  modelNoOrManufacturer String?
+  LaboratoryRequests    LaboratoryRequests     @relation(fields: [laboratoryRequestsId], references: [id])
+  laboratoryRequestsId  String
+  schoolYear            SchoolYear?            @relation(fields: [schoolYearId], references: [id])
+  schoolYearId          String?
+}
+
+model MaterialRequests {
+  // TODO: Ask about how the materials work
+  id                  String                 @id @default(uuid())
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  quantity            Int
+  materials           InventoryOfMaterials[]
+  name                String
+  description         String?
+  laboratoryRequest   LaboratoryRequests     @relation(fields: [laboratoryRequestId], references: [id])
+  laboratoryRequestId String
+  schoolYear          SchoolYear?            @relation(fields: [schoolYearId], references: [id])
+  schoolYearId        String?
+}
+
+model ReagentRequests {
+  id                   String                @id @default(uuid())
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  quantity             Int
+  unit                 String
+  reagents             InventoryOfReagents[]
+  name                 String
+  description          String?
+  LaboratoryRequests   LaboratoryRequests    @relation(fields: [laboratoryRequestsId], references: [id])
+  laboratoryRequestsId String
+  schoolYear           SchoolYear?           @relation(fields: [schoolYearId], references: [id])
+  schoolYearId         String?
+}
+
 model LaboratoryRequests {
-  id              String  @id @default(uuid())
-  requestor       Users   @relation(fields: [requestorId], references: [id])
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  requestor       Users    @relation(fields: [requestorId], references: [id])
   requestorId     String
   forSubject      String?
   concurrentTopic String?
@@ -287,13 +352,13 @@ model LaboratoryRequests {
 
   // TODO: Clarify the materials requested an sample inventory
   materialsRequestedControlNumber String?
-  materialsRequested              InventoryOfMaterials[]
+  materialsRequested              MaterialRequests[]
 
   equipmentRequestedControlNumber String?
-  equipmentRequested              InventoryOfEqupiment[]
+  equipmentRequested              EquipmentRequests[]
 
   reagentsRequestedControlNumber String?
-  reagentsRequested              InventoryOfReagents[]
+  reagentsRequested              ReagentRequests[]
 
   laboratoryReservations LaboratoryReservations[]
 
