@@ -23,4 +23,8 @@ const createSchoolYear = await prisma.schoolYear.createMany({
     ],
 });
 
-console.log(createSchoolYear);
+console.log(
+    `Created School Years and respective counters: ${JSON.stringify(
+        createSchoolYear,
+    )}`,
+);

@@ -153,4 +153,4 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
     ],
 });
 
-console.log(createReagents);
+console.log(`Created Reagents: ${JSON.stringify(createReagents)}`);

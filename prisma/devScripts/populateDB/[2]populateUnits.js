@@ -17,4 +17,4 @@ const createUnits = await prisma.units.createMany({
     skipDuplicates: true,
 });
 
-console.log(createUnits);
+console.log(`Created Units: ${JSON.stringify(createUnits)}`);

@@ -78,5 +78,7 @@ const laboratories = await prisma.laboratories.createMany({
     skipDuplicates: true,
 });
 
-console.log(laboratoryLocations);
-console.log(laboratories);
+console.log(
+    `Created Laboratory Locations: ${JSON.stringify(laboratoryLocations)}`,
+);
+console.log(`Created Laboratories: ${JSON.stringify(laboratories)}`);

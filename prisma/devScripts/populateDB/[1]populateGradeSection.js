@@ -31,4 +31,4 @@ const createGradeSection = await prisma.gradeSection.createMany({
     skipDuplicates: true,
 });
 
-console.log(createGradeSection);
+console.log(`Created Grade Section: ${JSON.stringify(createGradeSection)}`);

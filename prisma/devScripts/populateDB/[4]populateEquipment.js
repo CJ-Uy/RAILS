@@ -222,4 +222,4 @@ for (const equipment of createdEquipment) {
     updatedEquipment.push(updated);
 }   
 
-console.log(updatedEquipment);
+console.log(`${updatedEquipment.length} equipment created and updated`);
