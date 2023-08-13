@@ -159,10 +159,11 @@ model LaboratoryLocations {
 
 model LaboratoryReservations {
   id                 String       @id @default(uuid())
+  controlNumber      String
   laboratoryReserved Laboratories @relation(fields: [laboratoryId], references: [id])
   laboratoryId       String
-  startTime          DateTime
-  endTime            DateTime
+  startTime          String       // Strings but stored in the DateTime format
+  endTime            String       // Strings but stored in the DateTime format
 
   laboratoryRequest   LaboratoryRequests @relation(fields: [laboratoryRequestId], references: [id])
   laboratoryRequestId String

@@ -3,9 +3,9 @@ import prisma from "~/server/db/prisma";
 export default defineEventHandler(async () => {
     const allTeachers = await prisma.teachers.findMany({
         select: {
+            id: true,
             userProfile: {
                 select: {
-                    id: true,
                     firstName: true,
                     lastName: true,
                 },
@@ -34,7 +34,7 @@ export default defineEventHandler(async () => {
     const filteredTeachers = {};
     for (const teacher of sortedTeachers) {
         filteredTeachers[
-            teacher.userProfile[0].id
+            teacher.id
         ] = `${teacher.userProfile[0].firstName} ${teacher.userProfile[0].lastName}`;
     }
 

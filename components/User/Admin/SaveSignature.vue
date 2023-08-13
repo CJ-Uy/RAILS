@@ -30,7 +30,6 @@ async function save() {
             signature: signature,
         },
     });
-    // TODO: Figure out how to retrieve svg from string ¯\_(ツ)_/¯ (https://stackoverflow.com/questions/24107288/creating-an-svg-dom-element-from-a-string)
 }
 </script>
 
