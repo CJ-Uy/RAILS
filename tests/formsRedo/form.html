@@ -5,70 +5,67 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
         <style>
-            table {
-                border-collapse: collapse;
-            }
-            td {
-                padding: 5px;
-                white-space: nowrap;
-            }
-            .underline {
-                border-bottom: 1px solid black;
+            #table {
+                width: 500px;
+                border: 2px solid black;
             }
         </style>
     </head>
     <body>
-        <table id="table"></table>
+        <div id="table"></div>
     </body>
     <script>
         let data = [
             {
                 label: "Name",
-                value: "John Doe",
+                value: "John DDDDDDoe",
                 minWidth: 200,
             },
             {
                 label: "Description",
                 value: "Your description goes here",
-                minWidth: 500,
+                minWidth: 200,
             },
             {
                 label: "Something",
-                value: "Something else",
-                minWidth: 300,
+                value: "a",
+                minWidth: 200,
             },
         ];
 
-        function getCharCountToFitWidth(text, maxWidth) {
-            let span = document.createElement("span");
-            span.style.whiteSpace = "nowrap";
-            document.body.appendChild(span);
-            let remainChars = "";
-            let extraChars = "";
-            for (let i = 0; i < text.length; i++) {
-                span.textContent += text[i];
-                if (span.offsetWidth > maxWidth) {
-                    extraChars += text[i];
-                } else {
-                    remainChars += text[i];
-                }
-            }
-            document.body.removeChild(span);
-            return [remainChars, extraChars];
-        }
+        // Create flex container
+        let container = document.getElementById("table");
+        container.style.display = "flex";
+        container.style.flexWrap = "wrap";
 
-        let table = document.getElementById("table");
-
+        // Iterate over data to create flex items
         for (let i = 0; i < data.length; i++) {
-            let row = document.createElement("tr");
-            let labelCell = document.createElement("td");
-            let valueCell = document.createElement("td");
-            labelCell.textContent = data[i].label;
-            valueCell.textContent = data[i].value;
-            row.appendChild(labelCell);
-            row.appendChild(valueCell);
-            table.appendChild(row);
-        }
+            // Create label item
+            let labelItem = document.createElement("div");
+            labelItem.textContent = data[i].label + ":";
+            labelItem.style.marginRight = "5px"
+            container.appendChild(labelItem);
 
+            // Create value item
+            let valueItem = document.createElement("div");
+            valueItem.textContent = data[i].value;
+            valueItem.style.borderBottom = "1px solid black";
+            container.appendChild(valueItem);
+
+            // Space
+            let spaceItem = document.createElement("div");
+            spaceItem.style.borderBottom = "1px solid black";
+            spaceItem.style.marginRight = "15px"
+
+            let difference =
+                data[i].minWidth -
+                labelItem.offsetWidth -
+                valueItem.offsetWidth;
+            let offsetWidth = difference < 0 ? 0 : difference;
+
+            spaceItem.style.minWidth = offsetWidth + "px";
+            console.log(offsetWidth)
+            container.appendChild(spaceItem);
+        }
     </script>
 </html>
