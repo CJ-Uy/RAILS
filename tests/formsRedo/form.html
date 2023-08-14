@@ -1,11 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+            td {
+                padding: 5px;
+                white-space: nowrap;
+            }
+            .underline {
+                border-bottom: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <table id="table"></table>
+    </body>
+    <script>
+        let data = [
+            {
+                label: "Name",
+                value: "John Doe",
+                minWidth: 200,
+            },
+            {
+                label: "Description",
+                value: "Your description goes here",
+                minWidth: 500,
+            },
+            {
+                label: "Something",
+                value: "Something else",
+                minWidth: 300,
+            },
+        ];
+
+        function getCharCountToFitWidth(text, maxWidth) {
+            let span = document.createElement("span");
+            span.style.whiteSpace = "nowrap";
+            document.body.appendChild(span);
+            let remainChars = "";
+            let extraChars = "";
+            for (let i = 0; i < text.length; i++) {
+                span.textContent += text[i];
+                if (span.offsetWidth > maxWidth) {
+                    extraChars += text[i];
+                } else {
+                    remainChars += text[i];
+                }
+            }
+            document.body.removeChild(span);
+            return [remainChars, extraChars];
+        }
+
+        let table = document.getElementById("table");
+
+        for (let i = 0; i < data.length; i++) {
+            let row = document.createElement("tr");
+            let labelCell = document.createElement("td");
+            let valueCell = document.createElement("td");
+            labelCell.textContent = data[i].label;
+            valueCell.textContent = data[i].value;
+            row.appendChild(labelCell);
+            row.appendChild(valueCell);
+            table.appendChild(row);
+        }
+
+    </script>
 </html>
