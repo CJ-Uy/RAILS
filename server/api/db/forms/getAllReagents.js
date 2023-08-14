@@ -16,10 +16,11 @@ export default defineEventHandler(async () => {
                 item.description === current.description
         );
 
-        // If it is in the accumultor, add the quantity to the existing quantity
+        // If it is in the accumultor, add the quantity to the existing quantity adn the id to the ids array
         if (index !== -1) {
             accumulator[index].currentQuantity += current.currentQuantity;
             accumulator[index].maxQuantity += current.maxQuantity;
+            accumulator[index].ids.push(current.id);
             return accumulator;
         } else {
             // filter current to only the fields we need
@@ -29,6 +30,7 @@ export default defineEventHandler(async () => {
                 unit: current.unit,
                 currentQuantity: current.currentQuantity,
                 maxQuantity: current.maxQuantity,
+                ids: [current.id],
             };
 
             // add filteredCurrent to the accumulator

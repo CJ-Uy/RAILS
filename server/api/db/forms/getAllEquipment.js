@@ -1,7 +1,6 @@
 import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async () => {
-    // TODO: set the quantity to the available quantity the day of the lab activity?
     const allEquipment = await prisma.InventoryOfEqupiment.findMany({
         where: {
             available: true,
@@ -17,9 +16,10 @@ export default defineEventHandler(async () => {
                 item.modelNoOrManufacturer === current.modelNoOrManufacturer,
         );
 
-        // If it is in the accumultor, add the quantity to the existing quantity
+        // If it is in the accumultor, add the quantity to the existing quantity and the id to the ids array
         if (index !== -1) {
             accumulator[index].quantity += current.quantity;
+            accumulator[index].ids.push(current.id);
             return accumulator;
         } else {
             // filter current to only the fields we need
@@ -28,6 +28,7 @@ export default defineEventHandler(async () => {
                 description: current.description,
                 modelNoOrManufacturer: current.modelNoOrManufacturer,
                 quantity: current.quantity,
+                ids: [current.id],
             };
 
             // add filteredCurrent to the accumulator
@@ -36,5 +37,4 @@ export default defineEventHandler(async () => {
     }, []);
 
     return filteredEquipment;
-
 });
