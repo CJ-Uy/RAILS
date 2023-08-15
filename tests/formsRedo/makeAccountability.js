@@ -21,7 +21,6 @@ async function convertHtmlToPDF(htmlContent, filePath) {
 
 console.log("Fetching request...");
 const request = await getRequest("ca9ca394-7a7b-485f-9904-a2fb14100b37");
-// console.dir(request, { depth: null, colors: true });
 
 let { campus } = request.schoolYear;
 let { controlNumber } = request.equipmentRequested[0];
@@ -36,7 +35,6 @@ let unit = request.unit.name;
 let teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
 let venueOfExperiment =
     request.laboratoryReservations[0].laboratoryReserved.name;
-
 
 // Dates an Time of Use
 let inclusiveDates = "";
@@ -148,18 +146,17 @@ let html =
     }
     #request {
         text-align: center;
+        border-collapse: collapse;
     }
     #request td {
         border: 1px solid black;
         white-space: pre-wrap; /* allow wrapping of white space */
         word-wrap: break-word; /* break long words */
-    }
-    #request td:first-child {
-        border-bottom: 1px solid black !important;
+        padding-right: 20px;
+        padding-left: 20px;
     }
     .request-header {
         vertical-align: top;
-        border: 1px solid black;
     }
     .return {
         vertical-align: top;
@@ -179,18 +176,18 @@ let html =
         font-style: italic;
     }
     .sigs-table {
-        width: 90%;
+        width: 100%;
         margin-top: 0.25in;
     }
     .sigs-input {
         text-align: center;
-        width: 20%;
+        width: 20%; 
     }
     .sigs-gap {
         width: 10%;
     }
     .sigs-who {
-        width: 11%;
+        width: 20%;
     }
     .sigs-title {
         text-align: center;
@@ -211,7 +208,55 @@ let html =
         </div>
         
         <div id="table"></div>
+`;
 
+console.dir(request, { depth: null, colors: true });
+
+html += `
+<span class="italics"> Materials/Equipment Needed: </span>
+        <table id="request">
+            <tr class="request-header">
+                <td rowspan="2">Quantity</td>
+                <td rowspan="2">Item</td>
+                <td rowspan="2">Description</td>
+                <td>Issued</td>
+                <td>Returned</td>
+            </tr>
+            <tr class="request-header">
+                <td>Condition/Remarks</td>
+                <td>Condition/Remarks</td>
+            </tr>
+`;
+
+for (const item of request.equipmentRequested) {
+    html += `
+            <tr>
+                <td>${item.quantity}</td>
+                <td>${item.name}</td>
+                <td>${item.description}</td>
+                <td></td>
+                <td></td>
+            </tr>
+    `;
+}
+
+html += `
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="return" style="padding: 1px;">Received by:</td>
+                <td class="return" style="padding: 1px;">Received and<br>Inspected by:</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="text-align: left; padding: 1px;">Date:</td>
+                <td style="text-align: left; padding: 1px;">Date:</td>
+            </tr>
+        </table>
+        <br>
         <ul class="italics">
             <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
             <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
@@ -226,7 +271,7 @@ let html =
             </tr>
             <tr>
                 <td class="sigs-who">Requested By:</td>
-                <td class="input sigs-input">${studentName}</td>
+                <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${studentName}</td>
                 <td class="sigs-gap"></td>
                 <td class="sigs-who">Date Requested:</td> 
                 <td class="input sigs-input">${dateRequested}</td>
@@ -239,6 +284,33 @@ let html =
                 <td></td>
             </tr>
         </table>
+
+        <p class="italics">
+            If user of the lab is a group, list down the names of students.
+        </p>
+        <table class="groupmates">
+`;
+
+let length =
+    request.otherGroupMembers.length < 5 ? 5 : request.otherGroupMembers.length;
+
+for (let i = 0; i < length; i++) {
+    html += `
+        <tr>
+            <td style="text-align: right;">${i + 1}.</td>
+            <td class="input">&nbsp;&nbsp;${
+                request.otherGroupMembers[i] == null
+                    ? ""
+                    : request.otherGroupMembers[i]
+            }</td>
+        </tr>
+    `;
+}
+html += `</table>`;
+
+// Add the endorsers sign table
+
+html += `
     </div>
 </body>
 <script>
