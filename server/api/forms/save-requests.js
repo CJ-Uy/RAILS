@@ -9,16 +9,12 @@ export default defineEventHandler(async (event) => {
         for (const dates of allDates) {
             for (const date of dates.requestDates) {
                 // TODO: Fix this
-                const startDatTime = dayjs(date).set({
-                    hour: dates.inclusiveTimeOfUse[0].hours,
-                    minute: dates.inclusiveTimeOfUse[0].minutes,
-                    second: dates.inclusiveTimeOfUse[0].seconds,
-                });
-                const endDateTime = dayjs(date).set({
-                    hour: dates.inclusiveTimeOfUse[1].hours,
-                    minute: dates.inclusiveTimeOfUse[1].minutes,
-                    second: dates.inclusiveTimeOfUse[1].seconds,
-                });
+                const startDatTime = dayjs(date)
+                    .set("hour", dates.inclusiveTimeOfUse[0].hours)
+                    .set("minute", dates.inclusiveTimeOfUse[0].minutes);
+                const endDateTime = dayjs(date)
+                    .set("hour", dates.inclusiveTimeOfUse[1].hours)
+                    .set("minute", dates.inclusiveTimeOfUse[1].minutes);
                 formatedDates.push({
                     startDateTime: startDatTime.format(),
                     endDateTime: endDateTime.format(),
@@ -116,7 +112,9 @@ export default defineEventHandler(async (event) => {
             unitId: body.formValues.data.basicInfo.unit,
             teacherInChargeId: body.formValues.data.basicInfo.teacherInCharge,
             noOfStudents: body.formValues.data.basicInfo.noOfStudents,
-            otherGroupMembers: Number(body.formValues.data.basicInfo.nameOfStudents), // TODO: test this
+            otherGroupMembers: Number(
+                body.formValues.data.basicInfo.nameOfStudents,
+            ), // TODO: test this
             schoolYearId: controlNumbers.id,
         },
     });

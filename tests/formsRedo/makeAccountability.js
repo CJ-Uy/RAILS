@@ -20,7 +20,7 @@ async function convertHtmlToPDF(htmlContent, filePath) {
 }
 
 console.log("Fetching request...");
-const request = await getRequest("1d74d7c7-2cd4-4c07-9a32-a8fff5afd420");
+const request = await getRequest("a93395ef-a8e4-49ac-83ef-f39677ea2198");
 // console.dir(request, { depth: null, colors: true });
 
 let { campus } = request.schoolYear;
@@ -29,7 +29,7 @@ let schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`
 let studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
 let dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
 let gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
-let { numberOfStudents } = request;
+let { noOfStudents } = request;
 let subject = request.forSubject;
 let { concurrentTopic } = request;
 let unit = request.unit.name;
@@ -37,13 +37,15 @@ let teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${req
 let venueOfExperiment =
     request.laboratoryReservations[0].laboratoryReserved.name;
 
+
+// Dates an Time of Use
 let inclusiveDates = "";
 let inclusiveTimeOfUse = "";
 let groupedReservations = request.laboratoryReservations.reduce((acc, curr) => {
-    let time = `${dayjs(curr.startTime).format("hh:mm").toString()}-${dayjs(
+    let time = `${dayjs(curr.startTime).format("HH:mm").toString()}-${dayjs(
         curr.endTime,
     )
-        .format("hh:mm")
+        .format("HH:mm")
         .toString()}`;
     let date = `${dayjs(curr.startTime).format("MM/DD/YY").toString()}`;
 
@@ -55,8 +57,6 @@ let groupedReservations = request.laboratoryReservations.reduce((acc, curr) => {
 
     return acc;
 }, {});
-console.log(groupedReservations);
-
 let counter = 1;
 for (const time in groupedReservations) {
     inclusiveTimeOfUse += `(${counter}) ${time} `;
@@ -66,8 +66,6 @@ for (const time in groupedReservations) {
     }
     counter += 1;
 }
-console.log(inclusiveDates);
-console.log(inclusiveTimeOfUse);
 
 const pageScript = fs.readFileSync(
     "./server/app/forms/addPageNumbers/page.polyfill.txt",
@@ -253,7 +251,7 @@ let html =
         },
         {
             label: "Number of Students",
-            value: "${numberOfStudents}",
+            value: "${noOfStudents}",
             minWidth: 210,
         },
         {
