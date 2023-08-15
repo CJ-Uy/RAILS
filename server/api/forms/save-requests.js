@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
         const formatedDates = [];
         for (const dates of allDates) {
             for (const date of dates.requestDates) {
+                // TODO: Fix this
                 const startDatTime = dayjs(date).set({
                     hour: dates.inclusiveTimeOfUse[0].hours,
                     minute: dates.inclusiveTimeOfUse[0].minutes,

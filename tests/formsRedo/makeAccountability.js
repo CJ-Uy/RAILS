@@ -19,9 +19,9 @@ async function convertHtmlToPDF(htmlContent, filePath) {
     writeFileSync(path.resolve(currentDir, filePath), pdfBuffer);
 }
 
-console.log("Fetching request...")
+console.log("Fetching request...");
 const request = await getRequest("1d74d7c7-2cd4-4c07-9a32-a8fff5afd420");
-console.dir(request, { depth: null, colors: true });
+// console.dir(request, { depth: null, colors: true });
 
 let { campus } = request.schoolYear;
 let { controlNumber } = request.equipmentRequested[0];
@@ -34,10 +34,40 @@ let subject = request.forSubject;
 let { concurrentTopic } = request;
 let unit = request.unit.name;
 let teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
-let venueOfExperiment = request.laboratoryReservations[0].laboratoryReserved.name;
+let venueOfExperiment =
+    request.laboratoryReservations[0].laboratoryReserved.name;
 
-let dateInclusiveDates = "TODAY";
-let inclusiveTimeOfUse = "whole day";
+let inclusiveDates = "";
+let inclusiveTimeOfUse = "";
+let groupedReservations = request.laboratoryReservations.reduce((acc, curr) => {
+    let time = `${dayjs(curr.startTime).format("hh:mm").toString()}-${dayjs(
+        curr.endTime,
+    )
+        .format("hh:mm")
+        .toString()}`;
+    let date = `${dayjs(curr.startTime).format("MM/DD/YY").toString()}`;
+
+    if (!acc[time]) {
+        acc[time] = [date];
+    } else {
+        acc[time].push(date);
+    }
+
+    return acc;
+}, {});
+console.log(groupedReservations);
+
+let counter = 1;
+for (const time in groupedReservations) {
+    inclusiveTimeOfUse += `(${counter}) ${time} `;
+    inclusiveDates += `(${counter}) `;
+    for (const date of groupedReservations[time]) {
+        inclusiveDates += `${date} `;
+    }
+    counter += 1;
+}
+console.log(inclusiveDates);
+console.log(inclusiveTimeOfUse);
 
 const pageScript = fs.readFileSync(
     "./server/app/forms/addPageNumbers/page.polyfill.txt",
@@ -253,7 +283,7 @@ let html =
         },
         {
             label: "Date/Inclusive Dates",
-            value: "${dateInclusiveDates}",
+            value: "${inclusiveDates}",
             minWidth: 255,
         },
         {
