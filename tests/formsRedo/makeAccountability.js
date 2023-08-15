@@ -29,12 +29,13 @@ let schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`
 let studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
 let dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
 let gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
-let numberOfStudents = 4;
-let subject = "Research";
-let concurrentTopic = "Developmental Research";
-let unit = "Research Unit";
-let teacherInCharge = "Rolex Padilla";
-let venueOfExperiment = "Computer Science Laboratory";
+let { numberOfStudents } = request;
+let subject = request.forSubject;
+let { concurrentTopic } = request;
+let unit = request.unit.name;
+let teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
+let venueOfExperiment = request.laboratoryReservations[0].laboratoryReserved.name;
+
 let dateInclusiveDates = "TODAY";
 let inclusiveTimeOfUse = "whole day";
 

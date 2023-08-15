@@ -9,6 +9,7 @@ export default async function getRequest(id) {
             createdAt: true,
             forSubject: true,
             concurrentTopic: true,
+            noOfStudents: true,
             otherGroupMembers: true,
 
             schoolYear: {
@@ -76,6 +77,19 @@ export default async function getRequest(id) {
                     name: true,
                     description: true,
                 },
+            },
+
+            laboratoryReservations: {
+                select: {
+                    controlNumber: true,
+                    startTime: true,
+                    endTime: true,
+                    laboratoryReserved: {
+                        select: {
+                            name: true,
+                        }
+                    }
+                }
             },
 
             isSignedByTeacher: true,
