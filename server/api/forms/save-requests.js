@@ -114,7 +114,8 @@ export default defineEventHandler(async (event) => {
             gradeSectionId: body.formValues.data.basicInfo.gradeSection,
             unitId: body.formValues.data.basicInfo.unit,
             teacherInChargeId: body.formValues.data.basicInfo.teacherInCharge,
-            otherGroupMembers: body.formValues.data.basicInfo.nameOfStudents, // TODO: test this
+            noOfStudents: body.formValues.data.basicInfo.noOfStudents,
+            otherGroupMembers: Number(body.formValues.data.basicInfo.nameOfStudents), // TODO: test this
             schoolYearId: controlNumbers.id,
         },
     });

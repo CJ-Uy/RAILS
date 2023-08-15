@@ -33,6 +33,7 @@ model SchoolYear {
   yearEnd           Int
   createdAt         DateTime @default(now())
   currentSchoolYear Boolean  @default(false)
+  campus            String   @default("EASTERN VISAYAS CAMPUS")
 
   materialEquipmentRequestControlNumberCounter Int @default(0)
   equipmentRequestControlNumberCounter         Int @default(0)
@@ -337,13 +338,15 @@ model ReagentRequests {
 }
 
 model LaboratoryRequests {
-  id              String   @id @default(uuid())
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  requestor       Users    @relation(fields: [requestorId], references: [id])
-  requestorId     String
-  forSubject      String?
-  concurrentTopic String?
+  id                String   @id @default(uuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  requestor         Users    @relation(fields: [requestorId], references: [id])
+  requestorId       String
+  forSubject        String?
+  concurrentTopic   String?
+  noOfStudents      Int?
+  otherGroupMembers Json?
 
   gradeSection   GradeSection @relation(fields: [gradeSectionId], references: [id])
   gradeSectionId String
@@ -360,7 +363,6 @@ model LaboratoryRequests {
   reagentsRequested      ReagentRequests[]
   laboratoryReservations LaboratoryReservations[]
 
-  otherGroupMembers Json?
   isSignedByTeacher Boolean   @default(false)
   isSignedByAdmin   Boolean   @default(false)
   signedTeacher     Teachers? @relation("signed_teacher", fields: [signedTeacherId], references: [id])

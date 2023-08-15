@@ -4,6 +4,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { writeFileSync } from "fs";
 
+import getRequest from "./getRequest.js";
+import dayjs from "dayjs";
+
 async function convertHtmlToPDF(htmlContent, filePath) {
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
@@ -16,12 +19,16 @@ async function convertHtmlToPDF(htmlContent, filePath) {
     writeFileSync(path.resolve(currentDir, filePath), pdfBuffer);
 }
 
-let campus = "EASTERN VISAYS CAMPUS";
-let controlNumber = "2023-2023-001";
-let schoolYeaar = "2023-2024";
-let studentName = "Charles Joshua Uy";
-let dateRequested = "TODAY";
-let gradeSection = "11-C";
+console.log("Fetching request...")
+const request = await getRequest("1d74d7c7-2cd4-4c07-9a32-a8fff5afd420");
+console.dir(request, { depth: null, colors: true });
+
+let { campus } = request.schoolYear;
+let { controlNumber } = request.equipmentRequested[0];
+let schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
+let studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
+let dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
+let gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
 let numberOfStudents = 4;
 let subject = "Research";
 let concurrentTopic = "Developmental Research";
@@ -97,11 +104,14 @@ let html =
     }
     #title {
         margin-top: 0.21in;
-        margin-bottom: 0.23in;
+        margin-bottom: 0.15in;
     }
     #tableId {
         width: 100%;
         text-align: right;
+    }
+    #table {
+        margin-bottom: 0.15in;
     }
     .input {
         font-weight: normal;
@@ -168,7 +178,7 @@ let html =
         <h2 id="title">LABORATORY REQUEST AND EQUIPMENT ACCOUNTABILITY FORM</h2>
         <div id="tableId">
             Control No: <span class="input">${controlNumber}</span>
-            &emsp;SY: <span class="input">${schoolYeaar}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>
+            &emsp;SY: <span class="input">${schoolYear}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>
         </div>
         
         <div id="table"></div>
@@ -291,6 +301,6 @@ let html =
 
 // ---- END ----- //
 
-console.log("STARTED");
+console.log("STARTED PDF GENERATION");
 await convertHtmlToPDF(html, "./sample.pdf");
-console.log("DONE");
+console.log("COMPLETED");

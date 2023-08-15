@@ -39,7 +39,7 @@ function makeSelectionOptions(response) {
             name="campus"
             validation="required"
             value="EASTERN VISAYAS CAMPUS"
-            help="Enter the PSHS Campus"
+            :disabled="true"
         />
         <!-- TODO: Make the School year dynamic based on database -->
         <!-- You dodnt even need to send this just show it in the form -->
@@ -59,6 +59,7 @@ function makeSelectionOptions(response) {
             label="Lastname"
             name="lastname"
             validation="required"
+            :disabled="true"
         />
         <FormKit
             v-model="user.firstName"
@@ -66,6 +67,7 @@ function makeSelectionOptions(response) {
             label="Firstname"
             name="firstname"
             validation="required"
+            :disabled="true"
         />
         <FormKit
             v-model="user.email"
@@ -73,6 +75,7 @@ function makeSelectionOptions(response) {
             label="Email"
             name="email"
             validation="required"
+            :disabled="true"
         />
         <FormKit
             type="select"
