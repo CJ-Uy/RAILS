@@ -417,6 +417,13 @@ export default async function makeAccountabilityForm(data) {
     const notarization = `
         <table class="sigs-table">
             <tr>
+                <td></td>
+                <td> <div id="endorserSignature"></div> </td>
+                <td></td>
+                <td></td>
+                <td> <div id="approverSignature"> </div> </td>
+            <tr>
+            <tr>
                 <td class="sigs-who">Endorsed By:</td>
                 <td class="input sigs-input">${endorser}</td>
                 <td class="sigs-gap"></td>

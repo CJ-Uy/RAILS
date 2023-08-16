@@ -36,6 +36,21 @@ let teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${req
 let venueOfExperiment =
     request.laboratoryReservations[0].laboratoryReserved.name;
 
+let approver = "&nbsp;";
+let approverSignature = " ";
+let teacherSignature = " ";
+
+// TODO: NEED APPROVAL SYSTEM
+// Notarization
+if (request.isSignedByTeacher) {
+    teacherSignature = "<INSERT SIGNATURE>";
+}
+
+if (request.isSignedByAdmin) {
+    approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
+    approverSignature = "<INSERT SIGNATURE>";
+}
+
 // Dates an Time of Use
 let inclusiveDates = "";
 let inclusiveTimeOfUse = "";
@@ -178,16 +193,19 @@ let html =
     .sigs-table {
         width: 100%;
         margin-top: 0.25in;
+        border-collapse: collapse;
     }
     .sigs-input {
         text-align: center;
-        width: 20%; 
+        width: 20%;
+        border-bottom: 1px solid black; 
     }
     .sigs-gap {
-        width: 10%;
+        width: 15%;
     }
     .sigs-who {
-        width: 20%;
+        width: 1px;
+        white-space: nowrap;
     }
     .sigs-title {
         text-align: center;
@@ -209,8 +227,6 @@ let html =
         
         <div id="table"></div>
 `;
-
-console.dir(request, { depth: null, colors: true });
 
 html += `
 <span class="italics"> Materials/Equipment Needed: </span>
@@ -265,12 +281,12 @@ html += `
         <table class="sigs-table">
             <tr>
                 <td></td>
-                <td id="studentSignature"></td>
+                <td></td>
                 <td></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="sigs-who">Requested By:</td>
+                <td class="sigs-who">Requested by:</td>
                 <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${studentName}</td>
                 <td class="sigs-gap"></td>
                 <td class="sigs-who">Date Requested:</td> 
@@ -308,7 +324,33 @@ for (let i = 0; i < length; i++) {
 }
 html += `</table>`;
 
-// Add the endorsers sign table
+// Notarization
+console.dir(request, { depth: null, colors: true });
+html += `
+    <table class="sigs-table">
+        <tr>
+            <td></td>
+            <td> <div id="endorserSignature"></div> </td>
+            <td></td>
+            <td></td>
+            <td> <div id="approverSignature"> </div> </td>
+        <tr>
+        <tr>
+            <td class="sigs-who">Endorsed by:</td>
+            <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${teacherInCharge}</td>
+            <td class="sigs-gap"></td>
+            <td class="sigs-who">Approved by:</td> 
+            <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${approver}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="sigs-title">Subject Teacher/Unit Head</td>
+            <td class="sigs-gap"></td>
+            <td></td>
+            <td class="sigs-title">Laboratory Technician</td>
+        </tr>
+    </table>
+`;
 
 html += `
     </div>
@@ -396,6 +438,10 @@ html += `
         console.log(offsetWidth)
         container.appendChild(spaceItem);
     }
+
+    // Signatures
+    document.getElementById("").innerHTML = "${approverSignature}";
+
 </script>
 </html>
 `;
