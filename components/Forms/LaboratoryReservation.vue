@@ -42,6 +42,7 @@ function removeDateTime(index) {
             :options="{
                 true: 'I already have a Laboratory Reservation for this activity',
                 false: 'I do NOT have a Laboratory Reservation yet',
+                custom: 'I will not be using a Laboratory for this activity',
             }"
             help="If this is for a class activity select the first option"
         />
@@ -53,12 +54,21 @@ function removeDateTime(index) {
         </div>
         <br />
         <FormKit
+            v-if="labResStatus != 'custom'"
             type="select"
             label="Preferred Laboratory Room"
             name="venue"
             validation="required"
             placeholder="Select Your Laboratory Room"
             :options="laboratoriesOptions"
+        />
+        <FormKit
+            v-if="labResStatus === 'custom'"
+            type="text"
+            label="Location of Activity"
+            name="customLocation"
+            placeholder="Enter Custom Location"
+            validation="required"
         />
         <h3 class="font-bold">Add Date(s) and their Time Range</h3>
         <p>

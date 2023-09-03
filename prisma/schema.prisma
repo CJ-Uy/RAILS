@@ -358,12 +358,13 @@ model LaboratoryRequests {
   teacherInChargeId String
 
   // TODO: Clarify the materials requested an sample inventory
-  materialsRequested     MaterialRequests[]
-  equipmentRequested     EquipmentRequests[]
-  reagentsRequested      ReagentRequests[]
+  materialsRequested MaterialRequests[]
+  equipmentRequested EquipmentRequests[]
+  reagentsRequested  ReagentRequests[]
 
   laboratoryReservations LaboratoryReservations[]
   independentTime        Json? // Store here all the date and time as you would reservation without filing a lab reservation
+  independentLocation    String? // TODO: Store the location as it could also be custom (ex: a classroom or area in the school)
 
   isSignedByTeacher Boolean   @default(false)
   isSignedByAdmin   Boolean   @default(false)

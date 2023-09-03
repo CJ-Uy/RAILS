@@ -146,6 +146,55 @@ export default defineEventHandler(async (event) => {
                 },
             });
         }
+    } else {
+        // If they already have a laboratory reservation, save the date time independently for forms
+        let timeJSON = {};
+        for (const timeOfUse of body.formValues.data.laboratorySetting
+            .allDates) {
+            timeJSON[
+                `${String(timeOfUse.inclusiveTimeOfUse[0].hours).padStart(
+                    2,
+                    "0",
+                )}:${String(timeOfUse.inclusiveTimeOfUse[0].minutes).padStart(
+                    2,
+                    "0",
+                )}-${String(timeOfUse.inclusiveTimeOfUse[1].hours).padStart(
+                    2,
+                    "0",
+                )}:${String(timeOfUse.inclusiveTimeOfUse[0].minutes).padStart(
+                    2,
+                    "0",
+                )}`
+            ] = timeOfUse.requestDates;
+        }
+
+
+        let location;
+        // Save Location Independently
+        if (body.formValues.data.laboratorySetting.hasLaboratoryReservation ===
+            "true") { // They already have a reservation
+            let findLocation = await prisma.laboratories.findUnique({
+                where: {
+                    id: body.formValues.data.laboratorySetting.venue,
+                }, select: {
+                    name: true
+                }
+            })
+            location = findLocation.name;
+        } else if (body.formValues.data.laboratorySetting.hasLaboratoryReservation === "custom") { // They have a custom location
+            location = body.formValues.data.laboratorySetting.customLocation;
+        }
+
+        // Update the request
+        await prisma.laboratoryRequests.update({
+            where: {
+                id: request.id,
+            },
+            data: {
+                independentTime: timeJSON,
+                independentLocation: location,
+            },
+        });
     }
 
     // Make Equipment Request(s)
