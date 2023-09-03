@@ -361,7 +361,9 @@ model LaboratoryRequests {
   materialsRequested     MaterialRequests[]
   equipmentRequested     EquipmentRequests[]
   reagentsRequested      ReagentRequests[]
+
   laboratoryReservations LaboratoryReservations[]
+  independentTime        Json? // Store here all the date and time as you would reservation without filing a lab reservation
 
   isSignedByTeacher Boolean   @default(false)
   isSignedByAdmin   Boolean   @default(false)
