@@ -5,10 +5,25 @@ import makeAccountabilityForm from "../../app/forms/makeAccountabilityForm.js";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    console.log(body);
     const requestDetails = await prisma.laboratoryRequests.findUnique({
         where: {
             id: body.id,
+        },
+        include: {
+            requestor: true,
+            gradeSection: true,
+            unit: true,
+            teacherInCharge: true,
+
+            materialsRequested: true,
+            equipmentRequested: true,
+            reagentsRequested: true,
+            laboratoryReservations: true,
+            
+            signedTeacher: true,
+            signedAdmin: true;
+
+            schoolYear: true,
         },
     });
 
