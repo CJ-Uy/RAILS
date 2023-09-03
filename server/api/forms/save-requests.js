@@ -1,102 +1,12 @@
 import prisma from "~/server/db/prisma";
 import dayjs from "dayjs";
+import getControlNumbers from "../../app/forms/saving-requests/getControlNumbers.js";
+import formatDates from "../../app/forms/saving-requests/formatDates.js";
 
 export default defineEventHandler(async (event) => {
-    // Extra helper functions
-    function formatDates(allDates) {
-        // Initialize Laboratory Reservation Request
-        const formatedDates = [];
-        for (const dates of allDates) {
-            for (const date of dates.requestDates) {
-                // TODO: Fix this
-                const startDatTime = dayjs(date)
-                    .set("hour", dates.inclusiveTimeOfUse[0].hours)
-                    .set("minute", dates.inclusiveTimeOfUse[0].minutes);
-                const endDateTime = dayjs(date)
-                    .set("hour", dates.inclusiveTimeOfUse[1].hours)
-                    .set("minute", dates.inclusiveTimeOfUse[1].minutes);
-                formatedDates.push({
-                    startDateTime: startDatTime.format(),
-                    endDateTime: endDateTime.format(),
-                });
-            }
-        }
-        return formatedDates;
-    }
-
-    async function getControlNumbers(form) {
-        // form = laboratoryReservation, equipmentRequest, reagentRequest
-        let updatedControlNumberCounter;
-        let counter;
-        switch (form) {
-            case "laboratoryReservation":
-                updatedControlNumberCounter = await prisma.schoolYear.update({
-                    where: {
-                        id: controlNumbers.id,
-                    },
-                    data: {
-                        laboratoryRequestControlNumberCounter:
-                            controlNumbers.laboratoryRequestControlNumberCounter +
-                            1,
-                    },
-                });
-                counter =
-                    updatedControlNumberCounter.laboratoryRequestControlNumberCounter;
-                break;
-            case "equipmentRequest":
-                updatedControlNumberCounter = await prisma.schoolYear.update({
-                    where: {
-                        id: controlNumbers.id,
-                    },
-                    data: {
-                        equipmentRequestControlNumberCounter:
-                            controlNumbers.equipmentRequestControlNumberCounter +
-                            1,
-                    },
-                });
-                counter =
-                    updatedControlNumberCounter.equipmentRequestControlNumberCounter;
-                break;
-            case "reagentRequest":
-                updatedControlNumberCounter = await prisma.schoolYear.update({
-                    where: {
-                        id: controlNumbers.id,
-                    },
-                    data: {
-                        reagentRequestControlNumberCounter:
-                            controlNumbers.reagentRequestControlNumberCounter +
-                            1,
-                    },
-                });
-                counter =
-                    updatedControlNumberCounter.reagentRequestControlNumberCounter;
-                break;
-            case "materialsRequest":
-                updatedControlNumberCounter = await prisma.schoolYear.update({
-                    where: {
-                        id: controlNumbers.id,
-                    },
-                    data: {
-                        materialsRequestControlNumberCounter:
-                            controlNumbers.materialsRequestControlNumberCounter +
-                            1,
-                    },
-                });
-                counter =
-                    updatedControlNumberCounter.materialsRequestControlNumberCounter;
-                break;
-            default:
-                return "Control Number Error";
-        }
-
-        return `${controlNumbers.yearStart}-${controlNumbers.yearEnd}-${counter
-            .toString()
-            .padStart(3, "0")}`;
-    }
-
     const body = await readBody(event);
     // Initialize Base Request
-    const controlNumbers = await prisma.schoolYear.findFirst({
+    const schoolYear = await prisma.schoolYear.findFirst({
         where: {
             currentSchoolYear: true,
         },
@@ -115,7 +25,7 @@ export default defineEventHandler(async (event) => {
                 body.formValues.data.basicInfo.numberOfStudents,
             ),
             otherGroupMembers: body.formValues.data.basicInfo.nameOfStudents,
-            schoolYearId: controlNumbers.id,
+            schoolYearId: schoolYear.id,
         },
     });
 
@@ -127,6 +37,7 @@ export default defineEventHandler(async (event) => {
         // Make control number
         const labResControlNumber = await getControlNumbers(
             "laboratoryReservation",
+            schoolYear,
         );
 
         // Format dates
@@ -200,7 +111,7 @@ export default defineEventHandler(async (event) => {
     // Make Equipment Request(s)
     if (body.formValues.data.equipment.details.length > 0) {
         const requestedEquipment = body.formValues.data.equipment.details;
-        const controlNumber = await getControlNumbers("equipmentRequest");
+        const controlNumber = await getControlNumbers("equipmentRequest", schoolYear);
 
         for (const equipment of requestedEquipment) {
             await prisma.equipmentRequests.create({
@@ -210,7 +121,7 @@ export default defineEventHandler(async (event) => {
                     description: equipment.description,
                     modelNoOrManufacturer: equipment.modelNoOrManufacturer,
                     laboratoryRequestsId: request.id,
-                    schoolYearId: controlNumbers.id,
+                    schoolYearId: schoolYear.id,
                     controlNumber: controlNumber,
                     equipment: {
                         connect: equipment.ids.map((id) => ({ id })),
@@ -223,7 +134,7 @@ export default defineEventHandler(async (event) => {
     // Make Reagent Request(s)
     if (body.formValues.data.reagents.details.length > 0) {
         const requestedReagents = body.formValues.data.reagents.details;
-        const controlNumber = await getControlNumbers("reagentRequest");
+        const controlNumber = await getControlNumbers("reagentRequest", schoolYear);
 
         for (const reagent of requestedReagents) {
             await prisma.reagentRequests.create({
@@ -233,7 +144,7 @@ export default defineEventHandler(async (event) => {
                     description: reagent.description,
                     unit: reagent.unit,
                     laboratoryRequestsId: request.id,
-                    schoolYearId: controlNumbers.id,
+                    schoolYearId: schoolYear.id,
                     controlNumber: controlNumber,
                     reagents: {
                         connect: reagent.ids.map((id) => ({ id })),
@@ -245,5 +156,5 @@ export default defineEventHandler(async (event) => {
 
     // TODO: Make materials request too after clarifying
 
-    return "SAVED";
+    return request.id;
 });

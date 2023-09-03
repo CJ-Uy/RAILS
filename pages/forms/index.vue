@@ -16,42 +16,42 @@ let value = ref();
 async function submitHandler(formValues) {
     // Save response to database
     // TODO: Format formValues to remove useless data (Lab Settings) - Add also a note that all their other requests will be duplicated for those days listed.
-    const requestSaveStatus = await useFetch("/api/forms/save-requests", {
+    const requestId = await useFetch("/api/forms/save-requests", {
         method: "POST",
         body: { user: user, formValues: formValues},
     });
 
+    // Downloaing pdfs
+    if (formValues.data.submission.download) {
+        try {
+            const pdfBuffers_rawData = await useFetch(
+                "/api/forms/create-pdf-buffers",
+                {
+                    method: "POST",
+                    body: { id: requestId.data.value},
+                },
+            );
+            // const pdfBuffers = pdfBuffers_rawData.data.value;
+
+            // try {
+            //     downloadRequests(
+            //         pdfBuffers,
+            //         formValues.requestData.basicInfo.lastname,
+            //     );
+            // } catch (error) {
+            //     console.error(
+            //         "There was an error downloading the pdf: ",
+            //         error,
+            //     );
+            // }
+        } catch (error) {
+            console.error("There was an error creating the pdf: ", error);
+        }
+    }
+
     // // Emailing pdfs
     // if (formValues.data.submission.email) {
     //     // TODO: Make it so they send the info to their email
-    // }
-
-    // // Downloaing pdfs
-    // if (formValues.data.submission.download) {
-    //     try {
-    //         const pdfBuffers_rawData = await useFetch(
-    //             "/api/forms/create-pdf-buffers",
-    //             {
-    //                 method: "POST",
-    //                 body: formValues,
-    //             },
-    //         );
-    //         const pdfBuffers = pdfBuffers_rawData.data.value;
-
-    //         try {
-    //             downloadRequests(
-    //                 pdfBuffers,
-    //                 formValues.requestData.basicInfo.lastname,
-    //             );
-    //         } catch (error) {
-    //             console.error(
-    //                 "There was an error downloading the pdf: ",
-    //                 error,
-    //             );
-    //         }
-    //     } catch (error) {
-    //         console.error("There was an error creating the pdf: ", error);
-    //     }
     // }
 }
 
