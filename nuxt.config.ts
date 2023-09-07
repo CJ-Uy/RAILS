@@ -32,29 +32,10 @@ export default defineNuxtConfig({
         transpile: ["@vuepic/vue-datepicker"], // https://vue3datepicker.com/ (datepicker calendar and time vue components)
     },
 
-    ui: {
-        global: true,
-        icons: "all",
-    },
-
-    colorMode: {
-        preference: "light",
-    },
-
-    formkit: {
-        configFile: "./formkit.config.js",
-    },
-
-    // NUXT-MAILER CONFIGURATION [DONT'T REMOVE]
-    runtimeConfig: {
-        mailerUser: "",
-        mailerPass: "",
-        mailerLog: "",
-    },
-
     // NUXT-AUTH CONFIGURATION
     auth: {
-        origin: "localhost:3000",
+        // The origin is set to the development origin. Change this when deploying to production by setting `origin` in this config before build-time or by exporting `AUTH_ORIGIN` by running `export AUTH_ORIGIN=...`
+        origin: "http://localhost:3000", // This doesn't change unlike the IP per network
         // origin: "http://172.20.10.2:3000", // CJ-Uy hotspot IP adress fo when hosted
         // (for new netorks add .nip.io to URI to https://console.cloud.google.com/apis/credentials?project=rails-382915)
 
@@ -78,5 +59,25 @@ export default defineNuxtConfig({
         // enableSessionRefreshPeriodically: false, // Whether to periodically refresh the session. Change this to `true` for a refresh every seconds or set this to a number like `5000` for a refresh every 5000 milliseconds (aka: 5 seconds)
         // enableSessionRefreshOnWindowFocus: true, // Whether to refresh the session whenever a window focus event happens, i.e, when your user refocuses the window. Set this to `false` to turn this off
         */
+    },
+
+    ui: {
+        global: true,
+        icons: "all",
+    },
+
+    colorMode: {
+        preference: "light",
+    },
+
+    formkit: {
+        configFile: "./formkit.config.js",
+    },
+
+    // NUXT-MAILER CONFIGURATION [DONT'T REMOVE]
+    runtimeConfig: {
+        mailerUser: "",
+        mailerPass: "",
+        mailerLog: "",
     },
 });

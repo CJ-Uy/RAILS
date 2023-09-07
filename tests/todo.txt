@@ -1,21 +1,22 @@
 Some Random Notes:
-- Finish the input for reagents and materials request
-    - Add fetch server api request (same name and description get combined)
-    - Add Filter
-    - Add Pagination
+- Add materials
+- Combine materials and equipment to the new forms
+- Add materials to the saving sequence
 
-- Make all the lists dynamic to the database that need to be
-- Make population scripts for the materials and reagents
-- Save requests to the database
+- Finish creating and downloading pdf
 
+- limit dates that can be selected on the form to the max school year
 - Redo the form templates (seperate forms for admins, teachers, and students [levels of authorization])
 
-- Add signature signing
-- Admin UI to change values
+- Fix signature signing
+- Table to view the lab requests
+- Admin UI to change any values
 
+Later into the future:
 - Add prisma-backup
-- Dockerize the project
-
-- Add other common forms to download for convinience
 - Notification system
 - Add terms and conditions to each (signatures auto sign and admins can use it to make e-records)
+- Dockerize the project
+
+Extra not super important:
+- Add other common forms to download for convenience
