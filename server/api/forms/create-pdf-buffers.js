@@ -21,13 +21,11 @@ export default defineEventHandler(async (event) => {
             laboratoryReservations: true,
             
             signedTeacher: true,
-            signedAdmin: true;
+            signedAdmin: true,
 
             schoolYear: true,
         },
     });
-
-    console.log(requestDetails);
 
     return "TEST";
 

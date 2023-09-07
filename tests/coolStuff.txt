@@ -1,3 +1,164 @@
 Prisma studio in production:
 https://stackoverflow.com/questions/73335287/how-to-access-prisma-studio-when-the-app-is-already-deployed-on-heroku
 https://github.com/prisma/studio/issues/601
+
+SAMPLE LAB REQUEST RETRIEVAL:
+{                                                                                                                                             9:50:52 PM
+  id: 'c2cc442a-210e-46b3-ac7c-9145dba36aaf',
+  createdAt: 2023-09-03T13:50:52.033Z,
+  updatedAt: 2023-09-03T13:50:52.033Z,
+  requestorId: '75016902-5ed8-4aad-8f72-aaaab799a19d',
+  forSubject: 'Research 3',
+  concurrentTopic: 'Publishing your paper',
+  noOfStudents: 30,
+  otherGroupMembers: [],
+  gradeSectionId: 'edc63ff7-b718-4fec-8010-ea8a523ff55c',
+  unitId: 'f5d793f2-a8ce-49c2-ab02-341c1f86aa4a',
+  teacherInChargeId: 'ff459708-3b9c-488e-bf09-b80f677f08ea',
+  independentTime: null,
+  independentLocation: null,
+  isSignedByTeacher: false,
+  isSignedByAdmin: false,
+  signedTeacherId: null,
+  signedAdminId: null,
+  schoolYearId: '0552146b-348c-4c5c-a630-713eb29b3859',
+  requestor: {
+    id: '75016902-5ed8-4aad-8f72-aaaab799a19d',
+    email: 'charlesjoshuauy@gmail.com',
+    firstName: 'Charles Joshua',
+    lastName: 'Uy',
+    role: 'ADMIN',
+    imageLink: 'https://lh3.googleusercontent.com/a/AAcHTteh14cXo8b6l1DZAAXppvHRHv3pMwmT1a4qIrH3hxiJeBE=s96-c',
+    createdAt: 2023-09-03T11:40:17.910Z,
+    updatedAt: 2023-09-03T11:42:27.306Z,
+    studentsId: 'db3e2d52-36bf-4b67-bddc-795ff00f4f15',
+    teachersId: null,
+    adminsId: null
+  },
+  gradeSection: {
+    id: 'edc63ff7-b718-4fec-8010-ea8a523ff55c',
+    createdAt: 2023-09-03T11:41:31.960Z,
+    updatedAt: 2023-09-03T11:41:31.960Z,
+    grade: 12,
+    section: 'C'
+  },
+  unit: {
+    id: 'f5d793f2-a8ce-49c2-ab02-341c1f86aa4a',
+    createdAt: 2023-09-03T11:41:31.959Z,
+    updatedAt: 2023-09-03T11:41:31.959Z,
+    name: 'Research Unit',
+    frequencyRank: 1
+  },
+  teacherInCharge: {
+    id: 'ff459708-3b9c-488e-bf09-b80f677f08ea',
+    createdAt: 2023-09-03T11:43:11.529Z,
+    updatedAt: 2023-09-03T11:43:11.529Z,
+    signature: null
+  },
+  materialsRequested: [],
+  equipmentRequested: [
+    {
+      id: '64d8115b-25d9-4982-b43c-e003ec1f2a73',
+      controlNumber: '2023-2024-010',
+      createdAt: 2023-09-03T13:50:52.432Z,
+      updatedAt: 2023-09-03T13:50:52.432Z,
+      quantity: 2,
+      name: 'Analytical Balance',
+      description: 'readability: 0.1mg',
+      modelNoOrManufacturer: 'Entris224-1S/Sartorius',
+      laboratoryRequestsId: 'c2cc442a-210e-46b3-ac7c-9145dba36aaf',
+      schoolYearId: '0552146b-348c-4c5c-a630-713eb29b3859'
+    }
+  ],
+  reagentsRequested: [
+    {
+      id: '0476193a-d1cf-4046-ac6f-fd712ac2d47a',
+      controlNumber: '2023-2024-010',
+      createdAt: 2023-09-03T13:50:52.447Z,
+      updatedAt: 2023-09-03T13:50:52.447Z,
+      quantity: 500,
+      unit: 'mL',
+      name: 'Acetone',
+      description: null,
+      laboratoryRequestsId: 'c2cc442a-210e-46b3-ac7c-9145dba36aaf',
+      schoolYearId: '0552146b-348c-4c5c-a630-713eb29b3859'
+    },
+    {
+      id: 'cddf0d63-636e-45ed-97ca-1731a7a78187',
+      controlNumber: '2023-2024-010',
+      createdAt: 2023-09-03T13:50:52.453Z,
+      updatedAt: 2023-09-03T13:50:52.453Z,
+      quantity: 1800,
+      unit: 'mL',
+      name: 'Amonia Solution',
+      description: '28%',
+      laboratoryRequestsId: 'c2cc442a-210e-46b3-ac7c-9145dba36aaf',
+      schoolYearId: '0552146b-348c-4c5c-a630-713eb29b3859'
+    }
+  ],
+  laboratoryReservations: [
+    {
+      id: '520da114-9be9-4db5-9496-2ea7a114f835',
+      createdAt: 2023-09-03T13:50:52.414Z,
+      updatedAt: 2023-09-03T13:50:52.414Z,
+      controlNumber: '2023-2024-014',
+      laboratoryId: '72497bf3-7e96-46cc-b579-d188fecfc490',
+      startTime: '2023-09-06T12:00:00+08:00',
+      endTime: '2023-09-06T13:00:00+08:00',
+      laboratoryRequestId: 'c2cc442a-210e-46b3-ac7c-9145dba36aaf'
+    },
+    {
+      id: 'c40d6f64-de7a-4398-ab44-ccda4d88645b',
+      createdAt: 2023-09-03T13:50:52.409Z,
+      updatedAt: 2023-09-03T13:50:52.409Z,
+      controlNumber: '2023-2024-014',
+      laboratoryId: '72497bf3-7e96-46cc-b579-d188fecfc490',
+      startTime: '2023-09-04T12:00:00+08:00',
+      endTime: '2023-09-04T13:00:00+08:00',
+      laboratoryRequestId: 'c2cc442a-210e-46b3-ac7c-9145dba36aaf'
+    },
+    {
+      id: 'c6ab4de5-deb2-47d5-aa7a-b7dec185973c',
+      createdAt: 2023-09-03T13:50:52.421Z,
+      updatedAt: 2023-09-03T13:50:52.421Z,
+      controlNumber: '2023-2024-014',
+      laboratoryId: '72497bf3-7e96-46cc-b579-d188fecfc490',
+      startTime: '2023-09-05T13:00:00+08:00',
+      endTime: '2023-09-05T14:00:00+08:00',
+      laboratoryRequestId: 'c2cc442a-210e-46b3-ac7c-9145dba36aaf'
+    },
+    {
+      id: 'c979fd72-4cd3-403d-a673-245a9ea292bd',
+      createdAt: 2023-09-03T13:50:52.424Z,
+      updatedAt: 2023-09-03T13:50:52.424Z,
+      controlNumber: '2023-2024-014',
+      laboratoryId: '72497bf3-7e96-46cc-b579-d188fecfc490',
+      startTime: '2023-09-07T13:00:00+08:00',
+      endTime: '2023-09-07T14:00:00+08:00',
+      laboratoryRequestId: 'c2cc442a-210e-46b3-ac7c-9145dba36aaf'
+    },
+    {
+      id: 'f72690ed-6f90-46ab-8ada-bbd4000dd994',
+      createdAt: 2023-09-03T13:50:52.417Z,
+      updatedAt: 2023-09-03T13:50:52.417Z,
+      controlNumber: '2023-2024-014',
+      laboratoryId: '72497bf3-7e96-46cc-b579-d188fecfc490',
+      startTime: '2023-09-08T12:00:00+08:00',
+      endTime: '2023-09-08T13:00:00+08:00',
+      laboratoryRequestId: 'c2cc442a-210e-46b3-ac7c-9145dba36aaf'
+    }
+  ],
+  signedTeacher: null,
+  schoolYear: {
+    id: '0552146b-348c-4c5c-a630-713eb29b3859',
+    yearStart: 2023,
+    yearEnd: 2024,
+    createdAt: 2023-09-03T11:41:31.970Z,
+    currentSchoolYear: true,
+    campus: 'EASTERN VISAYAS CAMPUS',
+    materialEquipmentRequestControlNumberCounter: 0,
+    equipmentRequestControlNumberCounter: 10,
+    reagentRequestControlNumberCounter: 10,
+    laboratoryRequestControlNumberCounter: 14
+  }
+}
