@@ -10,7 +10,7 @@ useHead({
 definePageMeta({ layout: "forms-pages" });
 const user = inject("user");
 
-let value = ref();
+const value = ref();
 
 // TODO: Add error management
 async function submitHandler(formValues) {
@@ -18,7 +18,7 @@ async function submitHandler(formValues) {
     // TODO: Format formValues to remove useless data (Lab Settings) - Add also a note that all their other requests will be duplicated for those days listed.
     const requestId = await useFetch("/api/forms/save-requests", {
         method: "POST",
-        body: { user: user, formValues: formValues},
+        body: { user, formValues },
     });
 
     // Downloaing pdfs
@@ -28,7 +28,7 @@ async function submitHandler(formValues) {
                 "/api/forms/create-pdf-buffers",
                 {
                     method: "POST",
-                    body: { id: requestId.data.value},
+                    body: { id: requestId.data.value },
                 },
             );
             // const pdfBuffers = pdfBuffers_rawData.data.value;
@@ -75,7 +75,7 @@ function downloadRequests(pdfBuffers, lastname) {
 <template>
     <div class="flex w-full flex-col items-center justify-center">
         <div class="fixed top-0 z-10 w-full bg-white text-center">
-            <h1 class="font-bold text-2xl mt-5">LABORATORY REQUESTS</h1>
+            <h1 class="mt-5 text-2xl font-bold">LABORATORY REQUESTS</h1>
             <NuxtLink
                 to="/redirect"
                 class="text-blue-500 hover:underline active:text-green-500"
@@ -132,7 +132,7 @@ function downloadRequests(pdfBuffers, lastname) {
                         <pre>
                             {{ value }}
                         </pre>
-                        <h2>
+                        <h2 class="mb-3">
                             NOTE: Selecting more options may increase your wait
                             time
                         </h2>

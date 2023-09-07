@@ -65,7 +65,7 @@ function filterSelectedEquipment(arr) {
 }
 
 function addItem(item) {
-    item.requestedQuantity = 5;
+    item.requestedQuantity = 100;
     requestedReagents.value.push(item);
 }
 </script>
