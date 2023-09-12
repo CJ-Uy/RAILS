@@ -70,6 +70,19 @@ function downloadRequests(pdfBuffers, lastname) {
         link.click();
     }
 }
+
+// Remove progress bad labels on mobile
+const hideLabels = ref(false);
+
+const updateHideLabels = () => {
+    hideLabels.value = window.innerWidth <= 768; // or any other value you want
+};
+
+// Update the value on window resize
+window.addEventListener("resize", updateHideLabels);
+
+// Update the value on initial load
+updateHideLabels();
 </script>
 
 <template>
@@ -95,11 +108,12 @@ function downloadRequests(pdfBuffers, lastname) {
                     type="multi-step"
                     tab-style="progress"
                     name="data"
+                    :hide-progress-labels="hideLabels"
                 >
                     <FormKit
                         type="step"
                         name="basicInfo"
-                        :classes="{ step: 'w-1/2' }"
+                        :classes="{ step: 'md:w-1/2' }"
                     >
                         <FormsBasicInfo />
                     </FormKit>
@@ -107,15 +121,23 @@ function downloadRequests(pdfBuffers, lastname) {
                     <FormKit
                         type="step"
                         name="laboratorySetting"
-                        :classes="{ step: 'w-1/2' }"
+                        :classes="{ step: 'md:w-1/2' }"
                     >
                         <FormsLaboratoryReservation />
                     </FormKit>
 
                     <FormKit
                         type="step"
+                        name="materials"
+                        :classes="{ step: 'md:w-full' }"
+                    >
+                        <FormsMaterialRequest />
+                    </FormKit>
+
+                    <FormKit
+                        type="step"
                         name="equipment"
-                        :classes="{ step: 'w-full' }"
+                        :classes="{ step: 'md:w-full' }"
                     >
                         <FormsEquipmentRequest />
                     </FormKit>
@@ -123,7 +145,7 @@ function downloadRequests(pdfBuffers, lastname) {
                     <FormKit
                         type="step"
                         name="reagents"
-                        :classes="{ step: 'w-full' }"
+                        :classes="{ step: 'md:w-full' }"
                     >
                         <FormsReagentRequest />
                     </FormKit>

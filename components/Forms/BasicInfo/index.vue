@@ -41,8 +41,7 @@ function makeSelectionOptions(response) {
             value="EASTERN VISAYAS CAMPUS"
             :disabled="true"
         />
-        <!-- TODO: Make the School year dynamic based on database -->
-        <!-- You dodnt even need to send this just show it in the form -->
+
         <FormKit
             v-model="schoolYearOptions"
             type="select"
