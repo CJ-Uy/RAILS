@@ -189,28 +189,36 @@ model LaboratoryReservations {
 // -------------------- //
 model InventoryOfMaterials {
   //Materials refer to small devices for experiments (such as breakers and test tubes) and supplies of the Laboratory Unit (Cleaning Supplies etc..)
-  id                 String                @id @default(uuid())
-  createdAt          DateTime              @default(now())
-  updatedAt          DateTime              @updatedAt
-  code               String? // Only provide the prefix then number increments per same name "itemName" and "description"
-  itemName           String
-  description        String?
-  additionalPurchase Int?
+
+  //Identification
+  id             String    @id @default(uuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  itemName       String
+  code           String? // Only provide the prefix then number increments per same name "itemName" and "description"
+  description    String?
+  classification String?
+  unit           String //Unit of measurement like "mL", "mg", etc..
+  supplier       String?
+  dateReceived   DateTime?
+  borrowed       Boolean   @default(false)
+  available      Boolean   @default(true)
+
+  //Quantity
+  quantity           Int?    @default(1)
+  additionalPurchase Int? // TODO: create pruchase table ?
   make               String?
-  supplier           String?
-  dateReceived       DateTime?
-  quantity           Int?                  @default(1)
-  unit               String //Unit of measurement like "mL", "mg", etc..
   unitCost           Float?
-  borrowed           Boolean               @default(false)
-  available          Boolean               @default(true)
   damage             String?
   balancePerCard     Int?
   balancePerCount    Int?
-  location           LaboratoryLocations[]
-  laboratories       Laboratories?         @relation(fields: [laboratoriesId], references: [id])
-  laboratoriesId     String?
 
+  //Location
+  location       LaboratoryLocations[]
+  laboratories   Laboratories?         @relation(fields: [laboratoriesId], references: [id])
+  laboratoriesId String?
+
+  //Related Requests
   requests     MaterialRequests[]
   schoolYear   SchoolYear?        @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
@@ -220,16 +228,16 @@ model InventoryOfEqupiment {
   //Equipment refer to objects that you operate
 
   //Identification
-  id                    String                @id @default(uuid())
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime              @updatedAt
+  id                    String    @id @default(uuid())
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
   code                  String? // Only provide the prefix then number increments per same name "equipmentName" and "description"
   equipmentName         String
   description           String?
-  available             Boolean               @default(true)
+  available             Boolean   @default(true)
   serialNumber          String?
   modelNoOrManufacturer String?
-  quantity              Int?                  @default(1)
+  quantity              Int?      @default(1)
   unit                  String?
   unitCost              Float?
   dateReceived          DateTime?
@@ -239,9 +247,9 @@ model InventoryOfEqupiment {
   status                String?
 
   //Location
-  location              LaboratoryLocations[]
-  laboratories          Laboratories?         @relation(fields: [laboratoriesId], references: [id])
-  laboratoriesId        String?
+  location       LaboratoryLocations[]
+  laboratories   Laboratories?         @relation(fields: [laboratoriesId], references: [id])
+  laboratoriesId String?
 
   //Related Requests
   requests     EquipmentRequests[]

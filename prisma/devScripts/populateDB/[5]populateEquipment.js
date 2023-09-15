@@ -201,7 +201,7 @@ const equipmentData = [
 ];
 
 // prisma.createMany does not store the created elements just the counnt
-let createdEquipment = [];
+const createdEquipment = [];
 // Add to the dataabase
 for (const equipment of equipmentData) {
     const created = await prisma.inventoryOfEqupiment.create({
@@ -211,15 +211,17 @@ for (const equipment of equipmentData) {
 }
 
 // Update the equipment code
-let updatedEquipment = [];    
+const updatedEquipment = [];
+let counter = 0;
 for (const equipment of createdEquipment) {
+    counter++;
     const updated = await prisma.inventoryOfEqupiment.update({
         where: { id: equipment.id },
         data: {
-            equipmentCode: `LE-${equipment.equipmentCodeNumber}`,
+            code: `LE-${counter}`,
         },
     });
     updatedEquipment.push(updated);
-}   
+}
 
 console.log(`${updatedEquipment.length} equipment created and updated`);
