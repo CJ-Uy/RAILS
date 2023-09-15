@@ -192,18 +192,19 @@ model InventoryOfMaterials {
   id                 String                @id @default(uuid())
   createdAt          DateTime              @default(now())
   updatedAt          DateTime              @updatedAt
+  code               String? // Only provide the prefix then number increments per same name "itemName" and "description"
   itemName           String
-  description        String
+  description        String?
   additionalPurchase Int?
   make               String?
   supplier           String?
   dateReceived       DateTime?
-  quantity           Int                   @default(0)
+  quantity           Int?                  @default(1)
   unit               String //Unit of measurement like "mL", "mg", etc..
   unitCost           Float?
-  borrowed           Int                   @default(0)
-  returned           Int                   @default(0)
-  damage             Int                   @default(0)
+  borrowed           Boolean               @default(false)
+  available          Boolean               @default(true)
+  damage             String?
   balancePerCard     Int?
   balancePerCount    Int?
   location           LaboratoryLocations[]
@@ -211,36 +212,39 @@ model InventoryOfMaterials {
   laboratoriesId     String?
 
   requests     MaterialRequests[]
-  available    Boolean            @default(true)
   schoolYear   SchoolYear?        @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 }
 
 model InventoryOfEqupiment {
-  //Equipment refer to the large devices that may not be easily moved from one location to another
+  //Equipment refer to objects that you operate
+
+  //Identification
   id                    String                @id @default(uuid())
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
-  equipmentCodeNumber   Int                   @unique @default(autoincrement()) // This is so we can have LE-1, LE-2, etc..
-  equipmentCode         String?
+  code                  String? // Only provide the prefix then number increments per same name "equipmentName" and "description"
   equipmentName         String
+  description           String?
+  available             Boolean               @default(true)
   serialNumber          String?
   modelNoOrManufacturer String?
-  description           String?
-  quantity              Int? // TODO: Double check if this matters as according to the table it will always be 1
+  quantity              Int?                  @default(1)
   unit                  String?
   unitCost              Float?
-  dateReceived          DateTime              @default(now()) // TODO: Change this
+  dateReceived          DateTime?
   propertyNumber        String?
   acquisitionType       String?
   supplier              String?
-  location              LaboratoryLocations[]
   status                String?
+
+  //Location
+  location              LaboratoryLocations[]
   laboratories          Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId        String?
 
+  //Related Requests
   requests     EquipmentRequests[]
-  available    Boolean             @default(true)
   schoolYear   SchoolYear?         @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 }
@@ -252,12 +256,14 @@ model InventoryOfReagents {
   id               String   @id @default(uuid())
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  itemNumber       String? // All chemicals with the same chemical name will have the same starting number arranged in alphabetical order then a letter for variant
   casNumber        String?
+  code             String? // Only provide the prefix then number increments per same name "chemicalName" and "description"
   chemicalName     String // Same name chemicals should be grouped together
   description      String? // If chemicals are the same name but have a varation (ex: acetic acid - glacial an food grade) or are in differnet bottles(?)
+  classification   String?
   manufacturerName String?
   supplier         String?
+  available        Boolean  @default(true)
 
   // Quantities
   currentQuantity Float?
@@ -280,8 +286,8 @@ model InventoryOfReagents {
   laboratories   Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId String?
 
+  //Related Requests
   requests     ReagentRequests[]
-  available    Boolean           @default(true)
   schoolYear   SchoolYear?       @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 }
@@ -306,7 +312,6 @@ model EquipmentRequests {
 }
 
 model MaterialRequests {
-  // TODO: Ask about how the materials work
   id                  String                 @id @default(uuid())
   controlNumber       String
   createdAt           DateTime               @default(now())
@@ -357,7 +362,6 @@ model LaboratoryRequests {
   teacherInCharge   Teachers @relation("teacher_in_charge", fields: [teacherInChargeId], references: [id])
   teacherInChargeId String
 
-  // TODO: Clarify the materials requested an sample inventory
   materialsRequested MaterialRequests[]
   equipmentRequested EquipmentRequests[]
   reagentsRequested  ReagentRequests[]

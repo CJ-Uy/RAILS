@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 const createReagents = await prisma.inventoryOfReagents.createMany({
     data: [
         {
-            itemNumber: "1a",
+            code: "1a",
             casNumber: "75-07-0",
             chemicalName: "Acetaldehyde",
             manufacturerName: "Acetaldehyde",
@@ -16,7 +16,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "1b",
+            code: "1b",
             casNumber: "75-07-0",
             chemicalName: "Acetaldehyde",
             manufacturerName: "Acetaldehyde",
@@ -28,7 +28,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "2a",
+            code: "2a",
             casNumber: "64-19-7",
             chemicalName: "Acetic Acid",
             manufacturerName: "Acetic Acid",
@@ -41,7 +41,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "2b",
+            code: "2b",
             casNumber: "64-19-7",
             chemicalName: "Acetic Acid",
             manufacturerName: "Acetic Acid",
@@ -56,7 +56,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "3a",
+            code: "3a",
             casNumber: "67-64-1",
             chemicalName: "Acetone",
             manufacturerName: "Acetone",
@@ -70,7 +70,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "3b",
+            code: "3b",
             casNumber: "67-64-1",
             chemicalName: "Acetone",
             manufacturerName: "Acetone",
@@ -84,7 +84,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "3c",
+            code: "3c",
             casNumber: "67-64-1",
             chemicalName: "Acetone",
             manufacturerName: "Acetone",
@@ -98,7 +98,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "3d",
+            code: "3d",
             casNumber: "67-64-1",
             chemicalName: "Acetone",
             manufacturerName: "Acetone",
@@ -112,7 +112,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "4",
+            code: "4",
             casNumber: "98-86-2",
             chemicalName: "Acetophenone, extra pure",
             manufacturerName: "Acetophenone, extra pure",
@@ -125,7 +125,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "5",
+            code: "5",
             casNumber: "1336-21-6",
             chemicalName: "Amonia Solution",
             manufacturerName: "Amonia Solution",
@@ -140,7 +140,7 @@ const createReagents = await prisma.inventoryOfReagents.createMany({
             hazSub: true,
         },
         {
-            itemNumber: "6",
+            code: "6",
             casNumber: "98-86-2",
             chemicalName: "n-Amyl Alcohol",
             manufacturerName: "Pentanol",

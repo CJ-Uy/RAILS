@@ -18,7 +18,7 @@ const equipmentData = [
         description: "readability: 0.1mg",
         quantity: 1,
         unit: "unit",
-        status: "Operaational / For caalibration",
+        status: "Operational / For calibration",
     },
     {
         equipmentName: "Autoclave",
@@ -61,8 +61,8 @@ const equipmentData = [
         status: "Operational",
     },
 
-    // 15 Biological (blank) Microscopes  
-    
+    // 15 Biological (blank) Microscopes
+
     {
         equipmentName: "Biological Microscope",
         modelNoOrManufacturer: "XSP-13A",

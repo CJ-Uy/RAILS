@@ -1,8 +1,11 @@
 Some Random Notes:
+- update packages and nuxt
+
 - Add materials
 - Combine materials and equipment to the new forms
 - Add materials to the saving sequence
 
+- Control Code Prefix (A-#)
 - Finish creating and downloading pdf
 
 - limit dates that can be selected on the form to the max school year

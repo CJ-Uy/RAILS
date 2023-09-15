@@ -13,7 +13,7 @@ const items = computed(() => {
             },
             {
                 slot: "orderReagents",
-                label: `Orders`,
+                label: "Orders",
                 disabled: true,
             },
         ];
