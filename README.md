@@ -15,8 +15,11 @@ Install the dependencies:
 npm install
 ```
 <hr>
-
-Create a ```.env``` file by following the instructions on the ```.env.example``` 
+Create a ```.env``` file by following the instructions on the ```.env.example```
+Note, if you are using codespaces or docker set in the ```.env``` 
+```
+DATABASE_URL = "mysql://user:password@mysql-db:3306/rails_db"
+```
 <hr>
 
 Generate the database with prisma running the ```npm run dbgenerate``` or ```npx prisma generate``` command

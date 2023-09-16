@@ -27,13 +27,14 @@
     "ritwickdey.LiveServer",
     "sdras.vue-vscode-snippets",
     "streetsidesoftware.code-spell-checker",
-    "TabNine.tabnine-vscode",
     "vincaslt.highlight-matching-tag",
     "VisualStudioExptTeam.intellicode-api-usage-examples",
     "VisualStudioExptTeam.vscodeintellicode",
     "Vue.volar",
     "wix.vscode-import-cost",
-    "xabikos.JavaScriptSnippets"
+    "xabikos.JavaScriptSnippets",
+    "ms-azuretools.vscode-docker",
+    "PKief.material-icon-theme"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []
