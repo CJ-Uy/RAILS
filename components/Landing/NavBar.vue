@@ -15,7 +15,7 @@ function toggleMenu() {
                 <div class="pt-2">
                     <NuxtLink to="/">
                         <nuxt-icon
-                            name="logo"
+                            name="Logo"
                             filled
                             class="logo cursor-pointer"
                         />

@@ -35,6 +35,7 @@ const { signIn } = useAuth();
                     color="gray"
                     size="xl"
                     padding="xl"
+                    @click="signIn('google')"
                 />
                 <template #footer>
                     <p>
