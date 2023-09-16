@@ -4,5 +4,19 @@
     },
     "editor.quickSuggestions": {
         "strings": true
-    }
+    },
+    "cSpell.words": [
+        "NUXT",
+        "formkit",
+        "vuepic",
+        "nuxtjs",
+        "vuetify",
+        "invictus",
+        "vueuse",
+        "iconify",
+        "nuxthq",
+        "tailwindcss",
+        "sidebase",
+        "fontaine",
+    ]
 }

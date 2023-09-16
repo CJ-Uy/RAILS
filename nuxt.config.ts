@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    components: true,
     devtools: { enabled: true },
     modules: [
         "nuxt-mailer", // https://github.com/jurassicjs/nuxt-mailer (Nodemailer wrapper for email functionality)
@@ -36,8 +37,8 @@ export default defineNuxtConfig({
     auth: {
         // The origin is set to the development origin. Change this when deploying to production by setting `origin` in this config before build-time or by exporting `AUTH_ORIGIN` by running `export AUTH_ORIGIN=...`
         origin: "http://localhost:3000", // This doesn't change unlike the IP per network
-        // origin: "http://172.20.10.2:3000", // CJ-Uy hotspot IP adress fo when hosted
-        // (for new netorks add .nip.io to URI to https://console.cloud.google.com/apis/credentials?project=rails-382915)
+        // origin: "http://172.20.10.2:3000", // CJ-Uy hot spot IP address fo when hosted
+        // (for new networks add .nip.io to URI to https://console.cloud.google.com/apis/credentials?project=rails-382915)
 
         isEnabled: true, // The module is enabled. Change this to disable the module
 
@@ -74,7 +75,7 @@ export default defineNuxtConfig({
         configFile: "./formkit.config.js",
     },
 
-    // NUXT-MAILER CONFIGURATION [DONT'T REMOVE]
+    // NUXT-MAILER CONFIGURATION [DON'T REMOVE]
     runtimeConfig: {
         mailerUser: "",
         mailerPass: "",
