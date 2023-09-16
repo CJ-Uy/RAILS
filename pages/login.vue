@@ -14,26 +14,36 @@ const { signIn } = useAuth();
 </script>
 
 <template>
-    <div class="flex h-screen flex-row">
+    <div class="flex h-screen flex-col md:flex-row">
         <div
-            class="flex basis-[60%] items-center justify-center bg-light-primary"
+            class="flex basis-[50%] items-center justify-center bg-light-primary"
         >
             <LoginLeftSide />
         </div>
         <div
-            class="flex w-[40%] basis-auto flex-col items-center justify-center bg-white"
+            class="md:h[100%] flex basis-[50%] flex-col items-center justify-center bg-white"
         >
-            <h1 class="font-bold">SIGN IN</h1>
-            <button
-                class="flex h-[8%] w-[40%] items-center justify-center rounded border-2 border-light-secondary bg-light-primary text-white hover:bg-light-accent"
-                @click="signIn('google')"
-            >
-                <Icon
-                    class="h-[100%] w-[30%] bg-white p-3"
-                    name="logos:google-icon"
+            <UCard class="w-[80%] text-center">
+                <template #header>
+                    <h1 class="text-3xl font-extrabold text-main-500">
+                        SIGN IN
+                    </h1>
+                </template>
+                <UButton
+                    label="Sign in with EVC"
+                    icon="i-logos-google-icon"
+                    color="gray"
+                    size="xl"
+                    padding="xl"
                 />
-                <div class="w-[70%] p-2">Sign In with EVC</div>
-            </button>
+                <template #footer>
+                    <p>
+                        We use the EVC email as proof you are a bonfide student.
+                        Hence, if you do not have an EVC email or cannot access
+                        it you will not be able to use this ervice
+                    </p>
+                </template>
+            </UCard>
         </div>
     </div>
 </template>
