@@ -36,7 +36,7 @@ const items = computed(() => {
 <template>
     <div class="w-full">
         <div class="pb-5 text-center">
-            <h1 class="text-xl font-bold">EQUIPMENT REQUEST</h1>
+            <h1 class="text-xl font-bold">MATERIALS REQUEST</h1>
         </div>
 
         <!-- Tabs -->
@@ -45,10 +45,10 @@ const items = computed(() => {
             class="w-full"
             :ui="{ list: { tab: { active: 'bg-white' } } }"
         >
-            <template #selectEquipment>
+            <template #selectMaterials>
                 <FormsMaterialRequestSelection />
             </template>
-            <template #orderEquipment>
+            <template #orderMaterials>
                 <FormsMaterialRequestOrder />
             </template>
         </UTabs>

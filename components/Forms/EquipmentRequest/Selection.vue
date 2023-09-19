@@ -31,7 +31,6 @@ async function updateTable() {
     allEquipmentData.value = allEquipment.data.value;
 }
 
-//let filteredRows = ref(allEquipment);
 // Filter rows
 const searchQuery = ref("");
 const filteredRows = computed(() => {
@@ -46,7 +45,7 @@ const filteredRows = computed(() => {
         );
     }
     // filtering the rows
-    let filtered = filterSelectedEquipment(
+    const filtered = filterSelectedEquipment(
         allEquipmentData.value.filter((item) => {
             return Object.values(item).some((value) => {
                 return String(value)
@@ -75,16 +74,15 @@ function addItem(item) {
 <template>
     <div>
         <div class="mt-7 text-center">
-            <h2 class="text-lg font-bold text-main-500">
-                SELECT MATERIALS AND EQUIPMENT
-            </h2>
-            <p>
-                Select any materials or equipment you would like to add to this
-                request.
-            </p>
+            <h2 class="text-lg font-bold text-main-500">SELECT EQUIPMENT</h2>
+            <p>Select equipment you would like to add to this request.</p>
             <div v-if="requestedEquipment.length != 0">
                 <p class="text-red-600">
-                    Finalize Materials and Equipment Request in the <span class="font-bold">Orders ({{ requestedEquipment.length }})</span> tab
+                    Finalize Materials and Equipment Request in the
+                    <span class="font-bold"
+                        >Orders ({{ requestedEquipment.length }})</span
+                    >
+                    tab
                 </p>
             </div>
         </div>
@@ -136,8 +134,8 @@ function addItem(item) {
                 <UTable
                     :columns="selectedColumns"
                     :rows="filteredRows"
-                    @select="addItem"
                     :loading="pending"
+                    @select="addItem"
                 />
                 <!-- Pagination -->
                 <div class="mt-2 flex w-[100%] items-center justify-end">
