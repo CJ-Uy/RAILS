@@ -45,6 +45,7 @@ function removeDateTime(index) {
                 custom: 'I will not be using a Laboratory for this activity',
             }"
             help="If this is for a class activity select the first option"
+            validation="required"
         />
         <div v-if="showLabRes">
             <h2>

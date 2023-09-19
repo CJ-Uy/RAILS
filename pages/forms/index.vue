@@ -75,11 +75,16 @@ function downloadRequests(pdfBuffers, lastname) {
 const hideLabels = ref(false);
 
 const updateHideLabels = () => {
-    hideLabels.value = window.innerWidth <= 768; // or any other value you want
+    // Only access window if on client side
+    if (process.client) {
+        hideLabels.value = window.innerWidth <= 768; // or any other value you want
+    }
 };
 
 // Update the value on window resize
-window.addEventListener("resize", updateHideLabels);
+if (process.client) {
+    window.addEventListener("resize", updateHideLabels);
+}
 
 // Update the value on initial load
 updateHideLabels();

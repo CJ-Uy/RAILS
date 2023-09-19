@@ -10,7 +10,7 @@ export default defineNuxtConfig({
         // CSS and styling modules
         // "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
         // "@nuxtjs/color-mode", // https://nuxt.com/modules/color-mode (dark mode and other themes)
-        "@nuxthq/ui", // https://ui.nuxtlabs.com/getting-started (Component Library)
+        "@nuxthq/ui", // https://ui.nuxtlabs.com/getting-started (Component Library) // TODO: @nuxthq/ui is depreciated and can be updated to @nuxt/ui but breaking changes need to be adressed
 
         // Optimization modules
         "@nuxt/image-edge", // https://v1.image.nuxtjs.org/ (Image loading optimization)

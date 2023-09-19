@@ -5,7 +5,7 @@ provide("requestedMaterials", requestedMaterials);
 
 // Tabs
 const items = computed(() => {
-    if (requestedEquipment.value.length == 0) {
+    if (requestedMaterials.value.length === 0) {
         return [
             {
                 slot: "selectMaterials",
@@ -20,11 +20,11 @@ const items = computed(() => {
     } else {
         return [
             {
-                slot: "selectEquipment",
+                slot: "selectMaterials",
                 label: "Select",
             },
             {
-                slot: "orderEquipment",
+                slot: "orderMaterials",
                 label: `Orders (${requestedMaterials.value.length})`,
                 disabled: false,
             },
@@ -46,15 +46,15 @@ const items = computed(() => {
             :ui="{ list: { tab: { active: 'bg-white' } } }"
         >
             <template #selectEquipment>
-                <FormsEquipmentRequestSelection />
+                <FormsMaterialRequestSelection />
             </template>
             <template #orderEquipment>
-                <FormsEquipmentRequestOrder />
+                <FormsMaterialRequestOrder />
             </template>
         </UTabs>
 
         <FormKit
-            v-model="requestedEquipment"
+            v-model="requestedMaterials"
             type="list"
             name="details"
             dynamic
