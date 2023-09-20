@@ -13,11 +13,12 @@ Some Random Notes:
 - Table to view the lab requests
 - Admin UI to change any values
 
+- Are the list of the teachers in the form alphabetical?
+
 Later into the future:
 - Add prisma-backup
 - Notification system
 - Add terms and conditions to each (signatures auto sign and admins can use it to make e-records)
-- Dockerize the project
 
 Extra not super important:
 - Add other common forms to download for convenience
