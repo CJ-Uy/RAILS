@@ -29,7 +29,6 @@ async function updateTable() {
     allReagentsData.value = allReagents.data.value;
 }
 
-//let filteredRows = ref(allReagents);
 // Filter rows
 const searchQuery = ref("");
 const filteredRows = computed(() => {
@@ -44,7 +43,7 @@ const filteredRows = computed(() => {
         );
     }
     // filtering the rows
-    let filtered = filterSelectedEquipment(
+    const filtered = filterSelectedEquipment(
         allReagentsData.value.filter((item) => {
             return Object.values(item).some((value) => {
                 return String(value)
@@ -65,7 +64,11 @@ function filterSelectedEquipment(arr) {
 }
 
 function addItem(item) {
-    item.requestedQuantity = 100;
+    if (item.maxQuantity > 100) {
+        item.requestedQuantity = 100;
+    } else {
+        item.requestedQuantity = item.maxQuantity;
+    }
     requestedReagents.value.push(item);
 }
 </script>
@@ -133,8 +136,8 @@ function addItem(item) {
                 <UTable
                     :columns="selectedColumns"
                     :rows="filteredRows"
-                    @select="addItem"
                     :loading="pending"
+                    @select="addItem"
                 />
                 <!-- Pagination -->
                 <div class="mt-2 flex w-[100%] items-center justify-end">

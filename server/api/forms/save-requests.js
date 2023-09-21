@@ -1,10 +1,10 @@
-import prisma from "~/server/db/prisma";
-import dayjs from "dayjs";
 import getControlNumbers from "../../app/forms/saving-requests/getControlNumbers.js";
 import formatDates from "../../app/forms/saving-requests/formatDates.js";
+import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
+
     // Initialize Base Request
     const schoolYear = await prisma.schoolYear.findFirst({
         where: {
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
         }
     } else {
         // If they already have a laboratory reservation, save the date time independently for forms
-        let timeJSON = {};
+        const timeJSON = {};
         for (const timeOfUse of body.formValues.data.laboratorySetting
             .allDates) {
             timeJSON[
@@ -79,20 +79,27 @@ export default defineEventHandler(async (event) => {
             ] = timeOfUse.requestDates;
         }
 
-
         let location;
         // Save Location Independently
-        if (body.formValues.data.laboratorySetting.hasLaboratoryReservation ===
-            "true") { // They already have a reservation
-            let findLocation = await prisma.laboratories.findUnique({
+        if (
+            body.formValues.data.laboratorySetting.hasLaboratoryReservation ===
+            "true"
+        ) {
+            // They already have a reservation
+            const findLocation = await prisma.laboratories.findUnique({
                 where: {
                     id: body.formValues.data.laboratorySetting.venue,
-                }, select: {
-                    name: true
-                }
-            })
+                },
+                select: {
+                    name: true,
+                },
+            });
             location = findLocation.name;
-        } else if (body.formValues.data.laboratorySetting.hasLaboratoryReservation === "custom") { // They have a custom location
+        } else if (
+            body.formValues.data.laboratorySetting.hasLaboratoryReservation ===
+            "custom"
+        ) {
+            // They have a custom location
             location = body.formValues.data.laboratorySetting.customLocation;
         }
 
@@ -108,10 +115,42 @@ export default defineEventHandler(async (event) => {
         });
     }
 
+    // Control Numbers for Materials Equipment Requests
+    let materialEquipmentControlNumber;
+    if (
+        body.formValues.data.materials.details.length > 0 ||
+        body.formValues.data.equipment.details.length > 0
+    ) {
+        materialEquipmentControlNumber = await getControlNumbers(
+            "materialEquipmentRequest",
+            schoolYear,
+        );
+    }
+
+    if (body.formValues.data.materials.details.length > 0) {
+        // Make Materials Requests(s)
+        const requestedMaterials = body.formValues.data.materials.details;
+
+        for (const material of requestedMaterials) {
+            await prisma.materialRequests.create({
+                data: {
+                    quantity: Number(material.requestedQuantity),
+                    name: material.materialName,
+                    description: material.description,
+                    schoolYearId: schoolYear.id,
+                    controlNumber: materialEquipmentControlNumber,
+                    materials: {
+                        connect: material.ids.map((id) => ({ id })),
+                    },
+                    laboratoryRequestId: request.id,
+                },
+            });
+        }
+    }
+
     // Make Equipment Request(s)
     if (body.formValues.data.equipment.details.length > 0) {
         const requestedEquipment = body.formValues.data.equipment.details;
-        const controlNumber = await getControlNumbers("equipmentRequest", schoolYear);
 
         for (const equipment of requestedEquipment) {
             await prisma.equipmentRequests.create({
@@ -120,12 +159,12 @@ export default defineEventHandler(async (event) => {
                     name: equipment.equipmentName,
                     description: equipment.description,
                     modelNoOrManufacturer: equipment.modelNoOrManufacturer,
-                    laboratoryRequestsId: request.id,
                     schoolYearId: schoolYear.id,
-                    controlNumber: controlNumber,
+                    controlNumber: materialEquipmentControlNumber,
                     equipment: {
                         connect: equipment.ids.map((id) => ({ id })),
                     },
+                    laboratoryRequestId: request.id,
                 },
             });
         }
@@ -134,7 +173,10 @@ export default defineEventHandler(async (event) => {
     // Make Reagent Request(s)
     if (body.formValues.data.reagents.details.length > 0) {
         const requestedReagents = body.formValues.data.reagents.details;
-        const controlNumber = await getControlNumbers("reagentRequest", schoolYear);
+        const controlNumber = await getControlNumbers(
+            "reagentRequest",
+            schoolYear,
+        );
 
         for (const reagent of requestedReagents) {
             await prisma.reagentRequests.create({
@@ -143,18 +185,16 @@ export default defineEventHandler(async (event) => {
                     name: reagent.chemicalName,
                     description: reagent.description,
                     unit: reagent.unit,
-                    laboratoryRequestsId: request.id,
                     schoolYearId: schoolYear.id,
-                    controlNumber: controlNumber,
+                    controlNumber,
                     reagents: {
                         connect: reagent.ids.map((id) => ({ id })),
                     },
+                    laboratoryRequestId: request.id,
                 },
             });
         }
     }
-
-    // TODO: Make materials request too after clarifying
 
     return request.id;
 });

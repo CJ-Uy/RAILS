@@ -19,19 +19,6 @@ export default async function getControlNumbers(form, controlNumbers) {
             counter =
                 updatedControlNumberCounter.laboratoryRequestControlNumberCounter;
             break;
-        case "equipmentRequest":
-            updatedControlNumberCounter = await prisma.schoolYear.update({
-                where: {
-                    id: controlNumbers.id,
-                },
-                data: {
-                    equipmentRequestControlNumberCounter:
-                        controlNumbers.equipmentRequestControlNumberCounter + 1,
-                },
-            });
-            counter =
-                updatedControlNumberCounter.equipmentRequestControlNumberCounter;
-            break;
         case "reagentRequest":
             updatedControlNumberCounter = await prisma.schoolYear.update({
                 where: {
@@ -45,18 +32,19 @@ export default async function getControlNumbers(form, controlNumbers) {
             counter =
                 updatedControlNumberCounter.reagentRequestControlNumberCounter;
             break;
-        case "materialsRequest":
+        case "materialEquipmentRequest":
             updatedControlNumberCounter = await prisma.schoolYear.update({
                 where: {
                     id: controlNumbers.id,
                 },
                 data: {
-                    materialsRequestControlNumberCounter:
-                        controlNumbers.materialsRequestControlNumberCounter + 1,
+                    materialEquipmentRequestControlNumberCounter:
+                        controlNumbers.materialEquipmentRequestControlNumberCounter +
+                        1,
                 },
             });
             counter =
-                updatedControlNumberCounter.materialsRequestControlNumberCounter;
+                updatedControlNumberCounter.materialEquipmentRequestControlNumberCounter;
             break;
         default:
             return "Control Number Error";

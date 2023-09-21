@@ -107,6 +107,7 @@ updateHideLabels();
                 name="requestData"
                 use-local-storage
                 @submit="submitHandler"
+                @keydown.enter.prevent
             >
                 <FormKit
                     v-model="value"

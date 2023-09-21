@@ -36,7 +36,6 @@ model SchoolYear {
   campus            String   @default("EASTERN VISAYAS CAMPUS")
 
   materialEquipmentRequestControlNumberCounter Int @default(0)
-  equipmentRequestControlNumberCounter         Int @default(0)
   reagentRequestControlNumberCounter           Int @default(0)
   laboratoryRequestControlNumberCounter        Int @default(0)
 
@@ -313,8 +312,8 @@ model EquipmentRequests {
   name                  String
   description           String?
   modelNoOrManufacturer String?
-  laboratoryRequests    LaboratoryRequests     @relation(fields: [laboratoryRequestsId], references: [id])
-  laboratoryRequestsId  String
+  laboratoryRequest     LaboratoryRequests     @relation(fields: [laboratoryRequestId], references: [id])
+  laboratoryRequestId   String
   schoolYear            SchoolYear?            @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
 }
@@ -335,19 +334,19 @@ model MaterialRequests {
 }
 
 model ReagentRequests {
-  id                   String                @id @default(uuid())
-  controlNumber        String
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  quantity             Int
-  unit                 String
-  reagents             InventoryOfReagents[]
-  name                 String
-  description          String?
-  LaboratoryRequests   LaboratoryRequests    @relation(fields: [laboratoryRequestsId], references: [id])
-  laboratoryRequestsId String
-  schoolYear           SchoolYear?           @relation(fields: [schoolYearId], references: [id])
-  schoolYearId         String?
+  id                  String                @id @default(uuid())
+  controlNumber       String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  quantity            Int
+  unit                String
+  reagents            InventoryOfReagents[]
+  name                String
+  description         String?
+  LaboratoryRequest   LaboratoryRequests    @relation(fields: [laboratoryRequestId], references: [id])
+  laboratoryRequestId String
+  schoolYear          SchoolYear?           @relation(fields: [schoolYearId], references: [id])
+  schoolYearId        String?
 }
 
 model LaboratoryRequests {
