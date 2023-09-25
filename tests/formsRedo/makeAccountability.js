@@ -45,7 +45,7 @@ let teacherSignature = "";
 // TODO: NEED APPROVAL SYSTEM
 // Notarization
 if (request.isSignedByTeacher) {
-    teacherSignature = "<INSERT SIGNATURE>";
+    teacherSignature = request.signedTeacher.signature;
 }
 
 if (request.isSignedByAdmin) {
@@ -213,6 +213,19 @@ let html =
     .sigs-title {
         text-align: center;
     }
+    #endorserSignature {
+        position: absolute; 
+        transform: scale(0.3)  translateY(-350px);
+    }
+    #approverSignature {
+        position: absolute;
+        transform: scale(0.3) translateY(-350px);
+    }
+    .svgSig {
+        display: flex;
+        justify-content: center;
+        align-items: top;
+    }
 </style>
 </head>
 <body>
@@ -333,10 +346,10 @@ html += `
     <table class="sigs-table">
         <tr>
             <td></td>
-            <td> <div id="endorserSignature"></div> </td>
+            <td class="svgSig"> <div id="endorserSignature"></div> </td>
             <td></td>
             <td></td>
-            <td> <div id="approverSignature"></div> </td>
+            <td class="svgSig"> <div id="approverSignature"></div> </td>
         <tr>
         <tr>
             <td class="sigs-who">Endorsed by:</td>
@@ -443,8 +456,8 @@ html += `
     }
 
     // Signatures
-    document.getElementById("endorserSignature").innerHTML = "${teacherSignature}";
-    document.getElementById("approverSignature").innerHTML = "${approverSignature}";
+    document.getElementById("endorserSignature").innerHTML = '${teacherSignature}';
+    document.getElementById("approverSignature").innerHTML = '${approverSignature}';
 
 
 </script>
