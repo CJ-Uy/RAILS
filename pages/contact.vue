@@ -5,7 +5,7 @@ useHead({
 });
 
 // [auth: false] allows the page to be seen by "Authenticated" and "Unauthenticated" users
-definePageMeta({ auth: false, layout: "landing-pages" }); 
+definePageMeta({ auth: false, layout: "landing-pages" });
 // PAGE META END
 </script>
 

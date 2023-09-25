@@ -11,23 +11,16 @@ const user = inject("user");
 <template>
     <div>
         <UserDashboardHeader title="ADMIN | EDIT FORMS" />
-
-        <UContainer class="w-auto md:w-2/3">
-            <UCard>
+        <UContainer>
+            <UCard class="m-auto w-2/3">
                 <template #header>
-                    <h2>Form Approval Settings</h2>
+                    <h2 class="text-center">FORM APPROVAL SETTINGS</h2>
                 </template>
-
                 <UserAdminSaveSignature />
             </UCard>
-            <UCard class="mt-5">
-                <template #header>
-                    <h2>Edit Forms Template</h2>
-                </template>
-                <div>
-                    <UserAdminEditForms />
-                </div>
-            </UCard>
+            <div class="mt-10">
+                <UserAdminEditForms />
+            </div>
         </UContainer>
     </div>
 </template>
