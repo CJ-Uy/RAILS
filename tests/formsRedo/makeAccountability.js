@@ -1,11 +1,11 @@
-import puppeteer from "puppeteer";
-import fs from "fs";
+import fs, { writeFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { writeFileSync } from "fs";
 
-import getRequest from "./getRequest.js";
+import puppeteer from "puppeteer";
+
 import dayjs from "dayjs";
+import getRequest from "./getRequest.js";
 
 async function convertHtmlToPDF(htmlContent, filePath) {
     const browser = await puppeteer.launch({ headless: "new" });
@@ -20,25 +20,27 @@ async function convertHtmlToPDF(htmlContent, filePath) {
 }
 
 console.log("Fetching request...");
-const request = await getRequest("ca9ca394-7a7b-485f-9904-a2fb14100b37");
+const request = await getRequest("a2b04495-7a39-4964-be04-44e47e5ebe29");
 
-let { campus } = request.schoolYear;
-let { controlNumber } = request.equipmentRequested[0];
-let schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
-let studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
-let dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
-let gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
-let { noOfStudents } = request;
-let subject = request.forSubject;
-let { concurrentTopic } = request;
-let unit = request.unit.name;
-let teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
-let venueOfExperiment =
+console.dir(request, { depth: null });
+
+const { campus } = request.schoolYear;
+const { controlNumber } = request.equipmentRequested[0];
+const schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
+const studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
+const dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
+const gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
+const { noOfStudents } = request;
+const subject = request.forSubject;
+const { concurrentTopic } = request;
+const unit = request.unit.name;
+const teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
+const venueOfExperiment =
     request.laboratoryReservations[0].laboratoryReserved.name;
 
 let approver = "&nbsp;";
-let approverSignature = " ";
-let teacherSignature = " ";
+let approverSignature = "";
+let teacherSignature = "";
 
 // TODO: NEED APPROVAL SYSTEM
 // Notarization
@@ -54,22 +56,23 @@ if (request.isSignedByAdmin) {
 // Dates an Time of Use
 let inclusiveDates = "";
 let inclusiveTimeOfUse = "";
-let groupedReservations = request.laboratoryReservations.reduce((acc, curr) => {
-    let time = `${dayjs(curr.startTime).format("HH:mm").toString()}-${dayjs(
-        curr.endTime,
-    )
-        .format("HH:mm")
-        .toString()}`;
-    let date = `${dayjs(curr.startTime).format("MM/DD/YY").toString()}`;
+const groupedReservations = request.laboratoryReservations.reduce(
+    (acc, curr) => {
+        const time = `${dayjs(curr.startTime)
+            .format("HH:mm")
+            .toString()}-${dayjs(curr.endTime).format("HH:mm").toString()}`;
+        const date = `${dayjs(curr.startTime).format("MM/DD/YY").toString()}`;
 
-    if (!acc[time]) {
-        acc[time] = [date];
-    } else {
-        acc[time].push(date);
-    }
+        if (!acc[time]) {
+            acc[time] = [date];
+        } else {
+            acc[time].push(date);
+        }
 
-    return acc;
-}, {});
+        return acc;
+    },
+    {},
+);
 let counter = 1;
 for (const time in groupedReservations) {
     inclusiveTimeOfUse += `(${counter}) ${time} `;
@@ -307,7 +310,7 @@ html += `
         <table class="groupmates">
 `;
 
-let length =
+const length =
     request.otherGroupMembers.length < 5 ? 5 : request.otherGroupMembers.length;
 
 for (let i = 0; i < length; i++) {
@@ -333,7 +336,7 @@ html += `
             <td> <div id="endorserSignature"></div> </td>
             <td></td>
             <td></td>
-            <td> <div id="approverSignature"> </div> </td>
+            <td> <div id="approverSignature"></div> </td>
         <tr>
         <tr>
             <td class="sigs-who">Endorsed by:</td>
@@ -440,7 +443,9 @@ html += `
     }
 
     // Signatures
-    document.getElementById("").innerHTML = "${approverSignature}";
+    document.getElementById("endorserSignature").innerHTML = "${teacherSignature}";
+    document.getElementById("approverSignature").innerHTML = "${approverSignature}";
+
 
 </script>
 </html>

@@ -8,5 +8,8 @@ definePageMeta({ layout: "teacher-pages" });
 </script>
 
 <template>
-    <h1>STUDENT REQUESTS</h1>
+    <div class="flex flex-col">
+        <UserDashboardHeader title="REQUESTS FROM STUDENTS" />
+        <UserTeacherSaveSignature />
+    </div>
 </template>

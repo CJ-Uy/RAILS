@@ -10,7 +10,7 @@ const user = inject("user");
 
 <template>
     <div>
-        <h1>TEACHER PAGE</h1>
+        <UserDashboardHeader title="DASHBOARD" />
     </div>
 </template>
 

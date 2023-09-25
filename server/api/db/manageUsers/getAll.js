@@ -1,9 +1,9 @@
-import prisma from "~/server/db/prisma";
 import dayjs from "dayjs";
+import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async () => {
-    let allUsers = await prisma.users.findMany();
-    for (let user of allUsers) {
+    const allUsers = await prisma.users.findMany();
+    for (const user of allUsers) {
         user.createdAt = dayjs(user.createdAt).format(
             "MMMM D, YYYY - HH:mm:ss",
         );
