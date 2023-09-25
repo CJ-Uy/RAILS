@@ -14,11 +14,11 @@ export default defineEventHandler(async (event) => {
         });
 
         if (signature.signature === null) {
-            return "No Saved Signature";
+            return [false, "No Saved Signature"];
         }
 
-        return signature;
+        return [true, signature];
     } catch (error) {
-        return "No Teacher Account Found";
+        return [false, "No Teacher Account Found"];
     }
 });
