@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import getControlNumbers from "../../app/forms/saving-requests/getControlNumbers.js";
 import formatDates from "../../app/forms/saving-requests/formatDates.js";
 import prisma from "~/server/db/prisma";
@@ -62,6 +63,13 @@ export default defineEventHandler(async (event) => {
         const timeJSON = {};
         for (const timeOfUse of body.formValues.data.laboratorySetting
             .allDates) {
+            const formatedDates = [];
+            for (const index in timeOfUse.requestDates) {
+                formatedDates[index] = dayjs(
+                    timeOfUse.requestDates[index],
+                ).format("MMMM DD, YYYY");
+            }
+
             timeJSON[
                 `${String(timeOfUse.inclusiveTimeOfUse[0].hours).padStart(
                     2,
@@ -76,7 +84,7 @@ export default defineEventHandler(async (event) => {
                     2,
                     "0",
                 )}`
-            ] = timeOfUse.requestDates;
+            ] = formatedDates;
         }
 
         let location;

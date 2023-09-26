@@ -31,19 +31,16 @@ async function submitHandler(formValues) {
                     body: { id: requestId.data.value },
                 },
             );
-            // const pdfBuffers = pdfBuffers_rawData.data.value;
+            const pdfBuffers = pdfBuffers_rawData.data.value;
 
-            // try {
-            //     downloadRequests(
-            //         pdfBuffers,
-            //         formValues.requestData.basicInfo.lastname,
-            //     );
-            // } catch (error) {
-            //     console.error(
-            //         "There was an error downloading the pdf: ",
-            //         error,
-            //     );
-            // }
+            try {
+                downloadRequests(pdfBuffers, user.lastName);
+            } catch (error) {
+                console.error(
+                    "There was an error downloading the pdf: ",
+                    error,
+                );
+            }
         } catch (error) {
             console.error("There was an error creating the pdf: ", error);
         }

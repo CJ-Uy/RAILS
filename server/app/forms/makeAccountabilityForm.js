@@ -1,39 +1,95 @@
 import fs from "fs";
 import dayjs from "dayjs";
+
 import getRequest from "./getRequest.js";
 
-export default async function makeAccountabilityForm(requestId) {
-    // Import pagedjs for page numbers
+export default async function makeAccountability(requestId) {
+    const request = await getRequest(requestId);
+
+    const { campus } = request.schoolYear;
+    const { controlNumber } = request.equipmentRequested[0];
+    const schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
+    const studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
+    const dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
+    const gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
+    const { noOfStudents } = request;
+    const subject = request.forSubject;
+    const { concurrentTopic } = request;
+    const unit = request.unit.name;
+    const teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
+
+    let approver = "&nbsp;";
+    let approverSignature = "";
+    let teacherSignature = "";
+
+    // Notarization
+    if (request.isSignedByTeacher) {
+        teacherSignature = request.signedTeacher.signature;
+    }
+
+    if (request.isSignedByAdmin) {
+        approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
+        approverSignature = request.signedAdmin.signature; // TODO: Testing on this not done yet
+    }
+
+    // Laboratory Setting
+    let venueOfExperiment;
+    let inclusiveDates = "";
+    let inclusiveTimeOfUse = "";
+
+    let groupedReservations;
+    // TODO: FIX THIS
+    if (request.independentTime && request.independentLocation) {
+        venueOfExperiment = request.independentLocation;
+        groupedReservations = request.independentTime;
+    } else {
+        venueOfExperiment =
+            request.laboratoryReservations[0].laboratoryReserved.name;
+        groupedReservations = request.laboratoryReservations.reduce(
+            (acc, curr) => {
+                const time = `${dayjs(curr.startTime)
+                    .format("HH:mm")
+                    .toString()}-${dayjs(curr.endTime)
+                    .format("HH:mm")
+                    .toString()}`;
+                const date = `${dayjs(curr.startTime)
+                    .format("MMMM DD, YYYY")
+                    .toString()}`;
+
+                if (!acc[time]) {
+                    acc[time] = [date];
+                } else {
+                    acc[time].push(date);
+                }
+
+                return acc;
+            },
+            {},
+        );
+    }
+
+    let counter = 1;
+    for (const time in groupedReservations) {
+        inclusiveTimeOfUse += `(${counter}) ${time} `;
+        inclusiveDates += `(${counter}) `;
+        for (const date of groupedReservations[time]) {
+            inclusiveDates += `${date} `;
+        }
+        counter += 1;
+    }
+
     const pageScript = fs.readFileSync(
         "./server/app/forms/addPageNumbers/page.polyfill.txt",
         "utf8",
     );
 
-    let campus = "EASTERN VISAYS CAMPUS";
-    let controlNumber = "2023-2023-001";
-    let schoolYeaar = "2023-2024";
-    let studentName = "Charles Joshua Uy";
-    let dateRequested = "TODAY";
-    let gradeSection = "11-C";
-    let numberOfStudents = 4;
-    let subject = "Research";
-    let concurrentTopic = "Developmental Research";
-    let unit = "Research Unit";
-    let teacherInCharge = "Rolex Padilla";
-    let venueOfExperiment = "Computer Science Laboratory";
-    let dateInclusiveDates = "TODAY";
-    let inclusiveTimeOfUse = "whole day";
-
-    // Assemble html content
-
-    // Everything before the Requested Items Table
-    let htmlContent = `
-<!doctype html>
+    let html =
+        `<!doctype html>
 <html lang="en">
 <head>
-<script>
-` + pageScript + `
-</script>
+<script>` +
+        pageScript +
+        `</script>
 <style>
     * {
         font-family: "Calibri";
@@ -103,18 +159,17 @@ export default async function makeAccountabilityForm(requestId) {
     }
     #request {
         text-align: center;
+        border-collapse: collapse;
     }
     #request td {
         border: 1px solid black;
         white-space: pre-wrap; /* allow wrapping of white space */
         word-wrap: break-word; /* break long words */
-    }
-    #request td:first-child {
-        border-bottom: 1px solid black !important;
+        padding-right: 20px;
+        padding-left: 20px;
     }
     .request-header {
         vertical-align: top;
-        border: 1px solid black;
     }
     .return {
         vertical-align: top;
@@ -134,21 +189,37 @@ export default async function makeAccountabilityForm(requestId) {
         font-style: italic;
     }
     .sigs-table {
-        width: 90%;
-        margin-top: 0.25in;
+        width: 100%;
+        margin-top: 0.5in;
+        border-collapse: collapse;
     }
     .sigs-input {
         text-align: center;
         width: 20%;
+        border-bottom: 1px solid black; 
     }
     .sigs-gap {
-        width: 10%;
+        width: 15%;
     }
     .sigs-who {
-        width: 11%;
+        width: 1px;
+        white-space: nowrap;
     }
     .sigs-title {
         text-align: center;
+    }
+    #endorserSignature {
+        position: absolute; 
+        transform: scale(0.3)  translateY(-400px);
+    }
+    #approverSignature {
+        position: absolute;
+        transform: scale(0.3) translateY(-400px);
+    }
+    .svgSig {
+        display: flex;
+        justify-content: center;
+        align-items: top;
     }
 </style>
 </head>
@@ -162,42 +233,71 @@ export default async function makeAccountabilityForm(requestId) {
         <h2 id="title">LABORATORY REQUEST AND EQUIPMENT ACCOUNTABILITY FORM</h2>
         <div id="tableId">
             Control No: <span class="input">${controlNumber}</span>
-            &emsp;SY: <span class="input">${schoolYeaar}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>
+            &emsp;SY: <span class="input">${schoolYear}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>
         </div>
         
         <div id="table"></div>
 `;
 
-    // Requested Items Table
-    htmlContent += `
+    html += `
 <span class="italics"> Materials/Equipment Needed: </span>
-    <table id="request">
-        <tr class="request-header">
-            <td rowspan="2">Quantity</td>
-            <td rowspan="2">Item</td>
-            <td rowspan="2">Description</td>
-            <td>Issued</td>
-            <td>Returned</td>
-        </tr>
-        <tr class="request-header">
-            <td>Condition/Remarks</td>
-            <td>Condition/Remarks</td>
-        </tr>
-`
-    for (let i = 0; i < quantity.length; i++) {
-        requestedItemsTable += `
-        <tr>
-            <td>${quantity[i]}</td>
-            <td>${item[i]}</td>
-            <td>${description[i]}</td>
-            <td></td>
-            <td></td>
-        </tr>`;
-    }
-    
+        <table id="request">
+            <tr class="request-header">
+                <td rowspan="2">Quantity</td>
+                <td rowspan="2">Item</td>
+                <td rowspan="2">Description</td>
+                <td>Issued</td>
+                <td>Returned</td>
+            </tr>
+            <tr class="request-header">
+                <td>Condition/Remarks</td>
+                <td>Condition/Remarks</td>
+            </tr>
+`;
 
-    // Everything After the Requested Items Table
-    htmlContent += `
+    // Requested materials
+    for (const item of request.materialsRequested) {
+        html += `
+            <tr>
+                <td>${item.quantity}</td>
+                <td>${item.name}</td>
+                <td>${item.description}</td>
+                <td></td>
+                <td></td>
+            </tr>
+    `;
+    }
+
+    // Requested equipment
+    for (const item of request.equipmentRequested) {
+        html += `
+            <tr>
+                <td>${item.quantity}</td>
+                <td>${item.name}</td>
+                <td>${item.description}</td>
+                <td></td>
+                <td></td>
+            </tr>
+    `;
+    }
+
+    html += `
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="return" style="padding: 1px;">Received by:</td>
+                <td class="return" style="padding: 1px;">Received and<br>Inspected by:</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="text-align: left; padding: 1px;">Date:</td>
+                <td style="text-align: left; padding: 1px;">Date:</td>
+            </tr>
+        </table>
+        <br>
         <ul class="italics">
             <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
             <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
@@ -206,13 +306,13 @@ export default async function makeAccountabilityForm(requestId) {
         <table class="sigs-table">
             <tr>
                 <td></td>
-                <td id="studentSignature"></td>
+                <td></td>
                 <td></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="sigs-who">Requested By:</td>
-                <td class="input sigs-input">${studentName}</td>
+                <td class="sigs-who">Requested by:</td>
+                <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${studentName}</td>
                 <td class="sigs-gap"></td>
                 <td class="sigs-who">Date Requested:</td> 
                 <td class="input sigs-input">${dateRequested}</td>
@@ -225,6 +325,60 @@ export default async function makeAccountabilityForm(requestId) {
                 <td></td>
             </tr>
         </table>
+
+        <p class="italics">
+            If user of the lab is a group, list down the names of students.
+        </p>
+        <table class="groupmates">
+`;
+
+    const length =
+        request.otherGroupMembers.length < 5
+            ? 5
+            : request.otherGroupMembers.length;
+
+    for (let i = 0; i < length; i++) {
+        html += `
+        <tr>
+            <td style="text-align: right;">${i + 1}.</td>
+            <td class="input">&nbsp;&nbsp;${
+                request.otherGroupMembers[i] == null
+                    ? ""
+                    : request.otherGroupMembers[i]
+            }</td>
+        </tr>
+    `;
+    }
+    html += `</table>`;
+
+    // Notarization
+    html += `
+    <table class="sigs-table">
+        <tr>
+            <td></td>
+            <td class="svgSig"> <div id="endorserSignature"></div> </td>
+            <td></td>
+            <td></td>
+            <td class="svgSig"> <div id="approverSignature"></div> </td>
+        <tr>
+        <tr>
+            <td class="sigs-who">Endorsed by:</td>
+            <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${teacherInCharge}</td>
+            <td class="sigs-gap"></td>
+            <td class="sigs-who">Approved by:</td> 
+            <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${approver}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="sigs-title">Subject Teacher/Unit Head</td>
+            <td class="sigs-gap"></td>
+            <td></td>
+            <td class="sigs-title">Laboratory Technician</td>
+        </tr>
+    </table>
+`;
+
+    html += `
     </div>
 </body>
 <script>
@@ -237,7 +391,7 @@ export default async function makeAccountabilityForm(requestId) {
         },
         {
             label: "Number of Students",
-            value: "${numberOfStudents}",
+            value: "${noOfStudents}",
             minWidth: 210,
         },
         {
@@ -267,7 +421,7 @@ export default async function makeAccountabilityForm(requestId) {
         },
         {
             label: "Date/Inclusive Dates",
-            value: "${dateInclusiveDates}",
+            value: "${inclusiveDates}",
             minWidth: 255,
         },
         {
@@ -310,7 +464,17 @@ export default async function makeAccountabilityForm(requestId) {
         console.log(offsetWidth)
         container.appendChild(spaceItem);
     }
+
+    // Signatures
+    document.getElementById("endorserSignature").innerHTML = '${teacherSignature}';
+    document.getElementById("approverSignature").innerHTML = '${approverSignature}';
+
+
 </script>
 </html>
 `;
+
+    // ---- END ----- //
+
+    return html;
 }
