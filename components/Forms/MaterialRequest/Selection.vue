@@ -73,6 +73,8 @@ function addItem(item) {
     item.requestedQuantity = 1;
     requestedMaterials.value.push(item);
 }
+
+updateTable();
 </script>
 
 <template>

@@ -1,48 +1,46 @@
 <script setup>
-
 const user = inject("user");
 
-// Set Coulmns of the table
+// Set Columns of the table
 const columns = [
     {
-        key: "grade",
-        label: "Grade Level",
+        key: "name",
+        label: "Laboratory Name",
         sortable: true,
     },
-    { key: "section", label: "Section", sortable: true },
 ];
 
 // Pagination
 const page = ref(1);
-const pageCount = 6;
+const pageCount = 4;
 const totalItems = ref();
 
 // Searching Rows
-const { pending, data: allGradeSections } = await useLazyFetch(
-    "/api/db/forms/getAllGradeSectionsUnformatted",
+const { pending, data: allLaboratories } = await useLazyFetch(
+    "/api/db/editForms/getAllLaboratoriesUnformatted",
 );
-const allGradeSectionsData = ref([]);
-watch(allGradeSections, (updatedValues) => {
-    allGradeSectionsData.value = updatedValues;
+const allLaboratoriesData = ref([]);
+watch(allLaboratories, (updatedValues) => {
+    allLaboratoriesData.value = updatedValues;
 });
 
 async function updateTable() {
-    const allGradeSections = await useFetch("/api/db/forms/getAllGradeSectionsUnformatted");
-    allGradeSectionsData.value = allGradeSections.data.value;
+    const allLaboratories = await useFetch("/api/db/editForms/getAllLaboratoriesUnformatted");
+    allLaboratoriesData.value = allLaboratories.data.value;
 }
 
 const searchQuery = ref("");
 const filteredRows = computed(() => {
     // Return all rows if search query is empty
     if (!searchQuery.value) {
-        totalItems.value = allGradeSectionsData.value.length;
-        return allGradeSectionsData.value.slice(
+        totalItems.value = allLaboratoriesData.value.length;
+        return allLaboratoriesData.value.slice(
             (page.value - 1) * pageCount,
             page.value * pageCount,
         );
     }
     // filtering the rows
-    const filtered = allGradeSectionsData.value.filter((item) => {
+    let filtered = allLaboratoriesData.value.filter((item) => {
         return Object.values(item).some((value) => {
             return String(value)
                 .toLowerCase()
@@ -54,20 +52,22 @@ const filteredRows = computed(() => {
     return filtered.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
 
-// Seclection and User Modal
-const selectedGradeSection = ref();
-const gradeSectionModalIsOpen = ref(false);
-function OpenGradeSectionModal(user) {
-    selectedGradeSection.value = user;
-    gradeSectionModalIsOpen.value = true;
+// Selection and User Modal
+const selectedLaboratory = ref();
+const LaboratoryModalIsOpen = ref(false);
+function OpenLaboratoryModal(user) {
+    selectedLaboratory.value = user;
+    LaboratoryModalIsOpen.value = true;
 }
+
+updateTable();
 </script>
 
 <template>
     <div>
         <UCard>
             <template #header>
-                <h2 class="text-center font-bold">GRADES AND SECTIONS</h2>
+                <h2 class="text-center font-bold">LABORATORIES</h2>
             </template>
 
             <div>
@@ -103,7 +103,7 @@ function OpenGradeSectionModal(user) {
 
             <!-- DATA TABLE -->
             <UTable
-                @select="OpenGradeSectionModal"
+                @select="OpenLaboratoryModal"
                 :columns="columns"
                 :rows="filteredRows"
                 :loading="pending"
@@ -120,7 +120,7 @@ function OpenGradeSectionModal(user) {
         </UCard>
 
         <!-- User Modals -->
-        <UModal v-model="gradeSectionModalIsOpen" prevent-close>
+        <UModal v-model="LaboratoryModalIsOpen" prevent-close>
             <UCard
                 :ui="{
                     ring: '',
@@ -132,21 +132,20 @@ function OpenGradeSectionModal(user) {
                         <h3
                             class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                         >
-                            {{ selectedGradeSection.gradeLevel }},
-                            {{ selectedGradeSection.section }}
+                            {{ selectedLaboratory.name }}
                         </h3>
                         <UButton
                             color="gray"
                             variant="ghost"
                             icon="i-heroicons-x-mark-20-solid"
                             class="-my-1"
-                            @click="gradeSectionModalIsOpen = false"
+                            @click="LaboratoryModalIsOpen = false"
                         />
                     </div>
                 </template>
 
                 <pre>
-                    {{ selectedGradeSection }}
+                    {{ selectedLaboratory }}
                 </pre>
 
                 <UButton

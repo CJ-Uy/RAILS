@@ -19,7 +19,13 @@ const user = inject("user");
                 <UserAdminSaveSignature />
             </UCard>
             <div class="mt-10">
-                <UserAdminEditForms />
+                <UserAdminEditFormsGradeSection />
+            </div>
+            <div class="mt-10">
+                <UserAdminEditFormsUnits />
+            </div>
+            <div class="mt-10">
+                <UserAdminEditFormsLaboratories />
             </div>
         </UContainer>
     </div>

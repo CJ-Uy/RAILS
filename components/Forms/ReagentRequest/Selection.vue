@@ -68,6 +68,8 @@ function addItem(item) {
     item.requestedQuantity = 100;
     requestedReagents.value.push(item);
 }
+
+updateTable();
 </script>
 
 <template>
