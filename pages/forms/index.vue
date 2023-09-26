@@ -24,11 +24,31 @@ async function submitHandler(formValues) {
     // Downloaing pdfs
     if (formValues.data.submission.download) {
         try {
+            const requestedForms = [];
+            if (
+                formValues.data.laboratorySetting.hasLaboratoryReservation ===
+                "false"
+            ) {
+                requestedForms.push(5);
+            }
+            if (formValues.data.reagents.details.length > 0) {
+                requestedForms.push(19);
+            }
+            if (
+                formValues.data.materials.details.length > 0 ||
+                formValues.data.equipment.details.length > 0
+            ) {
+                requestedForms.push(20);
+            }
+
             const pdfBuffers_rawData = await useFetch(
                 "/api/forms/create-pdf-buffers",
                 {
                     method: "POST",
-                    body: { id: requestId.data.value },
+                    body: {
+                        id: requestId.data.value,
+                        requestedForms,
+                    },
                 },
             );
             const pdfBuffers = pdfBuffers_rawData.data.value;

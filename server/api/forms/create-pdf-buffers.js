@@ -5,26 +5,30 @@ import makeAccountabilityForm from "../../app/forms/makeAccountabilityForm.js";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-
     const pdfBuffers = {};
     let pdfBuffer;
 
-    // Make CID 19
-    // if (
-    //     body.requestData.laboratorySetting.hasLaboratoryReservation === "false"
-    // ) {
+    // Make CID 05 - Laboratory Reservation Form
+    // if (body.requestedForms.includes(5)) {
     //     pdfBuffer = await convertHtmlToPdf(
     //         await makeLaboratoryReservationForm(body),
     //     );
-    //     console.log("CREATED CID19.pdf at assets/pdftests/CID19.pdf");
     //     pdfBuffers.CID19 = pdfBuffer;
     // }
 
-    // Make CID 20
-    pdfBuffer = await convertHtmlToPdf(
-        String(await makeAccountabilityForm(body)),
-    );
-    pdfBuffers.CID20 = pdfBuffer;
+    // Make CID 19 - Reagent Request Form
+    // if (body.requestedForms.includes(19)) {
+    //     pdfBuffer = await convertHtmlToPdf(
+    //         await makeReagentRequestForm(body),
+    //     );
+    //     pdfBuffers.CID19 = pdfBuffer;
+    // }
+
+    // Make CID 20 - Accounatbility for Materials and Equipment Request Form
+    if (body.requestedForms.includes(20)) {
+        pdfBuffer = await convertHtmlToPdf(await makeAccountabilityForm(body));
+        pdfBuffers.CID20 = pdfBuffer;
+    }
 
     return pdfBuffers;
 });

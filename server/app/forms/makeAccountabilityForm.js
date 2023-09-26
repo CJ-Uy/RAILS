@@ -7,7 +7,8 @@ export default async function makeAccountability(requestId) {
     const request = await getRequest(requestId);
 
     const { campus } = request.schoolYear;
-    const { controlNumber } = request.equipmentRequested[0];
+    const { controlNumber } =
+        request.equipmentRequested[0] || request.materialsRequested[0];
     const schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
     const studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
     const dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
