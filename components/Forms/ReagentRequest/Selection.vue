@@ -71,6 +71,8 @@ function addItem(item) {
     }
     requestedReagents.value.push(item);
 }
+
+updateTable();
 </script>
 
 <template>

@@ -69,6 +69,8 @@ function addItem(item) {
     item.requestedQuantity = 1;
     requestedEquipment.value.push(item);
 }
+
+updateTable();
 </script>
 
 <template>
