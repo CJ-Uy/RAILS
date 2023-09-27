@@ -40,8 +40,6 @@ async function sendEmail() {
 
 <template>
     <div>
-        <h1 class="text-3xl font-bold text-green-500">GOOGLE SIGN IN</h1>
-
         <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE -->
         <NuxtLink v-if="!isSignedIn" to="/login">
             <button

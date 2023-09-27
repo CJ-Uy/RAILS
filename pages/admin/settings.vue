@@ -1,10 +1,10 @@
 <script setup>
 useHead({
-    title: "EVC LABS Teacher | Settings",
+    title: "EVC LABS | Admin Settings",
 });
 
 // authentication and the navbar is addedd through the layout
-definePageMeta({ layout: "teacher-pages" });
+definePageMeta({ layout: "admin-pages" });
 
 const { signOut } = useAuth();
 async function handleSignOut() {
@@ -15,8 +15,8 @@ async function handleSignOut() {
 
 <template>
     <div>
-        <UserDashboardHeader title="SETTINGS" />
-        <UContainer class="mt-10 flex w-full items-center justify-center">
+        <UserDashboardHeader title="ADMIN | SETTINGS" />
+        <UContainer class="flex w-full items-center justify-center">
             <UButton
                 icon="i-ph-sign-out"
                 label="Sign Out"
@@ -27,3 +27,5 @@ async function handleSignOut() {
         </UContainer>
     </div>
 </template>
+
+<style scoped></style>

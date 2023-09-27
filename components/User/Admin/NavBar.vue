@@ -40,7 +40,7 @@ const links = [
             {
                 label: "NEW REQUEST",
                 to: "/forms",
-                icon: "i-codicon-git-pull-request-new-changes"
+                icon: "i-codicon-git-pull-request-new-changes",
             },
         ],
     },
@@ -56,6 +56,11 @@ const links = [
                 label: "MANAGE USERS",
                 to: "/admin/manage-users",
                 icon: "i-mdi-account-search",
+            },
+            {
+                label: "SETTINGS",
+                to: "/admin/settings",
+                icon: "i-material-symbols-settings-rounded",
             },
         ],
     },

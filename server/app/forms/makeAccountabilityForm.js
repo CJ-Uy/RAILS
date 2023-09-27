@@ -39,7 +39,6 @@ export default async function makeAccountability(requestId) {
     let inclusiveTimeOfUse = "";
 
     let groupedReservations;
-    // TODO: FIX THIS
     if (request.independentTime && request.independentLocation) {
         venueOfExperiment = request.independentLocation;
         groupedReservations = request.independentTime;
@@ -332,7 +331,7 @@ export default async function makeAccountability(requestId) {
         </p>
         <table class="groupmates">
 `;
-
+    // Group Members
     const length =
         request.otherGroupMembers.length < 5
             ? 5

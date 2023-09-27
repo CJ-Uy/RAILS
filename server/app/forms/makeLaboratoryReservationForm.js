@@ -1,7 +1,7 @@
 import fs from "fs";
 import prisma from "~/server/db/prisma.js";
 
-export default async function makeAccountabilityForm(data) {
+export default async function makeLaboratoryReservationForm(data) {
     const pageScript = fs.readFileSync(
         "./server/app/forms/addPageNumbers/page.polyfill.txt",
         "utf8",
