@@ -80,8 +80,6 @@ async function delteRequest() {
 
 // Approving
 async function approveRequest() {
-    // TODO: Add confirmation modal
-    // TODO : Add error handling
     for (const request of selectedRequests.value) {
         await useFetch("/api/db/manageRoles/approve", {
             method: "POST",

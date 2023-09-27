@@ -40,26 +40,6 @@ async function sendEmail() {
 
 <template>
     <div>
-        <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE -->
-        <NuxtLink v-if="!isSignedIn" to="/login">
-            <button
-                class="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-            >
-                Sign In
-            </button>
-        </NuxtLink>
-        <button
-            v-else
-            class="rounded bg-gray-500 px-4 py-2 font-bold text-white hover:bg-gray-700"
-            @click="handleSignOut"
-        >
-            Sign Out
-        </button>
-        <h1>
-            {{ data }}
-        </h1>
-        <!-- CHANGE BASED ON LOGIN STATUS EXAMPLE END -->
-
         <!-- EMAIL COMPONENT EXAMPLE -->
         <div v-if="isSignedIn">
             <button

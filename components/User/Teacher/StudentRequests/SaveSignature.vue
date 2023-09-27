@@ -57,7 +57,7 @@ function clearSig() {
                     v-if="signature[0]"
                     class="flex items-center justify-center"
                 >
-                    <div v-html="signature[1].signature"></div>
+                    <div v-html="signature[1].signature" class="scale-75"></div>
                 </div>
                 <div v-else>{{ signature[1] }}</div>
                 <template #footer>
