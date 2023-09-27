@@ -67,12 +67,12 @@ const selectedRequests = ref([]);
 
 // Deleting
 async function delteRequest() {
-    // TODO: Add confirmation modal
-    // TODO : Add error handling
     for (const request of selectedRequests.value) {
         await useFetch("/api/db/manageRoles/delete", {
             method: "POST",
-            body: request.id,
+            body: {
+                id: request.id,
+            },
         });
     }
     updateTable();
