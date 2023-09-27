@@ -47,9 +47,13 @@ const filteredRows = computed(() => {
     // filtering the rows
     let filtered = allGradeSectionsData.value.filter((item) => {
         return Object.values(item).some((value) => {
+            const skip = Object.keys(item).find((key) => item[key] === value);
+            if (skip === "id" || skip === "createdAt" || skip === "updatedAt") {
+                return false;
+            }
             return String(value)
                 .toLowerCase()
-                .includes(searchQuery.value.toLowerCase());
+                .includes(String(searchQuery.value).toLowerCase());
         });
     });
     // Slice the values into pages
@@ -57,27 +61,42 @@ const filteredRows = computed(() => {
     return filtered.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
 
+const filteredRowsSliced = ref();
+function sortFix(obj) {
+    console.log(obj.key);
+}
+
 // Selection and User Modal
 const selectedGradeSection = ref();
-const selectedGradeSectionFormattedDates = ref();
 const gradeSectionModalIsOpen = ref(false);
 const editingModalIsOpen = ref(false);
+const tempGradeSectionValues = ref();
 function OpenGradeSectionModal(user) {
     selectedGradeSection.value = user;
+    tempGradeSectionValues.value = Object.assign(true, {}, selectedGradeSection.value);
     gradeSectionModalIsOpen.value = true;
-    selectedGradeSectionFormattedDates.value = [
-        dayjs(selectedGradeSection.value.createdAt).format(
-            "MMMM DD, YYYY - HH:MM",
-        ),
-        dayjs(selectedGradeSection.value.updatedAt).format(
-            "MMMM DD, YYYY - HH:MM",
-        ),
-    ];
     editingModalIsOpen.value = false;
 }
 
 function editingMode() {
     editingModalIsOpen.value = true;
+}
+
+const saveConfirmButton = ref({
+    text: "SAVE CHANGES",
+    color: "primary",
+});
+function discardChanges() {
+    editingModalIsOpen.value = false;
+    tempGradeSectionValues.value = Object.assign(true, {}, selectedGradeSection.value);
+    saveConfirmButton.value.text = "SAVE CHANGES";
+    saveConfirmButton.value.color = "primary";
+}
+
+function approveRequest() {
+    saveConfirmButton.value.text = "PRESS AGAIN TO CONFIRM";
+    saveConfirmButton.value.color = "red";
+    console.log("yes");
 }
 
 updateTable();
@@ -152,8 +171,8 @@ updateTable();
                         <h3
                             class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                         >
-                            {{ selectedGradeSection.grade }} -
-                            {{ selectedGradeSection.section }}
+                            {{ tempGradeSectionValues.grade }} -
+                            {{ tempGradeSectionValues.section }}
                         </h3>
                         <UButton
                             color="gray"
@@ -168,42 +187,36 @@ updateTable();
                 <div class="my-5 flex flex-col px-3 leading-7">
                     <div class="flex justify-between">
                         <div>ID:</div>
-                        <UInput
-                            v-model="selectedGradeSection.id"
-                            :ui="{
-                                base: 'w-[320px]  disabled:cursor-not-allowed disabled:opacity-75',
-                            }"
-                            :disabled="editingModalIsOpen == false"
-                        />
+                        <div>{{ tempGradeSectionValues.id }}</div>
                     </div>
                     <div class="flex justify-between">
                         <div>Created:</div>
-                        <UInput
-                            v-model="selectedGradeSectionFormattedDates[0]"
-                            :ui="{
-                                base: 'w-[320px]  disabled:cursor-not-allowed disabled:opacity-75',
-                            }"
-                            :disabled="editingModalIsOpen == false"
-                        />
+                        <div>
+                            {{
+                                dayjs(tempGradeSectionValues.createdAt).format(
+                                    "MMMM DD, YYYY - HH:MM",
+                                )
+                            }}
+                        </div>
                     </div>
                     <div class="flex justify-between">
                         <div>Updated:</div>
-                        <UInput
-                            v-model="selectedGradeSectionFormattedDates[1]"
-                            :ui="{
-                                base: 'w-[320px]  disabled:cursor-not-allowed disabled:opacity-75',
-                            }"
-                            :disabled="editingModalIsOpen == false"
-                        />
+                        <div>
+                            {{
+                                dayjs(tempGradeSectionValues.updatedAt).format(
+                                    "MMMM DD, YYYY - HH:MM",
+                                )
+                            }}
+                        </div>
                     </div>
                     <div
-                        class="flex justify-between disabled:cursor-not-allowed disabled:opacity-75"
+                        class="mt-5 flex justify-between disabled:cursor-not-allowed disabled:opacity-75"
                     >
                         <div>Grade:</div>
                         <UInput
-                            v-model="selectedGradeSection.grade"
+                            v-model="tempGradeSectionValues.grade"
                             :ui="{
-                                base: 'w-[320px]  disabled:cursor-not-allowed disabled:opacity-75',
+                                base: 'w-[202px]  disabled:cursor-not-allowed disabled:opacity-75',
                             }"
                             :disabled="editingModalIsOpen == false"
                         />
@@ -211,9 +224,9 @@ updateTable();
                     <div class="flex justify-between">
                         <div>Section:</div>
                         <UInput
-                            v-model="selectedGradeSection.section"
+                            v-model="tempGradeSectionValues.section"
                             :ui="{
-                                base: 'w-[320px]  disabled:cursor-not-allowed disabled:opacity-75',
+                                base: 'w-[202px]  disabled:cursor-not-allowed disabled:opacity-75',
                             }"
                             :disabled="editingModalIsOpen == false"
                         />
@@ -221,17 +234,17 @@ updateTable();
                 </div>
 
                 <UButton
-                    v-if="editingModalIsOpen"
+                    :disabled="editingModalIsOpen == false"
                     color="red"
                     variant="soft"
                     icon="i-material-symbols-delete-outline"
                     label="DELETE GRADE AND SECTION"
-                    class="mr-3"
+                    class="mr-3 disabled:invisible"
                 />
 
                 <template #footer>
                     <!-- Action Buttons -->
-                    <div class="flex w-auto justify-end">
+                    <div class="flex w-auto justify-center">
                         <UButton
                             v-if="editingModalIsOpen == false"
                             variant="solid"
@@ -240,13 +253,21 @@ updateTable();
                             color="green"
                             @click="editingMode"
                         />
-                        <UButton
-                            v-else
-                            variant="solid"
-                            icon="i-material-symbols-save"
-                            label="SAVE CHANGES"
-                            @click="approveRequest"
-                        />
+                        <div v-else class="flex w-[100%] justify-between">
+                            <UButton
+                                variant="solid"
+                                icon="i-material-symbols-undo"
+                                label="UNDO CHANGES"
+                                @click="discardChanges"
+                            />
+                            <UButton
+                                variant="outline"
+                                icon="i-material-symbols-save"
+                                :label="saveConfirmButton.text"
+                                :color="saveConfirmButton.color"
+                                @click="approveRequest"
+                            />
+                        </div>
                     </div>
                 </template>
             </UCard>

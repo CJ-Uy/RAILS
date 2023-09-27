@@ -39,6 +39,10 @@ const filteredRows = computed(() => {
     // filtering the rows
     const filtered = allUnitsData.value.filter((item) => {
         return Object.values(item).some((value) => {
+            const skip = Object.keys(item).find((key) => item[key] === value);
+            if (skip === "id" || skip === "createdAt" || skip === "updatedAt") {
+                return false;
+            }
             return String(value)
                 .toLowerCase()
                 .includes(searchQuery.value.toLowerCase());

@@ -24,7 +24,7 @@ const user = inject("user");
             <div class="mt-10">
                 <UserAdminEditFormsUnits />
             </div>
-            <div class="mt-10">
+            <div class="my-10">
                 <UserAdminEditFormsLaboratories />
             </div>
         </UContainer>
