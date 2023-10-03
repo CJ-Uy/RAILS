@@ -61,9 +61,10 @@ const filteredRows = computed(() => {
     return filtered.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
 
+const sortData = ref();
 const filteredRowsSliced = ref();
-function sortFix(obj) {
-    console.log(obj.key);
+function SortFix(obj) {
+    console.log(obj);
 }
 
 // Selection and User Modal
@@ -76,6 +77,7 @@ function OpenGradeSectionModal(user) {
     tempGradeSectionValues.value = Object.assign(true, {}, selectedGradeSection.value);
     gradeSectionModalIsOpen.value = true;
     editingModalIsOpen.value = false;
+    console.log(user);
 }
 
 function editingMode() {
@@ -147,6 +149,7 @@ updateTable();
                 :loading="pending"
                 :ui="{ tr: { active: 'hover:bg-gray-200' } }"
                 @select="OpenGradeSectionModal"
+                @sort="SortFix"
             />
 
             <div class="flex w-[100%] items-center justify-end">
