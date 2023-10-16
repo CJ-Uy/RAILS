@@ -34,16 +34,20 @@ const filteredRows = computed(() => {
     // Return all rows if search query is empty
     if (!searchQuery.value) {
         totalItems.value = allLaboratoriesData.value.length;
-        return allLaboratoriesData.value.slice(
-            (page.value - 1) * pageCount,
-            page.value * pageCount,
-        );
+        return allLaboratoriesData.value;
     }
     // filtering the rows
+    const skipKeys = [
+        "id",
+        "createdAt",
+        "updatedAt",
+        "description",
+        "locationId",
+    ];
     let filtered = allLaboratoriesData.value.filter((item) => {
         return Object.values(item).some((value) => {
             const skip = Object.keys(item).find((key) => item[key] === value);
-            if (skip === "id" || skip === "createdAt" || skip === "updatedAt" || skip === "description" || skip === "locationId") {
+            if (skipKeys.includes(skip)) {
                 return false;
             }
             return String(value)
@@ -53,7 +57,7 @@ const filteredRows = computed(() => {
     });
     // Slice the values into pages
     totalItems.value = filtered.length;
-    return filtered.slice((page.value - 1) * pageCount, page.value * pageCount);
+    return filtered;
 });
 
 // Selection and User Modal

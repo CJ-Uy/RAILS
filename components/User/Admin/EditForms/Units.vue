@@ -31,16 +31,14 @@ const filteredRows = computed(() => {
     // Return all rows if search query is empty
     if (!searchQuery.value) {
         totalItems.value = allUnitsData.value.length;
-        return allUnitsData.value.slice(
-            (page.value - 1) * pageCount,
-            page.value * pageCount,
-        );
+        return allUnitsData.value;
     }
     // filtering the rows
+    const skipKeys = ["id", "createdAt", "updatedAt"]
     const filtered = allUnitsData.value.filter((item) => {
         return Object.values(item).some((value) => {
             const skip = Object.keys(item).find((key) => item[key] === value);
-            if (skip === "id" || skip === "createdAt" || skip === "updatedAt") {
+            if (skipKeys.includes(skip)) {
                 return false;
             }
             return String(value)
@@ -50,7 +48,7 @@ const filteredRows = computed(() => {
     });
     // Slice the values into pages
     totalItems.value = filtered.length;
-    return filtered.slice((page.value - 1) * pageCount, page.value * pageCount);
+    return filtered;
 });
 
 // Selection and User Modal
