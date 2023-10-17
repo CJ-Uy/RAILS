@@ -1,14 +1,17 @@
 Some Random Notes:
-- Control Code Prefix (A-#)
-- FIx control number bug when adding stuff
-- Finish creating and downloading pdf
-
-- limit dates that can be selected on the form to the max school year
+Charles:
+- Change database to counter type
+- Finish making the Reservation and Reagent autoated forms 
 - Redo the form templates (seperate forms for admins, teachers, and students [levels of authorization])
 
-- Fix signature signing
-- Table to view the lab requests
-- Admin UI to change any values
+Abit:
+- Finish form edits and additions through admin boxes
+- Summary page froms 
+
+Michel:
+- Calendar
+
+- limit dates that can be selected on the form to the max school year
 
 - Are the list of the teachers in the form alphabetical?
 

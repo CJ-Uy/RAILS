@@ -272,7 +272,7 @@ model InventoryOfReagents {
   supplier         String?
   available        Boolean  @default(true)
 
-  // Quantities
+  // Quantities 
   currentQuantity Float?
   maxQuantity     Float? // Assuming this means the max quantity someone can request for
   unit            String? // Unit of measurement like "mL", "mg", etc..
