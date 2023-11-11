@@ -200,11 +200,10 @@ model InventoryOfMaterials {
   unit           String //Unit of measurement like "mL", "mg", etc..
   supplier       String?
   dateReceived   DateTime?
-  borrowed       Boolean   @default(false)
   available      Boolean   @default(true)
 
   //Quantity
-  quantity           Int?    @default(1)
+  quantity           Int     @default(1)
   additionalPurchase Int? // TODO: create pruchase table ?
   make               String?
   unitCost           Float?
@@ -273,9 +272,9 @@ model InventoryOfReagents {
   available        Boolean  @default(true)
 
   // Quantities 
-  currentQuantity Float?
-  maxQuantity     Float? // Assuming this means the max quantity someone can request for
-  unit            String? // Unit of measurement like "mL", "mg", etc..
+  maxRequestableQuantity Float? // Assuming this means the max quantity someone can request for
+  currentQuantity        Float? // Assuming this means the current quantity in the inventory
+  unit                   String? // Unit of measurement like "mL", "mg", etc..
 
   DGClass        String?
   subRisk        String?
