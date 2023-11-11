@@ -5,7 +5,7 @@ const requestedReagents = inject("requestedReagents");
 const columns = [
     { key: "chemicalName", label: "Name", sortable: true, direction: "asc" },
     { key: "description", label: "Description" },
-    { key: "maxQuantity", label: "Stock" },
+    { key: "maxRequestableQuantity", label: "Stock" },
     { key: "unit", label: "Units" },
 ];
 const selectedColumns = ref(columns);
@@ -19,6 +19,9 @@ const totalItems = ref();
 const { pending, data: allReagents } = await useLazyFetch(
     "/api/db/forms/getAllReagents",
 );
+
+console.log(allReagents);
+
 const allReagentsData = ref([]);
 watch(allReagents, (updatedValues) => {
     allReagentsData.value = updatedValues;
@@ -64,10 +67,10 @@ function filterSelectedEquipment(arr) {
 }
 
 function addItem(item) {
-    if (item.maxQuantity > 100) {
+    if (item.maxRequestableQuantity > 100) {
         item.requestedQuantity = 100;
     } else {
-        item.requestedQuantity = item.maxQuantity;
+        item.requestedQuantity = item.maxRequestableQuantity;
     }
     requestedReagents.value.push(item);
 }

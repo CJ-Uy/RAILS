@@ -5,8 +5,8 @@ function validateQuantity(reagent) {
     if (reagent.requestedQuantity < 1) {
         reagent.requestedQuantity = 1;
     }
-    if (reagent.requestedQuantity > reagent.maxQuantity) {
-        reagent.requestedQuantity = reagent.maxQuantity;
+    if (reagent.requestedQuantity > reagent.maxRequestableQuantity) {
+        reagent.requestedQuantity = reagent.maxRequestableQuantity;
     }
 }
 </script>
@@ -55,7 +55,7 @@ function validateQuantity(reagent) {
                             </td>
 
                             <td class="border px-4 py-2">
-                                {{ reagent.maxQuantity }}
+                                {{ reagent.maxRequestableQuantity }}
                             </td>
 
                             <td class="border px-4 py-2">
@@ -101,10 +101,11 @@ function validateQuantity(reagent) {
                                         class="px-2"
                                         @click="
                                             reagent.requestedQuantity <
-                                            reagent.maxQuantity
+                                            reagent.maxRequestableQuantity
                                                 ? (reagent.requestedQuantity =
-                                                      reagent.requestedQuantity +
-                                                      5)
+                                                      parseInt(
+                                                          reagent.requestedQuantity,
+                                                      ) + 5)
                                                 : null
                                         "
                                     />

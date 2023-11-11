@@ -25,6 +25,7 @@ const totalItems = ref();
 const { pending, data: allMaterials } = await useLazyFetch(
     "/api/db/forms/getAllMaterials",
 );
+
 const allMaterialsData = ref([]);
 watch(allMaterials, (updatedValues) => {
     allMaterialsData.value = updatedValues;
