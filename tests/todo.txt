@@ -1,24 +1,45 @@
-Some Random Notes:
+Project Management
+
+All:
+- Prepare for the Research Colloquium
+- Sift through all the submitted data of the Laboratory Unit
+- Make the landing pages based on given data
+- Tracking Accountabilities for damaged items
+- Implement scheduled backups and deletions
+- Host the web application
+- SEO optimizations
+
+- Create Documentation
+
+---------------------------------------------------------------------------
+- Quick Forms Feature - (Add other common forms to download for convenience)
+---------------------------------------------------------------------------
+
+
 Charles:
 - Change database to counter type
-- Finish making the Reservation and Reagent autoated forms 
-- Redo the form templates (seperate forms for admins, teachers, and students [levels of authorization])
+- Finish making the Reservation and Reagent HTML forms
+- Finish making the automation of the remaining HTML forms
+- Create seperate Request Forms fo different types of users
+- Add signatures for admins and teachers
+- Add the prisma autobackup using nuxt scheduler
+- Create system for displaying all transactions in a given time
+- Create a Notification system
+
 
 Abit:
-- Finish form edits and additions through admin boxes
-- Summary page froms 
+- Polish Admin Edit Forms Page
+- Create Desktop Landing pages
+- Create Mobile Page Counterparts
+- Create Calendars
+- Create Dashboards
+- Polish Request Forms
 
-Michel:
-- Calendar
 
-- limit dates that can be selected on the form to the max school year
+Malaqui:
+- Create Desktop Landing pages
+- Create Mobile Page Counterparts
+- Create content for each of the pages
+- Create offciial terms and conditions for all types of users in the application
 
-- Are the list of the teachers in the form alphabetical?
 
-Later into the future:
-- Add prisma-backup
-- Notification system
-- Add terms and conditions to each (signatures auto sign and admins can use it to make e-records)
-
-Extra not super important:
-- Add other common forms to download for convenience
