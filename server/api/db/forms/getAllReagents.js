@@ -14,6 +14,6 @@ export default defineEventHandler(async () => {
             maxRequestableQuantity: true,
         },
     });
-    
+
     return allReagents;
 });
