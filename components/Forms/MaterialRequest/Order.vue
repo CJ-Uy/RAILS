@@ -46,7 +46,7 @@ function validateQuantity(Material) {
                         >
                             <!-- Item -->
                             <td class="border px-4 py-2">
-                                {{ Materials.materialName }}
+                                {{ Materials.itemName }}
                             </td>
 
                             <td class="border px-4 py-2">
