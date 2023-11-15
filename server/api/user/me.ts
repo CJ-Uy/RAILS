@@ -11,6 +11,7 @@ export default eventHandler(async (event) => {
     // Database logic
     /*
         TODO: Add the secret button to login page to allow admins to login through username and password
+        TODO: Make it so when the specific emails join they're already given ROLEs
     */
     const userInDatabase = await prisma.users.findFirst({
         where: {
