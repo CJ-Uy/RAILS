@@ -13,9 +13,6 @@ const columns = [
     { key: "section", label: "Section", sortable: true },
 ];
 
-// Pagination
-const page = ref(1);
-const pageCount = 6;
 const totalItems = ref();
 
 // Searching Rows
@@ -59,12 +56,6 @@ const filteredRows = computed(() => {
     return filtered;
 });
 
-const sortData = ref();
-const filteredRowsSliced = ref();
-function SortFix(obj) {
-    console.log(obj);
-}
-
 // Selection and User Modal
 const selectedGradeSection = ref();
 const gradeSectionModalIsOpen = ref(false);
@@ -105,7 +96,17 @@ function discardChanges() {
 // Approving row changes
 async function confirmEditRow() {
     // Second confirmation press check
-    if (saveConfirmButton.value.text === "SAVE CHANGES") {
+    if (
+        tempGradeSectionValues.value.grade === "" ||
+        tempGradeSectionValues.value.section === ""
+    ) {
+        saveConfirmButton.value.text = "FILL FORM PROPERLY";
+        saveConfirmButton.value.color = "red";
+        return null;
+    } else if (
+        saveConfirmButton.value.text === "SAVE CHANGES" ||
+        saveConfirmButton.value.text === "FILL FORM PROPERLY"
+    ) {
         saveConfirmButton.value.text = "PRESS AGAIN TO CONFIRM";
         saveConfirmButton.value.color = "red";
         return null;
@@ -173,7 +174,6 @@ async function confirmAddRow() {
         saveAddRowConfirmButton.value.color = "red";
         return null;
     }
-    console.log("nutz");
 
     // Add new record to database
     const request = await useFetch("/api/db/editForms/updateGradeSections", {
@@ -271,16 +271,7 @@ updateTable();
                 :loading="pending"
                 :ui="{ tr: { active: 'hover:bg-gray-200' } }"
                 @select="OpenGradeSectionModal"
-                @sort="SortFix"
             />
-
-            <div class="flex w-[100%] items-center justify-end">
-                <UPagination
-                    v-model="page"
-                    :page-count="pageCount"
-                    :total="totalItems"
-                />
-            </div>
         </UCard>
 
         <!-- User Modals -->
@@ -338,6 +329,7 @@ updateTable();
                         <div>Grade:</div>
                         <UInput
                             v-model="tempGradeSectionValues.grade"
+                            type="number"
                             :ui="{
                                 base: 'w-[202px]  disabled:cursor-not-allowed disabled:opacity-75',
                             }"
