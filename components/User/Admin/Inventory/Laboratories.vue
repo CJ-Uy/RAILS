@@ -7,12 +7,21 @@ const columns = [
         key: "name",
         label: "Laboratory Name",
         sortable: true,
+        direction: "asc",
+    },
+    {
+        key: "locationName",
+        label: "Location",
+        sortable: true,
+    },
+    {
+        key: "description",
+        label: "Description",
+        sortable: true,
     },
 ];
 
 // Pagination
-const page = ref(1);
-const pageCount = 4;
 const totalItems = ref();
 
 // Searching Rows
@@ -22,10 +31,16 @@ const { pending, data: allLaboratories } = await useLazyFetch(
 const allLaboratoriesData = ref([]);
 watch(allLaboratories, (updatedValues) => {
     allLaboratoriesData.value = updatedValues;
+    for (let i = 0; i < allLaboratoriesData.value.length; i++) {
+        allLaboratoriesData.value[i].locationName =
+            allLaboratoriesData.value[i].location.name;
+    }
 });
 
 async function updateTable() {
-    const allLaboratories = await useFetch("/api/db/editForms/getAllLaboratoriesUnformatted");
+    const allLaboratories = await useFetch(
+        "/api/db/editForms/getAllLaboratoriesUnformatted",
+    );
     allLaboratoriesData.value = allLaboratories.data.value;
 }
 
@@ -34,16 +49,19 @@ const filteredRows = computed(() => {
     // Return all rows if search query is empty
     if (!searchQuery.value) {
         totalItems.value = allLaboratoriesData.value.length;
-        return allLaboratoriesData.value.slice(
-            (page.value - 1) * pageCount,
-            page.value * pageCount,
-        );
+        return allLaboratoriesData.value;
     }
     // filtering the rows
-    let filtered = allLaboratoriesData.value.filter((item) => {
+    const filtered = allLaboratoriesData.value.filter((item) => {
         return Object.values(item).some((value) => {
             const skip = Object.keys(item).find((key) => item[key] === value);
-            if (skip === "id" || skip === "createdAt" || skip === "updatedAt" || skip === "description" || skip === "locationId") {
+            if (
+                skip === "id" ||
+                skip === "createdAt" ||
+                skip === "updatedAt" ||
+                skip === "description" ||
+                skip === "locationId"
+            ) {
                 return false;
             }
             return String(value)
@@ -53,7 +71,7 @@ const filteredRows = computed(() => {
     });
     // Slice the values into pages
     totalItems.value = filtered.length;
-    return filtered.slice((page.value - 1) * pageCount, page.value * pageCount);
+    return filtered;
 });
 
 // Selection and User Modal
@@ -113,14 +131,6 @@ updateTable();
                 :loading="pending"
                 :ui="{ tr: { active: 'hover:bg-gray-200' } }"
             />
-
-            <div class="flex w-[100%] items-center justify-end">
-                <UPagination
-                    v-model="page"
-                    :page-count="pageCount"
-                    :total="totalItems"
-                />
-            </div>
         </UCard>
 
         <!-- User Modals -->
@@ -162,7 +172,12 @@ updateTable();
                 <template #footer>
                     <!-- Action Buttons -->
                     <div class="flex w-full items-center justify-end">
-                        <UButton variant="solid" icon="i-material-symbols-save" label="SAVE CHANGES" @click="approveRequest" />
+                        <UButton
+                            variant="solid"
+                            icon="i-material-symbols-save"
+                            label="SAVE CHANGES"
+                            @click="approveRequest"
+                        />
                     </div>
                 </template>
             </UCard>

@@ -37,9 +37,11 @@ const editFormsTabs = [
                 :ui="{ list: { tab: { active: 'bg-white' } } }"
             >
                 <template #adminApprovalSettings>
-                    <UserAdminSaveSignature />
+                    <UserAdminEditFormsSaveSignature />
                 </template>
-                <template #syCampus> </template>
+                <template #syCampus>
+                    <UserAdminEditFormsSyCampus />
+                </template>
                 <template #gradeSection>
                     <UserAdminEditFormsGradeSection />
                 </template>
