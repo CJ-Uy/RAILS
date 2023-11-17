@@ -6,27 +6,49 @@ useHead({
 // authentication and the navbar is addedd through the layout
 definePageMeta({ layout: "admin-pages" });
 const user = inject("user");
+
+// Tabs
+const editFormsTabs = [
+    {
+        label: "Admin Approval Settings",
+        slot: "adminApprovalSettings",
+    },
+    {
+        label: "SY & Campus",
+        slot: "syCampus",
+    },
+    {
+        label: "Grades & Sections",
+        slot: "gradeSection",
+    },
+    {
+        label: "Units & Teachers",
+        slot: "unitsTeachers",
+    },
+];
 </script>
 
 <template>
     <div>
         <UserDashboardHeader title="ADMIN | EDIT FORMS" />
         <UContainer>
-            <UCard class="m-auto w-2/3">
-                <template #header>
-                    <h2 class="text-center">FORM APPROVAL SETTINGS</h2>
+            <UTabs
+                :items="editFormsTabs"
+                :ui="{ list: { tab: { active: 'bg-white' } } }"
+            >
+                <template #adminApprovalSettings>
+                    <UserAdminEditFormsSaveSignature />
                 </template>
-                <UserAdminSaveSignature />
-            </UCard>
-            <div class="mt-10">
-                <UserAdminEditFormsGradeSection />
-            </div>
-            <div class="mt-10">
-                <UserAdminEditFormsUnits />
-            </div>
-            <div class="my-10">
-                <UserAdminEditFormsLaboratories />
-            </div>
+                <template #syCampus>
+                    <UserAdminEditFormsSyCampus />
+                </template>
+                <template #gradeSection>
+                    <UserAdminEditFormsGradeSection />
+                </template>
+                <template #unitsTeachers>
+                    <UserAdminEditFormsUnits />
+                </template>
+            </UTabs>
         </UContainer>
     </div>
 </template>

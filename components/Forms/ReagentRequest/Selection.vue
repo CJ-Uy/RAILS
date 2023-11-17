@@ -20,8 +20,6 @@ const { pending, data: allReagents } = await useLazyFetch(
     "/api/db/forms/getAllReagents",
 );
 
-console.log(allReagents);
-
 const allReagentsData = ref([]);
 watch(allReagents, (updatedValues) => {
     allReagentsData.value = updatedValues;

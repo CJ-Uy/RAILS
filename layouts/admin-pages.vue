@@ -18,7 +18,7 @@ if (user.data.value.role === "STUDENT") {
 
 // Toggle menu for mobile
 const showMenu = ref(false);
-async function toggleMenu() {
+function toggleMenu() {
     showMenu.value = !showMenu.value;
 }
 

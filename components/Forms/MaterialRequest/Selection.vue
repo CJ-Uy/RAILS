@@ -3,7 +3,7 @@ const requestedMaterials = inject("requestedMaterials");
 
 // Table Columns
 const columns = [
-    { key: "materialName", label: "Name", sortable: true, direction: "asc" },
+    { key: "itemName", label: "Name", sortable: true, direction: "asc" },
     { key: "description", label: "Description" },
     {
         key: "classification",

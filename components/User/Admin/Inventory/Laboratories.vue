@@ -9,6 +9,17 @@ const columns = [
         key: "name",
         label: "Laboratory Name",
         sortable: true,
+        direction: "asc",
+    },
+    {
+        key: "locationName",
+        label: "Location",
+        sortable: true,
+    },
+    {
+        key: "description",
+        label: "Description",
+        sortable: true,
     },
 ];
 
@@ -21,10 +32,16 @@ const { pending, data: allLaboratories } = await useLazyFetch(
 const allLaboratoriesData = ref([]);
 watch(allLaboratories, (updatedValues) => {
     allLaboratoriesData.value = updatedValues;
+    for (let i = 0; i < allLaboratoriesData.value.length; i++) {
+        allLaboratoriesData.value[i].locationName =
+            allLaboratoriesData.value[i].location.name;
+    }
 });
 
 async function updateTable() {
-    const allLaboratories = await useFetch("/api/db/editForms/getAllLaboratoriesUnformatted");
+    const allLaboratories = await useFetch(
+        "/api/db/editForms/getAllLaboratoriesUnformatted",
+    );
     allLaboratoriesData.value = allLaboratories.data.value;
 }
 
