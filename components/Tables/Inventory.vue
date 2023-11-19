@@ -4,20 +4,34 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    columns: {
+    startingColumns: {
+        type: Array,
+        required: true,
+    },
+    listOfAllColumns: {
         type: Array,
         required: false,
+        default: () => [],
     },
     fetchPath: {
         type: String,
-        required: false,
+        required: true,
     },
 });
+
+const { pending, data: allItems } = await useLazyFetch(props.fetchPath);
 </script>
 
 <template>
     <div>
         <h1>{{ title }}</h1>
+        <p>{{ fetchPath }}</p>
+        <p>{{ startingColumns }}</p>
+        <p>{{ listOfAllColumns }}</p>
         <slot name="modal-content" />
+
+        <pre>
+            {{ allItems }}
+        </pre>
     </div>
 </template>
