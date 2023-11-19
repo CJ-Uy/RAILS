@@ -27,7 +27,7 @@ const totalItems = ref();
 
 // Searching Rows
 const { pending, data: allLaboratories } = await useLazyFetch(
-    "/api/db/rawData/getAllLaboratoriesUnformatted",
+    "/api/db/rawData/getAllLaboratories",
 );
 const allLaboratoriesData = ref([]);
 watch(allLaboratories, (updatedValues) => {
@@ -40,7 +40,7 @@ watch(allLaboratories, (updatedValues) => {
 
 async function updateTable() {
     const allLaboratories = await useFetch(
-        "/api/db/rawData/getAllLaboratoriesUnformatted",
+        "/api/db/rawData/getAllLaboratories",
     );
     allLaboratoriesData.value = allLaboratories.data.value;
 }
@@ -128,7 +128,7 @@ async function confirmEditRow() {
     );
 
     // Updating database with changed row
-    const request = await useFetch("/api/db/rawData/updateLaboratorys", {
+    const request = await useFetch("/api/db/rawData/updateLaboratories", {
         method: "POST",
         body: {
             user,
@@ -181,7 +181,7 @@ async function confirmAddRow() {
     }
 
     // Add new record to database
-    const request = await useFetch("/api/db/rawData/updateLaboratorys", {
+    const request = await useFetch("/api/db/rawData/updateLaboratories", {
         method: "POST",
         body: {
             user,
@@ -205,7 +205,7 @@ async function deleteLaboratory(id) {
     }
 
     // Delete record from database
-    const request = await useFetch("/api/db/rawData/updateLaboratorys", {
+    const request = await useFetch("/api/db/rawData/updateLaboratories", {
         method: "POST",
         body: {
             user,

@@ -17,7 +17,7 @@ const totalItems = ref();
 
 // Searching Rows
 const { pending, data: allGradeSections } = await useLazyFetch(
-    "/api/db/rawData/getAllGradeSectionsUnformatted",
+    "/api/db/rawData/getAllGradeSections",
 );
 const allGradeSectionsData = ref([]);
 watch(allGradeSections, (updatedValues) => {
@@ -26,7 +26,7 @@ watch(allGradeSections, (updatedValues) => {
 
 async function updateTable() {
     const allGradeSections = await useFetch(
-        "/api/db/rawData/getAllGradeSectionsUnformatted",
+        "/api/db/rawData/getAllGradeSections",
     );
     allGradeSectionsData.value = allGradeSections.data.value;
 }

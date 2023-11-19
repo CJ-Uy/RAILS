@@ -11,7 +11,7 @@ const columns = [
 
 // Searching Rows
 const { pending, data: allUnits } = await useLazyFetch(
-    "/api/db/rawData/getAllUnitsUnformatted",
+    "/api/db/rawData/getAllUnits",
 );
 const allUnitsData = ref([]);
 watch(allUnits, (updatedValues) => {
@@ -20,7 +20,7 @@ watch(allUnits, (updatedValues) => {
 const totalItems = ref();
 
 async function updateTable() {
-    const allUnits = await useFetch("/api/db/rawData/getAllUnitsUnformatted");
+    const allUnits = await useFetch("/api/db/rawData/getAllUnits");
     allUnitsData.value = allUnits.data.value;
     totalItems.value = allUnitsData.value.length;
 }
