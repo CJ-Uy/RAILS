@@ -9,7 +9,6 @@ const startingColumns = [
         key: "equipmentName",
         label: "Name",
         sortable: true,
-        direction: "asc",
     },
     {
         key: "description",
@@ -127,20 +126,26 @@ const listOfAllColumns = [
     },
 ];
 
-const selectedData = ref(null);
+const selectedData = ref();
+function selectedRow(data) {
+    selectedData.value = data;
+}
 </script>
 
 <template>
     <div>
         <TablesInventory
             title="EQUIPMENT"
+            default-sort-key="equipmentName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
             fetch-path="/api/db/rawData/getAllEquipment"
-            @selectRow="selectedData"
+            @selectedRow="selectedRow"
         >
             <template #modal-content>
-                <div>{{ selectedData }}</div>
+                <UCard>
+                    <div>{{ selectedData }}</div>
+                </UCard>
             </template>
         </TablesInventory>
     </div>

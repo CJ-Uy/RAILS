@@ -4,6 +4,11 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    defaultSortKey: {
+        type: String,
+        required: false,
+        default: "name",
+    },
     startingColumns: {
         type: Array,
         required: true,
@@ -19,7 +24,9 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["selectRow"]);
+const emit = defineEmits(["selectedRow"]);
+
+const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
 
 const totalItems = ref();
 
@@ -71,7 +78,8 @@ const filteredRows = computed(() => {
 const modalIsOpen = ref(false);
 function openModal(row) {
     modalIsOpen.value = true;
-    emit("selectRow", row);
+    console.log(row);
+    emit("selectedRow", row);
 };
 </script>
 
@@ -123,6 +131,7 @@ function openModal(row) {
 
             <!-- DATA TABLE -->
             <UTable
+                v-model:sort="defaultSort"
                 @select="openModal"
                 :columns="columns"
                 :rows="filteredRows"
@@ -131,9 +140,8 @@ function openModal(row) {
             />
         </UCard>
 
-        <h1>
-            <h1>HELLO</h1>
+        <UModal v-model="modalIsOpen">
             <slot name="modal-content" />
-        </h1>
+        </UModal>
     </div>
 </template>
