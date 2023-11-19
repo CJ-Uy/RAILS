@@ -17,7 +17,7 @@ const totalItems = ref();
 
 // Searching Rows
 const { pending, data: allGradeSections } = await useLazyFetch(
-    "/api/db/editForms/getAllGradeSectionsUnformatted",
+    "/api/db/rawData/getAllGradeSectionsUnformatted",
 );
 const allGradeSectionsData = ref([]);
 watch(allGradeSections, (updatedValues) => {
@@ -26,7 +26,7 @@ watch(allGradeSections, (updatedValues) => {
 
 async function updateTable() {
     const allGradeSections = await useFetch(
-        "/api/db/editForms/getAllGradeSectionsUnformatted",
+        "/api/db/rawData/getAllGradeSectionsUnformatted",
     );
     allGradeSectionsData.value = allGradeSections.data.value;
 }
@@ -118,7 +118,7 @@ async function confirmEditRow() {
     );
 
     // Updating database with changed row
-    const request = await useFetch("/api/db/editForms/updateGradeSections", {
+    const request = await useFetch("/api/db/rawData/updateGradeSections", {
         method: "POST",
         body: {
             user,
@@ -176,7 +176,7 @@ async function confirmAddRow() {
     }
 
     // Add new record to database
-    const request = await useFetch("/api/db/editForms/updateGradeSections", {
+    const request = await useFetch("/api/db/rawData/updateGradeSections", {
         method: "POST",
         body: {
             user,
@@ -200,7 +200,7 @@ async function deleteGradeSection(id) {
     }
 
     // Delete record from database
-    const request = await useFetch("/api/db/editForms/updateGradeSections", {
+    const request = await useFetch("/api/db/rawData/updateGradeSections", {
         method: "POST",
         body: {
             user,

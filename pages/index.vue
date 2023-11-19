@@ -40,8 +40,9 @@ async function sendEmail() {
 
 <template>
     <div>
+        This is the home page
         <!-- EMAIL COMPONENT EXAMPLE -->
-        <div v-if="isSignedIn">
+        <!-- <div v-if="isSignedIn">
             <button
                 class="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-gray-700"
                 @click="sendEmail"
@@ -60,7 +61,7 @@ async function sendEmail() {
                     {{ errors }}
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- EMAIL COMPONENT EXAMPLE END-->
     </div>
 </template>

@@ -11,7 +11,7 @@ const columns = [
 
 // Searching Rows
 const { pending, data: allUnits } = await useLazyFetch(
-    "/api/db/editForms/getAllUnitsUnformatted",
+    "/api/db/rawData/getAllUnitsUnformatted",
 );
 const allUnitsData = ref([]);
 watch(allUnits, (updatedValues) => {
@@ -20,7 +20,7 @@ watch(allUnits, (updatedValues) => {
 const totalItems = ref();
 
 async function updateTable() {
-    const allUnits = await useFetch("/api/db/editForms/getAllUnitsUnformatted");
+    const allUnits = await useFetch("/api/db/rawData/getAllUnitsUnformatted");
     allUnitsData.value = allUnits.data.value;
     totalItems.value = allUnitsData.value.length;
 }
@@ -100,7 +100,7 @@ async function confirmEditRow() {
     }
 
     // Updating database with changed row
-    const requestFirst = await useFetch("/api/db/editForms/updateUnits", {
+    const requestFirst = await useFetch("/api/db/rawData/updateUnits", {
         method: "POST",
         body: {
             user,
@@ -156,7 +156,7 @@ async function confirmAddRow() {
     }
 
     // Add new record to database
-    const request = await useFetch("/api/db/editForms/updateUnits", {
+    const request = await useFetch("/api/db/rawData/updateUnits", {
         method: "POST",
         body: {
             user,
@@ -180,7 +180,7 @@ async function deleteUnit(id) {
     }
 
     // Delete record from database
-    const request = await useFetch("/api/db/editForms/updateUnits", {
+    const request = await useFetch("/api/db/rawData/updateUnits", {
         method: "POST",
         body: {
             user,
@@ -203,7 +203,7 @@ async function moveUnit(dir, index) {
     } else if (dir === 0) {
         const change = { ...allUnitsData.value[index] };
         change.frequencyRank = index;
-        const requestFirst = await useFetch("/api/db/editForms/updateUnits", {
+        const requestFirst = await useFetch("/api/db/rawData/updateUnits", {
             method: "POST",
             body: {
                 user,
@@ -215,7 +215,7 @@ async function moveUnit(dir, index) {
     } else if (dir === 1) {
         const change = { ...allUnitsData.value[index] };
         change.frequencyRank = index + 2;
-        const requestFirst = await useFetch("/api/db/editForms/updateUnits", {
+        const requestFirst = await useFetch("/api/db/rawData/updateUnits", {
             method: "POST",
             body: {
                 user,
