@@ -31,11 +31,6 @@ const startingColumns = [
         sortable: true,
     },
     {
-        key: "status",
-        label: "Status",
-        sortable: true,
-    },
-    {
         key: "available",
         label: "Availability",
         sortable: true,
@@ -131,6 +126,8 @@ const listOfAllColumns = [
         sortable: true,
     },
 ];
+
+const selectedData = ref(null);
 </script>
 
 <template>
@@ -140,9 +137,10 @@ const listOfAllColumns = [
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
             fetch-path="/api/db/rawData/getAllEquipment"
+            @selectRow="selectedData"
         >
             <template #modal-content>
-                <div>This is the editing modal</div>
+                <div>{{ selectedData }}</div>
             </template>
         </TablesInventory>
     </div>
