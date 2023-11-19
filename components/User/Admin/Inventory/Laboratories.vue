@@ -58,9 +58,9 @@ const filteredRows = computed(() => {
         "createdAt",
         "updatedAt",
         "description",
-        "locationId",
+        "locationName",
     ];
-    let filtered = allLaboratoriesData.value.filter((item) => {
+    const filtered = allLaboratoriesData.value.filter((item) => {
         return Object.values(item).some((value) => {
             const skip = Object.keys(item).find((key) => item[key] === value);
             if (skipKeys.includes(skip)) {
@@ -334,11 +334,11 @@ updateTable();
                         <div>{{ tempLaboratoryValues.description }}</div>
                     </div>
                     <div class="flex justify-between">
-                        <div>Location ID:</div>
-                        <div>{{ tempLaboratoryValues.locationId }}</div>
+                        <div>Location:</div>
+                        <div>{{ tempLaboratoryValues.locationName }}</div>
                     </div>
                     <div class="mt-5 flex justify-between">
-                        <div>Grade:</div>
+                        <div>Laboratory Name:</div>
                         <UInput
                             v-model="tempLaboratoryValues.name"
                             :ui="{
@@ -417,7 +417,7 @@ updateTable();
 
                 <div class="my-5 flex flex-col px-3 leading-7">
                     <div class="flex justify-between">
-                        <div>Grade:</div>
+                        <div>Laboratory Name:</div>
                         <UInput
                             v-model="newLaboratoryValues.name"
                             :ui="{
