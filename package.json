@@ -44,7 +44,7 @@
         "@formkit/addons": "^1.3.0",
         "@formkit/nuxt": "^1.3.0",
         "@nuxt/image-edge": "^1.0.0-28324167.9427c1c",
-        "@nuxthq/ui": "^2.7.0",
+        "@nuxt/ui": "^2.10.0",
         "@prisma/client": "^5.5.2",
         "@vuepic/vue-datepicker": "^6.1.0",
         "dayjs": "^1.11.10",
