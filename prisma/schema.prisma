@@ -8,6 +8,13 @@
 //  - Column Names are SINGULAR             i.e. firstName
 // -------------------- // 
 
+// Auto generate a database diagram:
+// https://github.com/notiz-dev/prisma-dbml-generator?fbclid=IwAR1XWxS0eVJ3p2HaAJtFKKc38PtgdFscBkLeIqdvSaHR7MIRiM-pVq-guP4
+// I uninstalled the dependency though since it had 4 high severity vulnerabilities 
+// generator dbml {
+//   provider = "prisma-dbml-generator"
+// }
+
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"] // https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search

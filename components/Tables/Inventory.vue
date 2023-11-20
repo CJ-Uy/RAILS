@@ -1,6 +1,4 @@
 <script setup>
-import { list } from "@formkit/i18n";
-
 const props = defineProps({
     title: {
         type: String,

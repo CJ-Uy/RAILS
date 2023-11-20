@@ -1,0 +1,406 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table SchoolYear {
+  id String [pk]
+  yearStart Int [not null]
+  yearEnd Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  currentSchoolYear Boolean [not null, default: false]
+  campus String [not null, default: 'EASTERN VISAYAS CAMPUS']
+  materialEquipmentRequestControlNumberCounter Int [not null, default: 0]
+  reagentRequestControlNumberCounter Int [not null, default: 0]
+  laboratoryRequestControlNumberCounter Int [not null, default: 0]
+  materialsAdded InventoryOfMaterials [not null]
+  equipmentAdded InventoryOfEqupiment [not null]
+  reagentsAdded InventoryOfReagents [not null]
+  laboratoryRequests LaboratoryRequests [not null]
+  equipmentRequests EquipmentRequests [not null]
+  materialRequests MaterialRequests [not null]
+  reagentRequests ReagentRequests [not null]
+  inventoryTransactions InventoryTransactions [not null]
+}
+
+Table Users {
+  id String [pk]
+  email String [not null]
+  firstName String [not null]
+  lastName String [not null]
+  role Role [not null, default: 'STUDENT']
+  imageLink String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  studentProfile Students
+  teacherProfile Teachers
+  adminProfile Admins
+  studentsId String
+  teachersId String
+  adminsId String
+  requests LaboratoryRequests [not null]
+  changeRoleRequest ChangeRoleRequests [not null]
+}
+
+Table Admins {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  signature String
+  signedRequests LaboratoryRequests [not null]
+  userProfile Users [not null]
+}
+
+Table Teachers {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  signature String
+  receivedLaboratoryRequests LaboratoryRequests [not null]
+  signedLaboratoryRequests LaboratoryRequests [not null]
+  userProfile Users [not null]
+}
+
+Table Students {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  gradeSection GradeSection
+  gradeSectionId String
+  grade Int
+  section String
+  userProfile Users [not null]
+}
+
+Table ChangeRoleRequests {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user Users [not null]
+  userId String [not null]
+  wantedRole Role [not null]
+}
+
+Table GradeSection {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  grade Int [not null]
+  section String [not null]
+  students Students [not null]
+  laboratoryRequests LaboratoryRequests [not null]
+}
+
+Table Units {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  frequencyRank Int [increment, unique, not null]
+  laboratoryRequests LaboratoryRequests [not null]
+}
+
+Table Laboratories {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  description String
+  location LaboratoryLocations [not null]
+  locationId String [not null]
+  supplies InventoryOfMaterials [not null]
+  equipment InventoryOfEqupiment [not null]
+  reagents InventoryOfReagents [not null]
+  laboratoryReservations LaboratoryReservations [not null]
+}
+
+Table LaboratoryLocations {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  description String
+  laboratories Laboratories [not null]
+  inventoryOfMaterials InventoryOfMaterials
+  inventoryOfMaterialsSupplyId String
+  inventoryOfEqupiment InventoryOfEqupiment
+  equipmentId String
+  inventoryOfReagents InventoryOfReagents
+  reagentId String
+}
+
+Table LaboratoryReservations {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  controlNumber String [not null]
+  laboratoryReserved Laboratories [not null]
+  laboratoryId String [not null]
+  startTime String [not null]
+  endTime String [not null]
+  laboratoryRequest LaboratoryRequests [not null]
+  laboratoryRequestId String [not null]
+}
+
+Table InventoryOfMaterials {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  itemName String [not null]
+  code String
+  description String
+  classification String
+  unit String [not null]
+  supplier String
+  dateReceived DateTime
+  available Boolean [not null, default: true]
+  quantity Int [not null, default: 1]
+  additionalPurchase Int
+  make String
+  unitCost Float
+  damage String
+  balancePerCard Int
+  balancePerCount Int
+  location LaboratoryLocations [not null]
+  laboratories Laboratories
+  laboratoriesId String
+  requests MaterialRequests [not null]
+  schoolYear SchoolYear
+  schoolYearId String
+  inventoryTransactions InventoryTransactions [not null]
+}
+
+Table InventoryOfEqupiment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  code String
+  equipmentName String [not null]
+  description String
+  available Boolean [not null, default: true]
+  serialNumber String
+  modelNoOrManufacturer String
+  quantity Int [default: 1]
+  unit String
+  unitCost Float
+  dateReceived DateTime
+  propertyNumber String
+  acquisitionType String
+  supplier String
+  status String
+  location LaboratoryLocations [not null]
+  laboratories Laboratories
+  laboratoriesId String
+  requests EquipmentRequests [not null]
+  schoolYear SchoolYear
+  schoolYearId String
+  inventoryTransactions InventoryTransactions [not null]
+}
+
+Table InventoryOfReagents {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  casNumber String
+  code String
+  chemicalName String [not null]
+  description String
+  classification String
+  manufacturerName String
+  supplier String
+  available Boolean [not null, default: true]
+  maxRequestableQuantity Float
+  currentQuantity Float
+  unit String
+  DGClass String
+  subRisk String
+  PG String
+  riskPhrase String
+  safetyPhrase String
+  hazSub Boolean
+  poisonSchedule String
+  currentSDS DateTime
+  dateReceived DateTime
+  expiryDate DateTime
+  dateOpened DateTime
+  status String
+  location LaboratoryLocations [not null]
+  laboratories Laboratories
+  laboratoriesId String
+  requests ReagentRequests [not null]
+  schoolYear SchoolYear
+  schoolYearId String
+  inventoryTransactions InventoryTransactions [not null]
+}
+
+Table InventoryTransactions {
+  id String [pk]
+  schoolYear SchoolYear
+  schoolYearId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  transactionType String [not null]
+  description String
+  equipment InventoryOfEqupiment
+  equipmentId String
+  material InventoryOfMaterials
+  materialId String
+  reagent InventoryOfReagents
+  reagentId String
+  quantityBeforeChange Float [not null]
+  quantityAfterChange Float [not null]
+  quantityOfChange Float [not null]
+  units String
+}
+
+Table EquipmentRequests {
+  id String [pk]
+  controlNumber String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  quantity Int [not null]
+  equipment InventoryOfEqupiment [not null]
+  name String [not null]
+  description String
+  modelNoOrManufacturer String
+  laboratoryRequest LaboratoryRequests [not null]
+  laboratoryRequestId String [not null]
+  schoolYear SchoolYear
+  schoolYearId String
+}
+
+Table MaterialRequests {
+  id String [pk]
+  controlNumber String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  quantity Int [not null]
+  materials InventoryOfMaterials [not null]
+  name String [not null]
+  description String
+  laboratoryRequest LaboratoryRequests [not null]
+  laboratoryRequestId String [not null]
+  schoolYear SchoolYear
+  schoolYearId String
+}
+
+Table ReagentRequests {
+  id String [pk]
+  controlNumber String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  quantity Int [not null]
+  unit String [not null]
+  reagents InventoryOfReagents [not null]
+  name String [not null]
+  description String
+  LaboratoryRequest LaboratoryRequests [not null]
+  laboratoryRequestId String [not null]
+  schoolYear SchoolYear
+  schoolYearId String
+}
+
+Table LaboratoryRequests {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  requestor Users [not null]
+  requestorId String [not null]
+  forSubject String
+  concurrentTopic String
+  noOfStudents Int
+  otherGroupMembers Json
+  gradeSection GradeSection [not null]
+  gradeSectionId String [not null]
+  unit Units [not null]
+  unitId String [not null]
+  teacherInCharge Teachers [not null]
+  teacherInChargeId String [not null]
+  materialsRequested MaterialRequests [not null]
+  equipmentRequested EquipmentRequests [not null]
+  reagentsRequested ReagentRequests [not null]
+  laboratoryReservations LaboratoryReservations [not null]
+  independentTime Json
+  independentLocation String
+  isSignedByTeacher Boolean [not null, default: false]
+  isSignedByAdmin Boolean [not null, default: false]
+  signedTeacher Teachers
+  signedTeacherId String
+  signedAdmin Admins
+  signedAdminId String
+  schoolYear SchoolYear
+  schoolYearId String
+}
+
+Enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+Ref: Users.studentsId > Students.id
+
+Ref: Users.teachersId > Teachers.id
+
+Ref: Users.adminsId > Admins.id
+
+Ref: Students.gradeSectionId > GradeSection.id
+
+Ref: ChangeRoleRequests.userId > Users.id
+
+Ref: Laboratories.locationId > LaboratoryLocations.id
+
+Ref: LaboratoryLocations.inventoryOfMaterialsSupplyId > InventoryOfMaterials.id
+
+Ref: LaboratoryLocations.equipmentId > InventoryOfEqupiment.id
+
+Ref: LaboratoryLocations.reagentId > InventoryOfReagents.id
+
+Ref: LaboratoryReservations.laboratoryId > Laboratories.id
+
+Ref: LaboratoryReservations.laboratoryRequestId > LaboratoryRequests.id
+
+Ref: InventoryOfMaterials.laboratoriesId > Laboratories.id
+
+Ref: InventoryOfMaterials.schoolYearId > SchoolYear.id
+
+Ref: InventoryOfEqupiment.laboratoriesId > Laboratories.id
+
+Ref: InventoryOfEqupiment.schoolYearId > SchoolYear.id
+
+Ref: InventoryOfReagents.laboratoriesId > Laboratories.id
+
+Ref: InventoryOfReagents.schoolYearId > SchoolYear.id
+
+Ref: InventoryTransactions.schoolYearId > SchoolYear.id
+
+Ref: InventoryTransactions.equipmentId > InventoryOfEqupiment.id
+
+Ref: InventoryTransactions.materialId > InventoryOfMaterials.id
+
+Ref: InventoryTransactions.reagentId > InventoryOfReagents.id
+
+Ref: EquipmentRequests.laboratoryRequestId > LaboratoryRequests.id
+
+Ref: EquipmentRequests.schoolYearId > SchoolYear.id
+
+Ref: MaterialRequests.laboratoryRequestId > LaboratoryRequests.id
+
+Ref: MaterialRequests.schoolYearId > SchoolYear.id
+
+Ref: ReagentRequests.laboratoryRequestId > LaboratoryRequests.id
+
+Ref: ReagentRequests.schoolYearId > SchoolYear.id
+
+Ref: LaboratoryRequests.requestorId > Users.id
+
+Ref: LaboratoryRequests.gradeSectionId > GradeSection.id
+
+Ref: LaboratoryRequests.unitId > Units.id
+
+Ref: LaboratoryRequests.teacherInChargeId > Teachers.id
+
+Ref: LaboratoryRequests.signedTeacherId > Teachers.id
+
+Ref: LaboratoryRequests.signedAdminId > Admins.id
+
+Ref: LaboratoryRequests.schoolYearId > SchoolYear.id
