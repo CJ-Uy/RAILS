@@ -34,10 +34,7 @@ const emit = defineEmits(["selectedRow"]);
 
 const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
 
-const selectedColumns = ref();
-nextTick(() => {
-    selectedColumns.value = [...props.startingColumns];
-});
+const selectedColumns = ref([...props.startingColumns]);
 
 const totalItems = ref();
 
@@ -147,6 +144,7 @@ watch(
                                 searchable-placeholder="Search Columns"
                                 multiple
                                 placeholder="Columns"
+                                :value-attribute="key"
                             />
                         </div>
                     </div>
