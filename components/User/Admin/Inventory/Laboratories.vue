@@ -23,6 +23,8 @@ const columns = [
     },
 ];
 
+const defaultSort = ref({ column: "name", direction: "asc" });
+
 const totalItems = ref();
 
 // Searching Rows
@@ -271,6 +273,7 @@ updateTable();
 
             <!-- DATA TABLE -->
             <UTable
+                v-model:sort="defaultSort"
                 @select="OpenLaboratoryModal"
                 :columns="columns"
                 :rows="filteredRows"

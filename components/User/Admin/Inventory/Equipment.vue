@@ -1,7 +1,4 @@
 <script setup>
-import dayjs from "dayjs";
-const user = inject("user");
-
 // Do the thing where you can add more columns to the table
 const startingColumns = [
     {
@@ -17,15 +14,11 @@ const startingColumns = [
     {
         key: "serialNumber",
         label: "Serial Number",
+        sortable: true,
     },
     {
         key: "modelNoOrManufacturer",
         label: "Model/Manufacturer",
-        sortable: true,
-    },
-    {
-        key: "dateReceived",
-        label: "Date Received",
         sortable: true,
     },
     {

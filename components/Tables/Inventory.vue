@@ -1,4 +1,6 @@
 <script setup>
+import { list } from "@formkit/i18n";
+
 const props = defineProps({
     title: {
         type: String,
@@ -15,8 +17,7 @@ const props = defineProps({
     },
     listOfAllColumns: {
         type: Array,
-        required: false,
-        default: () => [],
+        required: true,
     },
     fetchPath: {
         type: String,
@@ -33,9 +34,13 @@ const emit = defineEmits(["selectedRow"]);
 
 const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
 
+const selectedColumns = ref();
+nextTick(() => {
+    selectedColumns.value = [...props.startingColumns];
+});
+
 const totalItems = ref();
 
-const columns = ref(props.startingColumns);
 const { pending, data: allItems } = await useLazyFetch(props.fetchPath);
 const allItemsData = ref([]);
 watch(allItems, (updatedValues) => {
@@ -106,6 +111,7 @@ watch(
             <div>
                 <div class="flex flex-row justify-between">
                     <div class="flex flex-row">
+                        <!-- Refresh Button -->
                         <UButton
                             icon="i-material-symbols-refresh"
                             class="mr-2"
@@ -132,6 +138,17 @@ watch(
                                 </template>
                             </UInput>
                         </div>
+                        <!-- Select Columns -->
+                        <div class="ml-2 w-[200px]">
+                            <USelectMenu
+                                v-model="selectedColumns"
+                                :options="listOfAllColumns"
+                                searchable
+                                searchable-placeholder="Search Columns"
+                                multiple
+                                placeholder="Columns"
+                            />
+                        </div>
                     </div>
                     <UButton
                         label="ADD RECORD"
@@ -146,7 +163,7 @@ watch(
             <UTable
                 v-model:sort="defaultSort"
                 @select="openModal"
-                :columns="columns"
+                :columns="selectedColumns"
                 :rows="filteredRows"
                 :loading="pending"
                 :ui="{ tr: { active: 'hover:bg-gray-200' } }"

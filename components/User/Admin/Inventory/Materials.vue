@@ -1,7 +1,4 @@
 <script setup>
-import dayjs from "dayjs";
-const user = inject("user");
-
 // Do the thing where you can add more columns to the table
 const startingColumns = [
     {
@@ -17,6 +14,7 @@ const startingColumns = [
     {
         key: "serialNumber",
         label: "Serial Number",
+        sortable: true,
     },
     {
         key: "classification",
@@ -73,23 +71,8 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "modelOrManufacturer",
-        label: "Model/Manufacturer",
-        sortable: true,
-    },
-    {
-        key: "quantity",
-        label: "Quantity",
-        sortable: true,
-    },
-    {
         key: "unit",
         label: "Unit",
-        sortable: true,
-    },
-    {
-        key: "unitCost",
-        label: "Unit Cost",
         sortable: true,
     },
     {
@@ -103,23 +86,38 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "propertyNumber",
-        label: "property Number",
+        key: "quantity",
+        label: "Quantity",
         sortable: true,
     },
     {
-        key: "acquisitionType",
-        label: "Acquisition Type",
+        key: "additionalPurchase",
+        label: "Additional Purchase",
         sortable: true,
     },
     {
-        key: "supplier",
-        label: "Supplier",
+        key: "make",
+        label: "Make",
         sortable: true,
     },
     {
-        key: "status",
-        label: "Status",
+        key: "unitCost",
+        label: "Unit Cost",
+        sortable: true,
+    },
+    {
+        key: "damage",
+        label: "Damage",
+        sortable: true,
+    },
+    {
+        key: "balancePerCard",
+        label: "Balance per Card",
+        sortable: true,
+    },
+    {
+        key: "balancePerCount",
+        label: "Balance per Count",
         sortable: true,
     },
     {
