@@ -22,6 +22,11 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    editModeIsOpen: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 });
 
 const emit = defineEmits(["selectedRow"]);
@@ -78,9 +83,17 @@ const filteredRows = computed(() => {
 const modalIsOpen = ref(false);
 function openModal(row) {
     modalIsOpen.value = true;
-    console.log(row);
     emit("selectedRow", row);
-};
+}
+
+const editModalIsOpen = ref(false);
+watch(
+    () => props.editModeIsOpen,
+    (newValue) => {
+        editModalIsOpen.value = newValue;
+        modalIsOpen.value = !newValue;
+    },
+);
 </script>
 
 <template>
@@ -140,8 +153,11 @@ function openModal(row) {
             />
         </UCard>
 
+        <UModal v-model="editModalIsOpen">
+            <slot name="editModeModal" />
+        </UModal>
         <UModal v-model="modalIsOpen">
-            <slot name="modal-content" />
+            <slot name="detailsModal" />
         </UModal>
     </div>
 </template>

@@ -1,6 +1,5 @@
 <script setup>
 import dayjs from "dayjs";
-
 const user = inject("user");
 
 // Do the thing where you can add more columns to the table
@@ -130,6 +129,11 @@ const selectedData = ref();
 function selectedRow(data) {
     selectedData.value = data;
 }
+
+const equipmentEditModeIsOpen = ref(false);
+function toggleEditModal() {
+    equipmentEditModeIsOpen.value = !equipmentEditModeIsOpen.value;
+}
 </script>
 
 <template>
@@ -139,12 +143,22 @@ function selectedRow(data) {
             default-sort-key="equipmentName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
+            :editModeIsOpen="equipmentEditModeIsOpen"
             fetch-path="/api/db/rawData/getAllEquipment"
             @selectedRow="selectedRow"
         >
-            <template #modal-content>
+            <template #detailsModal>
                 <UCard>
+                    <template #header> </template>
                     <div>{{ selectedData }}</div>
+                    <template #footer>
+                        <UButton label="EDIT" @click="toggleEditModal()" />
+                    </template>
+                </UCard>
+            </template>
+            <template #editModeModal>
+                <UCard>
+                    <div>EDITING MODE</div>
                 </UCard>
             </template>
         </TablesInventory>

@@ -4,6 +4,9 @@
 
 <template>
     <div>
-        <h1>MATERIALS</h1>
+        <TablesInventory>
+            title="MATERIALS"
+            
+        </TablesInventory>
     </div>
 </template>
