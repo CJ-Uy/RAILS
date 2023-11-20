@@ -90,8 +90,8 @@ const editModalIsOpen = ref(false);
 watch(
     () => props.editModeIsOpen,
     (newValue) => {
-        editModalIsOpen.value = newValue;
         modalIsOpen.value = !newValue;
+        editModalIsOpen.value = newValue;
     },
 );
 </script>
@@ -137,7 +137,7 @@ watch(
                         label="ADD RECORD"
                         icon="i-material-symbols-add"
                         class=""
-                        @click="OpenAddLaboratory"
+                        @click="toggleAddRecord"
                     />
                 </div>
             </div>
@@ -152,12 +152,18 @@ watch(
                 :ui="{ tr: { active: 'hover:bg-gray-200' } }"
             />
         </UCard>
-
-        <UModal v-model="editModalIsOpen">
-            <slot name="editModeModal" />
-        </UModal>
-        <UModal v-model="modalIsOpen">
+        <UModal
+            v-model="modalIsOpen"
+            :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
+        >
             <slot name="detailsModal" />
+        </UModal>
+        <UModal
+            v-model="editModalIsOpen"
+            :ui="{ transition: { enter: 'duration-0', leave: 'duration-0' } }"
+            prevent-close
+        >
+            <slot name="editModeModal" />
         </UModal>
     </div>
 </template>

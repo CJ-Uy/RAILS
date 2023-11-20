@@ -19,7 +19,7 @@ const startingColumns = [
         label: "Serial Number",
     },
     {
-        key: "modelOrManufacturer",
+        key: "modelNoOrManufacturer",
         label: "Model/Manufacturer",
         sortable: true,
     },
@@ -74,7 +74,7 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "modelOrManufacturer",
+        key: "modelNoOrManufacturer",
         label: "Model/Manufacturer",
         sortable: true,
     },
@@ -130,9 +130,9 @@ function selectedRow(data) {
     selectedData.value = data;
 }
 
-const equipmentEditModeIsOpen = ref(false);
+const editModeIsOpen = ref(false);
 function toggleEditModal() {
-    equipmentEditModeIsOpen.value = !equipmentEditModeIsOpen.value;
+    editModeIsOpen.value = !editModeIsOpen.value;
 }
 </script>
 
@@ -143,7 +143,7 @@ function toggleEditModal() {
             default-sort-key="equipmentName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
-            :editModeIsOpen="equipmentEditModeIsOpen"
+            :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllEquipment"
             @selectedRow="selectedRow"
         >
@@ -158,7 +158,11 @@ function toggleEditModal() {
             </template>
             <template #editModeModal>
                 <UCard>
-                    <div>EDITING MODE</div>
+                    <template #header> </template>
+                    <div>EDITING</div>
+                    <template #footer>
+                        <UButton label="EDIT" @click="toggleEditModal()" />
+                    </template>
                 </UCard>
             </template>
         </TablesInventory>

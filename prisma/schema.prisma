@@ -205,7 +205,7 @@ model InventoryOfMaterials {
 
   //Quantity
   quantity           Int     @default(1)
-  additionalPurchase Int? // TODO: create pruchase table ?
+  additionalPurchase Int?
   make               String?
   unitCost           Float?
   damage             String?
