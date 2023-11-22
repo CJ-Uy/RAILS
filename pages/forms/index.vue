@@ -20,7 +20,7 @@ async function submitHandler(formValues) {
         method: "POST",
         body: { user, formValues },
     });
-
+    console.log(requestId);
     // Downloaing pdfs
     if (formValues.data.submission.download) {
         try {

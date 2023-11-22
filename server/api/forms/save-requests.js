@@ -143,12 +143,12 @@ export default defineEventHandler(async (event) => {
             await prisma.materialRequests.create({
                 data: {
                     quantity: Number(material.requestedQuantity),
-                    name: material.materialName,
+                    name: material.itemName,
                     description: material.description,
                     schoolYearId: schoolYear.id,
                     controlNumber: materialEquipmentControlNumber,
                     materials: {
-                        connect: material.ids.map((id) => ({ id })),
+                        connect: { id: material.id },
                     },
                     laboratoryRequestId: request.id,
                 },
@@ -196,7 +196,7 @@ export default defineEventHandler(async (event) => {
                     schoolYearId: schoolYear.id,
                     controlNumber,
                     reagents: {
-                        connect: reagent.ids.map((id) => ({ id })),
+                        connect: reagent.id.map((id) => ({ id })),
                     },
                     laboratoryRequestId: request.id,
                 },
@@ -204,5 +204,6 @@ export default defineEventHandler(async (event) => {
         }
     }
 
+    console.log(request);
     return request.id;
 });
