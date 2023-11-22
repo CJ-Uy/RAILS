@@ -64,13 +64,22 @@ function downloadPDF(pdfBuffers, lastname) {
                     :key="request.id"
                     class="text-center"
                 >
-                    <td class="border-2" @click="openEditRequestModal(request)">
+                    <td
+                        class="cursor-default border-2"
+                        @click="openEditRequestModal(request)"
+                    >
                         {{ request.id }}
                     </td>
-                    <td class="border-2" @click="openEditRequestModal(request)">
+                    <td
+                        class="cursor-default border-2"
+                        @click="openEditRequestModal(request)"
+                    >
                         {{ request.isSignedByTeacher }}
                     </td>
-                    <td class="border-2" @click="openEditRequestModal(request)">
+                    <td
+                        class="cursor-default border-2"
+                        @click="openEditRequestModal(request)"
+                    >
                         {{ request.isSignedByAdmin }}
                     </td>
                     <td class="px-2">
@@ -86,9 +95,20 @@ function downloadPDF(pdfBuffers, lastname) {
 
         <UModal v-model="editRequestModalIsOpen">
             <UCard>
-                <pre>
-                    {{ currentOpenRequest }}
-                </pre>
+                <template #header></template>
+
+                {{ currentOpenRequest }}
+
+                <template #footer>
+                    <div>
+                        <UButton
+                            label="DECLINE"
+                            color="red"
+                            variant="outline"
+                        />
+                        <UButton label="APPROVE" color="green" class="ml-3" />
+                    </div>
+                </template>
             </UCard>
         </UModal>
     </div>
