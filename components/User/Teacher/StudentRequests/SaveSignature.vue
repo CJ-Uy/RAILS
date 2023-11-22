@@ -28,6 +28,9 @@ function saveSig() {
     let svg = signaturePad.toSVG().toString();
     svg = svg.replace(`viewBox="0 0 400 200"`, `viewBox="0 0 500 250"`);
     // Save the svg output as the signature value
+    if (typeof signature.value[1] === "string") {
+        signature.value[1] = {};
+    }
     signature.value[1].signature = svg;
     signature.value[0] = true;
     sigModalIsOpen.value = false;
@@ -122,7 +125,7 @@ function clearSig() {
                             size="lg"
                             @click="clearSig"
                         />
-                        <UButton label="SAVE" size="lg" @click="saveSig" />
+                        <UButton label="SAVE" size="lg" @click="saveSig()" />
                     </div>
                 </template>
             </UCard>
