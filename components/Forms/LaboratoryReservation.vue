@@ -74,7 +74,8 @@ function removeDateTime(index) {
         <h3 class="font-bold">Add Date(s) and their Time Range</h3>
         <p>
             All Inclusive Time of Use applies to all dates selected in with
-            their respective calendar.
+            their respective calendar. You can also select multiple dates in the
+            calendar date picker.
         </p>
         <br />
         <UButton

@@ -2,10 +2,13 @@ import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-
-    return prisma.laboratoryRequests.findMany({
+    return prisma.laboratoryRequests.update({
         where: {
-            teacherInChargeId: body.teacherId,
+            id: body.id,
+        },
+        data: {
+            isSignedByTeacher: true,
+            signedTeacherId: body.user.teachersId,
         },
         include: {
             requestor: true,

@@ -1,4 +1,6 @@
 <script setup>
+import dayjs from "dayjs";
+
 const user = inject("user");
 
 const requests = await useFetch("/api/user/teacher/getAllStudentRequests", {
@@ -6,23 +8,24 @@ const requests = await useFetch("/api/user/teacher/getAllStudentRequests", {
     body: user,
 });
 
-const studentRequests = ref(requests.data);
+const studentRequests = ref(requests.data.value);
+
+async function updateTable() {
+    const requests = await useFetch("/api/user/teacher/getAllStudentRequests", {
+        method: "POST",
+        body: user,
+    });
+    studentRequests.value = requests.data.value;
+}
 
 async function downloadRequest(id) {
-    const pdfBuffers_rawData = await useFetch("/api/forms/create-pdf-buffers", {
+    const pdfBuffersRawData = await useFetch("/api/forms/create-pdf-buffers", {
         method: "POST",
         body: { id, requestedForms: [5, 19, 20] },
     });
 
-    const pdfBuffers = pdfBuffers_rawData.data.value;
+    const pdfBuffers = pdfBuffersRawData.data.value;
     downloadPDF(pdfBuffers, user.lastName);
-}
-
-const editRequestModalIsOpen = ref(false);
-const currentOpenRequest = ref(null);
-function openEditRequestModal(request) {
-    currentOpenRequest.value = request;
-    editRequestModalIsOpen.value = true;
 }
 
 function downloadPDF(pdfBuffers, lastname) {
@@ -40,6 +43,29 @@ function downloadPDF(pdfBuffers, lastname) {
         link.click();
     }
 }
+
+const editRequestModalIsOpen = ref(false);
+const currentOpenRequest = ref(null);
+function openEditRequestModal(request) {
+    currentOpenRequest.value = request;
+    editRequestModalIsOpen.value = true;
+}
+async function approve() {
+    editRequestModalIsOpen.value = false;
+    await useFetch("/api/user/teacher/approveRequest", {
+        method: "POST",
+        body: { ...currentOpenRequest.value, user },
+    });
+    updateTable();
+}
+async function decline() {
+    editRequestModalIsOpen.value = false;
+    await useFetch("/api/user/teacher/declineRequest", {
+        method: "POST",
+        body: currentOpenRequest.value,
+    });
+    updateTable();
+}
 </script>
 
 <template>
@@ -48,7 +74,17 @@ function downloadPDF(pdfBuffers, lastname) {
         <table class="w-[100%] table-auto text-left">
             <thead>
                 <tr>
-                    <th class="border-2 px-4 py-2 text-center">Request ID</th>
+                    <th class="border-2 px-4 py-2 text-center">
+                        Date Requested
+                    </th>
+                    <th class="border-2 px-4 py-2 text-center">Subject</th>
+                    <th class="border-2 px-4 py-2 text-center">
+                        Grade Section
+                    </th>
+                    <th class="border-2 px-4 py-2 text-center">Requestor</th>
+                    <th class="border-2 px-4 py-2 text-center">
+                        No. of People
+                    </th>
                     <th class="border-2 px-4 py-2 text-center">
                         Teacher Approved
                     </th>
@@ -65,19 +101,49 @@ function downloadPDF(pdfBuffers, lastname) {
                     class="text-center"
                 >
                     <td
-                        class="cursor-default border-2"
+                        class="cursor-default border-2 px-2"
                         @click="openEditRequestModal(request)"
                     >
-                        {{ request.id }}
+                        {{
+                            dayjs(request.createdAt).format(
+                                "MMM DD, YYYY - HH:mm",
+                            )
+                        }}
                     </td>
                     <td
-                        class="cursor-default border-2"
+                        class="cursor-default border-2 px-2"
+                        @click="openEditRequestModal(request)"
+                    >
+                        {{ request.forSubject }}
+                    </td>
+                    <td
+                        class="cursor-default border-2 px-2"
+                        @click="openEditRequestModal(request)"
+                    >
+                        {{ request.gradeSection.grade }} -
+                        {{ request.gradeSection.section }}
+                    </td>
+                    <td
+                        class="cursor-default border-2 px-2"
+                        @click="openEditRequestModal(request)"
+                    >
+                        {{ request.requestor.lastName }},
+                        {{ request.requestor.firstName }}
+                    </td>
+                    <td
+                        class="cursor-default border-2 px-2"
+                        @click="openEditRequestModal(request)"
+                    >
+                        {{ request.noOfStudents }}
+                    </td>
+                    <td
+                        class="cursor-default border-2 px-2"
                         @click="openEditRequestModal(request)"
                     >
                         {{ request.isSignedByTeacher }}
                     </td>
                     <td
-                        class="cursor-default border-2"
+                        class="cursor-default border-2 px-2"
                         @click="openEditRequestModal(request)"
                     >
                         {{ request.isSignedByAdmin }}
@@ -97,7 +163,9 @@ function downloadPDF(pdfBuffers, lastname) {
             <UCard>
                 <template #header></template>
 
-                {{ currentOpenRequest }}
+                <pre>
+                    {{ currentOpenRequest }}
+                </pre>
 
                 <template #footer>
                     <div>
@@ -105,8 +173,14 @@ function downloadPDF(pdfBuffers, lastname) {
                             label="DECLINE"
                             color="red"
                             variant="outline"
+                            @click="decline()"
                         />
-                        <UButton label="APPROVE" color="green" class="ml-3" />
+                        <UButton
+                            label="APPROVE"
+                            color="green"
+                            class="ml-3"
+                            @click="approve()"
+                        />
                     </div>
                 </template>
             </UCard>
