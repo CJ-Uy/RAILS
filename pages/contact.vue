@@ -11,6 +11,11 @@ definePageMeta({ auth: false, layout: "landing-pages" });
 
 <template>
     <div>
-        <h1>This is the contact page</h1>
+        <NuxtImg
+            format="webp"
+            src="../public/images/04.png"
+            alt="PSHS-EVC LABS"
+            class="w-full"
+        />
     </div>
 </template>

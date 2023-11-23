@@ -3,23 +3,26 @@ export default defineNuxtConfig({
     components: true,
     devtools: { enabled: true },
     modules: [
-        "nuxt-mailer", // https://github.com/jurassicjs/nuxt-mailer (Nodemailer wrapper for email functionality)
-        "@nuxtjs/fontaine", // https://nuxt.com/modules/fontaine (Optimized font fallbacks to keep layout consistent)
-        "@sidebase/nuxt-auth", // https://nuxt.com/modules/nuxt-auth (Next-auth wrapper for user authentication)
-
+        // https://github.com/jurassicjs/nuxt-mailer (Nodemailer wrapper for email functionality)
+        "nuxt-mailer",
+        // https://nuxt.com/modules/fontaine (Optimized font fallbacks to keep layout consistent)
+        "@nuxtjs/fontaine",
+        // https://nuxt.com/modules/nuxt-auth (Next-auth wrapper for user authentication)
+        "@sidebase/nuxt-auth",
         // CSS and styling modules
         // "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
         // "@nuxtjs/color-mode", // https://nuxt.com/modules/color-mode (dark mode and other themes)
-        "@nuxt/ui", // https://ui.nuxtlabs.com/getting-started (Component Library) // TODO: @nuxthq/ui is depreciated and can be updated to @nuxt/ui but breaking changes need to be adressed
-
+        // https://ui.nuxtlabs.com/getting-started (Component Library) // TODO: @nuxthq/ui is depreciated and can be updated to @nuxt/ui but breaking changes need to be adressed
+        "@nuxt/ui",
         // Optimization modules
-        "@nuxt/image-edge", // https://v1.image.nuxtjs.org/ (Image loading optimization)
-        "nuxt-icon", // https://nuxt.com/modules/icon (Icons from iconify) [DATASET: https://icones.js.org/]
-        "nuxt-icons", // https://nuxt.com/modules/icons Automatically import SVG icons from assets/icons
-
+        // https://image.nuxt.com/ (Image loading optimization)
+        "@nuxt/image",
+        // https://nuxt.com/modules/icon (Icons from iconify) [DATASET: https://icones.js.org/]
+        "nuxt-icon",
+        // https://nuxt.com/modules/icons Automatically import SVG icons from assets/icons
+        "nuxt-icons",
         // Forms framework
-        "@formkit/nuxt", // https://formkit.com/ (Vue forms framework)
-
+        // https://formkit.com/ (Vue forms framework)
         // Useful but not yet used modules
         // "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
         // "@invictus.codes/nuxt-vuetify", // https://nuxt.com/modules/nuxt-vuetify AND https://vuetifyjs.com/en/ (UI Library) [maybe try daisy UI instead]
@@ -27,6 +30,8 @@ export default defineNuxtConfig({
         // "@nuxtjs/device", // https://nuxt.com/modules/device (Device type detection)
         // Add website optimizations (https://nuxt.com/modules?category=Performance)
         // Add SEO [search engine optimizations] when complete (https://nuxt.com/modules/seo-kit)
+        "@formkit/nuxt",
+        "@nuxt/image",
     ],
 
     build: {

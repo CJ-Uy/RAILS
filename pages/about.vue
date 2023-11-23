@@ -5,12 +5,17 @@ useHead({
 });
 
 // [auth: false] allows the page to be seen by "Authenticated" and "Unauthenticated" users
-definePageMeta({ auth: false, layout: "landing-pages" }); 
+definePageMeta({ auth: false, layout: "landing-pages" });
 // PAGE META END
 </script>
 
 <template>
     <div>
-        <h1>This is the about Page</h1>
+        <NuxtImg
+            format="webp"
+            src="../public/images/03.png"
+            alt="PSHS-EVC LABS"
+            class="w-full"
+        />
     </div>
 </template>

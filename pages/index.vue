@@ -5,7 +5,7 @@ useHead({
 });
 
 // [auth: false] allows the page to be seen by "Authenticated" and "Unauthenticated" users
-definePageMeta({ auth: false, layout: "landing-pages" }); 
+definePageMeta({ auth: false, layout: "landing-pages" });
 // PAGE META END
 
 // AUTH FUNCTIONS
@@ -40,7 +40,12 @@ async function sendEmail() {
 
 <template>
     <div>
-        This is the home page
+        <NuxtImg
+            format="webp"
+            src="../public/images/01.png"
+            alt="PSHS-EVC LABS"
+            class="w-full"
+        />
         <!-- EMAIL COMPONENT EXAMPLE -->
         <!-- <div v-if="isSignedIn">
             <button
