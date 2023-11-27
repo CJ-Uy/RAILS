@@ -13,7 +13,7 @@ definePageMeta({ auth: false, layout: "landing-pages" });
     <div>
         <NuxtImg
             format="webp"
-            src="../public/images/03.png"
+            src="/images/03.png"
             alt="PSHS-EVC LABS"
             class="w-full"
         />

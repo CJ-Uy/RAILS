@@ -42,7 +42,7 @@ async function sendEmail() {
     <div>
         <NuxtImg
             format="webp"
-            src="../public/images/01.png"
+            src="/images/01.png"
             alt="PSHS-EVC LABS"
             class="w-full"
         />
