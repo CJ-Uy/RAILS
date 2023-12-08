@@ -276,19 +276,6 @@ export default async function makeAccountability(requestId) {
     `;
     }
 
-    // Requested equipment
-    for (const item of request.equipmentRequested) {
-        html += `
-            <tr>
-                <td>${item.quantity}</td>
-                <td>${item.name}</td>
-                <td>${item.description}</td>
-                <td></td>
-                <td></td>
-            </tr>
-    `;
-    }
-
     html += `
             <tr>
                 <td></td>

@@ -5,119 +5,35 @@ export default async function getRequest(id) {
         where: {
             id: id.id,
         },
-        select: {
-            createdAt: true,
-            forSubject: true,
-            concurrentTopic: true,
-            noOfStudents: true,
-            otherGroupMembers: true,
-            independentTime: true,
-            independentLocation: true,
-
-            schoolYear: {
-                select: {
-                    yearStart: true,
-                    yearEnd: true,
-                    campus: true,
-                },
-            },
-
-            requestor: {
-                select: {
-                    firstName: true,
-                    lastName: true,
-                },
-            },
-
-            gradeSection: {
-                select: {
-                    grade: true,
-                    section: true,
-                },
-            },
-
-            unit: {
-                select: {
-                    name: true,
-                },
-            },
-
+        include: {
+            requestor: true,
+            gradeSection: true,
+            unit: true,
             teacherInCharge: {
-                select: {
-                    userProfile: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                        },
-                    },
+                include: {
+                    userProfile: true,
                 },
             },
-
-            // Requests
-            materialsRequested: {
-                select: {
-                    controlNumber: true,
-                    quantity: true,
-                    name: true,
-                    description: true,
-                },
-            },
-
-            equipmentRequested: {
-                select: {
-                    controlNumber: true,
-                    quantity: true,
-                    name: true,
-                    description: true,
-                },
-            },
-
-            reagentsRequested: {
-                select: {
-                    controlNumber: true,
-                    quantity: true,
-                    name: true,
-                    description: true,
-                },
-            },
-
+            materialsRequested: true,
+            equipmentRequested: true,
+            reagentsRequested: true,
             laboratoryReservations: {
-                select: {
-                    controlNumber: true,
-                    startTime: true,
-                    endTime: true,
-                    laboratoryReserved: {
-                        select: {
-                            name: true,
-                        },
-                    },
+                include: {
+                    laboratoryReserved: true,
+                    laboratoryRequest: true,
                 },
             },
-
-            isSignedByTeacher: true,
             signedTeacher: {
-                select: {
-                    signature: true,
-                    userProfile: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                        },
-                    },
+                include: {
+                    userProfile: true,
                 },
             },
-            isSignedByAdmin: true,
             signedAdmin: {
-                select: {
-                    signature: true,
-                    userProfile: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                        },
-                    },
+                include: {
+                    userProfile: true,
                 },
             },
+            schoolYear: true,
         },
     });
 }

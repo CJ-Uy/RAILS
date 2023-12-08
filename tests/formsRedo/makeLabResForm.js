@@ -1,70 +1,98 @@
 import fs from "fs";
+import puppeteer from "puppeteer";
 import dayjs from "dayjs";
 import getRequest from "./getRequest.js";
 
+async function makePDF(htmlContent) {
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
+    await page.setContent(htmlContent);
+    await page.pdf({
+        path: "./tests/formsRedo/testPDF/reagentRequest.pdf",
+        format: "A4",
+    });
+    await browser.close();
+}
+
 // Fetch the Request
 const request = await getRequest({
-    id: "27a400b1-4733-4763-a082-acabc8750cda",
+    id: "4104910b-6c2f-4970-b03a-d0c61faae77e",
 });
-console.dir(request, { depth: null });
 
 const { campus } = request.schoolYear;
-const { controlNumber } = request.laboratoryReservations[0];
+const { controlNumber } = request.reagentsRequested[0];
 const schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
+const studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
+const dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
 const gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
 const { noOfStudents } = request;
 const subject = request.forSubject;
+const { concurrentTopic } = request;
+const unit = request.unit.name;
 const teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
-
-const studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
-const dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
 
 let approver = "&nbsp;";
 let approverSignature = "";
 let teacherSignature = "";
 
 // Notarization
-if (request.isSignedByTeacher) {
+if (request.isSignedByTeacher === "APPROVED") {
     teacherSignature = request.signedTeacher.signature;
 }
 
-if (request.isSignedByAdmin) {
+if (request.isSignedByAdmin === "APPROVED") {
     approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
     approverSignature = request.signedAdmin.signature; // TODO: Testing on this not done yet
 }
 
 // Laboratory Setting
-const venueOfExperiment =
-    request.laboratoryReservations[0].laboratoryReserved.name;
-
+let venueOfExperiment;
 let inclusiveDates = "";
 let inclusiveTimeOfUse = "";
 
-let groupedReservations = request.laboratoryReservations.reduce((acc, curr) => {
-    const time = `${dayjs(curr.startTime).format("HH:mm").toString()}-${dayjs(
-        curr.endTime,
-    )
-        .format("HH:mm")
-        .toString()}`;
-    const date = `${dayjs(curr.startTime).format("MMMM DD, YYYY").toString()}`;
+let groupedReservations;
+if (request.independentTime && request.independentLocation) {
+    venueOfExperiment = request.independentLocation;
+    groupedReservations = request.independentTime;
+} else {
+    venueOfExperiment =
+        request.laboratoryReservations[0].laboratoryReserved.name;
+    groupedReservations = request.laboratoryReservations.reduce((acc, curr) => {
+        const time = `${dayjs(curr.startTime)
+            .format("HH:mm")
+            .toString()}-${dayjs(curr.endTime).format("HH:mm").toString()}`;
+        const date = `${dayjs(curr.startTime)
+            .format("MMMM DD, YYYY")
+            .toString()}`;
 
-    if (!acc[time]) {
-        acc[time] = [date];
-    } else {
-        acc[time].push(date);
+        if (!acc[time]) {
+            acc[time] = [date];
+        } else {
+            acc[time].push(date);
+        }
+
+        return acc;
+    }, {});
+}
+
+if (Object.keys(groupedReservations).length > 1) {
+    let counter = 1;
+    for (const time in groupedReservations) {
+        inclusiveTimeOfUse += `(${counter}) ${time} `;
+        inclusiveDates += `(${counter}) `;
+        for (const date of groupedReservations[time]) {
+            inclusiveDates += `${date} `;
+        }
+        counter += 1;
     }
-
-    return acc;
-}, {});
-
-let counter = 1;
-for (const time in groupedReservations) {
-    inclusiveTimeOfUse += `(${counter}) ${time} `;
-    inclusiveDates += `(${counter}) `;
-    for (const date of groupedReservations[time]) {
-        inclusiveDates += `${date} `;
+} else {
+    for (const time in groupedReservations) {
+        inclusiveTimeOfUse += `${time} `;
+        for (const date of groupedReservations[time]) {
+            inclusiveDates += `${date} `;
+        }
+        counter += 1;
     }
-    counter += 1;
 }
 
 const pageScript = fs.readFileSync(
@@ -72,268 +100,393 @@ const pageScript = fs.readFileSync(
     "utf8",
 );
 
-let html = `
+let html =
+    `<!doctype html>
+<html lang="en">
+<head>
+<script>` +
+    pageScript +
+    `</script>
+<style>
+    * {
+        font-family: "Calibri";
+        font-size: 13.5px;
+        margin: 0;
+        padding: 0;
+    }
+    @page {
+        size: A4;
+        margin: 0;
+        margin-top: 1.14in;
+        margin-bottom: 1in;
 
-`
+        @bottom-left {
+            margin-left:  0.73in;
+            font-weight: bold;
+            content: 'PSHS-00-F-CID-20-Ver02-Rev0-02/01/20';
+        }
 
-// TODO: Follow the makeAccountabilityForm format to make the lab res form
+        @bottom-right {
+            margin-right:  0.73in;
+            font-weight: bold;
+            content: 'page ' counter(page); /* ' of ' counter(pages) [inconsistently working]*/
+        }
+    }
+    @media print {
+        html, body {
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+        }
+    }
+    html, body {
+        /*A4 Sizing (210mm x 297mm or 8.27in x 11.69in)*/
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    #content {
+        position: absolute;
+        /*Taken through trial and errror*/
+        width: 80%;
+        margin-left: 0.73in;
+    }
+    h1 h2 {
+        font-weight: bold;
+    }
+    #heading > h1 {
+        margin-bottom: 0.02in; 
+    }
+    #title {
+        margin-top: 0.21in;
+        margin-bottom: 0.15in;
+    }
+    #tableId {
+        width: 100%;
+        text-align: right;
+    }
+    #table {
+        margin-bottom: 0.15in;
+    }
+    .input {
+        font-weight: normal;
+        border-bottom: 1px solid black;
+    }
+    #request {
+        text-align: center;
+        border-collapse: collapse;
+    }
+    #request td {
+        border: 1px solid black;
+        white-space: pre-wrap; /* allow wrapping of white space */
+        word-wrap: break-word; /* break long words */
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+    .request-header {
+        vertical-align: top;
+    }
+    .return {
+        vertical-align: top;
+        text-align: left;
+        height: 1.05in;
+    }
+    ul {
+        margin-left: 0.25in;
+    }
+    .italics {
+        font-style: italic;
+    }
+    .groupmates {
+        margin-left: 0.25in;
+        width: 40%;
+        table-layout: auto;
+        font-style: italic;
+    }
+    .sigs-table {
+        width: 100%;
+        margin-top: 0.5in;
+        border-collapse: collapse;
+    }
+    .sigs-input {
+        text-align: center;
+        width: 20%;
+        border-bottom: 1px solid black; 
+    }
+    .sigs-gap {
+        width: 15%;
+    }
+    .sigs-who {
+        width: 1px;
+        white-space: nowrap;
+    }
+    .sigs-title {
+        text-align: center;
+    }
+    #endorserSignature {
+        position: absolute; 
+        transform: scale(0.3)  translateY(-400px);
+    }
+    #approverSignature {
+        position: absolute;
+        transform: scale(0.3) translateY(-400px);
+    }
+    .svgSig {
+        display: flex;
+        justify-content: center;
+        align-items: top;
+    }
+</style>
+</head>
+<body>
+    <div id="content">
+        <div id="heading">
+            <h1>PHILIPPINE SCIENCE HIGH SCHOOL SYSTEM</h1>
+            <h1>CAMPUS:&emsp;&emsp;<span class="input">&emsp;&emsp;${campus}&emsp;&emsp;</span></h1>
+        </div>
 
-// // ----- Start of basic info header ----- //
-// // This adds the basic info of the request
-// const basicInfoHeader =
-//     `
-// <!DOCTYPE html>
-// <html lang="en">
-// <head>
-//     <meta charset="UTF-8">
-//     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//     <title>PSHS-00-F-CID-20-Ver02-Rev1 Laboratory Request and Equipment Accountability Form</title>
-//     <script>` +
-//     pageScript +
-//     `</script>
-//     <style>
-//         * {
-//             font-family: "Calibri";
-//             font-size: 13.5px;
-//             margin: 0;
-//             padding: 0;
-//         }
-//         @page {
-//             size: A4;
-//             margin: 0;
-//             margin-top: 1.14in;
-//             margin-bottom: 1in;
+        <h2 id="title">LABORATORY REQUEST AND EQUIPMENT ACCOUNTABILITY FORM</h2>
+        <div id="tableId">
+            Control No: <span class="input">${controlNumber}</span>
+            &emsp;SY: <span class="input">${schoolYear}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>
+        </div>
+        
+        <div id="table"></div>
+`;
 
-//             @bottom-left {
-//                 margin-left:  0.73in;
-//                 font-weight: bold;
-//                 content: 'PSHS-00-F-CID-20-Ver02-Rev0-02/01/20';
-//             }
+html += `
+<span class="italics"> Materials/Equipment Needed: </span>
+        <table id="request">
+            <tr class="request-header">
+                <td rowspan="2">Quantity</td>
+                <td rowspan="2">Item</td>
+                <td rowspan="2">Description</td>
+                <td>Issued</td>
+                <td>Returned</td>
+            </tr>
+            <tr class="request-header">
+                <td>Condition/Remarks</td>
+                <td>Condition/Remarks</td>
+            </tr>
+`;
 
-//             @bottom-right {
-//                 margin-right:  0.73in;
-//                 font-weight: bold;
-//                 content: 'page ' counter(page); /* ' of ' counter(pages) [inconsistently working]*/
-//             }
-//         }
-//         @media print {
-//             html, body {
-//                 width: 210mm;
-//                 height: 297mm;
-//                 margin: 0;
-//                 padding: 0;
-//             }
-//         }
-//         html, body {
-//             /*A4 Sizing (210mm x 297mm or 8.27in x 11.69in)*/
-//             width: 210mm !important;
-//             height: 297mm !important;
-//             margin: 0 !important;
-//             padding: 0 !important;
-//         }
-//         #content {
-//             position: absolute;
-//             /*Taken through trial and errror*/
-//             width: 90%;
-//             margin-left: 0.73in;
-//         }
-//         h1 h2 {
-//             font-weight: bold;
-//         }
-//         #heading > h1 {
-//             margin-bottom: 0.02in;
-//         }
-//         #title {
-//             margin-top: 0.21in;
-//             margin-bottom: 0.23in;
-//         }
-//         .input {
-//             font-weight: normal;
-//             border-bottom: 1px solid black;
-//         }
-//         table {
-//             width: 90%;
-//             border-collapse: collapse;
-//             margin-bottom: 0.21in;
-//         }
-//         #basic-info-1{
-//             text-align: right;
-//             border-bottom: none !important;
-//         }
-//         .right-side-basic-info {
-//             display: inline-block;
-//             text-align: right;
-//             float: right;
-//         }
-//         .expander {
-//             border-bottom: 1px solid black;
-//         }
-//         .remove-botB {
-//             border-bottom: 2px solid white;
-//         }
-//         #request {
-//             text-align: center;
-//         }
-//         #request td {
-//             border: 1px solid black;
-//             white-space: pre-wrap; /* allow wrapping of white space */
-//             word-wrap: break-word; /* break long words */
-//         }
-//         #request td:first-child {
-//             border-bottom: 1px solid black !important;
-//         }
-//         .request-header {
-//             vertical-align: top;
-//             border: 1px solid black;
-//         }
-//         .return {
-//             vertical-align: top;
-//             text-align: left;
-//             height: 1.05in;
-//         }
-//         ul {
-//             margin-left: 0.25in;
-//         }
-//         .italics {
-//             font-style: italic;
-//         }
-//         .groupmates {
-//             margin-left: 0.25in;
-//             width: 40%;
-//             table-layout: auto;
-//             font-style: italic;
-//         }
-//         .sigs-table {
-//             width: 90%;
-//             margin-top: 0.25in;
-//         }
-//         .sigs-input {
-//             text-align: center;
-//             width: 20%;
-//         }
-//         .sigs-gap {
-//             width: 10%;
-//         }
-//         .sigs-who {
-//             width: 11%;
-//         }
-//         .sigs-title {
-//             text-align: center;
-//         }
-//     </style>
-// </head>
-// <body>
-//     <div id="content">
-//         <div id="heading">
-//             <h1>PHILIPPINE SCIENCE HIGH SCHOOL SYSTEM</h1>
-//             <h1>CAMPUS:&emsp;&emsp;<span class="input">&emsp;&emsp;${campus}&emsp;&emsp;</span></h1>
-//         </div>
+// Requested materials
+for (const item of request.reagentsRequested) {
+    html += `
+            <tr>
+                <td>${item.quantity}</td>
+                <td>${item.name}</td>
+                <td>${item.description}</td>
+                <td></td>
+                <td></td>
+            </tr>
+    `;
+}
 
-//         <h2 id="title">LABORATORY REQUEST AND EQUIPMENT ACCOUNTABILITY FORM</h2>
+// Requested equipment
+for (const item of request.equipmentRequested) {
+    html += `
+            <tr>
+                <td>${item.quantity}</td>
+                <td>${item.name}</td>
+                <td>${item.description}</td>
+                <td></td>
+                <td></td>
+            </tr>
+    `;
+}
 
-//         <table id="basic-info">
-//             <tr id="basic-info-1">
-//                 <td>
-//                     Control No: <span class="input">&emsp;${controlNo}&emsp;</span>
-//                     &emsp; SY: <span class="input">&emsp;${schoolYear}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>
-//                 </td>
-//             </tr>
-//             <tr class="expander">
-//                 <td>
-//                     <span class="remove-botB">Grade Level and Section:</span><span class="input">&emsp;${gradeSectionValue}&emsp;&emsp;&emsp;</span>
-//                     <span class="right-side-basic-info"><span class="remove-botB"> &emsp; Number of Students:</span><span class="input">&emsp;${numberOfStudents}&emsp;&emsp;&emsp;</span></span>
-//                 </td>
-//             </tr>
-//             <tr class="expander">
-//                 <td>
-//                     <span class="remove-botB">Subject:</span><span class="input">&emsp;${subject}&emsp;</span>
-//                     <span class="right-side-basic-info"><span class="remove-botB"> &emsp; Teacher-In-Charge: </span><span class="input">&emsp;${teacherInCharge}&emsp;</span> </span>
-//                 </td>
-//             </tr>
-//             <tr>
-//                 <td class="expander">
-//                     <span class="remove-botB">Date/Inclusive Dates: </span><span class="input">&emsp;${dates}&emsp;</span>
-//                     <span class="right-side-basic-info"><span class="remove-botB"> &emsp; Inclusive Time of Use: </span><span class="input">&emsp;${timeOfUse}&emsp;</span></span>
-//                 </td>
-//             </tr>
-//             <tr class="expander">
-//                 <td>
-//                     <span class="remove-botB">Venue of Experiment: </span><span class="input">&emsp;${venueValue}&emsp;</span>
-//                 </td>
-//             </tr>
-//         </table>
-// `;
-// // ----- End of basic info header ----- //
+html += `
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="return" style="padding: 1px;">Received by:</td>
+                <td class="return" style="padding: 1px;">Received and<br>Inspected by:</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="text-align: left; padding: 1px;">Date:</td>
+                <td style="text-align: left; padding: 1px;">Date:</td>
+            </tr>
+        </table>
+        <br>
+        <ul class="italics">
+            <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
+            <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
+        </ul>
 
-// // ----- Start of requested by ----- //
-// // This adds the instructions and terms and conditions as well as requestor and date requested
-// const requestedBy = `
-//         <ul class="italics">
-//             <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
-//             <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
-//         </ul>
+        <table class="sigs-table">
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="sigs-who">Requested by:</td>
+                <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${studentName}</td>
+                <td class="sigs-gap"></td>
+                <td class="sigs-who">Date Requested:</td> 
+                <td class="input sigs-input">${dateRequested}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="sigs-title">Teacher/Student</td>
+                <td class="sigs-gap"></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
 
-//         <table class="sigs-table">
-//             <tr>
-//                 <td class="sigs-who">Requested By:</td>
-//                 <td class="input sigs-input">${studentName}</td>
-//                 <td class="sigs-gap"></td>
-//                 <td class="sigs-who">Date Requested:</td>
-//                 <td class="input sigs-input">${dateRequested}</td>
-//             </tr>
-//             <tr>
-//                 <td></td>
-//                 <td class="sigs-title">Teacher/Student</td>
-//                 <td class="sigs-gap"></td>
-//                 <td></td>
-//                 <td></td>
-//             </tr>
-//         </table>
-// `;
-// // ----- End of requested by ----- //
+        <p class="italics">
+            If user of the lab is a group, list down the names of students.
+        </p>
+        <table class="groupmates">
+`;
+// Group Members
+const length =
+    request.otherGroupMembers.length < 5 ? 5 : request.otherGroupMembers.length;
 
-// // ----- Start of groupmates list ----- //
-// // Dynamically add all the groupmates in a list
-// let groupmatesList = `
-//         <p class="italics">
-//             If user of the lab is a group, list down the names of students.
-//         </p>
-//         <table class="groupmates">
-// `;
-// for (let i = 0; i < groupmates.length; i++) {
-//     groupmatesList += `
-//             <tr>
-//                 <td style="text-align: right;">${i + 1}.</td>
-//                 <td class="input">&nbsp;&nbsp;${groupmates[i]}</td>
-//             </tr>`;
-// }
-// groupmatesList += `</table>`;
-// // ----- End of groupmates list ----- //
+for (let i = 0; i < length; i++) {
+    html += `
+        <tr>
+            <td style="text-align: right;">${i + 1}.</td>
+            <td class="input">&nbsp;&nbsp;${
+                request.otherGroupMembers[i] == null
+                    ? ""
+                    : request.otherGroupMembers[i]
+            }</td>
+        </tr>
+    `;
+}
+html += `</table>`;
 
-// // ----- Start of notarization ----- //
-// // Endorser and Approver are placed here
-// const notarization = `
-//         <table class="sigs-table">
-//             <tr>
-//                 <td class="sigs-who">Endorsed By:</td>
-//                 <td class="input sigs-input">${endorser}</td>
-//                 <td class="sigs-gap"></td>
-//                 <td class="sigs-who">Approved By:</td>
-//                 <td class="input sigs-input">${approver}</td>
-//             </tr>
-//             <tr>
-//                 <td></td>
-//                 <td class="sigs-title">Subject Teacher/Unit Head</td>
-//                 <td class="sigs-gap"></td>
-//                 <td></td>
-//                 <td class="sigs-title">SRS/SRA</td>
-//             </tr>
-//         </table>
-//     </div>
-// </body>
-// </html>
-// `;
+// Notarization
+html += `
+    <table class="sigs-table">
+        <tr>
+            <td></td>
+            <td class="svgSig"> <div id="endorserSignature"></div> </td>
+            <td></td>
+            <td></td>
+            <td class="svgSig"> <div id="approverSignature"></div> </td>
+        <tr>
+        <tr>
+            <td class="sigs-who">Endorsed by:</td>
+            <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${teacherInCharge}</td>
+            <td class="sigs-gap"></td>
+            <td class="sigs-who">Approved by:</td> 
+            <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${approver}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="sigs-title">Subject Teacher/Unit Head</td>
+            <td class="sigs-gap"></td>
+            <td></td>
+            <td class="sigs-title">Laboratory Technician</td>
+        </tr>
+    </table>
+`;
 
-// const laboratoryReservation =
-//     basicInfoHeader + requestedBy + groupmatesList + notarization;
+html += `
+    </div>
+</body>
+<script>
+    // 585 is the row width
+    let data = [
+        {
+            label: "Grade Level and Section",
+            value: "${gradeSection}",
+            minWidth: 375,
+        },
+        {
+            label: "Number of Students",
+            value: "${noOfStudents}",
+            minWidth: 210,
+        },
+        {
+            label: "Subject",
+            value: "${subject}",
+            minWidth: 250,
+        },
+        {
+            label: "Concurrent Topic",
+            value: "${concurrentTopic}",
+            minWidth: 335,
+        },
+        {
+            label: "Unit",
+            value: "${unit}",
+            minWidth: 282,
+        },
+        {
+            label: "Teacher In-Charge",
+            value: "${teacherInCharge}",
+            minWidth: 302,
+        },
+        {
+            label: "Venue of Experiment",
+            value: "${venueOfExperiment}",
+            minWidth: 520,
+        },
+        {
+            label: "Date/Inclusive Dates",
+            value: "${inclusiveDates}",
+            minWidth: 255,
+        },
+        {
+            label: "Inclusive Time of Use",
+            value: "${inclusiveTimeOfUse}",
+            minWidth: 255,
+        },
+    ];
+
+    // Create flex container
+    let container = document.getElementById("table");
+    container.style.display = "flex";
+    container.style.flexWrap = "wrap";
+
+    // Iterate over data to create flex items
+    for (let i = 0; i < data.length; i++) {
+        // Create label item
+        let labelItem = document.createElement("div");
+        labelItem.textContent = data[i].label + ":";
+        labelItem.style.marginRight = "15px"
+        container.appendChild(labelItem);
+
+        // Create value item
+        let valueItem = document.createElement("div");
+        valueItem.textContent = data[i].value;
+        valueItem.style.borderBottom = "1px solid black";
+        container.appendChild(valueItem);
+
+        // Space
+        let spaceItem = document.createElement("div");
+        spaceItem.style.borderBottom = "1px solid black";
+
+        let difference =
+            data[i].minWidth -
+            labelItem.offsetWidth -
+            valueItem.offsetWidth;
+        let offsetWidth = difference < 0 ? 0 : difference;
+
+        spaceItem.style.minWidth = offsetWidth + "px";
+        console.log(offsetWidth)
+        container.appendChild(spaceItem);
+    }
+
+    // Signatures
+    document.getElementById("endorserSignature").innerHTML = '${teacherSignature}';
+    document.getElementById("approverSignature").innerHTML = '${approverSignature}';
+
+
+</script>
+</html>
+`;
+
+makePDF(html);

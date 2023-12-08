@@ -19,8 +19,6 @@ const request = await getRequest({
     id: "4104910b-6c2f-4970-b03a-d0c61faae77e",
 });
 
-console.log(request);
-
 const { campus } = request.schoolYear;
 const { controlNumber } = request.reagentsRequested[0];
 const schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
@@ -278,20 +276,7 @@ html += `
 for (const item of request.reagentsRequested) {
     html += `
             <tr>
-                <td>${item.quantity}</td>
-                <td>${item.name}</td>
-                <td>${item.description}</td>
-                <td></td>
-                <td></td>
-            </tr>
-    `;
-}
-
-// Requested equipment
-for (const item of request.equipmentRequested) {
-    html += `
-            <tr>
-                <td>${item.quantity}</td>
+                <td>${item.quantity} ${item.unit}</td>
                 <td>${item.name}</td>
                 <td>${item.description}</td>
                 <td></td>
