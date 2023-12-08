@@ -204,6 +204,5 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    console.log(request);
     return request.id;
 });

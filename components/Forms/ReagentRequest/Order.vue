@@ -86,7 +86,9 @@ function validateQuantity(reagent) {
                                     <div class="w-[100px] px-5">
                                         <UInput
                                             v-model="reagent.requestedQuantity"
-                                            class="text-center"
+                                            :ui="{
+                                                base: 'relative block w-full disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0 text-center', // It overrides the default UI classes so you have to 
+                                            }"
                                             type="number"
                                             min="1"
                                             @blur="validateQuantity(reagent)"
