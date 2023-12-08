@@ -8,7 +8,7 @@ async function makePDF(htmlContent) {
     const page = await browser.newPage();
     await page.setContent(htmlContent);
     await page.pdf({
-        path: "./tests/formsRedo/testPDF/reagentRequest.pdf",
+        path: "./tests/formsRedo/testPDF/labReservationForm.pdf",
         format: "A4",
     });
     await browser.close();
@@ -16,8 +16,10 @@ async function makePDF(htmlContent) {
 
 // Fetch the Request
 const request = await getRequest({
-    id: "4104910b-6c2f-4970-b03a-d0c61faae77e",
+    id: "b9f0e461-b91f-4dd7-942c-b9d429d7379a",
 });
+
+// This is a bit tricky cause there can be multiple laboratory reservations
 
 const { campus } = request.schoolYear;
 const { controlNumber } = request.reagentsRequested[0];
