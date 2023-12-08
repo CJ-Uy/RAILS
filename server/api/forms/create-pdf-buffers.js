@@ -1,6 +1,7 @@
 // import prisma from "~/server/db/prisma";
 import convertHtmlToPdf from "../../app/forms/PDFconverter.js";
 import makeLaboratoryReservationForm from "../../app/forms/makeLaboratoryReservationForm.js";
+import makeReagentRequestForm from "../../app/forms/makeReagentRequestForm.js";
 import makeAccountabilityForm from "../../app/forms/makeAccountabilityForm.js";
 
 export default defineEventHandler(async (event) => {
@@ -17,12 +18,10 @@ export default defineEventHandler(async (event) => {
     // }
 
     // Make CID 19 - Reagent Request Form
-    // if (body.requestedForms.includes(19)) {
-    //     pdfBuffer = await convertHtmlToPdf(
-    //         await makeReagentRequestForm(body),
-    //     );
-    //     pdfBuffers.CID19 = pdfBuffer;
-    // }
+    if (body.requestedForms.includes(19)) {
+        pdfBuffer = await convertHtmlToPdf(await makeReagentRequestForm(body));
+        pdfBuffers.CID19 = pdfBuffer;
+    }
 
     // Make CID 20 - Accounatbility for Materials and Equipment Request Form
     if (body.requestedForms.includes(20)) {

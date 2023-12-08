@@ -24,11 +24,11 @@ export default async function makeAccountability(requestId) {
     let teacherSignature = "";
 
     // Notarization
-    if (request.isSignedByTeacher) {
+    if (request.isSignedByTeacher === "APPROVED") {
         teacherSignature = request.signedTeacher.signature;
     }
 
-    if (request.isSignedByAdmin) {
+    if (request.isSignedByAdmin === "APPROVED") {
         approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
         approverSignature = request.signedAdmin.signature; // TODO: Testing on this not done yet
     }
@@ -68,14 +68,23 @@ export default async function makeAccountability(requestId) {
         );
     }
 
-    let counter = 1;
-    for (const time in groupedReservations) {
-        inclusiveTimeOfUse += `(${counter}) ${time} `;
-        inclusiveDates += `(${counter}) `;
-        for (const date of groupedReservations[time]) {
-            inclusiveDates += `${date} `;
+    if (Object.keys(groupedReservations).length > 1) {
+        let counter = 1;
+        for (const time in groupedReservations) {
+            inclusiveTimeOfUse += `(${counter}) ${time} `;
+            inclusiveDates += `(${counter}) `;
+            for (const date of groupedReservations[time]) {
+                inclusiveDates += `${date} `;
+            }
+            counter += 1;
         }
-        counter += 1;
+    } else {
+        for (const time in groupedReservations) {
+            inclusiveTimeOfUse += `${time} `;
+            for (const date of groupedReservations[time]) {
+                inclusiveDates += `${date} `;
+            }
+        }
     }
 
     const pageScript = fs.readFileSync(

@@ -196,7 +196,7 @@ export default defineEventHandler(async (event) => {
                     schoolYearId: schoolYear.id,
                     controlNumber,
                     reagents: {
-                        connect: reagent.id.map((id) => ({ id })),
+                        connect: [reagent.id].map((id) => ({ id })),
                     },
                     laboratoryRequestId: request.id,
                 },

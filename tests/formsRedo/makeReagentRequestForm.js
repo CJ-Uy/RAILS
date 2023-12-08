@@ -1,103 +1,114 @@
 import fs from "fs";
+import puppeteer from "puppeteer";
 import dayjs from "dayjs";
-
 import getRequest from "./getRequest.js";
 
-export default async function makeAccountability(requestId) {
-    const request = await getRequest(requestId);
+async function makePDF(htmlContent) {
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
+    await page.setContent(htmlContent);
+    await page.pdf({
+        path: "./tests/formsRedo/testPDF/reagentRequest.pdf",
+        format: "A4",
+    });
+    await browser.close();
+}
 
-    const { campus } = request.schoolYear;
-    const { controlNumber } = request.reagentsRequested[0];
-    const schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
-    const studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
-    const dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
-    const gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
-    const { noOfStudents } = request;
-    const subject = request.forSubject;
-    const { concurrentTopic } = request;
-    const unit = request.unit.name;
-    const teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
+// Fetch the Request
+const request = await getRequest({
+    id: "4104910b-6c2f-4970-b03a-d0c61faae77e",
+});
 
-    let approver = "&nbsp;";
-    let approverSignature = "";
-    let teacherSignature = "";
+console.log(request);
 
-    // Notarization
-    if (request.isSignedByTeacher === "APPROVED") {
-        teacherSignature = request.signedTeacher.signature;
-    }
+const { campus } = request.schoolYear;
+const { controlNumber } = request.reagentsRequested[0];
+const schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
+const studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
+const dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
+const gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
+const { noOfStudents } = request;
+const subject = request.forSubject;
+const { concurrentTopic } = request;
+const unit = request.unit.name;
+const teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
 
-    if (request.isSignedByAdmin === "APPROVED") {
-        approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
-        approverSignature = request.signedAdmin.signature; // TODO: Testing on this not done yet
-    }
+let approver = "&nbsp;";
+let approverSignature = "";
+let teacherSignature = "";
 
-    // Laboratory Setting
-    let venueOfExperiment;
-    let inclusiveDates = "";
-    let inclusiveTimeOfUse = "";
+// Notarization
+if (request.isSignedByTeacher === "APPROVED") {
+    teacherSignature = request.signedTeacher.signature;
+}
 
-    let groupedReservations;
-    if (request.independentTime && request.independentLocation) {
-        venueOfExperiment = request.independentLocation;
-        groupedReservations = request.independentTime;
-    } else {
-        venueOfExperiment =
-            request.laboratoryReservations[0].laboratoryReserved.name;
-        groupedReservations = request.laboratoryReservations.reduce(
-            (acc, curr) => {
-                const time = `${dayjs(curr.startTime)
-                    .format("HH:mm")
-                    .toString()}-${dayjs(curr.endTime)
-                    .format("HH:mm")
-                    .toString()}`;
-                const date = `${dayjs(curr.startTime)
-                    .format("MMMM DD, YYYY")
-                    .toString()}`;
+if (request.isSignedByAdmin === "APPROVED") {
+    approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
+    approverSignature = request.signedAdmin.signature; // TODO: Testing on this not done yet
+}
 
-                if (!acc[time]) {
-                    acc[time] = [date];
-                } else {
-                    acc[time].push(date);
-                }
+// Laboratory Setting
+let venueOfExperiment;
+let inclusiveDates = "";
+let inclusiveTimeOfUse = "";
 
-                return acc;
-            },
-            {},
-        );
-    }
+let groupedReservations;
+if (request.independentTime && request.independentLocation) {
+    venueOfExperiment = request.independentLocation;
+    groupedReservations = request.independentTime;
+} else {
+    venueOfExperiment =
+        request.laboratoryReservations[0].laboratoryReserved.name;
+    groupedReservations = request.laboratoryReservations.reduce((acc, curr) => {
+        const time = `${dayjs(curr.startTime)
+            .format("HH:mm")
+            .toString()}-${dayjs(curr.endTime).format("HH:mm").toString()}`;
+        const date = `${dayjs(curr.startTime)
+            .format("MMMM DD, YYYY")
+            .toString()}`;
 
-    if (Object.keys(groupedReservations).length > 1) {
-        let counter = 1;
-        for (const time in groupedReservations) {
-            inclusiveTimeOfUse += `(${counter}) ${time} `;
-            inclusiveDates += `(${counter}) `;
-            for (const date of groupedReservations[time]) {
-                inclusiveDates += `${date} `;
-            }
-            counter += 1;
+        if (!acc[time]) {
+            acc[time] = [date];
+        } else {
+            acc[time].push(date);
         }
-    } else {
-        for (const time in groupedReservations) {
-            inclusiveTimeOfUse += `${time} `;
-            for (const date of groupedReservations[time]) {
-                inclusiveDates += `${date} `;
-            }
+
+        return acc;
+    }, {});
+}
+
+if (Object.keys(groupedReservations).length > 1) {
+    let counter = 1;
+    for (const time in groupedReservations) {
+        inclusiveTimeOfUse += `(${counter}) ${time} `;
+        inclusiveDates += `(${counter}) `;
+        for (const date of groupedReservations[time]) {
+            inclusiveDates += `${date} `;
         }
+        counter += 1;
     }
+} else {
+    for (const time in groupedReservations) {
+        inclusiveTimeOfUse += `${time} `;
+        for (const date of groupedReservations[time]) {
+            inclusiveDates += `${date} `;
+        }
+        counter += 1;
+    }
+}
 
-    const pageScript = fs.readFileSync(
-        "./server/app/forms/addPageNumbers/page.polyfill.txt",
-        "utf8",
-    );
+const pageScript = fs.readFileSync(
+    "./server/app/forms/addPageNumbers/page.polyfill.txt",
+    "utf8",
+);
 
-    let html =
-        `<!doctype html>
+let html =
+    `<!doctype html>
 <html lang="en">
 <head>
 <script>` +
-        pageScript +
-        `</script>
+    pageScript +
+    `</script>
 <style>
     * {
         font-family: "Calibri";
@@ -247,7 +258,7 @@ export default async function makeAccountability(requestId) {
         <div id="table"></div>
 `;
 
-    html += `
+html += `
 <span class="italics"> Materials/Equipment Needed: </span>
         <table id="request">
             <tr class="request-header">
@@ -263,33 +274,33 @@ export default async function makeAccountability(requestId) {
             </tr>
 `;
 
-    // Requested materials
-    for (const item of request.reagentsRequested) {
-        html += `
-            <tr>
-                <td>${item.quantity}</td>
-                <td>${item.name}</td>
-                <td>${item.description}</td>
-                <td></td>
-                <td></td>
-            </tr>
-    `;
-    }
-
-    // Requested equipment
-    for (const item of request.equipmentRequested) {
-        html += `
-            <tr>
-                <td>${item.quantity}</td>
-                <td>${item.name}</td>
-                <td>${item.description}</td>
-                <td></td>
-                <td></td>
-            </tr>
-    `;
-    }
-
+// Requested materials
+for (const item of request.reagentsRequested) {
     html += `
+            <tr>
+                <td>${item.quantity}</td>
+                <td>${item.name}</td>
+                <td>${item.description}</td>
+                <td></td>
+                <td></td>
+            </tr>
+    `;
+}
+
+// Requested equipment
+for (const item of request.equipmentRequested) {
+    html += `
+            <tr>
+                <td>${item.quantity}</td>
+                <td>${item.name}</td>
+                <td>${item.description}</td>
+                <td></td>
+                <td></td>
+            </tr>
+    `;
+}
+
+html += `
             <tr>
                 <td></td>
                 <td></td>
@@ -339,14 +350,12 @@ export default async function makeAccountability(requestId) {
         </p>
         <table class="groupmates">
 `;
-    // Group Members
-    const length =
-        request.otherGroupMembers.length < 5
-            ? 5
-            : request.otherGroupMembers.length;
+// Group Members
+const length =
+    request.otherGroupMembers.length < 5 ? 5 : request.otherGroupMembers.length;
 
-    for (let i = 0; i < length; i++) {
-        html += `
+for (let i = 0; i < length; i++) {
+    html += `
         <tr>
             <td style="text-align: right;">${i + 1}.</td>
             <td class="input">&nbsp;&nbsp;${
@@ -356,11 +365,11 @@ export default async function makeAccountability(requestId) {
             }</td>
         </tr>
     `;
-    }
-    html += `</table>`;
+}
+html += `</table>`;
 
-    // Notarization
-    html += `
+// Notarization
+html += `
     <table class="sigs-table">
         <tr>
             <td></td>
@@ -386,7 +395,7 @@ export default async function makeAccountability(requestId) {
     </table>
 `;
 
-    html += `
+html += `
     </div>
 </body>
 <script>
@@ -482,7 +491,4 @@ export default async function makeAccountability(requestId) {
 </html>
 `;
 
-    // ---- END ----- //
-
-    return html;
-}
+makePDF(html);

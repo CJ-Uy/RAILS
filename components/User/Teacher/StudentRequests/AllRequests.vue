@@ -162,7 +162,31 @@ async function decline() {
         <UModal v-model="editRequestModalIsOpen">
             <UCard>
                 <template #header></template>
-
+                <h1>TIME</h1>
+                <table>
+                    <tr>
+                        <td>Start Time</td>
+                        <td>
+                            {{
+                                dayjs(
+                                    currentOpenRequest.laboratoryReservations[1]
+                                        .startTime,
+                                ).format("MMM DD, YYYY - HH:mm")
+                            }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Start Time</td>
+                        <td>
+                            {{
+                                dayjs(
+                                    currentOpenRequest.laboratoryReservations[1]
+                                        .endTime,
+                                ).format("MMM DD, YYYY - HH:mm")
+                            }}
+                        </td>
+                    </tr>
+                </table>
                 <pre>
                     {{ currentOpenRequest }}
                 </pre>
