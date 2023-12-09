@@ -19,10 +19,8 @@ const request = await getRequest({
     id: "00791347-4891-4eb1-ae13-6110cd2aea27",
 });
 
-// This is a bit tricky cause there can be multiple laboratory reservations
-
 const { campus } = request.schoolYear;
-const { controlNumber } = request.reagentsRequested[0];
+const { controlNumber } = request.laboratoryReservations[0];
 const schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
 const studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
 const dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
@@ -218,7 +216,7 @@ let html =
         align-items: top;
     }
     #form-code {
-        margin-top: 0.4in;
+        margin-top: 0.3in;
         font-size: 10px;
     }
 </style>

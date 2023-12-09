@@ -1,4 +1,3 @@
-// import prisma from "~/server/db/prisma";
 import convertHtmlToPdf from "~/utils/forms/PDFconverter.js";
 import makeLaboratoryReservationForm from "~/utils/forms/makeLaboratoryReservationForm.js";
 import makeReagentRequestForm from "~/utils/forms/makeReagentRequestForm.js";
@@ -10,12 +9,12 @@ export default defineEventHandler(async (event) => {
     let pdfBuffer;
 
     // Make CID 05 - Laboratory Reservation Form
-    // if (body.requestedForms.includes(5)) {
-    //     pdfBuffer = await convertHtmlToPdf(
-    //         await makeLaboratoryReservationForm(body),
-    //     );
-    //     pdfBuffers.CID19 = pdfBuffer;
-    // }
+    if (body.requestedForms.includes(5)) {
+        pdfBuffer = await convertHtmlToPdf(
+            await makeLaboratoryReservationForm(body),
+        );
+        pdfBuffers.CID05 = pdfBuffer;
+    }
 
     // Make CID 19 - Reagent Request Form
     if (body.requestedForms.includes(19)) {
