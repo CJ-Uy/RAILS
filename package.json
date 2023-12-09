@@ -48,6 +48,7 @@
         "@prisma/client": "^5.7.0",
         "@vuepic/vue-datepicker": "^6.1.0",
         "dayjs": "^1.11.10",
+        "flat": "^6.0.1",
         "nuxt-mailer": "^0.11.0",
         "puppeteer": "^21.6.0",
         "signature_pad": "^4.1.7",
