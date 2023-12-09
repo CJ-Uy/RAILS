@@ -24,11 +24,11 @@ async function downloadRequest(id) {
         body: { id, requestedForms: [5, 19, 20] },
     });
 
-    const pdfBuffers = pdfBuffersRawData.data.value;
-    downloadPDF(pdfBuffers, user.lastName);
+    const pdfBuffers = pdfBuffersRawData.data.value[0];
+    downloadPDF(pdfBuffers, pdfBuffersRawData.data.value[1]);
 }
 
-function downloadPDF(pdfBuffers, lastname) {
+function downloadPDF(pdfBuffers, prefix) {
     for (const property in pdfBuffers) {
         const buffer = pdfBuffers[property].data;
         const url = window.URL.createObjectURL(
@@ -36,7 +36,7 @@ function downloadPDF(pdfBuffers, lastname) {
         );
         const link = document.createElement("a");
         link.href = url;
-        const filename = `${lastname}-${property}-Request.pdf`;
+        const filename = `${prefix}-${property}-Request.pdf`;
 
         link.setAttribute("download", filename);
         document.body.appendChild(link);

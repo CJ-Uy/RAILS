@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+import prisma from "~/server/db/prisma";
 import convertHtmlToPdf from "~/utils/forms/PDFconverter.js";
 import makeLaboratoryReservationForm from "~/utils/forms/makeLaboratoryReservationForm.js";
 import makeReagentRequestForm from "~/utils/forms/makeReagentRequestForm.js";
@@ -28,5 +30,24 @@ export default defineEventHandler(async (event) => {
         pdfBuffers.CID20 = pdfBuffer;
     }
 
-    return pdfBuffers;
+    const requestorDetails = await prisma.laboratoryRequests.findUnique({
+        where: {
+            id: body.id,
+        },
+        select: {
+            createdAt: true,
+            requestor: {
+                select: {
+                    firstName: true,
+                    lastName: true,
+                },
+            },
+        },
+    });
+
+    const prefix = `${dayjs(requestorDetails.createdAt).format("MM-DD-YY")}_${
+        requestorDetails.requestor.lastName
+    },${requestorDetails.requestor.firstName}`;
+
+    return [pdfBuffers, prefix];
 });
