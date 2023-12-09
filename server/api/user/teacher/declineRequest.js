@@ -1,4 +1,5 @@
 import prisma from "~/server/db/prisma";
+import SignedStatus from "~/server/db/signedStatus";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -8,7 +9,7 @@ export default defineEventHandler(async (event) => {
             id: body.id,
         },
         data: {
-            isSignedByTeacher: false,
+            isSignedByTeacher: SignedStatus.REJECTED,
             signedTeacherId: null,
         },
         include: {

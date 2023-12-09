@@ -1,7 +1,7 @@
 <script setup>
 const user = inject("user");
 
-let links = [
+const links = [
     {
         label: `${user.firstName} ${user.lastName}\n${user.email}`,
         avatar: {
@@ -18,10 +18,10 @@ let links = [
                 icon: "i-heroicons-chart-bar-solid",
             },
             {
-                label: "STUDENT REQUESTS",
-                to: "/teacher/student-requests",
+                label: "REQUESTS",
+                to: "/teacher/requests",
                 icon: "i-material-symbols-manage-search",
-            }
+            },
         ],
     },
     {
