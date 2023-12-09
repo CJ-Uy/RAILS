@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import getControlNumbers from "../../app/forms/saving-requests/getControlNumbers.js";
-import formatDates from "../../app/forms/saving-requests/formatDates.js";
+import getControlNumbers from "~/utils/forms/saving-requests/getControlNumbers.js";
+import formatDates from "~/utils/forms/saving-requests/formatDates.js";
 import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async (event) => {

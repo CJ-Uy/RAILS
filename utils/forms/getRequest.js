@@ -1,4 +1,4 @@
-import prisma from "~/server/db/prisma.js";
+import prisma from "../db/prisma.js";
 
 export default async function getRequest(id) {
     return await prisma.laboratoryRequests.findUnique({

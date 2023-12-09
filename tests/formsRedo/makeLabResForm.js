@@ -16,7 +16,7 @@ async function makePDF(htmlContent) {
 
 // Fetch the Request
 const request = await getRequest({
-    id: "b9f0e461-b91f-4dd7-942c-b9d429d7379a",
+    id: "00791347-4891-4eb1-ae13-6110cd2aea27",
 });
 
 // This is a bit tricky cause there can be multiple laboratory reservations
@@ -98,7 +98,7 @@ if (Object.keys(groupedReservations).length > 1) {
 }
 
 const pageScript = fs.readFileSync(
-    "./server/app/forms/addPageNumbers/page.polyfill.txt",
+    "./utils/forms/addPageNumbers/page.polyfill.txt",
     "utf8",
 );
 

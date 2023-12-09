@@ -1,4 +1,4 @@
-import prisma from "../../../db/prisma.js";
+import prisma from "../../db/prisma.js";
 
 export default async function getControlNumbers(form, controlNumbers) {
     // form = laboratoryReservation, equipmentRequest, reagentRequest

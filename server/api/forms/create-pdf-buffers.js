@@ -1,8 +1,8 @@
 // import prisma from "~/server/db/prisma";
-import convertHtmlToPdf from "../../app/forms/PDFconverter.js";
-import makeLaboratoryReservationForm from "../../app/forms/makeLaboratoryReservationForm.js";
-import makeReagentRequestForm from "../../app/forms/makeReagentRequestForm.js";
-import makeAccountabilityForm from "../../app/forms/makeAccountabilityForm.js";
+import convertHtmlToPdf from "~/utils/forms/PDFconverter.js";
+import makeLaboratoryReservationForm from "~/utils/forms/makeLaboratoryReservationForm.js";
+import makeReagentRequestForm from "~/utils/forms/makeReagentRequestForm.js";
+import makeAccountabilityForm from "~/utils/forms/makeAccountabilityForm.js";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);

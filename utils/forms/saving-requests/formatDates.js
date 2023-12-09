@@ -1,4 +1,3 @@
-import prisma from "../../../db/prisma.js";
 import dayjs from "dayjs";
 
 export default function formatDates(allDates) {
