@@ -10,9 +10,9 @@ definePageMeta({ layout: "teacher-pages" });
 <template>
     <div class="flex flex-col">
         <UserDashboardHeader title="ASSIGNED LABORATORY REQUESTS" />
-        <UserTeacherStudentRequestsSaveSignature />
+        <UserTeacherRequestsSaveSignature />
         <UContainer class="mt-10">
-            <UserTeacherStudentRequestsAllRequests />
+            <UserTeacherRequestsAllRequests />
         </UContainer>
     </div>
 </template>

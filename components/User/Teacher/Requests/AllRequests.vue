@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 
 const user = inject("user");
 
-const requests = await useFetch("/api/user/teacher/getAllStudentRequests", {
+const requests = await useFetch("/api/user/teacher/requests/getAllRequests", {
     method: "POST",
     body: user,
 });
@@ -11,10 +11,13 @@ const requests = await useFetch("/api/user/teacher/getAllStudentRequests", {
 const studentRequests = ref(requests.data.value);
 
 async function updateTable() {
-    const requests = await useFetch("/api/user/teacher/getAllStudentRequests", {
-        method: "POST",
-        body: user,
-    });
+    const requests = await useFetch(
+        "/api/user/teacher/requests/getAllRequests",
+        {
+            method: "POST",
+            body: user,
+        },
+    );
     studentRequests.value = requests.data.value;
 }
 
@@ -52,7 +55,7 @@ function openEditRequestModal(request) {
 }
 async function approve() {
     editRequestModalIsOpen.value = false;
-    await useFetch("/api/user/teacher/approveRequest", {
+    await useFetch("/api/user/teacher/requests/approveRequest", {
         method: "POST",
         body: { ...currentOpenRequest.value, user },
     });
@@ -60,7 +63,7 @@ async function approve() {
 }
 async function decline() {
     editRequestModalIsOpen.value = false;
-    await useFetch("/api/user/teacher/declineRequest", {
+    await useFetch("/api/user/teacher/requests/declineRequest", {
         method: "POST",
         body: currentOpenRequest.value,
     });

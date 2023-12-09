@@ -8,8 +8,12 @@ definePageMeta({ layout: "admin-pages" });
 </script>
 
 <template>
-    <div>
+    <div class="flex flex-col">
         <UserDashboardHeader title="ADMIN | REQUESTS" />
+        <UserAdminRequestsSaveSignature />
+        <UContainer class="mt-10">
+            <UserAdminRequestsAllRequests />
+        </UContainer>
     </div>
 </template>
 
