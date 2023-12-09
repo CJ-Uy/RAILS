@@ -11,9 +11,9 @@ definePageMeta({ layout: "admin-pages" });
     <div class="flex flex-col">
         <UserDashboardHeader title="ADMIN | REQUESTS" />
         <UserAdminRequestsSaveSignature />
-        <UContainer class="mt-10">
-            <UserAdminRequestsAllRequests />
-        </UContainer>
+        <div class="mt-10">
+            <UserAdminRequestsTables />
+        </div>
     </div>
 </template>
 
