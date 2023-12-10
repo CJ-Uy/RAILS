@@ -35,6 +35,8 @@ const props = defineProps({
 
 const emit = defineEmits(["selectedRow"]);
 
+const allowMultipleSelection = ref(false);
+
 const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
 
 const selectedColumns = ref([...props.startingColumns]);
@@ -108,7 +110,36 @@ watch(
                 <h2 class="text-center font-bold">{{ title }}</h2>
             </template>
 
-            <div>
+            <div class="flex flex-col">
+                <div class="mb-5 mt-1 flex flex-col items-center">
+                    <div class="mb-2">
+                        <h3>Table Control Panel</h3>
+                    </div>
+                    <div class="flex flex-row items-center">
+                        <div class="mr-3 flex flex-row items-center">
+                            <h4 class="mr-2">Multiple Selection</h4>
+                            <UToggle
+                                v-model="allowMultipleSelection"
+                                size="lg"
+                            />
+                        </div>
+                        <div>
+                            <UButton
+                                label="Approve ALL"
+                                :disabled="!allowMultipleSelection"
+                                color="emerald"
+                                class="mr-2"
+                            />
+                            <UButton
+                                label="Reject ALL"
+                                :disabled="!allowMultipleSelection"
+                                color="red"
+                                variant="outline"
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex flex-row justify-between">
                     <div class="flex flex-row">
                         <!-- Refresh Button -->
