@@ -196,12 +196,6 @@ function addToSelectedRows(row) {
                             />
                         </div>
                     </div>
-                    <UButton
-                        label="ADD RECORD"
-                        icon="i-material-symbols-add"
-                        class=""
-                        @click="toggleAddRecord"
-                    />
                 </div>
             </div>
 

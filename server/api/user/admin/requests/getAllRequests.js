@@ -1,4 +1,5 @@
 import { flatten } from "flat";
+import dayjs from "dayjs";
 import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async () => {
@@ -42,6 +43,14 @@ export default defineEventHandler(async () => {
     };
     for (const request of allRequestsData) {
         const flattenedRequest = flatten(request, flatteningOptions);
+
+        flattenedRequest.createdAt = dayjs(flattenedRequest.createdAt).format(
+            "MMM DD, YYYY - HH:mm",
+        );
+
+        flattenedRequest.updatedAt = dayjs(flattenedRequest.updatedAt).format(
+            "MMM DD, YYYY - HH:mm",
+        );
 
         // The following block are workarounds to flatten the objects inside always single element arrays
         // teacherInChare.userProfile[0]
