@@ -7,7 +7,7 @@ const props = defineProps({
     defaultSortKey: {
         type: String,
         required: false,
-        default: "name",
+        default: "createdAt",
     },
     startingColumns: {
         type: Array,
@@ -39,6 +39,7 @@ const selectedColumns = ref([...props.startingColumns]);
 const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
 const totalItems = ref();
 
+// TODO: maybe have a thing where it refreshes as soon as possible like with a watch/watchEffect on the fetch request?
 const { pending, data: allItems } = await useLazyFetch(props.fetchPath);
 const allItemsData = ref([]);
 watch(allItems, (updatedValues) => {
@@ -221,7 +222,6 @@ function addToSelectedRows(row) {
                     :ui="{ tr: { active: 'hover:bg-gray-200' } }"
                 />
             </div>
-
         </UCard>
         <UModal
             v-model="modalIsOpen"

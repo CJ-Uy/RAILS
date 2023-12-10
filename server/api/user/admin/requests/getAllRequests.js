@@ -83,6 +83,5 @@ export default defineEventHandler(async () => {
 
         flattenedAllRequestsData.push(flattenedRequest);
     }
-
     return flattenedAllRequestsData;
 });
