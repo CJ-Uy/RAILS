@@ -9,7 +9,27 @@ function setShowDate(date) {
     showDate.value = date;
     parsedDate.value = dayjs(showDate.value);
     monthName.value = parsedDate.value.format("MMMM YYYY");
-    console.log(monthName.value);
+}
+
+const requests = await useFetch("/api/db/calendar/getCompletedRequests");
+const requestsValue = ref();
+requestsValue.value = requests.data.value;
+
+const items = ref([]);
+for (const i of requestsValue.value) {
+    for (const j in i.independentTime) {
+        const startDate = ref();
+        startDate.value = dayjs(i.independentTime[j][0]).format("YYYY-MM-DD");
+        const endDate = ref();
+        endDate.value = dayjs(i.independentTime[j][i.independentTime[j].length - 1]).format("YYYY-MM-DD");
+        items.value.push({
+            id: items.value.length,
+            startDate: startDate.value,
+            endDate: endDate.value,
+            title: j,
+            style: "margin: 10px 0px; border-radius: 20px; padding: 7px 12px;",
+        });
+    }
 }
 </script>
 <template>
@@ -18,6 +38,7 @@ function setShowDate(date) {
             <CalendarView
                 :show-date="showDate"
                 :current-period-label="monthName"
+                :items="items"
                 class="mx-auto h-full w-[90%]"
             >
                 <template #header="{ headerProps }">
