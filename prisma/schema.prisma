@@ -34,6 +34,12 @@ enum Role {
   ADMIN
 }
 
+enum SignedStatus {
+  APPROVED
+  REJECTED
+  PENDING
+}
+
 model SchoolYear {
   id                String   @id @default(uuid())
   yearStart         Int
@@ -412,12 +418,15 @@ model LaboratoryRequests {
   independentTime        Json? // Store here all the date and time as you would reservation without filing a lab reservation
   independentLocation    String? // TODO: Store the location as it could also be custom (ex: a classroom or area in the school)
 
-  isSignedByTeacher Boolean   @default(false)
-  isSignedByAdmin   Boolean   @default(false)
-  signedTeacher     Teachers? @relation("signed_teacher", fields: [signedTeacherId], references: [id])
+  isSignedByTeacher SignedStatus @default(PENDING)
+  isSignedByAdmin   SignedStatus @default(PENDING)
+  signedTeacher     Teachers?    @relation("signed_teacher", fields: [signedTeacherId], references: [id])
   signedTeacherId   String?
-  signedAdmin       Admins?   @relation(fields: [signedAdminId], references: [id])
+  signedAdmin       Admins?      @relation(fields: [signedAdminId], references: [id])
   signedAdminId     String?
+
+  teacherAnnotation String? @db.MediumText
+  adminAnnotation   String? @db.MediumText
 
   schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?

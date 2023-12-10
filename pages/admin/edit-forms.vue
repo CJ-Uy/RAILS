@@ -10,10 +10,6 @@ const user = inject("user");
 // Tabs
 const editFormsTabs = [
     {
-        label: "Admin Approval Settings",
-        slot: "adminApprovalSettings",
-    },
-    {
         label: "SY & Campus",
         slot: "syCampus",
     },
@@ -36,9 +32,6 @@ const editFormsTabs = [
                 :items="editFormsTabs"
                 :ui="{ list: { tab: { active: 'bg-white' } } }"
             >
-                <template #adminApprovalSettings>
-                    <UserAdminEditFormsSaveSignature />
-                </template>
                 <template #syCampus>
                     <UserAdminEditFormsSyCampus />
                 </template>

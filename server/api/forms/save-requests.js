@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import getControlNumbers from "../../app/forms/saving-requests/getControlNumbers.js";
-import formatDates from "../../app/forms/saving-requests/formatDates.js";
+import getControlNumbers from "~/utils/forms/saving-requests/getControlNumbers.js";
+import formatDates from "~/utils/forms/saving-requests/formatDates.js";
 import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async (event) => {
@@ -196,7 +196,7 @@ export default defineEventHandler(async (event) => {
                     schoolYearId: schoolYear.id,
                     controlNumber,
                     reagents: {
-                        connect: reagent.id.map((id) => ({ id })),
+                        connect: [reagent.id].map((id) => ({ id })),
                     },
                     laboratoryRequestId: request.id,
                 },
@@ -204,6 +204,5 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    console.log(request);
     return request.id;
 });

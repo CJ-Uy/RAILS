@@ -17,16 +17,16 @@ const links = [
                 to: "/admin",
                 icon: "i-heroicons-chart-bar-solid",
             },
-        ],
-    },
-    {
-        label: "Workspace",
-        children: [
             {
                 label: "REQUESTS",
                 to: "/admin/requests",
                 icon: "i-material-symbols-manage-search",
             },
+        ],
+    },
+    {
+        label: "Workspace",
+        children: [
             {
                 label: "CALENDAR",
                 to: "/admin/calendar",

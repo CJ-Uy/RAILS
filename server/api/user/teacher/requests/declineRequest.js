@@ -1,14 +1,16 @@
 import prisma from "~/server/db/prisma";
+import SignedStatus from "~/server/db/signedStatus";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
+
     return prisma.laboratoryRequests.update({
         where: {
             id: body.id,
         },
         data: {
-            isSignedByTeacher: true,
-            signedTeacherId: body.user.teachersId,
+            isSignedByTeacher: SignedStatus.REJECTED,
+            signedTeacherId: null,
         },
         include: {
             requestor: true,

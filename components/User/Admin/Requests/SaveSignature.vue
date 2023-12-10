@@ -3,11 +3,11 @@ import SignaturePad from "signature_pad";
 
 // Load Current Signature
 const user = inject("user");
-const signatureData = await useFetch("/api/user/teacher/getSignature", {
+const signatureData = await useFetch("/api/user/admin/signature/getSignature", {
     method: "POST",
     body: user,
 });
-const signature = ref(signatureData.data);
+const signature = ref(signatureData.data.value);
 
 // Initialize Signature Pad
 const sigModalIsOpen = ref(false);
@@ -24,9 +24,9 @@ watch(sigModalIsOpen, () => {
     });
 });
 
-function saveSig() {
+async function saveSig() {
     let svg = signaturePad.toSVG().toString();
-    svg = svg.replace(`viewBox="0 0 400 200"`, `viewBox="0 0 500 250"`);
+    svg = svg.replace(/viewBox="[^"]*"/, `viewBox="0 0 500 250"`); // It automatically crops it for some reason so this uncrops it
     // Save the svg output as the signature value
     if (typeof signature.value[1] === "string") {
         signature.value[1] = {};
@@ -34,13 +34,32 @@ function saveSig() {
     signature.value[1].signature = svg;
     signature.value[0] = true;
     sigModalIsOpen.value = false;
-    useFetch("/api/user/teacher/saveSignature", {
+    await useFetch("/api/user/admin/signature/saveSignature", {
         method: "POST",
         body: {
             user,
             signature: svg,
         },
     });
+}
+
+async function deleteSig() {
+    await useFetch("/api/user/admin/signature/deleteSignature", {
+        method: "POST",
+        body: {
+            user,
+        },
+    });
+
+    const signatureData = await useFetch(
+        "/api/user/admin/signature/getSignature",
+        {
+            method: "POST",
+            body: user,
+        },
+    );
+
+    signature.value = signatureData.data.value;
 }
 
 function clearSig() {
@@ -67,6 +86,13 @@ function clearSig() {
                     <UButton
                         label="Save New Signature"
                         @click="sigModalIsOpen = true"
+                        class="mr-2"
+                    />
+                    <UButton
+                        label="Delete Signature"
+                        @click="deleteSig"
+                        variant="outline"
+                        color="red"
                     />
                 </template>
             </UCard>

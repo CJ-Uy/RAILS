@@ -1,6 +1,6 @@
 <script setup>
 // Do the thing where you can add more columns to the table
-const startingColumns = [
+const startingColumns = ref([
     {
         key: "equipmentName",
         label: "Name",
@@ -26,10 +26,10 @@ const startingColumns = [
         label: "Availability",
         sortable: true,
     },
-];
+]);
 
 // TODO: add location Names
-const listOfAllColumns = [
+const listOfAllColumns = ref([
     {
         key: "id",
         label: "ID",
@@ -116,7 +116,7 @@ const listOfAllColumns = [
         label: "Availability",
         sortable: true,
     },
-];
+]);
 
 const selectedData = ref();
 function selectedRow(data) {

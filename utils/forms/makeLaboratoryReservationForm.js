@@ -3,20 +3,17 @@ import dayjs from "dayjs";
 
 import getRequest from "./getRequest.js";
 
-export default async function makeAccountability(requestId) {
+export default async function makeLaboratoryReservationForm(requestId) {
     const request = await getRequest(requestId);
 
     const { campus } = request.schoolYear;
-    const { controlNumber } =
-        request.equipmentRequested[0] || request.materialsRequested[0];
+    const { controlNumber } = request.laboratoryReservations[0];
     const schoolYear = `${request.schoolYear.yearStart}-${request.schoolYear.yearEnd}`;
     const studentName = `${request.requestor.firstName} ${request.requestor.lastName}`;
     const dateRequested = dayjs(request.createdAt).format("MMMM DD, YYYY");
     const gradeSection = `${request.gradeSection.grade}-${request.gradeSection.section}`;
     const { noOfStudents } = request;
     const subject = request.forSubject;
-    const { concurrentTopic } = request;
-    const unit = request.unit.name;
     const teacherInCharge = `${request.teacherInCharge.userProfile[0].firstName} ${request.teacherInCharge.userProfile[0].lastName}`;
 
     let approver = "&nbsp;";
@@ -24,11 +21,11 @@ export default async function makeAccountability(requestId) {
     let teacherSignature = "";
 
     // Notarization
-    if (request.isSignedByTeacher) {
+    if (request.isSignedByTeacher === "APPROVED") {
         teacherSignature = request.signedTeacher.signature;
     }
 
-    if (request.isSignedByAdmin) {
+    if (request.isSignedByAdmin === "APPROVED") {
         approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
         approverSignature = request.signedAdmin.signature; // TODO: Testing on this not done yet
     }
@@ -53,7 +50,7 @@ export default async function makeAccountability(requestId) {
                     .format("HH:mm")
                     .toString()}`;
                 const date = `${dayjs(curr.startTime)
-                    .format("MMMM DD, YYYY")
+                    .format("MMM DD, YYYY")
                     .toString()}`;
 
                 if (!acc[time]) {
@@ -68,18 +65,27 @@ export default async function makeAccountability(requestId) {
         );
     }
 
-    let counter = 1;
-    for (const time in groupedReservations) {
-        inclusiveTimeOfUse += `(${counter}) ${time} `;
-        inclusiveDates += `(${counter}) `;
-        for (const date of groupedReservations[time]) {
-            inclusiveDates += `${date} `;
+    if (Object.keys(groupedReservations).length > 1) {
+        let counter = 1;
+        for (const time in groupedReservations) {
+            inclusiveTimeOfUse += `(${counter}) ${time}; `;
+            inclusiveDates += `(${counter}) `;
+            for (const date of groupedReservations[time]) {
+                inclusiveDates += `${date}; `;
+            }
+            counter += 1;
         }
-        counter += 1;
+    } else {
+        for (const time in groupedReservations) {
+            inclusiveTimeOfUse += `${time} `;
+            for (const date of groupedReservations[time]) {
+                inclusiveDates += `${date} `;
+            }
+        }
     }
 
     const pageScript = fs.readFileSync(
-        "./server/app/forms/addPageNumbers/page.polyfill.txt",
+        "./utils/forms/addPageNumbers/page.polyfill.txt",
         "utf8",
     );
 
@@ -93,27 +99,15 @@ export default async function makeAccountability(requestId) {
 <style>
     * {
         font-family: "Calibri";
-        font-size: 13.5px;
+        font-size: 12px;
         margin: 0;
         padding: 0;
     }
     @page {
         size: A4;
         margin: 0;
-        margin-top: 1.14in;
+        margin-top: 0.8in;
         margin-bottom: 1in;
-
-        @bottom-left {
-            margin-left:  0.73in;
-            font-weight: bold;
-            content: 'PSHS-00-F-CID-20-Ver02-Rev0-02/01/20';
-        }
-
-        @bottom-right {
-            margin-right:  0.73in;
-            font-weight: bold;
-            content: 'page ' counter(page); /* ' of ' counter(pages) [inconsistently working]*/
-        }
     }
     @media print {
         html, body {
@@ -150,26 +144,9 @@ export default async function makeAccountability(requestId) {
         width: 100%;
         text-align: right;
     }
-    #table {
-        margin-bottom: 0.15in;
-    }
     .input {
         font-weight: normal;
         border-bottom: 1px solid black;
-    }
-    #request {
-        text-align: center;
-        border-collapse: collapse;
-    }
-    #request td {
-        border: 1px solid black;
-        white-space: pre-wrap; /* allow wrapping of white space */
-        word-wrap: break-word; /* break long words */
-        padding-right: 20px;
-        padding-left: 20px;
-    }
-    .request-header {
-        vertical-align: top;
     }
     .return {
         vertical-align: top;
@@ -182,15 +159,23 @@ export default async function makeAccountability(requestId) {
     .italics {
         font-style: italic;
     }
+    #groupmates-header {
+        margin-top: 0.15in;
+    }
     .groupmates {
-        margin-left: 0.25in;
+        margin-left: 0.1in;
         width: 40%;
         table-layout: auto;
         font-style: italic;
     }
     .sigs-table {
         width: 100%;
-        margin-top: 0.5in;
+        margin-top: 0.15in;
+        border-collapse: collapse;
+    }
+    .sigs-table2 {
+        width: 50%;
+        margin-top: 0.15in;
         border-collapse: collapse;
     }
     .sigs-input {
@@ -221,16 +206,20 @@ export default async function makeAccountability(requestId) {
         justify-content: center;
         align-items: top;
     }
+    #form-code {
+        margin-top: 0.3in;
+        font-size: 10px;
+    }
 </style>
 </head>
 <body>
     <div id="content">
         <div id="heading">
             <h1>PHILIPPINE SCIENCE HIGH SCHOOL SYSTEM</h1>
-            <h1>CAMPUS:&emsp;&emsp;<span class="input">&emsp;&emsp;${campus}&emsp;&emsp;</span></h1>
+            <h1>CAMPUS:<span class="input">&emsp;&emsp;${campus}&emsp;&emsp;</span></h1>
         </div>
 
-        <h2 id="title">LABORATORY REQUEST AND EQUIPMENT ACCOUNTABILITY FORM</h2>
+        <h2 id="title">LABORATORY RESERVATION FORM</h2>
         <div id="tableId">
             Control No: <span class="input">${controlNumber}</span>
             &emsp;SY: <span class="input">${schoolYear}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>
@@ -240,69 +229,6 @@ export default async function makeAccountability(requestId) {
 `;
 
     html += `
-<span class="italics"> Materials/Equipment Needed: </span>
-        <table id="request">
-            <tr class="request-header">
-                <td rowspan="2">Quantity</td>
-                <td rowspan="2">Item</td>
-                <td rowspan="2">Description</td>
-                <td>Issued</td>
-                <td>Returned</td>
-            </tr>
-            <tr class="request-header">
-                <td>Condition/Remarks</td>
-                <td>Condition/Remarks</td>
-            </tr>
-`;
-
-    // Requested materials
-    for (const item of request.materialsRequested) {
-        html += `
-            <tr>
-                <td>${item.quantity}</td>
-                <td>${item.name}</td>
-                <td>${item.description}</td>
-                <td></td>
-                <td></td>
-            </tr>
-    `;
-    }
-
-    // Requested equipment
-    for (const item of request.equipmentRequested) {
-        html += `
-            <tr>
-                <td>${item.quantity}</td>
-                <td>${item.name}</td>
-                <td>${item.description}</td>
-                <td></td>
-                <td></td>
-            </tr>
-    `;
-    }
-
-    html += `
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="return" style="padding: 1px;">Received by:</td>
-                <td class="return" style="padding: 1px;">Received and<br>Inspected by:</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td style="text-align: left; padding: 1px;">Date:</td>
-                <td style="text-align: left; padding: 1px;">Date:</td>
-            </tr>
-        </table>
-        <br>
-        <ul class="italics">
-            <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
-            <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
-        </ul>
-
         <table class="sigs-table">
             <tr>
                 <td></td>
@@ -326,7 +252,7 @@ export default async function makeAccountability(requestId) {
             </tr>
         </table>
 
-        <p class="italics">
+        <p class="italics" id="groupmates-header">
             If user of the lab is a group, list down the names of students.
         </p>
         <table class="groupmates">
@@ -343,7 +269,7 @@ export default async function makeAccountability(requestId) {
             <td style="text-align: right;">${i + 1}.</td>
             <td class="input">&nbsp;&nbsp;${
                 request.otherGroupMembers[i] == null
-                    ? ""
+                    ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                     : request.otherGroupMembers[i]
             }</td>
         </tr>
@@ -353,29 +279,46 @@ export default async function makeAccountability(requestId) {
 
     // Notarization
     html += `
-    <table class="sigs-table">
+    <table class="sigs-table2">
+        <tr>
+            <td>&nbsp;</td>
+            <td></td>
+        </tr>
         <tr>
             <td></td>
             <td class="svgSig"> <div id="endorserSignature"></div> </td>
-            <td></td>
-            <td></td>
-            <td class="svgSig"> <div id="approverSignature"></div> </td>
-        <tr>
+        </tr>
         <tr>
             <td class="sigs-who">Endorsed by:</td>
             <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${teacherInCharge}</td>
-            <td class="sigs-gap"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="sigs-title">Subject Teacher/Unit Head</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="svgSig"> <div id="approverSignature"></div> </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td></td>
+        </tr>
+        <tr>
             <td class="sigs-who">Approved by:</td> 
             <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${approver}</td>
         </tr>
         <tr>
             <td></td>
-            <td class="sigs-title">Subject Teacher/Unit Head</td>
-            <td class="sigs-gap"></td>
-            <td></td>
             <td class="sigs-title">Laboratory Technician</td>
         </tr>
     </table>
+
+    <div id="form-code">PSHS-00-F-CID-05-Ver02-Rev0-02/01/2020</div>
 `;
 
     html += `
@@ -400,24 +343,9 @@ export default async function makeAccountability(requestId) {
             minWidth: 250,
         },
         {
-            label: "Concurrent Topic",
-            value: "${concurrentTopic}",
-            minWidth: 335,
-        },
-        {
-            label: "Unit",
-            value: "${unit}",
-            minWidth: 282,
-        },
-        {
             label: "Teacher In-Charge",
             value: "${teacherInCharge}",
             minWidth: 302,
-        },
-        {
-            label: "Venue of Experiment",
-            value: "${venueOfExperiment}",
-            minWidth: 520,
         },
         {
             label: "Date/Inclusive Dates",
@@ -428,6 +356,11 @@ export default async function makeAccountability(requestId) {
             label: "Inclusive Time of Use",
             value: "${inclusiveTimeOfUse}",
             minWidth: 255,
+        },
+        {
+            label: "Preferred Lab Room",
+            value: "${venueOfExperiment}",
+            minWidth: 520,
         },
     ];
 
@@ -473,8 +406,7 @@ export default async function makeAccountability(requestId) {
 </script>
 </html>
 `;
-
-    // ---- END ----- //
+    // --- End --- //
 
     return html;
 }

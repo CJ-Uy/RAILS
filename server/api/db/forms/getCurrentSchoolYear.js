@@ -12,5 +12,7 @@ export default defineEventHandler(async () => {
         },
     });
 
-    return { [schoolYear.id] : `${schoolYear.yearStart} - ${schoolYear.yearEnd}` };
+    return {
+        [schoolYear.id]: `${schoolYear.yearStart} - ${schoolYear.yearEnd}`,
+    };
 });

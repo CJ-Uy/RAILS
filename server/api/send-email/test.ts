@@ -1,4 +1,4 @@
-import sendTestEmail from "../../app/email/sendTestEmail";
+import sendTestEmail from "~/utils/email/sendTestEmail";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);

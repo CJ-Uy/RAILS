@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 
 const user = inject("user");
 
-const requests = await useFetch("/api/user/teacher/getAllStudentRequests", {
+const requests = await useFetch("/api/user/teacher/requests/getAllRequests", {
     method: "POST",
     body: user,
 });
@@ -11,10 +11,13 @@ const requests = await useFetch("/api/user/teacher/getAllStudentRequests", {
 const studentRequests = ref(requests.data.value);
 
 async function updateTable() {
-    const requests = await useFetch("/api/user/teacher/getAllStudentRequests", {
-        method: "POST",
-        body: user,
-    });
+    const requests = await useFetch(
+        "/api/user/teacher/requests/getAllRequests",
+        {
+            method: "POST",
+            body: user,
+        },
+    );
     studentRequests.value = requests.data.value;
 }
 
@@ -24,11 +27,11 @@ async function downloadRequest(id) {
         body: { id, requestedForms: [5, 19, 20] },
     });
 
-    const pdfBuffers = pdfBuffersRawData.data.value;
-    downloadPDF(pdfBuffers, user.lastName);
+    const pdfBuffers = pdfBuffersRawData.data.value[0];
+    downloadPDF(pdfBuffers, pdfBuffersRawData.data.value[1]);
 }
 
-function downloadPDF(pdfBuffers, lastname) {
+function downloadPDF(pdfBuffers, prefix) {
     for (const property in pdfBuffers) {
         const buffer = pdfBuffers[property].data;
         const url = window.URL.createObjectURL(
@@ -36,7 +39,7 @@ function downloadPDF(pdfBuffers, lastname) {
         );
         const link = document.createElement("a");
         link.href = url;
-        const filename = `${lastname}-${property}-Request.pdf`;
+        const filename = `${prefix}-${property}-Request.pdf`;
 
         link.setAttribute("download", filename);
         document.body.appendChild(link);
@@ -52,7 +55,7 @@ function openEditRequestModal(request) {
 }
 async function approve() {
     editRequestModalIsOpen.value = false;
-    await useFetch("/api/user/teacher/approveRequest", {
+    await useFetch("/api/user/teacher/requests/approveRequest", {
         method: "POST",
         body: { ...currentOpenRequest.value, user },
     });
@@ -60,7 +63,7 @@ async function approve() {
 }
 async function decline() {
     editRequestModalIsOpen.value = false;
-    await useFetch("/api/user/teacher/declineRequest", {
+    await useFetch("/api/user/teacher/requests/declineRequest", {
         method: "POST",
         body: currentOpenRequest.value,
     });
@@ -162,7 +165,31 @@ async function decline() {
         <UModal v-model="editRequestModalIsOpen">
             <UCard>
                 <template #header></template>
-
+                <h1>TIME</h1>
+                <table>
+                    <tr>
+                        <td>Start Time</td>
+                        <td>
+                            {{
+                                dayjs(
+                                    currentOpenRequest.laboratoryReservations[1]
+                                        .startTime,
+                                ).format("MMM DD, YYYY - HH:mm")
+                            }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Start Time</td>
+                        <td>
+                            {{
+                                dayjs(
+                                    currentOpenRequest.laboratoryReservations[1]
+                                        .endTime,
+                                ).format("MMM DD, YYYY - HH:mm")
+                            }}
+                        </td>
+                    </tr>
+                </table>
                 <pre>
                     {{ currentOpenRequest }}
                 </pre>
