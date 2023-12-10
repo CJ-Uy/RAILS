@@ -43,12 +43,33 @@ export default defineEventHandler(async () => {
     for (const request of allRequestsData) {
         const flattenedRequest = flatten(request, flatteningOptions);
 
-        // This is a workaround to flatten "teacherInCharge-userProfile" key as it is always a single element array
+        // The following block are workarounds to flatten the objects inside always single element arrays
+        // teacherInChare.userProfile[0]
         delete flattenedRequest["teacherInCharge-userProfile"];
         const teacherInChargeUserProfile =
             request.teacherInCharge.userProfile[0];
         for (const [key, value] of Object.entries(teacherInChargeUserProfile)) {
             flattenedRequest[`teacherInCharge-userProfile-${key}`] = value;
+        }
+        // signedTeacher-userProfile[0]
+        if (request.signedTeacher) {
+            delete flattenedRequest["signedTeacher-userProfile"];
+            const signedTeacherUserProfile =
+                request.signedTeacher.userProfile[0];
+            for (const [key, value] of Object.entries(
+                signedTeacherUserProfile,
+            )) {
+                flattenedRequest[`signedTeacher-userProfile-${key}`] = value;
+            }
+        }
+        // signedAdmin-userProfile[0]
+        // TODO: test this
+        if (request.signedAdmin) {
+            delete flattenedRequest["signedAdmin-userProfile"];
+            const signedAdminUserProfile = request.signedAdmin.userProfile[0];
+            for (const [key, value] of Object.entries(signedAdminUserProfile)) {
+                flattenedRequest[`signedAdmin-userProfile-${key}`] = value;
+            }
         }
 
         flattenedAllRequestsData.push(flattenedRequest);
