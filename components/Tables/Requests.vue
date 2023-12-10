@@ -35,12 +35,8 @@ const props = defineProps({
 
 const emit = defineEmits(["selectedRow"]);
 
-const allowMultipleSelection = ref(false);
-
-const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
-
 const selectedColumns = ref([...props.startingColumns]);
-
+const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
 const totalItems = ref();
 
 const { pending, data: allItems } = await useLazyFetch(props.fetchPath);
@@ -101,6 +97,13 @@ watch(
         editModalIsOpen.value = newValue;
     },
 );
+
+// ----- Swap Mode ----- //
+const allowMultipleSelection = ref(false);
+const selectedRows = ref([]);
+function addToSelectedRows(row) {
+    selectedRows.value.push(row);
+}
 </script>
 
 <template>
@@ -112,8 +115,19 @@ watch(
 
             <div class="flex flex-col">
                 <div class="mb-5 mt-1 flex flex-col items-center">
-                    <div class="mb-2">
+                    <!-- TODO: Maybe have the control panel in an accorion drop down if it gets too big? -->
+                    <div class="mb-2 flex flex-row align-top">
                         <h3>Table Control Panel</h3>
+                        <!-- TODO: Have an info box appear that explains
+                            that when allowing Multiple Selection you 
+                            cannot click to view the request details and 
+                            you must turn it off to inspect each request -->
+                        <UButton
+                            icon="i-material-symbols-info-outline-rounded"
+                            size="2xs"
+                            variant="link"
+                            square
+                        />
                     </div>
                     <div class="flex flex-row items-center">
                         <div class="mr-3 flex flex-row items-center">
@@ -192,14 +206,28 @@ watch(
             </div>
 
             <!-- DATA TABLE -->
-            <UTable
-                v-model:sort="defaultSort"
-                @select="openModal"
-                :columns="selectedColumns"
-                :rows="filteredRows"
-                :loading="pending"
-                :ui="{ tr: { active: 'hover:bg-gray-200' } }"
-            />
+            <div v-if="!allowMultipleSelection">
+                <UTable
+                    v-model:sort="defaultSort"
+                    @select="openModal"
+                    :columns="selectedColumns"
+                    :rows="filteredRows"
+                    :loading="pending"
+                    :ui="{ tr: { active: 'hover:bg-gray-200' } }"
+                />
+            </div>
+            <div v-else>
+                <UTable
+                    v-model:sort="defaultSort"
+                    v-model="selectedRows"
+                    @select="addToSelectedRows"
+                    :columns="selectedColumns"
+                    :rows="filteredRows"
+                    :loading="pending"
+                    :ui="{ tr: { active: 'hover:bg-gray-200' } }"
+                />
+            </div>
+
         </UCard>
         <UModal
             v-model="modalIsOpen"
