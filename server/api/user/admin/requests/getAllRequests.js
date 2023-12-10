@@ -36,8 +36,22 @@ export default defineEventHandler(async () => {
     });
 
     const flattenedAllRequestsData = [];
+    const flatteningOptions = {
+        safe: true, // This preserves all arrays
+        delimiter: "-", // This is the chosen separator the default is "." and it has a weird interaction with NuxtLabsUI's table component always failing to be found
+    };
     for (const request of allRequestsData) {
-        flattenedAllRequestsData.push(flatten(request));
+        const flattenedRequest = flatten(request, flatteningOptions);
+
+        // This is a workaround to flatten "teacherInCharge-userProfile" key as it is always a single element array
+        delete flattenedRequest["teacherInCharge-userProfile"];
+        const teacherInChargeUserProfile =
+            request.teacherInCharge.userProfile[0];
+        for (const [key, value] of Object.entries(teacherInChargeUserProfile)) {
+            flattenedRequest[`teacherInCharge-userProfile-${key}`] = value;
+        }
+
+        flattenedAllRequestsData.push(flattenedRequest);
     }
 
     return flattenedAllRequestsData;

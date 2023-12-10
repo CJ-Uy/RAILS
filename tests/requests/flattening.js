@@ -3,35 +3,6 @@ import { flatten } from "flat";
 
 const prisma = new PrismaClient();
 
-function flattenObject(obj) {
-    // Initialize empty object for flattened key-value pairs.
-    const toReturn = {};
-
-    // Loop through each property in the object.
-    for (const key in obj) {
-        // Skip non-own properties (inherited from prototype).
-        if (!Object.hasOwn(obj, key)) continue;
-
-        const value = obj[key];
-
-        // Recursively flatten nested objects.
-        if (typeof value === "object" && value !== null) {
-            const flatObject = flattenObject(value);
-
-            // Combine and add flattened key-value pairs.
-            for (const nestedKey in flatObject) {
-                toReturn[`${key}.${nestedKey}`] = flatObject[nestedKey];
-            }
-        } else {
-            // Add non-nested key-value pair.
-            toReturn[key] = value;
-        }
-    }
-
-    // Return the final flattened object.
-    return toReturn;
-}
-
 const allRequestsData = await prisma.laboratoryRequests.findMany({
     include: {
         requestor: true,
@@ -65,4 +36,23 @@ const allRequestsData = await prisma.laboratoryRequests.findMany({
     },
 });
 
-console.dir(flatten(allRequestsData[0]), { depth: null });
+const flattenedAllRequestsData = [];
+const flatteningOptions = {
+    safe: true,
+    delimiter: "-",
+};
+for (const request of allRequestsData) {
+    const flattenedRequest = flatten(request, flatteningOptions);
+
+    delete flattenedRequest["teacherInCharge-userProfile"];
+
+    const teacherInChargeUserProfile = request.teacherInCharge.userProfile[0];
+    for (const [key, value] of Object.entries(teacherInChargeUserProfile)) {
+        flattenedRequest[`teacherInCharge-userProfile-${key}`] = value;
+    }
+
+    flattenedAllRequestsData.push(flattenedRequest);
+}
+
+console.log(flattenedAllRequestsData);
+
