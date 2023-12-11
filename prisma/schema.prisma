@@ -158,6 +158,7 @@ model Laboratories {
   updatedAt   DateTime @updatedAt
   name        String
   description String?
+  colorCode String?
 
   location   LaboratoryLocations @relation(fields: [locationId], references: [id])
   locationId String

@@ -18,17 +18,30 @@ requestsValue.value = requests.data.value;
 const items = ref([]);
 for (const i of requestsValue.value) {
     for (const j in i.independentTime) {
-        const startDate = ref();
-        startDate.value = dayjs(i.independentTime[j][0]).format("YYYY-MM-DD");
-        const endDate = ref();
-        endDate.value = dayjs(i.independentTime[j][i.independentTime[j].length - 1]).format("YYYY-MM-DD");
-        items.value.push({
-            id: items.value.length,
-            startDate: startDate.value,
-            endDate: endDate.value,
-            title: j,
-            style: "margin: 10px 0px; border-radius: 20px; padding: 7px 12px;",
-        });
+        for (const k in i.independentTime[j]) {
+            const startDate = ref();
+            startDate.value = dayjs(i.independentTime[j][k]).format(
+                "YYYY-MM-DD",
+            );
+            const endDate = ref();
+            endDate.value = dayjs(i.independentTime[j][k]).format("YYYY-MM-DD");
+            const color = await useFetch(
+                "/api/db/calendar/getLaboratoryColor",
+                {
+                    method: "POST",
+                    body: {
+                        labName: i.independentLocation,
+                    },
+                },
+            );
+            items.value.push({
+                id: items.value.length,
+                startDate: startDate.value,
+                endDate: endDate.value,
+                title: " ",
+                style: "background-color: " + color.data.value.colorCode,
+            });
+        }
     }
 }
 </script>
@@ -39,6 +52,7 @@ for (const i of requestsValue.value) {
                 :show-date="showDate"
                 :current-period-label="monthName"
                 :items="items"
+                item-top="1.9em"
                 class="mx-auto h-full w-[90%]"
             >
                 <template #header="{ headerProps }">
@@ -197,46 +211,46 @@ for (const i of requestsValue.value) {
     margin-right: 0.5em;
 }
 .cv-item.offset0 {
-    left: 0;
+    left: calc((14% / 7));
 }
 .cv-item.offset1 {
-    left: calc((100% / 7));
+    left: calc((114% / 7));
 }
 .cv-item.offset2 {
-    left: calc((200% / 7));
+    left: calc((214% / 7));
 }
 .cv-item.offset3 {
-    left: calc((300% / 7));
+    left: calc((314% / 7));
 }
 .cv-item.offset4 {
-    left: calc((400% / 7));
+    left: calc((414% / 7));
 }
 .cv-item.offset5 {
-    left: calc((500% / 7));
+    left: calc((514% / 7));
 }
 .cv-item.offset6 {
-    left: calc((600% / 7));
+    left: calc((614% / 7));
 }
 .cv-item.span1 {
-    width: calc((100% / 7) - 0.05em);
+    width: calc((100% / 7) - 2em);
 }
 .cv-item.span2 {
-    width: calc((200% / 7) - 0.05em);
+    width: calc((200% / 7) - 0.5em);
 }
 .cv-item.span3 {
-    width: calc((300% / 7) - 0.05em);
+    width: calc((300% / 7) - 0.5em);
 }
 .cv-item.span4 {
-    width: calc((400% / 7) - 0.05em);
+    width: calc((400% / 7) - 0.5em);
 }
 .cv-item.span5 {
-    width: calc((500% / 7) - 0.05em);
+    width: calc((500% / 7) - 0.5em);
 }
 .cv-item.span6 {
-    width: calc((600% / 7) - 0.05em);
+    width: calc((600% / 7) - 0.5em);
 }
 .cv-item.span7 {
-    width: calc(100% - 0.05em);
+    width: calc(100% - 0.5em);
 }
 .cv-weeks::-webkit-scrollbar,
 .cv-weekdays::-webkit-scrollbar {
@@ -347,5 +361,10 @@ for (const i of requestsValue.value) {
 }
 .outsideOfMonth {
     color: lightgray;
+}
+.cv-item {
+    border-radius: 10px;
+    border: none;
+    height: 20px;
 }
 </style>
