@@ -130,27 +130,33 @@ function addToSelectedRows(row) {
                             square
                         />
                     </div>
-                    <div class="flex flex-row items-center">
-                        <div class="mr-3 flex flex-row items-center">
-                            <h4 class="mr-2">Multiple Selection</h4>
+                    <div class="flex w-full flex-row items-start">
+                        <div class="flex flex-row items-center">
+                            <h4>Multiple Selection</h4>
                             <UToggle
                                 v-model="allowMultipleSelection"
                                 size="lg"
                             />
-                        </div>
-                        <div>
-                            <UButton
-                                label="Approve ALL"
-                                :disabled="!allowMultipleSelection"
-                                color="emerald"
-                                class="mr-2"
-                            />
-                            <UButton
-                                label="Reject ALL"
-                                :disabled="!allowMultipleSelection"
-                                color="red"
-                                variant="outline"
-                            />
+                            <div
+                                v-if="allowMultipleSelection"
+                                class="ml-3 mr-5 flex flex-row space-x-1"
+                            >
+                                <UButton
+                                    label="Download ALL"
+                                    :disabled="!allowMultipleSelection"
+                                />
+                                <UButton
+                                    label="Approve ALL"
+                                    :disabled="!allowMultipleSelection"
+                                    color="emerald"
+                                />
+                                <UButton
+                                    label="Reject ALL"
+                                    :disabled="!allowMultipleSelection"
+                                    color="red"
+                                    variant="outline"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -204,22 +210,22 @@ function addToSelectedRows(row) {
             <div v-if="!allowMultipleSelection">
                 <UTable
                     v-model:sort="defaultSort"
-                    @select="openModal"
                     :columns="selectedColumns"
                     :rows="filteredRows"
                     :loading="pending"
                     :ui="{ tr: { active: 'hover:bg-gray-200' } }"
+                    @select="openModal"
                 />
             </div>
             <div v-else>
                 <UTable
                     v-model:sort="defaultSort"
                     v-model="selectedRows"
-                    @select="addToSelectedRows"
                     :columns="selectedColumns"
                     :rows="filteredRows"
                     :loading="pending"
                     :ui="{ tr: { active: 'hover:bg-gray-200' } }"
+                    @select="addToSelectedRows"
                 />
             </div>
         </UCard>

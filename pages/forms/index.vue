@@ -20,9 +20,8 @@ async function submitHandler(formValues) {
         method: "POST",
         body: { user, formValues },
     });
-    console.log(requestId);
     // Downloaing pdfs
-    if (formValues.data.submission.download) {
+    if (formValues.data.submission.download === true) {
         try {
             const requestedForms = [];
             if (
@@ -54,7 +53,7 @@ async function submitHandler(formValues) {
             const pdfBuffers = pdfBuffers_rawData.data.value;
 
             try {
-                downloadRequests(pdfBuffers, user.lastName);
+                downloadRequests(pdfBuffers[0], pdfBuffers[1]);
             } catch (error) {
                 console.error(
                     "There was an error downloading the pdf: ",

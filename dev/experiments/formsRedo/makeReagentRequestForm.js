@@ -463,7 +463,6 @@ html += `
         let offsetWidth = difference < 0 ? 0 : difference;
 
         spaceItem.style.minWidth = offsetWidth + "px";
-        console.log(offsetWidth)
         container.appendChild(spaceItem);
     }
 
