@@ -1,7 +1,6 @@
 Project Management
 
 All:
-- Prepare for the Research Colloquium
 - Sift through all the submitted data of the Laboratory Unit
 - Make the landing pages based on given data
 - Tracking Accountabilities for damaged items

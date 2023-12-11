@@ -28,7 +28,7 @@ DATABASE_URL = "mysql://user:password@mysql-db:3306/rails_db"
 Generate the database with prisma running the `npm run dbgenerate` or `npx prisma generate` command
 <hr>
 
-Populate the database by running the file ```./prisma/devScripts/populateDB/[0]populateAll.js``` with node to populate the database with some dummy data
+Populate the database by running the file ```./dev/populateDB/[0]populateAll.js``` with node to populate the database with some dummy data
 
 ## Development Server
 Start the development server on [http://localhost:3000](http://localhost:3000)
