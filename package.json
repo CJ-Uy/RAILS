@@ -14,7 +14,8 @@
         "audit": "better-npm-audit audit",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
-        "postinstall": "nuxt prepare"
+        "postinstall": "nuxt prepare",
+        "catchup": "npm i && npx prisma generate"
     },
     "devDependencies": {
         "@iconify/json": "^2.2.154",
