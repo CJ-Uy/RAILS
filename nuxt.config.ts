@@ -12,7 +12,7 @@ export default defineNuxtConfig({
         // CSS and styling modules
         // "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
         // "@nuxtjs/color-mode", // https://nuxt.com/modules/color-mode (dark mode and other themes)
-        // https://ui.nuxtlabs.com/getting-started (Component Library) // TODO: @nuxthq/ui is depreciated and can be updated to @nuxt/ui but breaking changes need to be adressed
+        // https://ui.nuxtlabs.com/getting-started (Component Library) contains the above 2
         "@nuxt/ui",
         // Optimization modules
         // https://image.nuxt.com/ (Image loading optimization)
@@ -23,15 +23,14 @@ export default defineNuxtConfig({
         "nuxt-icons",
         // Forms framework
         // https://formkit.com/ (Vue forms framework)
+        "@formkit/nuxt",
+        "@nuxt/image",
+        "nuxt-scheduler", // Scheduler of events
         // Useful but not yet used modules
         // "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
-        // "@invictus.codes/nuxt-vuetify", // https://nuxt.com/modules/nuxt-vuetify AND https://vuetifyjs.com/en/ (UI Library) [maybe try daisy UI instead]
-        // "@nuxt/content", // https://content.nuxtjs.org/ (parses markdown and other files for content)
         // "@nuxtjs/device", // https://nuxt.com/modules/device (Device type detection)
         // Add website optimizations (https://nuxt.com/modules?category=Performance)
         // Add SEO [search engine optimizations] when complete (https://nuxt.com/modules/seo-kit)
-        "@formkit/nuxt",
-        "@nuxt/image",
     ],
 
     build: {
