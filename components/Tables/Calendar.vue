@@ -47,7 +47,7 @@ function itemHoverEnter(hoveredItem) {
         }),
     );
     item.value.title = item.value.laboratory.name;
-    item.value.style = item.value.style + "z-index: 9999;";
+    item.value.style = item.value.style + "z-index: 1;";
 }
 // When leaving hover
 function itemHoverLeave(hoveredItem) {
@@ -60,8 +60,12 @@ function itemHoverLeave(hoveredItem) {
     item.value.style = item.value.style + "z-index: 0;";
 }
 // When clicking on an item
+const checkItemModalIsOpen = ref(false);
+const reservation = ref();
 function checkItem(item) {
-    console.log(item);
+    reservation.value = ref(item);
+    console.log(reservation.value);
+    checkItemModalIsOpen.value = true;
 }
 </script>
 <template>
@@ -88,6 +92,31 @@ function checkItem(item) {
                 </template>
             </CalendarView>
         </UContainer>
+        <UModal v-model="checkItemModalIsOpen">
+            <UCard
+                :ui="{
+                    ring: '',
+                    divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                }"
+            >
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3
+                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                        >
+                            {{ reservation.value.title }}
+                        </h3>
+                        <UButton
+                            color="gray"
+                            variant="ghost"
+                            icon="i-heroicons-x-mark-20-solid"
+                            class="-my-1"
+                            @click="checkItemModalIsOpen = false"
+                        />
+                    </div>
+                </template>
+            </UCard>
+        </UModal>
     </div>
 </template>
 <style>
@@ -342,24 +371,24 @@ function checkItem(item) {
 }
 .currentPeriod {
     display: inline-block;
-    width: 200px;
+    width: 180px;
     height: 50px;
     background-color: rgb(239 68 68);
     color: white;
     font-weight: 900;
-    font-size: 20px !important;
+    font-size: 18px !important;
     border-radius: 15px;
     cursor: default !important;
 }
 .nextPeriod {
     border: none !important;
     color: rgb(37, 37, 37);
-    font-size: 25px !important;
+    font-size: 23px !important;
 }
 .previousPeriod {
     border: none !important;
     color: rgb(37, 37, 37);
-    font-size: 25px !important;
+    font-size: 23px !important;
 }
 
 .cv-header-days {
