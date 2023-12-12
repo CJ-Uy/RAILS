@@ -1,17 +1,19 @@
 import dayjs from "dayjs";
-import prisma from "~/server/db/prisma";
-import convertHtmlToPdf from "~/utils/forms/PDFconverter.js";
+import getRequest from "~/utils/forms/getRequest.js";
 import makeLaboratoryReservationForm from "~/utils/forms/makeLaboratoryReservationForm.js";
 import makeReagentRequestForm from "~/utils/forms/makeReagentRequestForm.js";
 import makeAccountabilityForm from "~/utils/forms/makeAccountabilityForm.js";
+import convertHtmlToPdf from "~/utils/forms/PDFconverter.js";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
+    const request = await getRequest(body);
+
     const pdfBuffers = {};
     let pdfBuffer;
 
     // Make CID 05 - Laboratory Reservation Form
-    if (body.requestedForms.includes(5)) {
+    if (request.laboratoryReservations.length > 0) {
         pdfBuffer = await convertHtmlToPdf(
             await makeLaboratoryReservationForm(body),
         );
@@ -19,35 +21,23 @@ export default defineEventHandler(async (event) => {
     }
 
     // Make CID 19 - Reagent Request Form
-    if (body.requestedForms.includes(19)) {
+    if (request.equipmentRequested.length > 0) {
         pdfBuffer = await convertHtmlToPdf(await makeReagentRequestForm(body));
         pdfBuffers.CID19 = pdfBuffer;
     }
 
     // Make CID 20 - Accounatbility for Materials and Equipment Request Form
-    if (body.requestedForms.includes(20)) {
+    if (
+        request.materialsRequested.length > 0 ||
+        request.equipmentRequested.length > 0
+    ) {
         pdfBuffer = await convertHtmlToPdf(await makeAccountabilityForm(body));
         pdfBuffers.CID20 = pdfBuffer;
     }
 
-    const requestorDetails = await prisma.laboratoryRequests.findUnique({
-        where: {
-            id: body.id,
-        },
-        select: {
-            createdAt: true,
-            requestor: {
-                select: {
-                    firstName: true,
-                    lastName: true,
-                },
-            },
-        },
-    });
-
-    const prefix = `${dayjs(requestorDetails.createdAt).format("MM-DD-YY")}_${
-        requestorDetails.requestor.lastName
-    },${requestorDetails.requestor.firstName}`;
+    const prefix = `${dayjs(request.createdAt).format("MM-DD-YY")}_${
+        request.requestor.lastName
+    },${request.requestor.firstName}`;
 
     return [pdfBuffers, prefix];
 });

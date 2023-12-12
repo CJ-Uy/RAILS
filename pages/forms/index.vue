@@ -1,6 +1,8 @@
 <!-- eslint-disable camelcase -->
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
+import downloadPDF from "~/utils/forms/downloadPDF.js";
+
 // PAGE META
 useHead({
     title: "EVC LABS | New Request",
@@ -23,37 +25,19 @@ async function submitHandler(formValues) {
     // Downloaing pdfs
     if (formValues.data.submission.download === true) {
         try {
-            const requestedForms = [];
-            if (
-                formValues.data.laboratorySetting.hasLaboratoryReservation ===
-                "false"
-            ) {
-                requestedForms.push(5);
-            }
-            if (formValues.data.reagents.details.length > 0) {
-                requestedForms.push(19);
-            }
-            if (
-                formValues.data.materials.details.length > 0 ||
-                formValues.data.equipment.details.length > 0
-            ) {
-                requestedForms.push(20);
-            }
-
             const pdfBuffers_rawData = await useFetch(
                 "/api/forms/create-pdf-buffers",
                 {
                     method: "POST",
                     body: {
                         id: requestId.data.value,
-                        requestedForms,
                     },
                 },
             );
             const pdfBuffers = pdfBuffers_rawData.data.value;
 
             try {
-                downloadRequests(pdfBuffers[0], pdfBuffers[1]);
+                downloadPDF(pdfBuffers[0], pdfBuffers[1]);
             } catch (error) {
                 console.error(
                     "There was an error downloading the pdf: ",
@@ -69,22 +53,6 @@ async function submitHandler(formValues) {
     // if (formValues.data.submission.email) {
     //     // TODO: Make it so they send the info to their email
     // }
-}
-
-function downloadRequests(pdfBuffers, lastname) {
-    for (const property in pdfBuffers) {
-        const buffer = pdfBuffers[property].data;
-        const url = window.URL.createObjectURL(
-            new Blob([new Uint8Array(buffer).buffer]),
-        );
-        const link = document.createElement("a");
-        link.href = url;
-        const filename = `${lastname}-${property}-Request.pdf`;
-
-        link.setAttribute("download", filename);
-        document.body.appendChild(link);
-        link.click();
-    }
 }
 
 // Remove progress bad labels on mobile

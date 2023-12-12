@@ -1,4 +1,6 @@
 <script setup>
+import downloadPDF from "~/utils/forms/downloadPDF.js";
+
 const user = inject("user");
 
 const props = defineProps({
@@ -97,8 +99,7 @@ function addToSelectedRows(row) {
 
 // ----- Table Control Panel ---- //
 async function approveAll() {
-    console.log("Approving all");
-    const approveAllItems = await useFetch(props.updatePath, {
+    await useFetch(props.updatePath, {
         method: "POST",
         body: {
             action: "APPROVE",
@@ -106,14 +107,33 @@ async function approveAll() {
             user: user.adminsId,
         },
     });
+    updateTable();
 }
 
 async function rejectAll() {
-    console.log("Rejecting all");
+    await useFetch(props.updatePath, {
+        method: "POST",
+        body: {
+            action: "REJECT",
+            items: selectedRows.value.map((element) => element.id),
+            user: user.adminsId,
+        },
+    });
+    updateTable();
 }
 
 async function downloadAll() {
-    console.log("Downloading all");
+    const requests = selectedRows.value.map((element) => element.id);
+    for (const request of requests) {
+        const rawPDFBuffers = await useFetch("/api/forms/create-pdf-buffers", {
+            method: "POST",
+            body: {
+                id: request,
+            },
+        });
+
+        downloadPDF(rawPDFBuffers.data.value[0], rawPDFBuffers.data.value[1]);
+    }
 }
 </script>
 

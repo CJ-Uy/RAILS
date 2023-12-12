@@ -128,20 +128,39 @@ function toggleEditModal() {
         >
             <template #detailsModal>
                 <UCard>
-                    <template #header> </template>
-                    <pre>{{ selectedData }}</pre>
-                    <template #footer>
-                        <UButton label="EDIT" @click="toggleEditModal()" />
+                    <template #header>
+                        <div class="flex flex-row items-center justify-between">
+                            <h1>
+                                {{ selectedData["requestor-lastName"] }},
+                                {{ selectedData["requestor-firstName"] }} |
+                                {{ selectedData.createdAt }}
+                            </h1>
+                            <UButton label="EDIT" @click="toggleEditModal()" />
+                        </div>
                     </template>
+                    <pre>{{ selectedData }}</pre>
+                    <template #footer> </template>
                 </UCard>
             </template>
             <template #editModeModal>
                 <UCard>
-                    <template #header> </template>
-                    <div>EDITING</div>
-                    <template #footer>
-                        <UButton label="EDIT" @click="toggleEditModal()" />
+                    <template #header>
+                        <div class="flex flex-row items-center justify-between">
+                            <h1>
+                                {{ selectedData["requestor-lastName"] }},
+                                {{ selectedData["requestor-firstName"] }} |
+                                {{ selectedData.createdAt }}
+                            </h1>
+                            <UButton
+                                icon="i-heroicons-x-mark-20-solid"
+                                variant="ghost"
+                                @click="toggleEditModal()"
+                                color="gray"
+                            />
+                        </div>
                     </template>
+                    <div>EDITING</div>
+                    <template #footer> </template>
                 </UCard>
             </template>
         </TablesRequests>
