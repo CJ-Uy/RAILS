@@ -10,6 +10,7 @@
 
 // Auto generate a database diagram:
 // https://github.com/notiz-dev/prisma-dbml-generator?fbclid=IwAR1XWxS0eVJ3p2HaAJtFKKc38PtgdFscBkLeIqdvSaHR7MIRiM-pVq-guP4
+// Copy Paste ./prisma/dbml/schema.dbml to https://dbdiagram.io/ to generate the diagram
 // I uninstalled the dependency though since it had 4 high severity vulnerabilities just reinstall every time you need it
 // generator dbml {
 //   provider = "prisma-dbml-generator"
@@ -418,8 +419,11 @@ model LaboratoryRequests {
   reagentsRequested  ReagentRequests[]
 
   laboratoryReservations LaboratoryReservations[]
+
+  // Independent Time and Location are for if someone else holds the labroatory reservation but they still need to request for materials, equipment, and reagents
+  // Example is when the teacher reserves the Lab but students still need to make requests for the materials, equipment, and reagents needed in the class activity
   independentTime        Json? // Store here all the date and time as you would reservation without filing a lab reservation
-  independentLocation    String? // TODO: Store the location as it could also be custom (ex: a classroom or area in the school)
+  independentLocation    String? 
 
   isSignedByTeacher SignedStatus @default(PENDING)
   isSignedByAdmin   SignedStatus @default(PENDING)
