@@ -17,6 +17,13 @@ requestsValue.value = requests.data.value;
 
 const items = ref([]);
 for (const i of requestsValue.value) {
+    const color = await useFetch("/api/db/calendar/getLaboratoryColor", {
+        method: "POST",
+        body: {
+            labName: i.independentLocation,
+        },
+    });
+    console.log(color.data.value.colorCode);
     for (const j in i.independentTime) {
         for (const k in i.independentTime[j]) {
             const startDate = ref();
@@ -25,15 +32,6 @@ for (const i of requestsValue.value) {
             );
             const endDate = ref();
             endDate.value = dayjs(i.independentTime[j][k]).format("YYYY-MM-DD");
-            const color = await useFetch(
-                "/api/db/calendar/getLaboratoryColor",
-                {
-                    method: "POST",
-                    body: {
-                        labName: i.independentLocation,
-                    },
-                },
-            );
             items.value.push({
                 id: items.value.length,
                 startDate: startDate.value,
