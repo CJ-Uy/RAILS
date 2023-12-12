@@ -105,6 +105,7 @@ Table Laboratories {
   updatedAt DateTime [not null]
   name String [not null]
   description String
+  colorCode String
   location LaboratoryLocations [not null]
   locationId String [not null]
   supplies InventoryOfMaterials [not null]
@@ -154,6 +155,7 @@ Table InventoryOfMaterials {
   dateReceived DateTime
   available Boolean [not null, default: true]
   quantity Int [not null, default: 1]
+  currentlyInUse Int [not null, default: 0]
   additionalPurchase Int
   make String
   unitCost Float
@@ -180,6 +182,7 @@ Table InventoryOfEqupiment {
   serialNumber String
   modelNoOrManufacturer String
   quantity Int [default: 1]
+  currentlyInUse Int [default: 0]
   unit String
   unitCost Float
   dateReceived DateTime
@@ -208,8 +211,8 @@ Table InventoryOfReagents {
   manufacturerName String
   supplier String
   available Boolean [not null, default: true]
-  maxRequestableQuantity Float
-  currentQuantity Float
+  quantity Float
+  reservedQuantity Float [default: 0]
   unit String
   DGClass String
   subRisk String
@@ -321,12 +324,14 @@ Table LaboratoryRequests {
   laboratoryReservations LaboratoryReservations [not null]
   independentTime Json
   independentLocation String
-  isSignedByTeacher Boolean [not null, default: false]
-  isSignedByAdmin Boolean [not null, default: false]
+  isSignedByTeacher SignedStatus [not null, default: 'PENDING']
+  isSignedByAdmin SignedStatus [not null, default: 'PENDING']
   signedTeacher Teachers
   signedTeacherId String
   signedAdmin Admins
   signedAdminId String
+  teacherAnnotation String
+  adminAnnotation String
   schoolYear SchoolYear
   schoolYearId String
 }
@@ -335,6 +340,12 @@ Enum Role {
   STUDENT
   TEACHER
   ADMIN
+}
+
+Enum SignedStatus {
+  APPROVED
+  REJECTED
+  PENDING
 }
 
 Ref: Users.studentsId > Students.id

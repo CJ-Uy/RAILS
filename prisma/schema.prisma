@@ -10,7 +10,7 @@
 
 // Auto generate a database diagram:
 // https://github.com/notiz-dev/prisma-dbml-generator?fbclid=IwAR1XWxS0eVJ3p2HaAJtFKKc38PtgdFscBkLeIqdvSaHR7MIRiM-pVq-guP4
-// I uninstalled the dependency though since it had 4 high severity vulnerabilities 
+// I uninstalled the dependency though since it had 4 high severity vulnerabilities just reinstall every time you need it
 // generator dbml {
 //   provider = "prisma-dbml-generator"
 // }
