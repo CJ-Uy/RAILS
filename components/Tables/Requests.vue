@@ -1,4 +1,6 @@
 <script setup>
+const user = inject("user");
+
 const props = defineProps({
     title: {
         type: String,
@@ -23,8 +25,7 @@ const props = defineProps({
     },
     updatePath: {
         type: String,
-        required: false,
-        default: "",
+        required: true,
     },
     editModeIsOpen: {
         type: Boolean,
@@ -59,26 +60,14 @@ const filteredRows = computed(() => {
         return allItemsData.value;
     }
     // filtering the rows
-    const skipKeys = [
-        "id",
-        "createdAt",
-        "updatedAt",
-        "description",
-        "locationName",
-    ];
     const filtered = allItemsData.value.filter((item) => {
         return Object.values(item).some((value) => {
-            const skip = Object.keys(item).find((key) => item[key] === value);
-            if (skipKeys.includes(skip)) {
-                return false;
-            }
             return String(value)
                 .toLowerCase()
                 .includes(searchQuery.value.toLowerCase());
         });
     });
 
-    // TODO: Slice the values into pages
     totalItems.value = filtered.length;
     return filtered;
 });
@@ -99,11 +88,32 @@ watch(
     },
 );
 
-// ----- Swap Mode ----- //
+// ----- Multiple Selection Mode ----- //
 const allowMultipleSelection = ref(false);
 const selectedRows = ref([]);
 function addToSelectedRows(row) {
     selectedRows.value.push(row);
+}
+
+// ----- Table Control Panel ---- //
+async function approveAll() {
+    console.log("Approving all");
+    const approveAllItems = await useFetch(props.updatePath, {
+        method: "POST",
+        body: {
+            action: "APPROVE",
+            items: selectedRows.value.map((element) => element.id),
+            user: user.adminsId,
+        },
+    });
+}
+
+async function rejectAll() {
+    console.log("Rejecting all");
+}
+
+async function downloadAll() {
+    console.log("Downloading all");
 }
 </script>
 
@@ -132,7 +142,7 @@ function addToSelectedRows(row) {
                     </div>
                     <div class="flex w-full flex-row items-start">
                         <div class="flex flex-row items-center">
-                            <h4>Multiple Selection</h4>
+                            <h4 class="mr-2">Multiple Selection</h4>
                             <UToggle
                                 v-model="allowMultipleSelection"
                                 size="lg"
@@ -144,15 +154,18 @@ function addToSelectedRows(row) {
                                 <UButton
                                     label="Download ALL"
                                     :disabled="!allowMultipleSelection"
+                                    @click="downloadAll"
                                 />
                                 <UButton
                                     label="Approve ALL"
                                     :disabled="!allowMultipleSelection"
+                                    @click="approveAll"
                                     color="emerald"
                                 />
                                 <UButton
                                     label="Reject ALL"
                                     :disabled="!allowMultipleSelection"
+                                    @click="rejectAll"
                                     color="red"
                                     variant="outline"
                                 />

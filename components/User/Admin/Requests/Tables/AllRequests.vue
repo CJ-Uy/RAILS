@@ -120,6 +120,7 @@ function toggleEditModal() {
         <TablesRequests
             title="All Requests"
             fetch-path="/api/user/admin/requests/getAllRequests"
+            update-path="/api/user/admin/requests/update"
             :starting-columns="startingColumns"
             :list-of-all-columns="listOfAllColumns"
             :editModeIsOpen="editModeIsOpen"
