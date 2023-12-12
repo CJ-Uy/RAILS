@@ -5,7 +5,7 @@ provide("requestedReagents", requestedReagents);
 
 // Tabs
 const items = computed(() => {
-    if (requestedReagents.value.length == 0) {
+    if (requestedReagents.value.length === 0) {
         return [
             {
                 slot: "selectReagents",

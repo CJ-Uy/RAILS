@@ -158,7 +158,7 @@ model Laboratories {
   updatedAt   DateTime @updatedAt
   name        String
   description String?
-  colorCode String?
+  colorCode   String?
 
   location   LaboratoryLocations @relation(fields: [locationId], references: [id])
   locationId String
@@ -219,6 +219,7 @@ model InventoryOfMaterials {
 
   //Quantity
   quantity           Int     @default(1)
+  currentlyInUse     Int     @default(0)
   additionalPurchase Int?
   make               String?
   unitCost           Float?
@@ -252,6 +253,7 @@ model InventoryOfEqupiment {
   serialNumber          String?
   modelNoOrManufacturer String?
   quantity              Int?      @default(1)
+  currentlyInUse        Int?      @default(0)
   unit                  String?
   unitCost              Float?
   dateReceived          DateTime?
@@ -289,9 +291,9 @@ model InventoryOfReagents {
   available        Boolean  @default(true)
 
   // Quantities 
-  maxRequestableQuantity Float? // Assuming this means the max quantity someone can request for
-  currentQuantity        Float? // Assuming this means the current quantity in the inventory
-  unit                   String? // Unit of measurement like "mL", "mg", etc..
+  quantity         Float? // Assuming this means the current quantity in the inventory
+  reservedQuantity Float?  @default(0) // This refers to regants that are reserved for later and hence cannot be reserved again as it is assumed that they will be consumed
+  unit             String? // Unit of measurement like "mL", "mg", etc..
 
   DGClass        String?
   subRisk        String?

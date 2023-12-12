@@ -12,6 +12,7 @@ export default defineEventHandler(async () => {
             classification: true,
             unit: true,
             quantity: true,
+            currentlyInUse: true,
         },
     });
 

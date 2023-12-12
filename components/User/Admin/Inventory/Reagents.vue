@@ -21,8 +21,13 @@ const startingColumns = [
         sortable: true,
     },
     {
-        key: "currentQuantity",
+        key: "quantity",
         label: "Inventory Quantity",
+        sortable: true,
+    },
+    {
+        key: "reservedQuantity",
+        label: "Reserved Quantity",
         sortable: true,
     },
     {
@@ -89,13 +94,13 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "maxRequestableQuantity",
-        label: "Max Requestable Quantity",
+        key: "quantity",
+        label: "Inventory Quantity",
         sortable: true,
     },
     {
-        key: "currentQuantity",
-        label: "Inventory Quantity",
+        key: "reservedQuantity",
+        label: "Reserved Quantity",
         sortable: true,
     },
     {

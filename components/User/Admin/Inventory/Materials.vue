@@ -12,11 +12,6 @@ const startingColumns = [
         sortable: true,
     },
     {
-        key: "serialNumber",
-        label: "Serial Number",
-        sortable: true,
-    },
-    {
         key: "classification",
         label: "Class",
         sortable: true,
@@ -24,6 +19,11 @@ const startingColumns = [
     {
         key: "quantity",
         label: "Quantity",
+        sortable: true,
+    },
+    {
+        key: "currentlyInUse",
+        label: "In Use",
         sortable: true,
     },
     {
@@ -88,6 +88,11 @@ const listOfAllColumns = [
     {
         key: "quantity",
         label: "Quantity",
+        sortable: true,
+    },
+    {
+        key: "currentlyInUse",
+        label: "In Use",
         sortable: true,
     },
     {

@@ -17,8 +17,13 @@ const startingColumns = ref([
         sortable: true,
     },
     {
-        key: "modelNoOrManufacturer",
-        label: "Model/Manufacturer",
+        key: "quantity",
+        label: "Quantity",
+        sortable: true,
+    },
+    {
+        key: "currentlyInUse",
+        label: "In Use",
         sortable: true,
     },
     {
@@ -74,6 +79,11 @@ const listOfAllColumns = ref([
     {
         key: "quantity",
         label: "Quantity",
+        sortable: true,
+    },
+    {
+        key: "currentlyInUse",
+        label: "In Use",
         sortable: true,
     },
     {

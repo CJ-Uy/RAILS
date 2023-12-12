@@ -10,10 +10,15 @@ export default defineEventHandler(async () => {
             chemicalName: true,
             description: true,
             unit: true,
-            currentQuantity: true,
-            maxRequestableQuantity: true,
+            quantity: true,
+            reservedQuantity: true,
         },
     });
+
+    for (const reagent of allReagents) {
+        reagent.maxRequestableQuantity =
+            reagent.quantity - reagent.reservedQuantity;
+    }
 
     return allReagents;
 });
