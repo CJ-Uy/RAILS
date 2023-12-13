@@ -26,7 +26,7 @@ const editFormsTabs = [
 
 <template>
     <div>
-        <UserDashboardHeader title="ADMIN | EDIT FORMS" />
+        <UserDashboardHeader title="ADMIN | FORM DATA" />
         <UContainer>
             <UTabs
                 :items="editFormsTabs"
