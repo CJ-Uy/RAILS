@@ -1,7 +1,9 @@
+
+import type getAllEquipment from '~/server/api/db/forms/getAllEquipment';
 <script setup>
-const startingColumns = [
+const startingColumns = ref([
     {
-        key: "itemName",
+        key: "equipmentName",
         label: "Name",
         sortable: true,
     },
@@ -11,8 +13,8 @@ const startingColumns = [
         sortable: true,
     },
     {
-        key: "classification",
-        label: "Class",
+        key: "serialNumber",
+        label: "Serial Number",
         sortable: true,
     },
     {
@@ -30,10 +32,10 @@ const startingColumns = [
         label: "Availability",
         sortable: true,
     },
-];
+]);
 
 // TODO: add location Names
-const listOfAllColumns = [
+const listOfAllColumns = ref([
     {
         key: "id",
         label: "ID",
@@ -55,9 +57,10 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "itemName",
+        key: "equipmentName",
         label: "Name",
         sortable: true,
+        direction: "asc",
     },
     {
         key: "description",
@@ -65,23 +68,13 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "classification",
-        label: "Class",
+        key: "serialNumber",
+        label: "Serial Number",
         sortable: true,
     },
     {
-        key: "unit",
-        label: "Unit",
-        sortable: true,
-    },
-    {
-        key: "supplier",
-        label: "Supplier",
-        sortable: true,
-    },
-    {
-        key: "dateReceived",
-        label: "Date Received",
+        key: "modelNoOrManufacturer",
+        label: "Model/Manufacturer",
         sortable: true,
     },
     {
@@ -95,13 +88,8 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "additionalPurchase",
-        label: "Additional Purchase",
-        sortable: true,
-    },
-    {
-        key: "make",
-        label: "Make",
+        key: "unit",
+        label: "Unit",
         sortable: true,
     },
     {
@@ -110,18 +98,28 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "damage",
-        label: "Damage",
+        key: "dateReceived",
+        label: "Date Received",
         sortable: true,
     },
     {
-        key: "balancePerCard",
-        label: "Balance per Card",
+        key: "propertyNumber",
+        label: "property Number",
         sortable: true,
     },
     {
-        key: "balancePerCount",
-        label: "Balance per Count",
+        key: "acquisitionType",
+        label: "Acquisition Type",
+        sortable: true,
+    },
+    {
+        key: "supplier",
+        label: "Supplier",
+        sortable: true,
+    },
+    {
+        key: "status",
+        label: "Status",
         sortable: true,
     },
     {
@@ -129,45 +127,34 @@ const listOfAllColumns = [
         label: "Availability",
         sortable: true,
     },
-];
+]);
 
 const selectedData = ref();
 function selectedRow(data) {
     selectedData.value = data;
-}
-
-const editModeIsOpen = ref(false);
-function toggleEditModal() {
-    editModeIsOpen.value = !editModeIsOpen.value;
 }
 </script>
 
 <template>
     <div>
         <TablesInventory
-            title="MATERIALS"
-            default-sort-key="itemName"
+            title="EQUIPMENT"
+            default-sort-key="equipmentName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
             :editModeIsOpen="editModeIsOpen"
-            fetch-path="/api/db/rawData/getAllMaterials"
+            fetch-path="/api/db/rawData/getAllEquipment"
             @selectedRow="selectedRow"
-            allowed-editing="true"
+            allowed-editing="false"
         >
             <template #detailsModal>
                 <UCard>
                     <template #header> </template>
                     <div>{{ selectedData }}</div>
-                    <template #footer>
-                        <UButton label="EDIT" @click="toggleEditModal()" />
-                    </template>
-                </UCard>
-            </template>
-            <template #editModeModal>
-                <UCard>
-                    <div>EDITING MODE</div>
                 </UCard>
             </template>
         </TablesInventory>
     </div>
 </template>
+
+<style scoped></style>

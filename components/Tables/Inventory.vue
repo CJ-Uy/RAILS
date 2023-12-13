@@ -26,6 +26,10 @@ const props = defineProps({
         required: false,
         default: false,
     },
+    allowedEditing: {
+        type: Boolean,
+        required: true,
+    },
 });
 
 const emit = defineEmits(["selectedRow"]);
@@ -146,12 +150,14 @@ watch(
                             />
                         </div>
                     </div>
-                    <UButton
-                        label="ADD RECORD"
-                        icon="i-material-symbols-add"
-                        class=""
-                        @click="toggleAddRecord"
-                    />
+                    <div v-if="allowedEditing == 'true'">
+                        <UButton
+                            label="ADD RECORD"
+                            icon="i-material-symbols-add"
+                            class=""
+                            @click="toggleAddRecord"
+                        />
+                    </div>
                 </div>
             </div>
 

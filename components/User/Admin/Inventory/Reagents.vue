@@ -201,6 +201,7 @@ function toggleEditModal() {
             :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllReagents"
             @selectedRow="selectedRow"
+            allowed-editing="true"
         >
             <template #detailsModal>
                 <UCard>

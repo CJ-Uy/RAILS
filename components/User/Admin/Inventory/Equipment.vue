@@ -1,5 +1,4 @@
 <script setup>
-// Do the thing where you can add more columns to the table
 const startingColumns = ref([
     {
         key: "equipmentName",
@@ -149,6 +148,7 @@ function toggleEditModal() {
             :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllEquipment"
             @selectedRow="selectedRow"
+            allowed-editing="true"
         >
             <template #detailsModal>
                 <UCard>

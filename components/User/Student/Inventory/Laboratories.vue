@@ -135,11 +135,6 @@ const selectedData = ref();
 function selectedRow(data) {
     selectedData.value = data;
 }
-
-const editModeIsOpen = ref(false);
-function toggleEditModal() {
-    editModeIsOpen.value = !editModeIsOpen.value;
-}
 </script>
 
 <template>
@@ -152,22 +147,16 @@ function toggleEditModal() {
             :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllMaterials"
             @selectedRow="selectedRow"
-            allowed-editing="true"
+            allowed-editing="false"
         >
             <template #detailsModal>
                 <UCard>
                     <template #header> </template>
                     <div>{{ selectedData }}</div>
-                    <template #footer>
-                        <UButton label="EDIT" @click="toggleEditModal()" />
-                    </template>
-                </UCard>
-            </template>
-            <template #editModeModal>
-                <UCard>
-                    <div>EDITING MODE</div>
                 </UCard>
             </template>
         </TablesInventory>
     </div>
 </template>
+
+<style scoped></style>
