@@ -32,8 +32,7 @@ for (const i in reservationsValue.value) {
             reservation.value.laboratoryReserved.colorCode +
             ";",
         reservation,
-        request: reservation.value.laboratoryRequest,
-        laboratory: reservation.value.laboratoryReserved,
+        colorCode: reservation.value.laboratoryReserved.colorCode,
     });
 }
 
@@ -46,7 +45,7 @@ function itemHoverEnter(hoveredItem) {
             return a.id === hoveredItem.id;
         }),
     );
-    item.value.title = item.value.laboratory.name;
+    item.value.title = item.value.reservation.laboratoryReserved.name;
     item.value.style = item.value.style + "z-index: 1;";
 }
 // When leaving hover
@@ -92,6 +91,7 @@ function checkItem(item) {
                 </template>
             </CalendarView>
         </UContainer>
+        <!-- Display reservation ID, date created, start time/end time, unit, subject, grade section -->
         <UModal v-model="checkItemModalIsOpen">
             <UCard
                 :ui="{
@@ -101,14 +101,33 @@ function checkItem(item) {
             >
                 <template #header>
                     <div class="flex items-center justify-between">
-                        <h3
-                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                        <div
+                            class="flex h-[32px] w-[120px] items-center justify-between rounded-[40px] p-3 text-[0.8em] text-white"
+                            :style="
+                                'background-color: ' +
+                                reservation.value.originalItem.colorCode +
+                                '!important;'
+                            "
                         >
-                            {{ reservation.value.title }}
-                        </h3>
+                            <div class="font-thin">
+                                {{
+                                    dayjs(reservation.value.startDate).format(
+                                        "MMMM",
+                                    )
+                                }}
+                            </div>
+                            <div>-</div>
+                            <div class="font-black">
+                                {{
+                                    dayjs(reservation.value.startDate).format(
+                                        "DD",
+                                    )
+                                }}
+                            </div>
+                        </div>
                         <UButton
-                            color="gray"
-                            variant="ghost"
+                            color="red"
+                            variant="outline"
                             icon="i-heroicons-x-mark-20-solid"
                             class="-my-1"
                             @click="checkItemModalIsOpen = false"
