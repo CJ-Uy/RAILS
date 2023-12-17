@@ -138,7 +138,8 @@ model Notifications {
   updatedAt DateTime @updatedAt
 
   isRead Boolean @default(false)
-  user   Users[]
+  user   Users   @relation(fields: [userId], references: [id])
+  userId String
 
   message String
 }
