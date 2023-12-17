@@ -85,6 +85,7 @@ model Users {
   requests LaboratoryRequests[]
 
   changeRoleRequest ChangeRoleRequests[]
+  notifications     Notifications[]
 }
 
 model Admins {
@@ -101,7 +102,7 @@ model Teachers {
   createdAt                  DateTime             @default(now())
   updatedAt                  DateTime             @updatedAt
   signature                  String?              @db.MediumText
-  receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge") //TODO rearrange this when i get to requests
+  receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge")
   signedLaboratoryRequests   LaboratoryRequests[] @relation("signed_teacher")
   userProfile                Users[]
 }
@@ -129,6 +130,17 @@ model ChangeRoleRequests {
   userId String
 
   wantedRole Role
+}
+
+model Notifications {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  isRead Boolean @default(false)
+  user   Users[]
+
+  message String
 }
 
 model GradeSection {

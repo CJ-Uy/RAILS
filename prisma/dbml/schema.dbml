@@ -39,6 +39,7 @@ Table Users {
   adminsId String
   requests LaboratoryRequests [not null]
   changeRoleRequest ChangeRoleRequests [not null]
+  notifications Notifications [not null]
 }
 
 Table Admins {
@@ -78,6 +79,15 @@ Table ChangeRoleRequests {
   user Users [not null]
   userId String [not null]
   wantedRole Role [not null]
+}
+
+Table Notifications {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  isRead Boolean [not null, default: false]
+  user Users [not null]
+  message String [not null]
 }
 
 Table GradeSection {
@@ -322,8 +332,8 @@ Table LaboratoryRequests {
   equipmentRequested EquipmentRequests [not null]
   reagentsRequested ReagentRequests [not null]
   laboratoryReservations LaboratoryReservations [not null]
-  independentTime Json
-  independentLocation String
+  independentTime Json [default: '{}']
+  independentLocation String [default: '']
   isSignedByTeacher SignedStatus [not null, default: 'PENDING']
   isSignedByAdmin SignedStatus [not null, default: 'PENDING']
   signedTeacher Teachers
