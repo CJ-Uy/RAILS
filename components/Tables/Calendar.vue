@@ -11,36 +11,61 @@ function setShowDate(date) {
     monthName.value = parsedDate.value.format("MMMM YYYY");
 }
 
-const requests = await useFetch("/api/db/calendar/getCompletedRequests");
-const requestsValue = ref();
-requestsValue.value = requests.data.value;
+// Get all completed reservations
+const reservations = await useFetch(
+    "/api/db/calendar/getCompletedReservations",
+);
+const reservationsValue = ref();
+reservationsValue.value = reservations.data.value;
 
+// Adding calendar items
 const items = ref([]);
-for (const i of requestsValue.value) {
-    const color = await useFetch("/api/db/calendar/getLaboratoryColor", {
-        method: "POST",
-        body: {
-            labName: i.independentLocation,
-        },
+for (const i in reservationsValue.value) {
+    const reservation = ref(reservationsValue.value[i]);
+    items.value.push({
+        id: reservation.value.id,
+        startDate: reservation.value.startTime,
+        endDate: reservation.value.endTime,
+        title: " ",
+        style:
+            "background-color: " +
+            reservation.value.laboratoryReserved.colorCode +
+            ";",
+        reservation,
+        request: reservation.value.laboratoryRequest,
+        laboratory: reservation.value.laboratoryReserved,
     });
-    console.log(color.data.value.colorCode);
-    for (const j in i.independentTime) {
-        for (const k in i.independentTime[j]) {
-            const startDate = ref();
-            startDate.value = dayjs(i.independentTime[j][k]).format(
-                "YYYY-MM-DD",
-            );
-            const endDate = ref();
-            endDate.value = dayjs(i.independentTime[j][k]).format("YYYY-MM-DD");
-            items.value.push({
-                id: items.value.length,
-                startDate: startDate.value,
-                endDate: endDate.value,
-                title: " ",
-                style: "background-color: " + color.data.value.colorCode,
-            });
-        }
-    }
+}
+
+// Allow hover effects
+const allowHoverEvents = ref(true);
+// When hovering an item
+function itemHoverEnter(hoveredItem) {
+    const item = ref(
+        items.value.find((a) => {
+            return a.id === hoveredItem.id;
+        }),
+    );
+    item.value.title = item.value.laboratory.name;
+    item.value.style = item.value.style + "z-index: 1;";
+}
+// When leaving hover
+function itemHoverLeave(hoveredItem) {
+    const item = ref(
+        items.value.find((a) => {
+            return a.id === hoveredItem.id;
+        }),
+    );
+    item.value.title = " ";
+    item.value.style = item.value.style + "z-index: 0;";
+}
+// When clicking on an item
+const checkItemModalIsOpen = ref(false);
+const reservation = ref();
+function checkItem(item) {
+    reservation.value = ref(item);
+    console.log(reservation.value);
+    checkItemModalIsOpen.value = true;
 }
 </script>
 <template>
@@ -50,8 +75,12 @@ for (const i of requestsValue.value) {
                 :show-date="showDate"
                 :current-period-label="monthName"
                 :items="items"
-                item-top="1.9em"
+                :do-emit-item-mouse-events="allowHoverEvents"
+                item-top="3.3em"
                 class="mx-auto h-full w-[90%]"
+                @item-mouseenter="itemHoverEnter"
+                @item-mouseleave="itemHoverLeave"
+                @click-item="checkItem"
             >
                 <template #header="{ headerProps }">
                     <CalendarViewHeader
@@ -63,6 +92,31 @@ for (const i of requestsValue.value) {
                 </template>
             </CalendarView>
         </UContainer>
+        <UModal v-model="checkItemModalIsOpen">
+            <UCard
+                :ui="{
+                    ring: '',
+                    divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                }"
+            >
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3
+                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                        >
+                            {{ reservation.value.title }}
+                        </h3>
+                        <UButton
+                            color="gray"
+                            variant="ghost"
+                            icon="i-heroicons-x-mark-20-solid"
+                            class="-my-1"
+                            @click="checkItemModalIsOpen = false"
+                        />
+                    </div>
+                </template>
+            </UCard>
+        </UModal>
     </div>
 </template>
 <style>
@@ -209,25 +263,25 @@ for (const i of requestsValue.value) {
     margin-right: 0.5em;
 }
 .cv-item.offset0 {
-    left: calc((14% / 7));
+    left: 0;
 }
 .cv-item.offset1 {
-    left: calc((114% / 7));
+    left: calc((100% / 7));
 }
 .cv-item.offset2 {
-    left: calc((214% / 7));
+    left: calc((200% / 7));
 }
 .cv-item.offset3 {
-    left: calc((314% / 7));
+    left: calc((300% / 7));
 }
 .cv-item.offset4 {
-    left: calc((414% / 7));
+    left: calc((400% / 7));
 }
 .cv-item.offset5 {
-    left: calc((514% / 7));
+    left: calc((500% / 7));
 }
 .cv-item.offset6 {
-    left: calc((614% / 7));
+    left: calc((600% / 7));
 }
 .cv-item.span1 {
     width: calc((100% / 7) - 2em);
@@ -317,24 +371,24 @@ for (const i of requestsValue.value) {
 }
 .currentPeriod {
     display: inline-block;
-    width: 200px;
+    width: 180px;
     height: 50px;
     background-color: rgb(239 68 68);
     color: white;
     font-weight: 900;
-    font-size: 20px !important;
+    font-size: 18px !important;
     border-radius: 15px;
     cursor: default !important;
 }
 .nextPeriod {
     border: none !important;
     color: rgb(37, 37, 37);
-    font-size: 25px !important;
+    font-size: 23px !important;
 }
 .previousPeriod {
     border: none !important;
     color: rgb(37, 37, 37);
-    font-size: 25px !important;
+    font-size: 23px !important;
 }
 
 .cv-header-days {
@@ -361,8 +415,18 @@ for (const i of requestsValue.value) {
     color: lightgray;
 }
 .cv-item {
-    border-radius: 10px;
+    border-radius: 0 20px 20px 0;
     border: none;
     height: 20px;
+    cursor: pointer;
+    font-size: 0.6em !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid white;
+    transition: width 0.3s;
+}
+.cv-item:hover {
+    width: calc((175% / 7) - 2em);
 }
 </style>
