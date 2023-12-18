@@ -87,6 +87,7 @@ Table Notifications {
   updatedAt DateTime [not null]
   isRead Boolean [not null, default: false]
   user Users [not null]
+  userId String [not null]
   message String [not null]
 }
 
@@ -367,6 +368,8 @@ Ref: Users.adminsId > Admins.id
 Ref: Students.gradeSectionId > GradeSection.id
 
 Ref: ChangeRoleRequests.userId > Users.id
+
+Ref: Notifications.userId > Users.id
 
 Ref: Laboratories.locationId > LaboratoryLocations.id
 
