@@ -50,6 +50,7 @@ function downloadPDF(pdfBuffers, prefix) {
 const editRequestModalIsOpen = ref(false);
 const currentOpenRequest = ref(null);
 function openEditRequestModal(request) {
+    console.log(request);
     currentOpenRequest.value = request;
     editRequestModalIsOpen.value = true;
 }
@@ -59,6 +60,13 @@ async function approve() {
         method: "POST",
         body: { ...currentOpenRequest.value, user },
     });
+    await useFetch("/api/db/notifications/addNotification", {
+        method: "POST",
+        body: {
+            ...currentOpenRequest.value,
+            notificationType: "teacherApprove",
+        },
+    });
     updateTable();
 }
 async function decline() {
@@ -66,6 +74,13 @@ async function decline() {
     await useFetch("/api/user/teacher/requests/declineRequest", {
         method: "POST",
         body: currentOpenRequest.value,
+    });
+    await useFetch("/api/db/notifications/addNotification", {
+        method: "POST",
+        body: {
+            ...currentOpenRequest.value,
+            notificationType: "teacherDecline",
+        },
     });
     updateTable();
 }
@@ -172,7 +187,7 @@ async function decline() {
                         <td>
                             {{
                                 dayjs(
-                                    currentOpenRequest.laboratoryReservations[1]
+                                    currentOpenRequest.laboratoryReservations[0]
                                         .startTime,
                                 ).format("MMM DD, YYYY - HH:mm")
                             }}
@@ -183,7 +198,7 @@ async function decline() {
                         <td>
                             {{
                                 dayjs(
-                                    currentOpenRequest.laboratoryReservations[1]
+                                    currentOpenRequest.laboratoryReservations[0]
                                         .endTime,
                                 ).format("MMM DD, YYYY - HH:mm")
                             }}
