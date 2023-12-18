@@ -114,7 +114,7 @@ export default async function makeAccountability(requestId) {
         @bottom-left {
             margin-left:  0.73in;
             font-weight: bold;
-            content: 'PSHS-00-F-CID-20-Ver02-Rev0-02/01/20';
+            content: 'PSHS-00-F-CID-19-Ver02-Rev1-10/18/20';
         }
 
         @bottom-right {
@@ -238,7 +238,7 @@ export default async function makeAccountability(requestId) {
             <h1>CAMPUS:&emsp;&emsp;<span class="input">&emsp;&emsp;${campus}&emsp;&emsp;</span></h1>
         </div>
 
-        <h2 id="title">LABORATORY REQUEST AND EQUIPMENT ACCOUNTABILITY FORM</h2>
+        <h2 id="title">REAGENT REQUEST FORM</h2>
         <div id="tableId">
             Control No: <span class="input">${controlNumber}</span>
             &emsp;SY: <span class="input">${schoolYear}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>
@@ -294,8 +294,10 @@ export default async function makeAccountability(requestId) {
         </table>
         <br>
         <ul class="italics">
-            <li>Fill out this form completely and legibly; transact with the Unit SRA concerned during office hours.</li>
+            <li>Students must certify that he/she/they have read the safety information as specified in the Safety Data Sheet (SDS) of the reagents being requested.</li>
+            <li>This form must be filled out completely and legibly and submitted, together with a suitable container with cover and proper label, to the SRA of the unit which will release the reagents.</li>
             <li>Requests not in accordance with existing Unit regulations and considerations may not be granted.</li>
+            <li>The reagents will be released to the SRA of the requesting unit.</li>
         </ul>
 
         <table class="sigs-table">

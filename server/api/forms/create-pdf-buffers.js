@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Make CID 19 - Reagent Request Form
-    if (request.equipmentRequested.length > 0) {
+    if (request.reagentsRequested.length > 0) {
         pdfBuffer = await convertHtmlToPdf(await makeReagentRequestForm(body));
         pdfBuffers.CID19 = pdfBuffer;
     }
