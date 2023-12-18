@@ -45,6 +45,10 @@ async function updateTable() {
         "/api/db/rawData/getAllLaboratories",
     );
     allLaboratoriesData.value = allLaboratories.data.value;
+    for (let i = 0; i < allLaboratoriesData.value.length; i++) {
+        allLaboratoriesData.value[i].locationName =
+            allLaboratoriesData.value[i].location.name;
+    }
 }
 
 const searchQuery = ref("");

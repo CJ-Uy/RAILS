@@ -44,11 +44,23 @@ const { pending, data: allItems } = await useLazyFetch(props.fetchPath);
 const allItemsData = ref([]);
 watch(allItems, (updatedValues) => {
     allItemsData.value = updatedValues;
+    if (props.title === "LABORATORIES") {
+        for (let i = 0; i < allItemsData.value.length; i++) {
+            allItemsData.value[i].locationName =
+                allItemsData.value[i].location.name;
+        }
+    }
 });
 
 async function updateTable() {
     const allItems = await useFetch(props.fetchPath);
     allItemsData.value = allItems.data.value;
+    if (props.title === "LABORATORIES") {
+        for (let i = 0; i < allItemsData.value.length; i++) {
+            allItemsData.value[i].locationName =
+                allItemsData.value[i].location.name;
+        }
+    }
 }
 
 const searchQuery = ref("");
@@ -98,6 +110,8 @@ watch(
         editModalIsOpen.value = newValue;
     },
 );
+
+updateTable();
 </script>
 
 <template>
