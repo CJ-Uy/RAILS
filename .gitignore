@@ -1,6 +1,9 @@
 # CJ-Uy
 %Documents%GitHub%RAILS/
 
+# Unlighthouse logs
+.unlighthouse
+
 # Nuxt dev/build outputs
 .output
 .nuxt
