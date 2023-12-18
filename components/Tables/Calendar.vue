@@ -134,6 +134,76 @@ function checkItem(item) {
                         />
                     </div>
                 </template>
+                <div class="flex flex-col px-3 leading-7">
+                    <div class="flex justify-between">
+                        <div>Reservation ID:</div>
+                        <div>{{ reservation.value.id }}</div>
+                    </div>
+                    <div class="flex justify-between">
+                        <div>Created:</div>
+                        <div>
+                            {{
+                                dayjs(
+                                    reservation.value.originalItem.reservation
+                                        .createdAt,
+                                ).format("MMMM DD, YYYY")
+                            }}
+                        </div>
+                    </div>
+                    <br />
+                    <div class="flex justify-between">
+                        <div>Laboratory:</div>
+                        <div>{{ reservation.value.title }}</div>
+                    </div>
+                    <div class="flex justify-between">
+                        <div>Start Time - End Time:</div>
+                        <div>
+                            {{
+                                dayjs(reservation.value.startDate).format(
+                                    "HH : mm",
+                                )
+                            }}
+                            -
+                            {{
+                                dayjs(reservation.value.endDate).format(
+                                    "HH : mm",
+                                )
+                            }}
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <div>Unit:</div>
+                        <div>
+                            {{
+                                reservation.value.originalItem.reservation
+                                    .laboratoryRequest.unit.name
+                            }}
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <div>Subject:</div>
+                        <div>
+                            {{
+                                reservation.value.originalItem.reservation
+                                    .laboratoryRequest.forSubject
+                            }}
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <div>Grade & Section:</div>
+                        <div>
+                            {{
+                                reservation.value.originalItem.reservation
+                                    .laboratoryRequest.gradeSection.grade
+                            }}
+                            -
+                            {{
+                                reservation.value.originalItem.reservation
+                                    .laboratoryRequest.gradeSection.section
+                            }}
+                        </div>
+                    </div>
+                </div>
             </UCard>
         </UModal>
     </div>
