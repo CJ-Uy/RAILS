@@ -1,41 +1,5 @@
 <script setup>
-const startingColumns = [
-    {
-        key: "chemicalName",
-        label: "Name",
-        sortable: true,
-    },
-    {
-        key: "description",
-        label: "Description",
-        sortable: true,
-    },
-    {
-        key: "classification",
-        label: "Class",
-        sortable: true,
-    },
-    {
-        key: "available",
-        label: "Availability",
-        sortable: true,
-    },
-    {
-        key: "quantity",
-        label: "Inventory Quantity",
-        sortable: true,
-    },
-    {
-        key: "reservedQuantity",
-        label: "Reserved Quantity",
-        sortable: true,
-    },
-    {
-        key: "unit",
-        label: "Unit",
-        sortable: true,
-    },
-];
+const startingColumns = [5, 6, 7, 10, 11, 12, 13]; // Index of selected columns in list of all columns
 
 const listOfAllColumns = [
     {
@@ -185,6 +149,7 @@ function selectedRow(data) {
     selectedData.value = data;
 }
 
+const allowedEditing = ref(true);
 const editModeIsOpen = ref(false);
 function toggleEditModal() {
     editModeIsOpen.value = !editModeIsOpen.value;
@@ -201,7 +166,7 @@ function toggleEditModal() {
             :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllReagents"
             @selectedRow="selectedRow"
-            allowed-editing="true"
+            :allowedEditing="allowedEditing"
         >
             <template #detailsModal>
                 <UCard>

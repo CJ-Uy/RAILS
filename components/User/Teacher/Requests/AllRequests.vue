@@ -50,7 +50,6 @@ function downloadPDF(pdfBuffers, prefix) {
 const editRequestModalIsOpen = ref(false);
 const currentOpenRequest = ref(null);
 function openEditRequestModal(request) {
-    console.log(request);
     currentOpenRequest.value = request;
     editRequestModalIsOpen.value = true;
 }

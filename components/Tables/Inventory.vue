@@ -36,7 +36,28 @@ const emit = defineEmits(["selectedRow"]);
 
 const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
 
-const selectedColumns = ref([...props.startingColumns]);
+const selectedColumns = ref([]);
+for (const i in props.startingColumns) {
+    selectedColumns.value.push(
+        props.listOfAllColumns[props.startingColumns[i]],
+    );
+}
+const test = ref(props.startingColumns);
+function toggleAddRecord() {
+    console.log(selectedColumns.value);
+    console.log(test.value);
+}
+// console.log(selectedColumnsTemp.value);
+// console.log([...props.startingColumns].map((item) => {
+//         return Object.values(item)[0];
+//     }));
+// const selectedColumns = ref([]);
+// const test = ref([1, 2]);
+// function toggleAddRecord() {
+//     console.log(selectedColumns.value);
+//     console.log(test.value);
+//     console.log(selectedColumnsTemp.value);
+// }
 
 const totalItems = ref();
 
@@ -160,11 +181,10 @@ updateTable();
                                 searchable-placeholder="Search Columns"
                                 multiple
                                 placeholder="Columns"
-                                :value-attribute="key"
                             />
                         </div>
                     </div>
-                    <div v-if="allowedEditing == 'true'">
+                    <div v-if="allowedEditing == true">
                         <UButton
                             label="ADD RECORD"
                             icon="i-material-symbols-add"
@@ -178,11 +198,11 @@ updateTable();
             <!-- DATA TABLE -->
             <UTable
                 v-model:sort="defaultSort"
-                @select="openModal"
                 :columns="selectedColumns"
                 :rows="filteredRows"
                 :loading="pending"
                 :ui="{ tr: { active: 'hover:bg-gray-200' } }"
+                @select="openModal"
             />
         </UCard>
         <UModal

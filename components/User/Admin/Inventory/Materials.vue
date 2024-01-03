@@ -1,36 +1,5 @@
 <script setup>
-const startingColumns = [
-    {
-        key: "itemName",
-        label: "Name",
-        sortable: true,
-    },
-    {
-        key: "description",
-        label: "Description",
-        sortable: true,
-    },
-    {
-        key: "classification",
-        label: "Class",
-        sortable: true,
-    },
-    {
-        key: "quantity",
-        label: "Quantity",
-        sortable: true,
-    },
-    {
-        key: "currentlyInUse",
-        label: "In Use",
-        sortable: true,
-    },
-    {
-        key: "available",
-        label: "Availability",
-        sortable: true,
-    },
-];
+const startingColumns = [4, 5, 6, 10, 11, 18]; // Index of selected columns in list of all columns
 
 // TODO: add location Names
 const listOfAllColumns = [
@@ -136,6 +105,7 @@ function selectedRow(data) {
     selectedData.value = data;
 }
 
+const allowedEditing = ref(true);
 const editModeIsOpen = ref(false);
 function toggleEditModal() {
     editModeIsOpen.value = !editModeIsOpen.value;
@@ -152,7 +122,7 @@ function toggleEditModal() {
             :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllMaterials"
             @selectedRow="selectedRow"
-            allowed-editing="true"
+            :allowedEditing="allowedEditing"
         >
             <template #detailsModal>
                 <UCard>
