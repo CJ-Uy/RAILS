@@ -42,22 +42,6 @@ for (const i in props.startingColumns) {
         props.listOfAllColumns[props.startingColumns[i]],
     );
 }
-const test = ref(props.startingColumns);
-function toggleAddRecord() {
-    console.log(selectedColumns.value);
-    console.log(test.value);
-}
-// console.log(selectedColumnsTemp.value);
-// console.log([...props.startingColumns].map((item) => {
-//         return Object.values(item)[0];
-//     }));
-// const selectedColumns = ref([]);
-// const test = ref([1, 2]);
-// function toggleAddRecord() {
-//     console.log(selectedColumns.value);
-//     console.log(test.value);
-//     console.log(selectedColumnsTemp.value);
-// }
 
 const totalItems = ref();
 
