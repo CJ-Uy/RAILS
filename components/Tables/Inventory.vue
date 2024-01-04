@@ -47,6 +47,7 @@ const selectedColumnsTable = ref(selectedColumns.value);
 
 function toggleAddRecord() {}
 
+// Sort table columns according to the order of columns in list of all columns
 watch(selectedColumns, () => {
     const selectedColumnsKeys = ref([]);
     const listOfAllColumnsKeys = ref([]);
