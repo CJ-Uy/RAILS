@@ -1,5 +1,13 @@
 <script setup>
-const startingColumns = [5, 6, 7, 10, 11, 12, 13]; // Index of selected columns in list of all columns
+const startingColumns = [
+    "chemicalName",
+    "description",
+    "classification",
+    "available",
+    "quantity",
+    "reservedQuantity",
+    "unit",
+]; // Key of starting columns in list of all columns
 
 const listOfAllColumns = [
     {

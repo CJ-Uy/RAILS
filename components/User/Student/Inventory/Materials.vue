@@ -1,36 +1,12 @@
 <script setup>
 const startingColumns = [
-    {
-        key: "itemName",
-        label: "Name",
-        sortable: true,
-    },
-    {
-        key: "description",
-        label: "Description",
-        sortable: true,
-    },
-    {
-        key: "classification",
-        label: "Class",
-        sortable: true,
-    },
-    {
-        key: "quantity",
-        label: "Quantity",
-        sortable: true,
-    },
-    {
-        key: "currentlyInUse",
-        label: "In Use",
-        sortable: true,
-    },
-    {
-        key: "available",
-        label: "Availability",
-        sortable: true,
-    },
-];
+    "itemName",
+    "description",
+    "classification",
+    "quantity",
+    "currentlyInUse",
+    "available",
+]; // Key of starting columns in list of all columns
 
 // TODO: add location Names
 const listOfAllColumns = [
@@ -135,6 +111,8 @@ const selectedData = ref();
 function selectedRow(data) {
     selectedData.value = data;
 }
+
+const allowedEditing = ref(false);
 </script>
 
 <template>
@@ -144,10 +122,9 @@ function selectedRow(data) {
             default-sort-key="itemName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
-            :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllMaterials"
             @selectedRow="selectedRow"
-            allowed-editing="false"
+            :allowedEditing="allowedEditing"
         >
             <template #detailsModal>
                 <UCard>

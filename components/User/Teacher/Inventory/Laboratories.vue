@@ -1,38 +1,6 @@
 <script setup>
-const startingColumns = [
-    {
-        key: "itemName",
-        label: "Name",
-        sortable: true,
-    },
-    {
-        key: "description",
-        label: "Description",
-        sortable: true,
-    },
-    {
-        key: "classification",
-        label: "Class",
-        sortable: true,
-    },
-    {
-        key: "quantity",
-        label: "Quantity",
-        sortable: true,
-    },
-    {
-        key: "currentlyInUse",
-        label: "In Use",
-        sortable: true,
-    },
-    {
-        key: "available",
-        label: "Availability",
-        sortable: true,
-    },
-];
+const startingColumns = ["name", "description", "locationName"]; // Key of starting columns in list of all columns
 
-// TODO: add location Names
 const listOfAllColumns = [
     {
         key: "id",
@@ -50,13 +18,8 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "code",
-        label: "Code",
-        sortable: true,
-    },
-    {
-        key: "itemName",
-        label: "Name",
+        key: "name",
+        label: "Laboratory Name",
         sortable: true,
     },
     {
@@ -65,68 +28,8 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "classification",
-        label: "Class",
-        sortable: true,
-    },
-    {
-        key: "unit",
-        label: "Unit",
-        sortable: true,
-    },
-    {
-        key: "supplier",
-        label: "Supplier",
-        sortable: true,
-    },
-    {
-        key: "dateReceived",
-        label: "Date Received",
-        sortable: true,
-    },
-    {
-        key: "quantity",
-        label: "Quantity",
-        sortable: true,
-    },
-    {
-        key: "currentlyInUse",
-        label: "In Use",
-        sortable: true,
-    },
-    {
-        key: "additionalPurchase",
-        label: "Additional Purchase",
-        sortable: true,
-    },
-    {
-        key: "make",
-        label: "Make",
-        sortable: true,
-    },
-    {
-        key: "unitCost",
-        label: "Unit Cost",
-        sortable: true,
-    },
-    {
-        key: "damage",
-        label: "Damage",
-        sortable: true,
-    },
-    {
-        key: "balancePerCard",
-        label: "Balance per Card",
-        sortable: true,
-    },
-    {
-        key: "balancePerCount",
-        label: "Balance per Count",
-        sortable: true,
-    },
-    {
-        key: "available",
-        label: "Availability",
+        key: "locationName",
+        label: "Location",
         sortable: true,
     },
 ];
@@ -135,19 +38,20 @@ const selectedData = ref();
 function selectedRow(data) {
     selectedData.value = data;
 }
+
+const allowedEditing = ref(false);
 </script>
 
 <template>
     <div>
         <TablesInventory
-            title="MATERIALS"
+            title="LABORATORIES"
             default-sort-key="itemName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
-            :editModeIsOpen="editModeIsOpen"
-            fetch-path="/api/db/rawData/getAllMaterials"
+            fetch-path="/api/db/rawData/getAllLaboratories"
             @selectedRow="selectedRow"
-            allowed-editing="false"
+            :allowedEditing="allowedEditing"
         >
             <template #detailsModal>
                 <UCard>

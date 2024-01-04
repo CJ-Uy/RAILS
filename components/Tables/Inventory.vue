@@ -37,11 +37,40 @@ const emit = defineEmits(["selectedRow"]);
 const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
 
 const selectedColumns = ref([]);
-for (const i in props.startingColumns) {
+// Initial starting columns
+for (const i of props.startingColumns) {
     selectedColumns.value.push(
-        props.listOfAllColumns[props.startingColumns[i]],
+        props.listOfAllColumns.find((object) => object.key === i),
     );
 }
+const selectedColumnsTable = ref(selectedColumns.value);
+
+function toggleAddRecord() {}
+
+watch(selectedColumns, () => {
+    const selectedColumnsKeys = ref([]);
+    const listOfAllColumnsKeys = ref([]);
+    const selectedColumnsTableTemp = ref([]);
+    for (const i of props.listOfAllColumns) {
+        listOfAllColumnsKeys.value.push(i.key);
+    }
+    for (const i of selectedColumns.value) {
+        selectedColumnsKeys.value.push(i.key);
+    }
+    selectedColumnsKeys.value = selectedColumnsKeys.value.sort(
+        (a, b) =>
+            listOfAllColumnsKeys.value.indexOf(a) -
+            listOfAllColumnsKeys.value.indexOf(b),
+    );
+    for (const i of selectedColumnsKeys.value) {
+        selectedColumnsTableTemp.value.push(
+            props.listOfAllColumns.find((column) => {
+                return column.key === i;
+            }),
+        );
+    }
+    selectedColumnsTable.value = selectedColumnsTableTemp.value;
+});
 
 const totalItems = ref();
 
@@ -182,7 +211,7 @@ updateTable();
             <!-- DATA TABLE -->
             <UTable
                 v-model:sort="defaultSort"
-                :columns="selectedColumns"
+                :columns="selectedColumnsTable"
                 :rows="filteredRows"
                 :loading="pending"
                 :ui="{ tr: { active: 'hover:bg-gray-200' } }"

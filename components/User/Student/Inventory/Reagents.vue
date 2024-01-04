@@ -1,43 +1,13 @@
-
-import type getAllReagents from '~/server/api/db/forms/getAllReagents';
 <script setup>
 const startingColumns = [
-    {
-        key: "chemicalName",
-        label: "Name",
-        sortable: true,
-    },
-    {
-        key: "description",
-        label: "Description",
-        sortable: true,
-    },
-    {
-        key: "classification",
-        label: "Class",
-        sortable: true,
-    },
-    {
-        key: "available",
-        label: "Availability",
-        sortable: true,
-    },
-    {
-        key: "quantity",
-        label: "Inventory Quantity",
-        sortable: true,
-    },
-    {
-        key: "reservedQuantity",
-        label: "Reserved Quantity",
-        sortable: true,
-    },
-    {
-        key: "unit",
-        label: "Unit",
-        sortable: true,
-    },
-];
+    "chemicalName",
+    "description",
+    "classification",
+    "available",
+    "quantity",
+    "reservedQuantity",
+    "unit",
+]; // Key of starting columns in list of all columns
 
 const listOfAllColumns = [
     {
@@ -186,6 +156,8 @@ const selectedData = ref();
 function selectedRow(data) {
     selectedData.value = data;
 }
+
+const allowedEditing = ref(false);
 </script>
 
 <template>
@@ -195,10 +167,9 @@ function selectedRow(data) {
             default-sort-key="chemicalName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
-            :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllReagents  "
             @selectedRow="selectedRow"
-            allowed-editing="false"
+            :allowedEditing="allowedEditing"
         >
             <template #detailsModal>
                 <UCard>

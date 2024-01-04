@@ -1,5 +1,12 @@
 <script setup>
-const startingColumns = [4, 5, 6, 10, 11, 18]; // Index of selected columns in list of all columns
+const startingColumns = [
+    "itemName",
+    "description",
+    "classification",
+    "quantity",
+    "currentlyInUse",
+    "available",
+]; // Key of starting columns in list of all columns
 
 // TODO: add location Names
 const listOfAllColumns = [

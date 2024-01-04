@@ -1,21 +1,35 @@
 <script setup>
-const startingColumns = [0, 1, 2]; // Index of selected columns in list of all columns
+const startingColumns = ["name", "description", "locationName"]; // Key of starting columns in list of all columns
 
 const listOfAllColumns = [
     {
-        key: "name",
-        label: "Laboratory Name",
+        key: "id",
+        label: "ID",
         sortable: true,
-        direction: "asc",
     },
     {
-        key: "locationName",
-        label: "Location",
+        key: "createdAt",
+        label: "Entry Created",
+        sortable: true,
+    },
+    {
+        key: "updatedAt",
+        label: "Entry Updated",
+        sortable: true,
+    },
+    {
+        key: "name",
+        label: "Laboratory Name",
         sortable: true,
     },
     {
         key: "description",
         label: "Description",
+        sortable: true,
+    },
+    {
+        key: "locationName",
+        label: "Location",
         sortable: true,
     },
 ];
