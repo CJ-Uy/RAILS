@@ -34,7 +34,7 @@ provide("user", user.data.value);
                     <UserStudentNavBar />
                 </div>
             </div>
-            <div class="basis-[84.723854%]">
+            <div class="basis-[84.723854%] overflow-hidden">
                 <slot v-if="user.data.value" />
             </div>
         </div>

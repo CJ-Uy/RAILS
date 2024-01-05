@@ -3,7 +3,7 @@ useHead({
     title: "EVC LABS | Admin Inventory",
 });
 
-// authentication and the navbar is addedd through the layout
+// authentication and the navbar is added through the layout
 definePageMeta({ layout: "admin-pages" });
 
 // Tabs
