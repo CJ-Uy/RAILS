@@ -21,18 +21,15 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    editModeIsOpen: {
-        type: Boolean,
-        required: false,
-        default: false,
+    updatePath: {
+        type: String,
+        required: true,
     },
     allowedEditing: {
         type: Boolean,
         required: true,
     },
 });
-
-const emit = defineEmits(["selectedRow"]);
 
 const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
 
@@ -48,8 +45,13 @@ const selectedColumnsTable = ref(selectedColumns.value);
 function toggleAddRecord() {}
 
 // Sort table columns according to the order of columns in list of all columns
+// Selected columns keys are also used in filtering search results
+const selectedColumnsKeys = ref([]);
+for (const i of props.startingColumns) {
+    selectedColumnsKeys.value.push(i);
+}
 watch(selectedColumns, () => {
-    const selectedColumnsKeys = ref([]);
+    selectedColumnsKeys.value = [];
     const listOfAllColumnsKeys = ref([]);
     const selectedColumnsTableTemp = ref([]);
     for (const i of props.listOfAllColumns) {
@@ -105,23 +107,16 @@ const filteredRows = computed(() => {
         totalItems.value = allItemsData.value.length;
         return allItemsData.value;
     }
-    // filtering the rows
-    const skipKeys = [
-        "id",
-        "createdAt",
-        "updatedAt",
-        "description",
-        "locationName",
-    ];
     const filtered = allItemsData.value.filter((item) => {
+        // Only search record data of keys selected in selectedColumns
         return Object.values(item).some((value) => {
             const skip = Object.keys(item).find((key) => item[key] === value);
-            if (skipKeys.includes(skip)) {
-                return false;
+            if (selectedColumnsKeys.value.includes(skip)) {
+                return String(value)
+                    .toLowerCase()
+                    .includes(searchQuery.value.toLowerCase());
             }
-            return String(value)
-                .toLowerCase()
-                .includes(searchQuery.value.toLowerCase());
+            return false;
         });
     });
 
@@ -132,20 +127,24 @@ const filteredRows = computed(() => {
 
 // ---------- MODAL ---------- //
 const modalIsOpen = ref(false);
+const selectedData = ref();
 function openModal(row) {
     modalIsOpen.value = true;
-    emit("selectedRow", row);
+    selectedData.value = row;
 }
 
-const editModalIsOpen = ref(false);
-watch(
-    () => props.editModeIsOpen,
-    (newValue) => {
-        modalIsOpen.value = !newValue;
-        editModalIsOpen.value = newValue;
-    },
-);
+const editModeIsOpen = ref(false);
+function enableEditMode() {
+    editModeIsOpen.value = true;
+}
 
+function discardChanges() {
+    editModeIsOpen.value = false;
+}
+
+function saveChanges() {
+
+}
 updateTable();
 </script>
 
@@ -222,15 +221,66 @@ updateTable();
         <UModal
             v-model="modalIsOpen"
             :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
+            :prevent-close="editModeIsOpen"
         >
-            <slot name="detailsModal" />
-        </UModal>
-        <UModal
-            v-model="editModalIsOpen"
-            :ui="{ transition: { enter: 'duration-0', leave: 'duration-0' } }"
-            prevent-close
-        >
-            <slot name="editModeModal" />
+            <UCard
+                :ui="{
+                    ring: '',
+                    divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                }"
+            >
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3
+                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                        >
+                            {{ selectedData[listOfAllColumns[0].key] }}
+                        </h3>
+                        <UButton
+                            v-if="!editModeIsOpen"
+                            color="gray"
+                            variant="ghost"
+                            icon="i-heroicons-x-mark-20-solid"
+                            @click="modalIsOpen = false"
+                        />
+                        <UButton
+                            v-else
+                            color="red"
+                            variant="soft"
+                            icon="i-material-symbols-delete-outline"
+                            label="DELETE RECORD"
+                        />
+                    </div>
+                </template>
+
+                <template v-if="allowedEditing" #footer>
+                    <div class="flex w-auto justify-center">
+                        <UButton
+                            v-if="!editModeIsOpen"
+                            color="green"
+                            label="EDIT"
+                            icon="i-material-symbols-edit"
+                            @click="enableEditMode"
+                        />
+                        <div v-else class="flex w-[100%] justify-between">
+                            <UButton
+                                variant="outline"
+                                icon="i-material-symbols-cancel"
+                                color="red"
+                                label="CANCEL"
+                                @click="discardChanges"
+                            />
+                            <UButton
+                                variant="outline"
+                                icon="i-material-symbols-save"
+                                label="SAVE"
+                                color="green"
+                                @click="saveChanges"
+                            />
+                        </div>
+                    </div>
+                </template>
+            </UCard>
         </UModal>
     </div>
 </template>

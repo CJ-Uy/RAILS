@@ -1,40 +1,16 @@
 <script setup>
+const user = inject("user");
+
 const startingColumns = [
     "chemicalName",
     "description",
     "classification",
-    "available",
     "quantity",
     "reservedQuantity",
-    "unit",
+    "available",
 ]; // Key of starting columns in list of all columns
 
 const listOfAllColumns = [
-    {
-        key: "id",
-        label: "ID",
-        sortable: true,
-    },
-    {
-        key: "createdAt",
-        label: "Entry Created",
-        sortable: true,
-    },
-    {
-        key: "updatedAt",
-        label: "Entry Updated",
-        sortable: true,
-    },
-    {
-        key: "casNumber",
-        label: "CAS Number",
-        sortable: true,
-    },
-    {
-        key: "code",
-        label: "Code",
-        sortable: true,
-    },
     {
         key: "chemicalName",
         label: "Name",
@@ -51,13 +27,13 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "manufacturerName",
-        label: "Manufacturer",
+        key: "quantity",
+        label: "Inventory Quantity",
         sortable: true,
     },
     {
-        key: "supplier",
-        label: "Supplier",
+        key: "reservedQuantity",
+        label: "Reserved Quantity",
         sortable: true,
     },
     {
@@ -66,13 +42,23 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "quantity",
-        label: "Inventory Quantity",
+        key: "casNumber",
+        label: "CAS Number",
         sortable: true,
     },
     {
-        key: "reservedQuantity",
-        label: "Reserved Quantity",
+        key: "code",
+        label: "Code",
+        sortable: true,
+    },
+    {
+        key: "manufacturerName",
+        label: "Manufacturer",
+        sortable: true,
+    },
+    {
+        key: "supplier",
+        label: "Supplier",
         sortable: true,
     },
     {
@@ -150,46 +136,38 @@ const listOfAllColumns = [
         label: "School Year ID",
         sortable: true,
     },
+    {
+        key: "id",
+        label: "ID",
+        sortable: true,
+    },
+    {
+        key: "createdAt",
+        label: "Entry Created",
+        sortable: true,
+    },
+    {
+        key: "updatedAt",
+        label: "Entry Updated",
+        sortable: true,
+    },
 ];
 
-const selectedData = ref();
-function selectedRow(data) {
-    selectedData.value = data;
-}
-
-const allowedEditing = ref(true);
-const editModeIsOpen = ref(false);
-function toggleEditModal() {
-    editModeIsOpen.value = !editModeIsOpen.value;
-}
+// Only allow editing if the user is an administrator
+const allowedEditing = ref(user.role === "ADMIN");
 </script>
 
 <template>
     <div>
         <TablesInventory
-            title="MATERIALS"
+            title="REAGENTS"
             default-sort-key="itemName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
-            :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllReagents"
-            @selectedRow="selectedRow"
+            update-path="/api/db/updateData/updateReagents"
             :allowedEditing="allowedEditing"
         >
-            <template #detailsModal>
-                <UCard>
-                    <template #header> </template>
-                    <div>{{ selectedData }}</div>
-                    <template #footer>
-                        <UButton label="EDIT" @click="toggleEditModal()" />
-                    </template>
-                </UCard>
-            </template>
-            <template #editModeModal>
-                <UCard>
-                    <div>EDITING MODE</div>
-                </UCard>
-            </template>
         </TablesInventory>
     </div>
 </template>
