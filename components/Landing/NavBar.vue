@@ -8,7 +8,7 @@ function toggleMenu() {
 <template>
     <div>
         <!-- Navigation Bar -->
-        <nav class="container relative ml-0 min-w-full bg-white p-6">
+        <nav class="container relative ml-2 min-w-full bg-white p-6">
             <!-- Flex box container -->
             <div class="flex items-center justify-between">
                 <!-- Logo -->
@@ -23,27 +23,31 @@ function toggleMenu() {
                     </NuxtLink>
                 </div>
                 <!-- Menu items -->
-                <div class="text-#222B45 hidden space-x-6 md:flex">
+                <div class="-ml-24 space-x-16 md:flex">
                     <NuxtLink
                         to="/"
-                        class="cursor-pointer hover:text-light-accent"
-                        >HOME</NuxtLink
+                        class="menu-item cursor-pointer hover:text-light-accent"
                     >
+                        HOME
+                    </NuxtLink>
                     <NuxtLink
                         to="/about"
-                        class="cursor-pointer hover:text-light-accent"
-                        >ABOUT</NuxtLink
+                        class="menu-item cursor-pointer hover:text-light-accent"
                     >
+                        ABOUT
+                    </NuxtLink>
                     <NuxtLink
                         to="/services"
-                        class="cursor-pointer hover:text-light-accent"
-                        >SERVICES</NuxtLink
+                        class="menu-item cursor-pointer hover:text-light-accent"
                     >
+                        SERVICES
+                    </NuxtLink>
                     <NuxtLink
                         to="/contact"
-                        class="cursor-pointer hover:text-light-accent"
-                        >CONTACT US</NuxtLink
+                        class="menu-item cursor-pointer hover:text-light-accent"
                     >
+                        CONTACT US
+                    </NuxtLink>
                 </div>
                 <!-- Sign in Button -->
                 <NuxtLink to="/login" class="p-3 px-6 pt-2">
@@ -77,30 +81,28 @@ function toggleMenu() {
                 <!-- Mobile Menu -->
                 <div v-auto-animate class="md:hidden">
                     <div
-                        id="menu"
                         v-if="isMenuOpen"
+                        id="menu"
                         class="fixed left-6 right-6 mt-10 flex flex-col items-center space-y-6 self-end bg-blue-600 py-8 font-bold drop-shadow-md sm:w-auto sm:self-center"
                     >
-                        <NuxtLink
-                            to="/"
-                            class="cursor-pointer hover:text-light-accent"
-                            >HOME</NuxtLink
-                        >
-                        <NuxtLink
-                            to="/about"
-                            class="cursor-pointer hover:text-light-accent"
-                            >ABOUT</NuxtLink
-                        >
+                        <NuxtLink to="/" class="menu-item cursor-pointer">
+                            HOME
+                        </NuxtLink>
+                        <NuxtLink to="/about" class="menu-item cursor-pointer">
+                            ABOUT
+                        </NuxtLink>
                         <NuxtLink
                             to="/services"
-                            class="cursor-pointer hover:text-light-accent"
-                            >SERVICES</NuxtLink
+                            class="menu-item cursor-pointer"
                         >
+                            SERVICES
+                        </NuxtLink>
                         <NuxtLink
                             to="/contact"
-                            class="cursor-pointer hover:text-light-accent"
-                            >CONTACT US</NuxtLink
+                            class="menu-item cursor-pointer"
                         >
+                            CONTACT US
+                        </NuxtLink>
                         <!-- Sign in Button -->
                         <NuxtLink to="/login" class="p-3 px-6 pt-2">
                             <button
@@ -120,7 +122,6 @@ function toggleMenu() {
 .logo {
     height: 60px;
     width: auto;
-    /* Add your other styles here */
 }
 
 .router-link-active {
@@ -135,6 +136,40 @@ function toggleMenu() {
     color: white;
     height: 45px;
     width: 45px;
-    /* Add your other styles here */
+}
+
+.ml-4 {
+    margin-left: -1rem;
+}
+
+.menu-item {
+    position: relative;
+    text-decoration: none;
+}
+
+.menu-item:hover,
+.menu-item.router-link-exact-active {
+    color: #4299e1;
+}
+
+.menu-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: #4299e1;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform property */
+    opacity: 0;
+    transform: scaleX(0); /* Initial scale to hide the underline */
+    transform-origin: bottom left; /* Set transform origin to start from bottom left */
+}
+
+.menu-item:hover::before,
+.menu-item.router-link-exact-active::before {
+    opacity: 1;
+    background-color: #4299e1;
+    transform: scaleX(1); /* Scale to show the underline on hover */
 }
 </style>
