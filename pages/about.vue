@@ -19,3 +19,9 @@ definePageMeta({ auth: false, layout: "landing-pages" });
         />
     </div>
 </template>
+
+<style>
+body {
+    overflow: hidden; /* Hide scrollbars */
+}
+</style>

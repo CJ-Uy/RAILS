@@ -8,21 +8,22 @@ function toggleMenu() {
 <template>
     <div>
         <!-- Navigation Bar -->
-        <nav class="container relative ml-0 min-w-full bg-light-primary p-6">
+        <nav class="container relative ml-0 min-w-full bg-white p-6">
             <!-- Flex box container -->
             <div class="flex items-center justify-between">
                 <!-- Logo -->
-                <div class="pt-2">
+                <div>
                     <NuxtLink to="/">
-                        <nuxt-icon
-                            name="Logo"
-                            filled
+                        <img
+                            src="/images/header.png"
+                            alt="Logo"
                             class="logo cursor-pointer"
+                            style="height: 60px; width: auto"
                         />
                     </NuxtLink>
                 </div>
                 <!-- Menu items -->
-                <div class="hidden space-x-6 text-dark-text md:flex">
+                <div class="text-#222B45 hidden space-x-6 md:flex">
                     <NuxtLink
                         to="/"
                         class="cursor-pointer hover:text-light-accent"
@@ -78,7 +79,7 @@ function toggleMenu() {
                     <div
                         id="menu"
                         v-if="isMenuOpen"
-                        class="fixed left-6 right-6 mt-10 flex flex-col items-center space-y-6 self-end bg-white py-8 font-bold drop-shadow-md sm:w-auto sm:self-center"
+                        class="fixed left-6 right-6 mt-10 flex flex-col items-center space-y-6 self-end bg-blue-600 py-8 font-bold drop-shadow-md sm:w-auto sm:self-center"
                     >
                         <NuxtLink
                             to="/"
@@ -116,10 +117,12 @@ function toggleMenu() {
 </template>
 
 <style>
-.logo svg {
-    height: 45px;
-    width: 46px;
+.logo {
+    height: 60px;
+    width: auto;
+    /* Add your other styles here */
 }
+
 .router-link-active {
     color: #3aa671;
 }
@@ -132,5 +135,6 @@ function toggleMenu() {
     color: white;
     height: 45px;
     width: 45px;
+    /* Add your other styles here */
 }
 </style>
