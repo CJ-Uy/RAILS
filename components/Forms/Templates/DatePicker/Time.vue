@@ -19,11 +19,11 @@ const props = defineProps({
         auto-apply
         placeholder="Select Time"
         :model-value="context._value"
-        @update:model-value="context.node.input($event)"
         :start-time="[
             { hours: 0, minutes: 0 },
             { hours: 0, minutes: 0 },
         ]"
+        @update:model-value="context.node.input($event)"
     >
         <template #input-icon>
             <Icon

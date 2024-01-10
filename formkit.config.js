@@ -32,6 +32,8 @@ const config = defaultConfig({
         }),
     ],
     theme: "genesis",
+
+    // This code adds the VueDatPicker as a Formkit type
     inputs: {
         calendarDatePicker: createInput(Calendar),
         RangedCalendarDatePicker: createInput(RangedCalendar),
