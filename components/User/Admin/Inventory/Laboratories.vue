@@ -44,7 +44,7 @@ const allowedEditing = ref(user.role === "ADMIN");
     <div>
         <TablesInventory
             title="LABORATORIES"
-            default-sort-key="itemName"
+            default-sort-key="name"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
             fetch-path="/api/db/rawData/getAllLaboratories"

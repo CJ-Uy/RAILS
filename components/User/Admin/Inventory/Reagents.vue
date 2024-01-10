@@ -161,7 +161,7 @@ const allowedEditing = ref(user.role === "ADMIN");
     <div>
         <TablesInventory
             title="REAGENTS"
-            default-sort-key="itemName"
+            default-sort-key="chemicalName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
             fetch-path="/api/db/rawData/getAllReagents"

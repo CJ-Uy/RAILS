@@ -1,76 +1,17 @@
 <script setup>
-const schoolYears = await useFetch("/api/db/rawData/getAllSY");
+const user = inject("user");
 
-const currentSchoolYear = ref();
-
-for (const schoolYear of schoolYears.data.value) {
-    if (schoolYear.currentSchoolYear) {
-        currentSchoolYear.value = schoolYear;
-    }
-}
-
-const startingColumns = [
-    {
-        key: "yearStart",
-        label: "SY Start",
-        sortable: true,
-    },
-    {
-        key: "yearEnd",
-        label: "SY End",
-        sortable: true,
-    },
-    {
-        key: "currentSchoolYear",
-        label: "Current",
-        sortable: true,
-    },
-    {
-        key: "laboratoryRequestControlNumberCounter",
-        label: "Laboratory Resv",
-        sortable: true,
-    },
-    {
-        key: "materialEquipmentRequestControlNumberCounter",
-        label: "Mat & Equip Requests",
-        sortable: true,
-    },
-    {
-        key: "reagentRequestControlNumberCounter",
-        label: "Reagent Requests",
-        sortable: true,
-    },
-];
+const startingColumns = ["yearStart", "yearEnd", "campus"]; // Key of starting columns in list of all columns
 
 const listOfAllColumns = [
     {
         key: "yearStart",
-        label: "SY Start",
+        label: "Starting Year",
         sortable: true,
     },
     {
         key: "yearEnd",
-        label: "SY End",
-        sortable: true,
-    },
-    {
-        key: "currentSchoolYear",
-        label: "Current",
-        sortable: true,
-    },
-    {
-        key: "laboratoryRequestControlNumberCounter",
-        label: "Laboratory Resv",
-        sortable: true,
-    },
-    {
-        key: "materialEquipmentRequestControlNumberCounter",
-        label: "Mat & Equip Requests",
-        sortable: true,
-    },
-    {
-        key: "reagentRequestControlNumberCounter",
-        label: "Reagent Requests",
+        label: "Ending Year",
         sortable: true,
     },
     {
@@ -78,74 +19,39 @@ const listOfAllColumns = [
         label: "Campus",
         sortable: true,
     },
+    {
+        key: "id",
+        label: "ID",
+        sortable: true,
+    },
+    {
+        key: "createdAt",
+        label: "Entry Created",
+        sortable: true,
+    },
+    {
+        key: "updatedAt",
+        label: "Entry Updated",
+        sortable: true,
+    },
 ];
 
-const selectedData = ref();
-function selectedRow(data) {
-    selectedData.value = data;
-}
-
-const editModeIsOpen = ref(false);
-function toggleEditModal() {
-    editModeIsOpen.value = !editModeIsOpen.value;
-}
+// Only allow editing if the user is an administrator
+const allowedEditing = ref(user.role === "ADMIN");
 </script>
 
 <template>
     <div>
-        <UContainer class="text-center">
-            <div
-                class="my-10 flex flex-row items-center justify-center space-x-10"
-            >
-                <UCard class="w-[30%]">
-                    <template #header>
-                        <h1 class="font-bold">CURRENT SCHOOL YEAR</h1>
-                    </template>
-                    <div class="text-lg font-bold text-red-500">
-                        S.Y. {{ currentSchoolYear.yearStart }} -
-                        {{ currentSchoolYear.yearEnd }}
-                    </div>
-                </UCard>
-                <UCard class="w-[30%]">
-                    <template #header>
-                        <h1 class="font-bold">CURRENT CAMPUS</h1>
-                    </template>
-                    <div class="text-lg font-bold text-red-500">
-                        {{ currentSchoolYear.campus }}
-                    </div>
-                </UCard>
-            </div>
-            <div>
-                <!-- TABLE OF SCHOOL YEARS -->
-                <TablesInventory
-                    title="LIST OF SCHOOL YEARS"
-                    default-sort-key="yearStart"
-                    :startingColumns="startingColumns"
-                    :listOfAllColumns="listOfAllColumns"
-                    :editModeIsOpen="editModeIsOpen"
-                    fetch-path="/api/db/rawData/getAllSY"
-                    @selectedRow="selectedRow"
-                    allowed-editing="true"
-                >
-                    <template #detailsModal>
-                        <UCard>
-                            <template #header> </template>
-                            <div>{{ selectedData }}</div>
-                            <template #footer>
-                                <UButton
-                                    label="EDIT"
-                                    @click="toggleEditModal()"
-                                />
-                            </template>
-                        </UCard>
-                    </template>
-                    <template #editModeModal>
-                        <UCard>
-                            <div>EDITING MODE</div>
-                        </UCard>
-                    </template>
-                </TablesInventory>
-            </div>
-        </UContainer>
+        <TablesInventory
+            title="SCHOOL YEARS"
+            default-sort-key="yearStart"
+            :startingColumns="startingColumns"
+            :listOfAllColumns="listOfAllColumns"
+            fetch-path="/api/db/rawData/getAllSY"
+            update-path="/api/db/updateData/updateLaboratories"
+            :allowedEditing="allowedEditing"
+        />
     </div>
 </template>
+
+<style scoped></style>

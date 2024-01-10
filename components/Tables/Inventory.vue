@@ -1,4 +1,6 @@
 <script setup>
+import { TypeFormatFlags } from "typescript";
+
 const props = defineProps({
     title: {
         type: String,
@@ -31,7 +33,7 @@ const props = defineProps({
     },
 });
 
-const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
+const sort = ref({ column: props.defaultSortKey, direction: "asc" });
 
 const selectedColumns = ref([]);
 // Initial starting columns
@@ -75,12 +77,12 @@ watch(selectedColumns, () => {
     selectedColumnsTable.value = selectedColumnsTableTemp.value;
 });
 
-const totalItems = ref();
-
 const { pending, data: allItems } = await useLazyFetch(props.fetchPath);
 const allItemsData = ref([]);
+const allItemsRawData = ref([]);
 watch(allItems, (updatedValues) => {
     allItemsData.value = updatedValues;
+    allItemsRawData.value = allItemsData.value;
     if (props.title === "LABORATORIES") {
         for (let i = 0; i < allItemsData.value.length; i++) {
             allItemsData.value[i].locationName =
@@ -88,6 +90,8 @@ watch(allItems, (updatedValues) => {
         }
     }
 });
+
+const totalItems = ref(allItemsData.value.length);
 
 async function updateTable() {
     const allItems = await useFetch(props.fetchPath);
@@ -98,14 +102,37 @@ async function updateTable() {
                 allItemsData.value[i].location.name;
         }
     }
+    allItemsRawData.value = allItemsData.value;
+    totalItems.value = allItemsData.value.length;
 }
 
+const page = ref(1);
+const pageCount = 8;
 const searchQuery = ref("");
 const filteredRows = computed(() => {
     // Return all rows if search query is empty
     if (!searchQuery.value) {
+        // console.log(allItemsData.value);
         totalItems.value = allItemsData.value.length;
-        return allItemsData.value;
+        if (sort.value.direction === "desc") {
+            allItemsData.value = allItemsRawData.value.sort((a, b) => {
+                if (typeof a[sort.value.column] === "number") {
+                    return b[sort.value.column] - a[sort.value.column];
+                }
+                return b[sort.value.column].localeCompare(a[sort.value.column]);
+            });
+        } else {
+            allItemsData.value = allItemsRawData.value.sort((a, b) => {
+                if (typeof a[sort.value.column] === "number") {
+                    return a[sort.value.column] - b[sort.value.column];
+                }
+                return a[sort.value.column].localeCompare(b[sort.value.column]);
+            });
+        }
+        return allItemsData.value.slice(
+            (page.value - 1) * pageCount,
+            page.value * pageCount,
+        );
     }
     const filtered = allItemsData.value.filter((item) => {
         // Only search record data of keys selected in selectedColumns
@@ -122,8 +149,25 @@ const filteredRows = computed(() => {
 
     // TODO: Slice the values into pages
     totalItems.value = filtered.length;
-    return filtered;
+    if (sort.value.direction === "desc") {
+        return filtered
+            .sort((a, b) => {
+                return a[sort.value.column].localeCompare(
+                    b[sort.value.column] * -1,
+                );
+            })
+            .slice((page.value - 1) * pageCount, page.value * pageCount);
+    }
+    return filtered
+        .sort((a, b) => {
+            return a[sort.value.column].localeCompare(b[sort.value.column]);
+        })
+        .slice((page.value - 1) * pageCount, page.value * pageCount);
 });
+
+function test(tester) {
+    // console.log(allItemsData.value);
+}
 
 // ---------- MODAL ---------- //
 const modalIsOpen = ref(false);
@@ -142,9 +186,7 @@ function discardChanges() {
     editModeIsOpen.value = false;
 }
 
-function saveChanges() {
-
-}
+function saveChanges() {}
 updateTable();
 </script>
 
@@ -209,14 +251,27 @@ updateTable();
             </div>
 
             <!-- DATA TABLE -->
-            <UTable
-                v-model:sort="defaultSort"
-                :columns="selectedColumnsTable"
-                :rows="filteredRows"
-                :loading="pending"
-                :ui="{ tr: { active: 'hover:bg-gray-200' } }"
-                @select="openModal"
-            />
+            <div class="min-h-[470px]">
+                <UTable
+                    v-model:sort="sort"
+                    :columns="selectedColumnsTable"
+                    :rows="filteredRows"
+                    :loading="pending"
+                    :ui="{ tr: { active: 'hover:bg-gray-200' } }"
+                    @select="openModal"
+                    @update:sort="test"
+                />
+            </div>
+
+            <template #footer>
+                <div class="my-2 flex justify-end">
+                    <UPagination
+                        v-model="page"
+                        :page-count="pageCount"
+                        :total="totalItems"
+                    />
+                </div>
+            </template>
         </UCard>
         <UModal
             v-model="modalIsOpen"
@@ -234,7 +289,14 @@ updateTable();
                         <h3
                             class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                         >
-                            {{ selectedData[listOfAllColumns[0].key] }}
+                            {{
+                                selectedData[listOfAllColumns[0].key] +
+                                (props.title === "GRADE & SECTIONS" ||
+                                props.title === "SCHOOL YEARS"
+                                    ? " - " +
+                                      selectedData[listOfAllColumns[1].key]
+                                    : "")
+                            }}
                         </h3>
                         <UButton
                             v-if="!editModeIsOpen"

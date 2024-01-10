@@ -18,8 +18,8 @@ const editFormsTabs = [
         slot: "gradeSection",
     },
     {
-        label: "Units & Teachers",
-        slot: "unitsTeachers",
+        label: "Units",
+        slot: "units",
     },
 ];
 </script>
@@ -38,7 +38,7 @@ const editFormsTabs = [
                 <template #gradeSection>
                     <UserAdminEditFormsGradeSection />
                 </template>
-                <template #unitsTeachers>
+                <template #units>
                     <UserAdminEditFormsUnits />
                 </template>
             </UTabs>

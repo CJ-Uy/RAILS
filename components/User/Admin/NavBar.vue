@@ -48,7 +48,7 @@ const links = [
         label: "Management",
         children: [
             {
-                label: "FORMS",
+                label: "EDIT FORMS",
                 to: "/admin/edit-forms",
                 icon: "i-mdi-clipboard-edit-outline",
             },
