@@ -205,6 +205,7 @@ function removeDateTime(index) {
                                 />
                             </template>
                         </VueDatePicker>
+                        <p class="text-xs">Note the 24hr time format</p>
                     </td>
                 </tr>
                 <tr>

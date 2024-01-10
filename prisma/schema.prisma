@@ -205,8 +205,9 @@ model LaboratoryReservations {
   controlNumber      String
   laboratoryReserved Laboratories @relation(fields: [laboratoryId], references: [id])
   laboratoryId       String
-  startTime          String // Strings but stored in the DateTime format
-  endTime            String // Strings but stored in the DateTime format
+  ranged             Boolean
+  dates              Json // { startDate: String, endDate: String } or { dates: [] } Date: YYYY-MM-DD
+  time               Json // { startTime: String, endTime: endTime } Time: HH:mm
 
   laboratoryRequest   LaboratoryRequests @relation(fields: [laboratoryRequestId], references: [id])
   laboratoryRequestId String
