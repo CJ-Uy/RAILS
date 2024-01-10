@@ -35,82 +35,59 @@ export default defineEventHandler(async (event) => {
         "false" // They DONT have a reservation make one
     ) {
         // Format dates
-        const formattedDates = [];
+        const formattedDates = { startDate: [], endDate: [] };
         for (const reservation of body.formValues.data.laboratorySetting
             .allDates) {
-            const formattedDate = {};
             if (reservation.ranged) {
-                formattedDate.startDate = dayjs(
-                    reservation.requestDates[0],
-                ).format("YYYY-MM-DD");
-                formattedDate.endDate = dayjs(
-                    reservation.requestDates[1],
-                ).format("YYYY-MM-DD");
+                formattedDates.startDate.push(
+                    dayjs(reservation.requestDates[0]).format("YYYY-MM-DD"),
+                );
+                formattedDates.endDate.push(
+                    dayjs(reservation.requestDates[1]).format("YYYY-MM-DD"),
+                );
             } else {
-                formattedDate.dates = [];
                 for (const requestDate of reservation.requestDates) {
-                    formattedDate.dates.push(
+                    formattedDates.startDate.push(
+                        dayjs(requestDate).format("YYYY-MM-DD"),
+                    );
+                    formattedDates.endDate.push(
                         dayjs(requestDate).format("YYYY-MM-DD"),
                     );
                 }
             }
-            formattedDate.startTime = dayjs()
+            formattedDates.startTime = dayjs()
                 .set("hour", reservation.startTime.hours)
                 .set("minute", reservation.startTime.minutes)
                 .format("HH:mm");
-            formattedDate.endTime = dayjs()
+            formattedDates.endTime = dayjs()
                 .set("hour", reservation.endTime.hours)
                 .set("minute", reservation.endTime.minutes)
                 .format("HH:mm");
-
-            formattedDate.ranged = reservation.ranged;
-            formattedDates.push(formattedDate);
         }
 
         // Create a Laboratory Reservation Request and connect to the Base Laboratory Request
-        for (const date of formattedDates) {
-            // Make control number
-            const labResControlNumber = await getControlNumbers(
-                "laboratoryReservation",
-                schoolYear,
-            );
+        // Make control number
+        const labResControlNumber = await getControlNumbers(
+            "laboratoryReservation",
+            schoolYear,
+        );
 
-            // Save Reservation
-            if (date.ranged) {
-                await prisma.laboratoryReservations.create({
-                    data: {
-                        controlNumber: labResControlNumber,
-                        laboratoryId:
-                            body.formValues.data.laboratorySetting.venue,
-                        laboratoryRequestId: request.id,
-                        ranged: date.ranged,
-                        dates: {
-                            startDate: date.startDate,
-                            endDate: date.endDate,
-                        },
-                        time: {
-                            startTime: date.startTime,
-                            endTime: date.endTime,
-                        },
-                    },
-                });
-            } else {
-                await prisma.laboratoryReservations.create({
-                    data: {
-                        controlNumber: labResControlNumber,
-                        laboratoryId:
-                            body.formValues.data.laboratorySetting.venue,
-                        laboratoryRequestId: request.id,
-                        ranged: date.ranged,
-                        dates: date.dates,
-                        time: {
-                            startTime: date.startTime,
-                            endTime: date.endTime,
-                        },
-                    },
-                });
-            }
-        }
+        // Save Reservation
+        await prisma.laboratoryReservations.create({
+            data: {
+                controlNumber: labResControlNumber,
+                laboratoryId: body.formValues.data.laboratorySetting.venue,
+                laboratoryRequestId: request.id,
+                dates: {
+                    startDate: formattedDates.startDate,
+                    endDate: formattedDates.endDate,
+                },
+                time: {
+                    startTime: formattedDates.startTime,
+                    endTime: formattedDates.endTime,
+                },
+            },
+        });
     } else {
         // If they already have a laboratory reservation, save the date time independently for forms
         const timeJSON = {};
