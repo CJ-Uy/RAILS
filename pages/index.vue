@@ -11,62 +11,30 @@ definePageMeta({ auth: false, layout: "landing-pages" });
 // AUTH FUNCTIONS
 const { status, signOut } = useAuth();
 const { data } = await useFetch("/api/user/me");
-
-const isSignedIn = computed(() => status.value === "authenticated"); // authenticated, loading, or unauthenticated ONLY
-
-async function handleSignOut() {
-    await signOut();
-}
 // AUTH FUNCTIONS END
 
 // EMAIL FUNCTIONS
 const gmailRes = ref();
-const errors = ref();
-async function sendEmail() {
-    const { data } = await useFetch("/api/user/me");
-
-    gmailRes.value = `Loading...Sending Email to ${data.value.email} This may take a minute or 2`;
-
-    gmailRes.value = await useFetch("/api/send-email/test", {
-        method: "POST",
-        body: {
-            name: String(data.value.firstName).concat(" ", data.value.lastName),
-            email: String(data.value.email),
-        },
-    });
-}
 // EMAIL FUNCTIONS END
 </script>
 
 <template>
-    <div>
-        <NuxtImg
-            format="webp"
-            src="/images/01.png"
-            alt="PSHS-EVC LABS"
-            class="w-full"
-        />
-        <!-- EMAIL COMPONENT EXAMPLE -->
-        <!-- <div v-if="isSignedIn">
-            <button
-                class="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-gray-700"
-                @click="sendEmail"
-            >
-                Send Email
-            </button>
-            <div v-if="gmailRes" class="min">
-                Gmail Respose:
-                <div>
-                    {{ gmailRes }}
-                </div>
-            </div>
-            <div v-if="errors" class="min">
-                Error:
-                <div>
-                    {{ errors }}
-                </div>
-            </div>
-        </div> -->
-        <!-- EMAIL COMPONENT EXAMPLE END-->
+    <div class="bg-cover bg-center h-screen flex items-start justify-start" style="background-image: url('/images/01.png');">
+        <div class="ml-14" style="margin-top: 255px;">
+            <h1 class="text-9xl font-bold text-gray-800 font-gilroy-extrabold">SIGN UP NOW</h1>
+            <p class="text-3xl text-gray-800">Welcome to the PSHS-EVC<br>Online Laboratory Reservation System</p>
+        </div>
     </div>
 </template>
+
+
+<style scoped>
+@font-face {
+    font-family: "Gilroy-ExtraBold";
+    src: url("~/assets/fonts/Gilroy-ExtraBold.otf");
+}
+
+.font-gilroy-extrabold {
+    font-family: "Gilroy-ExtraBold", sans-serif;
+}
+</style>
