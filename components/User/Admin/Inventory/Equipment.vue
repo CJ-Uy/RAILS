@@ -1,4 +1,6 @@
 <script setup>
+const user = inject("user");
+
 const startingColumns = [
     "equipmentName",
     "description",
@@ -9,27 +11,8 @@ const startingColumns = [
 ]; // Key of starting columns in list of all columns
 
 // TODO: add location Names
+// Index of each object dictates its position in the Select Menu
 const listOfAllColumns = [
-    {
-        key: "id",
-        label: "ID",
-        sortable: true,
-    },
-    {
-        key: "createdAt",
-        label: "Entry Created",
-        sortable: true,
-    },
-    {
-        key: "updatedAt",
-        label: "Entry Updated",
-        sortable: true,
-    },
-    {
-        key: "code",
-        label: "Code",
-        sortable: true,
-    },
     {
         key: "equipmentName",
         label: "Name",
@@ -47,11 +30,6 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "modelNoOrManufacturer",
-        label: "Model/Manufacturer",
-        sortable: true,
-    },
-    {
         key: "quantity",
         label: "Quantity",
         sortable: true,
@@ -59,6 +37,21 @@ const listOfAllColumns = [
     {
         key: "currentlyInUse",
         label: "In Use",
+        sortable: true,
+    },
+    {
+        key: "available",
+        label: "Availability",
+        sortable: true,
+    },
+    {
+        key: "code",
+        label: "Code",
+        sortable: true,
+    },
+    {
+        key: "modelNoOrManufacturer",
+        label: "Model/Manufacturer",
         sortable: true,
     },
     {
@@ -78,7 +71,7 @@ const listOfAllColumns = [
     },
     {
         key: "propertyNumber",
-        label: "property Number",
+        label: "Property Number",
         sortable: true,
     },
     {
@@ -97,22 +90,24 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "available",
-        label: "Availability",
+        key: "id",
+        label: "ID",
+        sortable: true,
+    },
+    {
+        key: "createdAt",
+        label: "Entry Created",
+        sortable: true,
+    },
+    {
+        key: "updatedAt",
+        label: "Entry Updated",
         sortable: true,
     },
 ];
 
-const selectedData = ref();
-function selectedRow(data) {
-    selectedData.value = data;
-}
-
-const allowedEditing = ref(true);
-const editModeIsOpen = ref(false);
-function toggleEditModal() {
-    editModeIsOpen.value = !editModeIsOpen.value;
-}
+// Only allow editing if the user is an administrator
+const allowedEditing = ref(user.role === "ADMIN");
 </script>
 
 <template>
@@ -122,29 +117,10 @@ function toggleEditModal() {
             default-sort-key="equipmentName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
-            :editModeIsOpen="editModeIsOpen"
             fetch-path="/api/db/rawData/getAllEquipment"
-            @selectedRow="selectedRow"
+            update-path="/api/db/updateData/updateEquipment"
             :allowedEditing="allowedEditing"
         >
-            <template #detailsModal>
-                <UCard>
-                    <template #header> </template>
-                    <div>{{ selectedData }}</div>
-                    <template #footer>
-                        <UButton label="EDIT" @click="toggleEditModal()" />
-                    </template>
-                </UCard>
-            </template>
-            <template #editModeModal>
-                <UCard>
-                    <template #header> </template>
-                    <div>EDITING</div>
-                    <template #footer>
-                        <UButton label="EDIT" @click="toggleEditModal()" />
-                    </template>
-                </UCard>
-            </template>
         </TablesInventory>
     </div>
 </template>

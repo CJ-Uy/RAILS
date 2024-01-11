@@ -1,4 +1,6 @@
 <script setup>
+import { TypeFormatFlags } from "typescript";
+
 const props = defineProps({
     title: {
         type: String,
@@ -21,10 +23,9 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    editModeIsOpen: {
-        type: Boolean,
-        required: false,
-        default: false,
+    updatePath: {
+        type: String,
+        required: true,
     },
     allowedEditing: {
         type: Boolean,
@@ -32,9 +33,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["selectedRow"]);
-
-const defaultSort = ref({ column: props.defaultSortKey, direction: "asc" });
+const sort = ref({ column: props.defaultSortKey, direction: "asc" });
 
 const selectedColumns = ref([]);
 // Initial starting columns
@@ -48,8 +47,13 @@ const selectedColumnsTable = ref(selectedColumns.value);
 function toggleAddRecord() {}
 
 // Sort table columns according to the order of columns in list of all columns
+// Selected columns keys are also used in filtering search results
+const selectedColumnsKeys = ref([]);
+for (const i of props.startingColumns) {
+    selectedColumnsKeys.value.push(i);
+}
 watch(selectedColumns, () => {
-    const selectedColumnsKeys = ref([]);
+    selectedColumnsKeys.value = [];
     const listOfAllColumnsKeys = ref([]);
     const selectedColumnsTableTemp = ref([]);
     for (const i of props.listOfAllColumns) {
@@ -73,12 +77,12 @@ watch(selectedColumns, () => {
     selectedColumnsTable.value = selectedColumnsTableTemp.value;
 });
 
-const totalItems = ref();
-
 const { pending, data: allItems } = await useLazyFetch(props.fetchPath);
 const allItemsData = ref([]);
+const allItemsRawData = ref([]);
 watch(allItems, (updatedValues) => {
     allItemsData.value = updatedValues;
+    allItemsRawData.value = allItemsData.value;
     if (props.title === "LABORATORIES") {
         for (let i = 0; i < allItemsData.value.length; i++) {
             allItemsData.value[i].locationName =
@@ -86,6 +90,8 @@ watch(allItems, (updatedValues) => {
         }
     }
 });
+
+const totalItems = ref(allItemsData.value.length);
 
 async function updateTable() {
     const allItems = await useFetch(props.fetchPath);
@@ -96,56 +102,91 @@ async function updateTable() {
                 allItemsData.value[i].location.name;
         }
     }
+    allItemsRawData.value = allItemsData.value;
+    totalItems.value = allItemsData.value.length;
 }
 
+const page = ref(1);
+const pageCount = 8;
 const searchQuery = ref("");
 const filteredRows = computed(() => {
     // Return all rows if search query is empty
     if (!searchQuery.value) {
+        // console.log(allItemsData.value);
         totalItems.value = allItemsData.value.length;
-        return allItemsData.value;
+        if (sort.value.direction === "desc") {
+            allItemsData.value = allItemsRawData.value.sort((a, b) => {
+                if (typeof a[sort.value.column] === "number") {
+                    return b[sort.value.column] - a[sort.value.column];
+                }
+                return b[sort.value.column].localeCompare(a[sort.value.column]);
+            });
+        } else {
+            allItemsData.value = allItemsRawData.value.sort((a, b) => {
+                if (typeof a[sort.value.column] === "number") {
+                    return a[sort.value.column] - b[sort.value.column];
+                }
+                return a[sort.value.column].localeCompare(b[sort.value.column]);
+            });
+        }
+        return allItemsData.value.slice(
+            (page.value - 1) * pageCount,
+            page.value * pageCount,
+        );
     }
-    // filtering the rows
-    const skipKeys = [
-        "id",
-        "createdAt",
-        "updatedAt",
-        "description",
-        "locationName",
-    ];
     const filtered = allItemsData.value.filter((item) => {
+        // Only search record data of keys selected in selectedColumns
         return Object.values(item).some((value) => {
             const skip = Object.keys(item).find((key) => item[key] === value);
-            if (skipKeys.includes(skip)) {
-                return false;
+            if (selectedColumnsKeys.value.includes(skip)) {
+                return String(value)
+                    .toLowerCase()
+                    .includes(searchQuery.value.toLowerCase());
             }
-            return String(value)
-                .toLowerCase()
-                .includes(searchQuery.value.toLowerCase());
+            return false;
         });
     });
 
     // TODO: Slice the values into pages
     totalItems.value = filtered.length;
-    return filtered;
+    if (sort.value.direction === "desc") {
+        return filtered
+            .sort((a, b) => {
+                return a[sort.value.column].localeCompare(
+                    b[sort.value.column] * -1,
+                );
+            })
+            .slice((page.value - 1) * pageCount, page.value * pageCount);
+    }
+    return filtered
+        .sort((a, b) => {
+            return a[sort.value.column].localeCompare(b[sort.value.column]);
+        })
+        .slice((page.value - 1) * pageCount, page.value * pageCount);
 });
+
+function test(tester) {
+    // console.log(allItemsData.value);
+}
 
 // ---------- MODAL ---------- //
 const modalIsOpen = ref(false);
+const selectedData = ref();
 function openModal(row) {
     modalIsOpen.value = true;
-    emit("selectedRow", row);
+    selectedData.value = row;
 }
 
-const editModalIsOpen = ref(false);
-watch(
-    () => props.editModeIsOpen,
-    (newValue) => {
-        modalIsOpen.value = !newValue;
-        editModalIsOpen.value = newValue;
-    },
-);
+const editModeIsOpen = ref(false);
+function enableEditMode() {
+    editModeIsOpen.value = true;
+}
 
+function discardChanges() {
+    editModeIsOpen.value = false;
+}
+
+function saveChanges() {}
 updateTable();
 </script>
 
@@ -210,27 +251,98 @@ updateTable();
             </div>
 
             <!-- DATA TABLE -->
-            <UTable
-                v-model:sort="defaultSort"
-                :columns="selectedColumnsTable"
-                :rows="filteredRows"
-                :loading="pending"
-                :ui="{ tr: { active: 'hover:bg-gray-200' } }"
-                @select="openModal"
-            />
+            <div class="min-h-[470px]">
+                <UTable
+                    v-model:sort="sort"
+                    :columns="selectedColumnsTable"
+                    :rows="filteredRows"
+                    :loading="pending"
+                    :ui="{ tr: { active: 'hover:bg-gray-200' } }"
+                    @select="openModal"
+                    @update:sort="test"
+                />
+            </div>
+
+            <template #footer>
+                <div class="my-2 flex justify-end">
+                    <UPagination
+                        v-model="page"
+                        :page-count="pageCount"
+                        :total="totalItems"
+                    />
+                </div>
+            </template>
         </UCard>
         <UModal
             v-model="modalIsOpen"
             :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
+            :prevent-close="editModeIsOpen"
         >
-            <slot name="detailsModal" />
-        </UModal>
-        <UModal
-            v-model="editModalIsOpen"
-            :ui="{ transition: { enter: 'duration-0', leave: 'duration-0' } }"
-            prevent-close
-        >
-            <slot name="editModeModal" />
+            <UCard
+                :ui="{
+                    ring: '',
+                    divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                }"
+            >
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3
+                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                        >
+                            {{
+                                selectedData[listOfAllColumns[0].key] +
+                                (props.title === "GRADE & SECTIONS" ||
+                                props.title === "SCHOOL YEARS"
+                                    ? " - " +
+                                      selectedData[listOfAllColumns[1].key]
+                                    : "")
+                            }}
+                        </h3>
+                        <UButton
+                            v-if="!editModeIsOpen"
+                            color="gray"
+                            variant="ghost"
+                            icon="i-heroicons-x-mark-20-solid"
+                            @click="modalIsOpen = false"
+                        />
+                        <UButton
+                            v-else
+                            color="red"
+                            variant="soft"
+                            icon="i-material-symbols-delete-outline"
+                            label="DELETE RECORD"
+                        />
+                    </div>
+                </template>
+
+                <template v-if="allowedEditing" #footer>
+                    <div class="flex w-auto justify-center">
+                        <UButton
+                            v-if="!editModeIsOpen"
+                            color="green"
+                            label="EDIT"
+                            icon="i-material-symbols-edit"
+                            @click="enableEditMode"
+                        />
+                        <div v-else class="flex w-[100%] justify-between">
+                            <UButton
+                                variant="outline"
+                                icon="i-material-symbols-cancel"
+                                color="red"
+                                label="CANCEL"
+                                @click="discardChanges"
+                            />
+                            <UButton
+                                variant="outline"
+                                icon="i-material-symbols-save"
+                                label="SAVE"
+                                color="green"
+                                @click="saveChanges"
+                            />
+                        </div>
+                    </div>
+                </template>
+            </UCard>
         </UModal>
     </div>
 </template>

@@ -7,28 +7,21 @@ const props = defineProps({
 </script>
 
 <template>
-    <!-- 
-        For the time picker with "enable-time-range-validation" it makes sure that the first time is before the second time
-        However, it does not tell the end user that the times are invalid andd simply does not change making it feel buggy.
-        TODO: figure out how to do validation on this
-     -->
     <VueDatePicker
-        time-picker
-        disable-time-range-validation
+        inline
         range
+        :enable-time-picker="false"
+        placeholder="Select Date(s)"
         auto-apply
-        placeholder="Select Time"
+        :min-date="new Date()"
+        :close-on-auto-apply="false"
         :model-value="context._value"
-        :start-time="[
-            { hours: 0, minutes: 0 },
-            { hours: 0, minutes: 0 },
-        ]"
         @update:model-value="context.node.input($event)"
     >
         <template #input-icon>
             <Icon
                 id="left-icon"
-                name="ic:round-access-time"
+                name="ic:baseline-calendar-today"
                 class="vue-date-picker-icons"
             />
         </template>
