@@ -206,7 +206,7 @@ model LaboratoryReservations {
   laboratoryReserved Laboratories @relation(fields: [laboratoryId], references: [id])
   laboratoryId       String
   dates              Json // { startDates: [], endDates: [] } Date: YYYY-MM-DD (prisma doesnt allow String[])
-  time               Json // { startTime: String, endTime: endTime } Time: HH:mm
+  time               Json // { startTime: [], endTime: [] } Time: HH:mm
 
   laboratoryRequest   LaboratoryRequests @relation(fields: [laboratoryRequestId], references: [id])
   laboratoryRequestId String

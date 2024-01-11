@@ -35,7 +35,12 @@ export default defineEventHandler(async (event) => {
         "false" // They DONT have a reservation make one
     ) {
         // Format dates
-        const formattedDates = { startDate: [], endDate: [] };
+        const formattedDates = {
+            startDate: [],
+            endDate: [],
+            startTime: [],
+            endTime: [],
+        };
         for (const reservation of body.formValues.data.laboratorySetting
             .allDates) {
             if (reservation.ranged) {
@@ -45,6 +50,18 @@ export default defineEventHandler(async (event) => {
                 formattedDates.endDate.push(
                     dayjs(reservation.requestDates[1]).format("YYYY-MM-DD"),
                 );
+                formattedDates.startTime.push(
+                    dayjs()
+                        .set("hour", reservation.startTime.hours)
+                        .set("minute", reservation.startTime.minutes)
+                        .format("HH:mm"),
+                );
+                formattedDates.endTime.push(
+                    dayjs()
+                        .set("hour", reservation.endTime.hours)
+                        .set("minute", reservation.endTime.minutes)
+                        .format("HH:mm"),
+                );
             } else {
                 for (const requestDate of reservation.requestDates) {
                     formattedDates.startDate.push(
@@ -53,16 +70,20 @@ export default defineEventHandler(async (event) => {
                     formattedDates.endDate.push(
                         dayjs(requestDate).format("YYYY-MM-DD"),
                     );
+                    formattedDates.startTime.push(
+                        dayjs()
+                            .set("hour", reservation.startTime.hours)
+                            .set("minute", reservation.startTime.minutes)
+                            .format("HH:mm"),
+                    );
+                    formattedDates.endTime.push(
+                        dayjs()
+                            .set("hour", reservation.endTime.hours)
+                            .set("minute", reservation.endTime.minutes)
+                            .format("HH:mm"),
+                    );
                 }
             }
-            formattedDates.startTime = dayjs()
-                .set("hour", reservation.startTime.hours)
-                .set("minute", reservation.startTime.minutes)
-                .format("HH:mm");
-            formattedDates.endTime = dayjs()
-                .set("hour", reservation.endTime.hours)
-                .set("minute", reservation.endTime.minutes)
-                .format("HH:mm");
         }
 
         // Create a Laboratory Reservation Request and connect to the Base Laboratory Request
