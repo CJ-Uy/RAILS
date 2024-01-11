@@ -8,6 +8,7 @@ const props = defineProps({
 
 <template>
     <VueDatePicker
+        inline
         multi-dates
         :enable-time-picker="false"
         placeholder="Select Date(s)"

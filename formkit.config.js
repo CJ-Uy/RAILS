@@ -11,6 +11,7 @@ import "@formkit/addons/css/multistep";
 import "@formkit/addons/css/floatingLabels";
 
 import Calendar from "./components/Forms/Templates/DatePicker/Calendar.vue";
+import RangedCalendar from "./components/Forms/Templates/DatePicker/RangedCalendar.vue";
 import Time from "./components/Forms/Templates/DatePicker/Time.vue";
 
 const config = defaultConfig({
@@ -31,8 +32,11 @@ const config = defaultConfig({
         }),
     ],
     theme: "genesis",
+
+    // This code adds the VueDatPicker as a Formkit type
     inputs: {
         calendarDatePicker: createInput(Calendar),
+        RangedCalendarDatePicker: createInput(RangedCalendar),
         timeDatePicker: createInput(Time),
     },
 });
