@@ -10,15 +10,21 @@ definePageMeta({ auth: false, layout: "landing-pages" });
 </script>
 
 <template>
-    <div class="bg-cover bg-center h-screen flex items-center justify-center" style="background-image: url('/images/01.png');">
-        <div class="ml-14 text-center" style="margin-top: -190px;">
-            <p class="text-3xl text-gray-800 max-w-700">
-          The PSHS-EVC provides its scholars with state-of-the-art facilities and high-caliber equipment <br> to hone their scientific proficiency and technological applications with the aim of producing <br> globally-competent leaders and professionals.
-        </p>
-      </div>
+    <div
+        class="flex h-screen items-center justify-center bg-cover bg-center"
+        style="background-image: url(&quot;/images/01.png&quot;)"
+    >
+        <div class="ml-14 text-center" style="margin-top: -190px">
+            <p class="max-w-700 text-3xl text-gray-800">
+                The PSHS-EVC provides its scholars with state-of-the-art
+                facilities and high-caliber equipment <br />
+                to hone their scientific proficiency and technological
+                applications with the aim of producing <br />
+                globally-competent leaders and professionals.
+            </p>
+        </div>
     </div>
-  </template>
-  
+</template>
 
 <style scoped>
 @font-face {
@@ -31,7 +37,7 @@ definePageMeta({ auth: false, layout: "landing-pages" });
 }
 </style>
 
-<style>
+<style scoped>
 body {
     overflow: hidden; /* Hide scrollbars */
 }

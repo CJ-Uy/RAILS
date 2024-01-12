@@ -19,14 +19,21 @@ const gmailRes = ref();
 </script>
 
 <template>
-    <div class="bg-cover bg-center h-screen flex items-start justify-start" style="background-image: url('/images/01.png');">
-        <div class="ml-14" style="margin-top: 255px;">
-            <h1 class="text-9xl font-bold text-gray-800 font-gilroy-extrabold">SIGN UP NOW</h1>
-            <p class="text-3xl text-gray-800">Welcome to the PSHS-EVC<br>Online Laboratory Reservation System</p>
+    <div
+        class="flex h-screen items-start justify-start bg-cover bg-center"
+        style="background-image: url(&quot;/images/01.png&quot;)"
+    >
+        <div class="ml-14" style="margin-top: 255px">
+            <h1 class="font-gilroy-extrabold text-9xl font-bold text-gray-800">
+                SIGN UP NOW
+            </h1>
+            <p class="text-3xl text-gray-800">
+                Welcome to the PSHS-EVC<br />Online Laboratory Reservation
+                System
+            </p>
         </div>
     </div>
 </template>
-
 
 <style scoped>
 @font-face {

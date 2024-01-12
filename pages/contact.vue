@@ -23,7 +23,7 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                 width="600"
                 height="450"
                 style="border: 0; box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15)"
-                allowfullscreen=""
+                allowfullscreen="false"
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
                 class="rounded-lg"
