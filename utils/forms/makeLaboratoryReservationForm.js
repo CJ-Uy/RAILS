@@ -27,7 +27,7 @@ export default async function makeLaboratoryReservationForm(requestId) {
 
     if (request.isSignedByAdmin === "APPROVED") {
         approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
-        approverSignature = request.signedAdmin.signature; // TODO: Testing on this not done yet
+        approverSignature = request.signedAdmin.signature;
     }
 
     // Laboratory Setting
@@ -35,34 +35,33 @@ export default async function makeLaboratoryReservationForm(requestId) {
     let inclusiveDates = "";
     let inclusiveTimeOfUse = "";
 
-    let groupedReservations;
+    let groupedReservations = {}; // { time: dates }
     if (request.independentTime && request.independentLocation) {
         venueOfExperiment = request.independentLocation;
         groupedReservations = request.independentTime;
     } else {
         venueOfExperiment =
             request.laboratoryReservations[0].laboratoryReserved.name;
-        groupedReservations = request.laboratoryReservations.reduce(
-            (acc, curr) => {
-                const time = `${dayjs(curr.startTime)
-                    .format("HH:mm")
-                    .toString()}-${dayjs(curr.endTime)
-                    .format("HH:mm")
-                    .toString()}`;
-                const date = `${dayjs(curr.startTime)
-                    .format("MMM DD, YYYY")
-                    .toString()}`;
+        const reservationDates = request.laboratoryReservations[0].dates;
+        const reservationTimes = request.laboratoryReservations[0].time;
+        for (let i = 0; i < reservationDates.startDate.length; i++) {
+            const reservationTime = `${reservationTimes.startTime[i]} to ${reservationTimes.endTime[i]}`;
 
-                if (!acc[time]) {
-                    acc[time] = [date];
-                } else {
-                    acc[time].push(date);
-                }
-
-                return acc;
-            },
-            {},
-        );
+            if (!groupedReservations[reservationTime]) {
+                groupedReservations[reservationTime] = [];
+            }
+            groupedReservations[reservationTime].push(
+                reservationDates.startDate[i] === reservationDates.endDate[i]
+                    ? dayjs(reservationDates.startDate[i]).format(
+                          "MMM DD, YYYY",
+                      )
+                    : `${dayjs(reservationDates.startDate[i]).format(
+                          "MMM DD, YYYY",
+                      )} to ${dayjs(reservationDates.endDate[i]).format(
+                          "MMM DD, YYYY",
+                      )}`,
+            );
+        }
     }
 
     if (Object.keys(groupedReservations).length > 1) {
@@ -195,11 +194,11 @@ export default async function makeLaboratoryReservationForm(requestId) {
     }
     #endorserSignature {
         position: absolute; 
-        transform: scale(0.3)  translateY(-400px);
+        transform: scale(0.3)  translateY(-300px);
     }
     #approverSignature {
         position: absolute;
-        transform: scale(0.3) translateY(-400px);
+        transform: scale(0.3) translateY(-200px);
     }
     .svgSig {
         display: flex;
@@ -350,12 +349,12 @@ export default async function makeLaboratoryReservationForm(requestId) {
         {
             label: "Date/Inclusive Dates",
             value: "${inclusiveDates}",
-            minWidth: 255,
+            minWidth: 300,
         },
         {
             label: "Inclusive Time of Use",
             value: "${inclusiveTimeOfUse}",
-            minWidth: 255,
+            minWidth: 300,
         },
         {
             label: "Preferred Lab Room",
