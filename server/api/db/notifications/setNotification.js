@@ -3,9 +3,12 @@ import prisma from "~/server/db/prisma";
 export default defineEventHandler(async (event) => {
     const data = await readBody(event);
 
-    return await prisma.notifications.findMany({
+    await prisma.notifications.update({
         where: {
-            userId: data.userId,
+            id: data.notificationId,
+        },
+        data: {
+            isRead: true,
         },
     });
 });

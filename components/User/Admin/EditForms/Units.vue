@@ -39,7 +39,7 @@ const allowedEditing = ref(user.role === "ADMIN");
     <div>
         <TablesInventory
             title="UNITS"
-            default-sort-key="name"
+            default-sort-key="frequencyRank"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
             fetch-path="/api/db/rawData/getAllUnits"

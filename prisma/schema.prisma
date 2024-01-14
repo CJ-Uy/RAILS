@@ -146,6 +146,7 @@ model Notifications {
   userId String
 
   message String
+  redirect String?
 }
 
 model GradeSection {
