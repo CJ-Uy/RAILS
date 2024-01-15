@@ -1,6 +1,4 @@
 <script setup>
-import { TypeFormatFlags } from "typescript";
-
 const props = defineProps({
     title: {
         type: String,

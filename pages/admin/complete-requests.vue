@@ -1,6 +1,6 @@
 <script setup>
 useHead({
-    title: "EVC LABS | Admin Requests",
+    title: "EVC LABS | Completed Requests",
 });
 
 // authentication and the navbar is addedd through the layout
@@ -9,11 +9,8 @@ definePageMeta({ layout: "admin-pages" });
 
 <template>
     <div class="flex flex-col">
-        <UserDashboardHeader title="ADMIN | REQUESTS" />
-        <UserAdminRequestsSaveSignature />
-        <div class="mt-10">
-            <UserAdminRequestsTables />
-        </div>
+        <UserDashboardHeader title="ADMIN | COMPLETED REQUESTS" />
+        
     </div>
 </template>
 
