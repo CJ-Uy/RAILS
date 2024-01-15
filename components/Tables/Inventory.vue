@@ -1,6 +1,4 @@
 <script setup>
-import { TypeFormatFlags } from "typescript";
-
 const props = defineProps({
     title: {
         type: String,
@@ -197,56 +195,54 @@ updateTable();
                 <h2 class="text-center font-bold">{{ title }}</h2>
             </template>
 
-            <div>
-                <div class="flex flex-row justify-between">
-                    <div class="flex flex-row">
-                        <!-- Refresh Button -->
-                        <UButton
-                            icon="i-material-symbols-refresh"
-                            class="mr-2"
-                            @click="updateTable"
-                        />
-                        <!-- Search and Filter -->
-                        <div class="w-[150px]">
-                            <UInput
-                                v-model="searchQuery"
-                                placeholder="Search..."
-                                size="sm"
-                                icon="i-heroicons-magnifying-glass-20-solid"
-                                :ui="{ icon: { trailing: { pointer: '' } } }"
-                            >
-                                <template #trailing>
-                                    <UButton
-                                        v-show="searchQuery !== ''"
-                                        color="gray"
-                                        variant="link"
-                                        icon="i-heroicons-x-mark-20-solid"
-                                        :padded="false"
-                                        @click="searchQuery = ''"
-                                    />
-                                </template>
-                            </UInput>
-                        </div>
-                        <!-- Select Columns -->
-                        <div class="ml-2 w-[200px]">
-                            <USelectMenu
-                                v-model="selectedColumns"
-                                :options="listOfAllColumns"
-                                searchable
-                                searchable-placeholder="Search Columns"
-                                multiple
-                                placeholder="Columns"
-                            />
-                        </div>
+            <div class="flex flex-row justify-between">
+                <div class="flex flex-row">
+                    <!-- Refresh Button -->
+                    <UButton
+                        icon="i-material-symbols-refresh"
+                        class="mr-2"
+                        @click="updateTable"
+                    />
+                    <!-- Search and Filter -->
+                    <div class="w-[150px]">
+                        <UInput
+                            v-model="searchQuery"
+                            placeholder="Search..."
+                            size="sm"
+                            icon="i-heroicons-magnifying-glass-20-solid"
+                            :ui="{ icon: { trailing: { pointer: '' } } }"
+                        >
+                            <template #trailing>
+                                <UButton
+                                    v-show="searchQuery !== ''"
+                                    color="gray"
+                                    variant="link"
+                                    icon="i-heroicons-x-mark-20-solid"
+                                    :padded="false"
+                                    @click="searchQuery = ''"
+                                />
+                            </template>
+                        </UInput>
                     </div>
-                    <div v-if="allowedEditing == true">
-                        <UButton
-                            label="ADD RECORD"
-                            icon="i-material-symbols-add"
-                            class=""
-                            @click="toggleAddRecord"
+                    <!-- Select Columns -->
+                    <div class="ml-2 w-[200px]">
+                        <USelectMenu
+                            v-model="selectedColumns"
+                            :options="listOfAllColumns"
+                            searchable
+                            searchable-placeholder="Search Columns"
+                            multiple
+                            placeholder="Columns"
                         />
                     </div>
+                </div>
+                <div v-if="allowedEditing == true">
+                    <UButton
+                        label="ADD RECORD"
+                        icon="i-material-symbols-add"
+                        class=""
+                        @click="toggleAddRecord"
+                    />
                 </div>
             </div>
 
@@ -295,6 +291,12 @@ updateTable();
                                 props.title === "SCHOOL YEARS"
                                     ? " - " +
                                       selectedData[listOfAllColumns[1].key]
+                                    : "") +
+                                (props.title === "ALL USERS"
+                                    ? " - " +
+                                      selectedData[listOfAllColumns[1].key] +
+                                      ", " +
+                                      selectedData[listOfAllColumns[2].key]
                                     : "")
                             }}
                         </h3>

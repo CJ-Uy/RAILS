@@ -16,18 +16,6 @@ async function handleSignOut() {
 <template>
     <div>
         <UserDashboardHeader title="SETTINGS" />
-        <UContainer>
-            <UCard>
-                <template #header>
-                    <h1>Role Change</h1>
-                </template>
-                <h2 class="mb-2">
-                    If you are a teacher please send a request to change your
-                    role by clicking the button below:
-                </h2>
-                <UserStudentRoleRequestChange />
-            </UCard>
-        </UContainer>
         <UContainer class="mt-10 flex w-full items-center justify-center">
             <UButton
                 icon="i-ph-sign-out"

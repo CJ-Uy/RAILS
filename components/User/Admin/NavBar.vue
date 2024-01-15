@@ -17,10 +17,20 @@ const links = [
                 to: "/admin",
                 icon: "i-heroicons-chart-bar-solid",
             },
+        ],
+    },
+    {
+        label: "Requests",
+        children: [
             {
-                label: "REQUESTS",
-                to: "/admin/requests",
+                label: "PENDING & SCHEDULED",
+                to: "/admin/current-requests",
                 icon: "i-material-symbols-manage-search",
+            },
+            {
+                label: "COMPLETED",
+                to: "/admin/complete-requests",
+                icon: "i-material-symbols-check-box-outline",
             },
         ],
     },

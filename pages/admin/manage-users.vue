@@ -14,10 +14,6 @@ const adminUserSettings = [
         slot: "allUsers",
     },
     {
-        label: "Role Change Requests",
-        slot: "requestApproval",
-    },
-    {
         label: "Accountability",
         slot: "accountability",
     },
@@ -34,9 +30,6 @@ const adminUserSettings = [
             >
                 <template #allUsers>
                     <UserAdminManageUsersAllUsers />
-                </template>
-                <template #requestApproval>
-                    <UserAdminManageUsersRoleChangeRequests />
                 </template>
                 <template #accountability>
                     <h1>Accountability of who broke what</h1>

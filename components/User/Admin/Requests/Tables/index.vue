@@ -2,24 +2,12 @@
 // Tabs
 const inventoryCategories = [
     {
-        label: "All",
-        slot: "allRequests",
-    },
-    {
-        label: "Teacher Pending",
-        slot: "teacherPending",
-    },
-    {
-        label: "Admin Pending",
-        slot: "adminPending",
+        label: "Pending",
+        slot: "pending",
     },
     {
         label: "Scheduled",
         slot: "scheduled",
-    },
-    {
-        label: "Completed",
-        slot: "completed",
     },
 ];
 
@@ -47,29 +35,20 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="mx-[10%]">
+    <UContainer>
         <UTabs
             :items="inventoryCategories"
             :ui="{ list: { tab: { active: 'bg-white' } } }"
             :orientation="tabsOrientation"
         >
-            <template #allRequests>
-                <UserAdminRequestsTablesAllRequests />
-            </template>
-            <template #teacherPending>
-                <UserAdminRequestsTablesTeacherPending />
-            </template>
-            <template #adminPending>
-                <UserAdminRequestsTablesAdminPending />
+            <template #pending>
+                <UserAdminRequestsTablesPending />
             </template>
             <template #scheduled>
                 <UserAdminRequestsTablesScheduled />
             </template>
-            <template #completed>
-                <UserAdminRequestsTablesCompleted />
-            </template>
         </UTabs>
-    </div>
+    </UContainer>
 </template>
 
 <style scoped></style>

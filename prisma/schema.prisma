@@ -101,7 +101,11 @@ model Teachers {
   id                         String               @id @default(uuid())
   createdAt                  DateTime             @default(now())
   updatedAt                  DateTime             @updatedAt
+
   signature                  String?              @db.MediumText
+  unit   Units? @relation(fields: [unitId], references: [id])
+  unitId String?
+
   receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge")
   signedLaboratoryRequests   LaboratoryRequests[] @relation("signed_teacher")
   userProfile                Users[]
@@ -142,6 +146,7 @@ model Notifications {
   userId String
 
   message String
+  redirect String?
 }
 
 model GradeSection {
@@ -160,6 +165,7 @@ model Units {
   updatedAt          DateTime             @updatedAt
   name               String
   frequencyRank      Int                  @unique @default(autoincrement())
+  teachers Teachers[]
   laboratoryRequests LaboratoryRequests[]
 }
 
