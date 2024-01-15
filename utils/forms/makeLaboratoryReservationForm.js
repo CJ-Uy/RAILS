@@ -349,17 +349,17 @@ export default async function makeLaboratoryReservationForm(requestId) {
         {
             label: "Date/Inclusive Dates",
             value: "${inclusiveDates}",
-            minWidth: 300,
+            minWidth: 280,
         },
         {
             label: "Inclusive Time of Use",
             value: "${inclusiveTimeOfUse}",
-            minWidth: 300,
+            minWidth: 280,
         },
         {
             label: "Preferred Lab Room",
             value: "${venueOfExperiment}",
-            minWidth: 520,
+            minWidth: 300,
         },
     ];
 

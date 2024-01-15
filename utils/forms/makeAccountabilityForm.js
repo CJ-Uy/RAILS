@@ -38,43 +38,42 @@ export default async function makeAccountability(requestId) {
     let inclusiveDates = "";
     let inclusiveTimeOfUse = "";
 
-    let groupedReservations;
+    let groupedReservations = {}; // { time: dates }
     if (request.independentTime && request.independentLocation) {
         venueOfExperiment = request.independentLocation;
         groupedReservations = request.independentTime;
     } else {
         venueOfExperiment =
             request.laboratoryReservations[0].laboratoryReserved.name;
-        groupedReservations = request.laboratoryReservations.reduce(
-            (acc, curr) => {
-                const time = `${dayjs(curr.startTime)
-                    .format("HH:mm")
-                    .toString()}-${dayjs(curr.endTime)
-                    .format("HH:mm")
-                    .toString()}`;
-                const date = `${dayjs(curr.startTime)
-                    .format("MMMM DD, YYYY")
-                    .toString()}`;
+        const reservationDates = request.laboratoryReservations[0].dates;
+        const reservationTimes = request.laboratoryReservations[0].time;
+        for (let i = 0; i < reservationDates.startDate.length; i++) {
+            const reservationTime = `${reservationTimes.startTime[i]} to ${reservationTimes.endTime[i]}`;
 
-                if (!acc[time]) {
-                    acc[time] = [date];
-                } else {
-                    acc[time].push(date);
-                }
-
-                return acc;
-            },
-            {},
-        );
+            if (!groupedReservations[reservationTime]) {
+                groupedReservations[reservationTime] = [];
+            }
+            groupedReservations[reservationTime].push(
+                reservationDates.startDate[i] === reservationDates.endDate[i]
+                    ? dayjs(reservationDates.startDate[i]).format(
+                          "MMM DD, YYYY",
+                      )
+                    : `${dayjs(reservationDates.startDate[i]).format(
+                          "MMM DD, YYYY",
+                      )} to ${dayjs(reservationDates.endDate[i]).format(
+                          "MMM DD, YYYY",
+                      )}`,
+            );
+        }
     }
 
     if (Object.keys(groupedReservations).length > 1) {
         let counter = 1;
         for (const time in groupedReservations) {
-            inclusiveTimeOfUse += `(${counter}) ${time} `;
+            inclusiveTimeOfUse += `(${counter}) ${time}; `;
             inclusiveDates += `(${counter}) `;
             for (const date of groupedReservations[time]) {
-                inclusiveDates += `${date} `;
+                inclusiveDates += `${date}; `;
             }
             counter += 1;
         }
