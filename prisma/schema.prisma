@@ -18,7 +18,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"] // https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
+  // previewFeatures = ["fullTextSearch", "fullTextIndex"] // https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
 }
 
 datasource db {
@@ -39,6 +39,7 @@ enum SignedStatus {
   APPROVED
   REJECTED
   PENDING
+  REVISION_NEEDED
 }
 
 model SchoolYear {
@@ -89,26 +90,32 @@ model Users {
 }
 
 model Admins {
-  id             String               @id @default(uuid())
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  signature      String?              @db.MediumText
-  signedRequests LaboratoryRequests[]
-  userProfile    Users[]
+  id                String               @id @default(uuid())
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  signature         String?              @db.MediumText
+  signedRequests    LaboratoryRequests[]
+  userProfile       Users[]
+  ReagentRequests   ReagentRequests[]
+  MaterialRequests  MaterialRequests[]
+  EquipmentRequests EquipmentRequests[]
 }
 
 model Teachers {
-  id                         String               @id @default(uuid())
-  createdAt                  DateTime             @default(now())
-  updatedAt                  DateTime             @updatedAt
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  signature                  String?              @db.MediumText
-  unit   Units? @relation(fields: [unitId], references: [id])
-  unitId String?
+  signature String? @db.MediumText
+  unit      Units?  @relation(fields: [unitId], references: [id])
+  unitId    String?
 
-  receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge")
-  signedLaboratoryRequests   LaboratoryRequests[] @relation("signed_teacher")
   userProfile                Users[]
+  receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge")
+  ReagentRequests            ReagentRequests[]
+  MaterialRequests           MaterialRequests[]
+  LaboratoryRequests         LaboratoryRequests[]
+  EquipmentRequests          EquipmentRequests[]
 }
 
 model Students {
@@ -145,7 +152,7 @@ model Notifications {
   user   Users   @relation(fields: [userId], references: [id])
   userId String
 
-  message String
+  message  String
   redirect String?
 }
 
@@ -165,7 +172,7 @@ model Units {
   updatedAt          DateTime             @updatedAt
   name               String
   frequencyRank      Int                  @unique @default(autoincrement())
-  teachers Teachers[]
+  teachers           Teachers[]
   laboratoryRequests LaboratoryRequests[]
 }
 
@@ -380,6 +387,13 @@ model EquipmentRequests {
   laboratoryRequestId   String
   schoolYear            SchoolYear?            @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
+
+  isSignedByTeacher SignedStatus @default(PENDING)
+  isSignedByAdmin   SignedStatus @default(PENDING)
+  signedTeacher     Teachers?    @relation(fields: [signedTeacherId], references: [id])
+  signedTeacherId   String?
+  signedAdmin       Admins?      @relation(fields: [signedAdminId], references: [id])
+  signedAdminId     String?
 }
 
 model MaterialRequests {
@@ -395,6 +409,13 @@ model MaterialRequests {
   laboratoryRequestId String
   schoolYear          SchoolYear?            @relation(fields: [schoolYearId], references: [id])
   schoolYearId        String?
+
+  isSignedByTeacher SignedStatus @default(PENDING)
+  isSignedByAdmin   SignedStatus @default(PENDING)
+  signedTeacher     Teachers?    @relation(fields: [signedTeacherId], references: [id])
+  signedTeacherId   String?
+  signedAdmin       Admins?      @relation(fields: [signedAdminId], references: [id])
+  signedAdminId     String?
 }
 
 model ReagentRequests {
@@ -411,6 +432,13 @@ model ReagentRequests {
   laboratoryRequestId String
   schoolYear          SchoolYear?           @relation(fields: [schoolYearId], references: [id])
   schoolYearId        String?
+
+  isSignedByTeacher SignedStatus @default(PENDING)
+  isSignedByAdmin   SignedStatus @default(PENDING)
+  signedTeacher     Teachers?    @relation(fields: [signedTeacherId], references: [id])
+  signedTeacherId   String?
+  signedAdmin       Admins?      @relation(fields: [signedAdminId], references: [id])
+  signedAdminId     String?
 }
 
 model LaboratoryRequests {
@@ -444,16 +472,13 @@ model LaboratoryRequests {
   independentTime     Json?   @default("{}") // Store here all the date and time as you would reservation without filing a lab reservation
   independentLocation String? @default("")
 
-  isSignedByTeacher SignedStatus @default(PENDING)
-  isSignedByAdmin   SignedStatus @default(PENDING)
-  signedTeacher     Teachers?    @relation("signed_teacher", fields: [signedTeacherId], references: [id])
-  signedTeacherId   String?
-  signedAdmin       Admins?      @relation(fields: [signedAdminId], references: [id])
-  signedAdminId     String?
-
   teacherAnnotation String? @db.MediumText
   adminAnnotation   String? @db.MediumText
 
   schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
+  Admins       Admins?     @relation(fields: [adminsId], references: [id])
+  adminsId     String?
+  Teachers     Teachers?   @relation(fields: [teachersId], references: [id])
+  teachersId   String?
 }
