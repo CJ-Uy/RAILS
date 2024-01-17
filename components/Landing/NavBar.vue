@@ -160,7 +160,9 @@ function toggleMenu() {
     width: 100%;
     height: 2px;
     background-color: #4299e1;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform property */
+    transition:
+        background-color 0.3s ease,
+        transform 0.3s ease; /* Added transform property */
     opacity: 0;
     transform: scaleX(0); /* Initial scale to hide the underline */
     transform-origin: bottom left; /* Set transform origin to start from bottom left */

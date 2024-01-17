@@ -11,8 +11,7 @@ definePageMeta({ auth: false, layout: "landing-pages" });
 
 <template>
     <div
-        class="flex h-screen items-center justify-center bg-cover bg-center"
-        style="background-image: url(&quot;/images/01.png&quot;)"
+        class="flex h-screen items-center justify-center bg-[url('/images/01.png')] bg-cover bg-center"
     >
         <div class="ml-14 text-center" style="margin-top: -190px">
             <p class="max-w-700 text-3xl text-gray-800">

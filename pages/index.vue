@@ -20,10 +20,9 @@ const gmailRes = ref();
 
 <template>
     <div
-        class="flex h-screen items-start justify-start bg-cover bg-center"
-        style="background-image: url(&quot;/images/01.png&quot;)"
+        class="flex h-screen items-start justify-start bg-[url('/images/01.png')] bg-cover bg-center"
     >
-        <div class="ml-14" style="margin-top: 255px">
+        <div class="ml-14 mt-[255px]">
             <h1 class="font-gilroy-extrabold text-9xl font-bold text-gray-800">
                 SIGN UP NOW
             </h1>
