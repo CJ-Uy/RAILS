@@ -35,7 +35,7 @@ const equipmentData = [
     {
         equipmentName: "Autoclave",
         serialNumber: "071917MB010S",
-        modelNoOrManufacturer: "STME / Market Forge Inddustries Inc.",
+        modelNoOrManufacturer: "STME / Market Forge Industries Inc.",
         description: "240 V; w.p. 17.8 psi @ 254 oF",
         quantity: 1,
         unit: "unit",
@@ -204,7 +204,7 @@ const equipmentData = [
 const createdEquipment = [];
 // Add to the dataabase
 for (const equipment of equipmentData) {
-    const created = await prisma.inventoryOfEqupiment.create({
+    const created = await prisma.inventoryOfEquipment.create({
         data: equipment,
     });
     createdEquipment.push(created);
@@ -215,7 +215,7 @@ const updatedEquipment = [];
 let counter = 0;
 for (const equipment of createdEquipment) {
     counter++;
-    const updated = await prisma.inventoryOfEqupiment.update({
+    const updated = await prisma.inventoryOfEquipment.update({
         where: { id: equipment.id },
         data: {
             code: `LE-${counter}`,
