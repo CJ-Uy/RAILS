@@ -55,7 +55,7 @@ model SchoolYear {
   laboratoryRequestControlNumberCounter        Int @default(0)
 
   materialsAdded InventoryOfMaterials[]
-  equipmentAdded InventoryOfEqupiment[]
+  equipmentAdded InventoryOfEquipment[]
   reagentsAdded  InventoryOfReagents[]
 
   laboratoryRequests    LaboratoryRequests[]
@@ -191,7 +191,7 @@ model Laboratories {
   locationId String
 
   supplies               InventoryOfMaterials[]
-  equipment              InventoryOfEqupiment[]
+  equipment              InventoryOfEquipment[]
   reagents               InventoryOfReagents[]
   laboratoryReservations LaboratoryReservations[]
 }
@@ -205,7 +205,7 @@ model LaboratoryLocations {
   laboratories                 Laboratories[]
   inventoryOfMaterials         InventoryOfMaterials? @relation(fields: [inventoryOfMaterialsSupplyId], references: [id])
   inventoryOfMaterialsSupplyId String?
-  inventoryOfEqupiment         InventoryOfEqupiment? @relation(fields: [equipmentId], references: [id])
+  inventoryOfEquipment         InventoryOfEquipment? @relation(fields: [equipmentId], references: [id])
   equipmentId                  String?
   inventoryOfReagents          InventoryOfReagents?  @relation(fields: [reagentId], references: [id])
   reagentId                    String?
@@ -266,7 +266,7 @@ model InventoryOfMaterials {
   inventoryTransactions InventoryTransactions[]
 }
 
-model InventoryOfEqupiment {
+model InventoryOfEquipment {
   //Equipment refer to objects that you operate
 
   //Identification
@@ -354,7 +354,7 @@ model InventoryTransactions {
   transactionType String // "ADD", "REMOVE", "MODIFY", etc...
   description     String?
 
-  equipment   InventoryOfEqupiment? @relation(fields: [equipmentId], references: [id])
+  equipment   InventoryOfEquipment? @relation(fields: [equipmentId], references: [id])
   equipmentId String?
 
   material   InventoryOfMaterials? @relation(fields: [materialId], references: [id])
@@ -379,7 +379,7 @@ model EquipmentRequests {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   quantity              Int
-  equipment             InventoryOfEqupiment[]
+  equipment             InventoryOfEquipment[]
   name                  String
   description           String?
   modelNoOrManufacturer String?
