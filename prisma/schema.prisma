@@ -17,7 +17,7 @@
 // }
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
   // previewFeatures = ["fullTextSearch", "fullTextIndex"] // https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
 }
 
@@ -40,6 +40,7 @@ enum SignedStatus {
   REJECTED
   PENDING
   REVISION_NEEDED
+  NOT_APPLICABLE
 }
 
 model SchoolYear {
@@ -90,15 +91,14 @@ model Users {
 }
 
 model Admins {
-  id                String               @id @default(uuid())
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @updatedAt
-  signature         String?              @db.MediumText
-  signedRequests    LaboratoryRequests[]
-  userProfile       Users[]
-  ReagentRequests   ReagentRequests[]
-  MaterialRequests  MaterialRequests[]
-  EquipmentRequests EquipmentRequests[]
+  id                        String               @id @default(uuid())
+  createdAt                 DateTime             @default(now())
+  updatedAt                 DateTime             @updatedAt
+  signature                 String?              @db.MediumText
+  userProfile               Users[]
+  equipmentRequestsApproved LaboratoryRequests[] @relation("equipment_approver")
+  materialRequestsApproved  LaboratoryRequests[] @relation("material_approver")
+  reagentRequestsApproved   LaboratoryRequests[] @relation("reagent_approver")
 }
 
 model Teachers {
@@ -112,10 +112,6 @@ model Teachers {
 
   userProfile                Users[]
   receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge")
-  ReagentRequests            ReagentRequests[]
-  MaterialRequests           MaterialRequests[]
-  LaboratoryRequests         LaboratoryRequests[]
-  EquipmentRequests          EquipmentRequests[]
 }
 
 model Students {
@@ -387,13 +383,6 @@ model EquipmentRequests {
   laboratoryRequestId   String
   schoolYear            SchoolYear?            @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
-
-  isSignedByTeacher SignedStatus @default(PENDING)
-  isSignedByAdmin   SignedStatus @default(PENDING)
-  signedTeacher     Teachers?    @relation(fields: [signedTeacherId], references: [id])
-  signedTeacherId   String?
-  signedAdmin       Admins?      @relation(fields: [signedAdminId], references: [id])
-  signedAdminId     String?
 }
 
 model MaterialRequests {
@@ -409,13 +398,6 @@ model MaterialRequests {
   laboratoryRequestId String
   schoolYear          SchoolYear?            @relation(fields: [schoolYearId], references: [id])
   schoolYearId        String?
-
-  isSignedByTeacher SignedStatus @default(PENDING)
-  isSignedByAdmin   SignedStatus @default(PENDING)
-  signedTeacher     Teachers?    @relation(fields: [signedTeacherId], references: [id])
-  signedTeacherId   String?
-  signedAdmin       Admins?      @relation(fields: [signedAdminId], references: [id])
-  signedAdminId     String?
 }
 
 model ReagentRequests {
@@ -432,13 +414,6 @@ model ReagentRequests {
   laboratoryRequestId String
   schoolYear          SchoolYear?           @relation(fields: [schoolYearId], references: [id])
   schoolYearId        String?
-
-  isSignedByTeacher SignedStatus @default(PENDING)
-  isSignedByAdmin   SignedStatus @default(PENDING)
-  signedTeacher     Teachers?    @relation(fields: [signedTeacherId], references: [id])
-  signedTeacherId   String?
-  signedAdmin       Admins?      @relation(fields: [signedAdminId], references: [id])
-  signedAdminId     String?
 }
 
 model LaboratoryRequests {
@@ -472,13 +447,30 @@ model LaboratoryRequests {
   independentTime     Json?   @default("{}") // Store here all the date and time as you would reservation without filing a lab reservation
   independentLocation String? @default("")
 
-  teacherAnnotation String? @db.MediumText
-  adminAnnotation   String? @db.MediumText
+  // Teacher Approval and Annotations Fields
+  equipmentRequestsTeacherApproval   SignedStatus @default(PENDING)
+  equipmentRequestsTeacherAnnotation String?      @db.Text // 64KiB
+  materialRequestsTeacherApproval    SignedStatus @default(PENDING)
+  materialRequestsTeacherAnnotation  String?      @db.Text // 64KiB
+  reagentRequestsTeacherApproval     SignedStatus @default(PENDING)
+  reagentRequestsTeacherAnnotation   String?      @db.Text // 64KiB
+
+  // Admin Approval Fields
+  equipmentRequestsAdminApproval   SignedStatus @default(PENDING)
+  equipmentRequestsAdminAnnotation String?      @db.Text // 64KiB
+  equipmentRequestsAdminApprover   Admins?      @relation("equipment_approver", fields: [equipmentRequestsAdminApproverId], references: [id])
+  equipmentRequestsAdminApproverId String?
+
+  materialRequestsAdminApproval   SignedStatus @default(PENDING)
+  materialRequestsAdminAnnotation String?      @db.Text // 64KiB
+  materialRequestsAdminApprover   Admins?      @relation("material_approver", fields: [materialRequestsAdminApproverId], references: [id])
+  materialRequestsAdminApproverId String?
+
+  reagentRequestsAdminApproval   SignedStatus @default(PENDING)
+  reagentRequestsAdminAnnotation String?      @db.Text // 64KiB
+  reagentRequestsAdminApprover   Admins?      @relation("reagent_approver", fields: [reagentRequestsAdminApproverId], references: [id])
+  reagentRequestsAdminApproverId String?
 
   schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
-  Admins       Admins?     @relation(fields: [adminsId], references: [id])
-  adminsId     String?
-  Teachers     Teachers?   @relation(fields: [teachersId], references: [id])
-  teachersId   String?
 }

@@ -19,17 +19,6 @@ export default defineEventHandler(async () => {
             laboratoryReservations: {
                 include: {
                     laboratoryReserved: true,
-                    laboratoryRequest: true,
-                },
-            },
-            signedTeacher: {
-                include: {
-                    userProfile: true,
-                },
-            },
-            signedAdmin: {
-                include: {
-                    userProfile: true,
                 },
             },
             schoolYear: true,
@@ -60,28 +49,9 @@ export default defineEventHandler(async () => {
         for (const [key, value] of Object.entries(teacherInChargeUserProfile)) {
             flattenedRequest[`teacherInCharge-userProfile-${key}`] = value;
         }
-        // signedTeacher-userProfile[0]
-        if (request.signedTeacher) {
-            delete flattenedRequest["signedTeacher-userProfile"];
-            const signedTeacherUserProfile =
-                request.signedTeacher.userProfile[0];
-            for (const [key, value] of Object.entries(
-                signedTeacherUserProfile,
-            )) {
-                flattenedRequest[`signedTeacher-userProfile-${key}`] = value;
-            }
-        }
-        // signedAdmin-userProfile[0]
-        // TODO: test this
-        if (request.signedAdmin) {
-            delete flattenedRequest["signedAdmin-userProfile"];
-            const signedAdminUserProfile = request.signedAdmin.userProfile[0];
-            for (const [key, value] of Object.entries(signedAdminUserProfile)) {
-                flattenedRequest[`signedAdmin-userProfile-${key}`] = value;
-            }
-        }
 
         flattenedAllRequestsData.push(flattenedRequest);
     }
+
     return flattenedAllRequestsData;
 });
