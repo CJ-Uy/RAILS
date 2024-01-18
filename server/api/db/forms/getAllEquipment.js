@@ -1,7 +1,7 @@
 import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async () => {
-    const allEquipment = await prisma.InventoryOfEqupiment.findMany({
+    const allEquipment = await prisma.InventoryOfEquipment.findMany({
         where: {
             available: true,
         },

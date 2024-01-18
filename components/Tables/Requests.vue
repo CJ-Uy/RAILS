@@ -101,7 +101,11 @@ async function updateTable() {
         }
     }
     allItemsRawData.value = allItemsData.value;
-    totalItems.value = allItemsData.value.length;
+    try {
+        totalItems.value = allItemsData.value.length;
+    } catch (e) {
+        totalItems.value = 0;
+    }
 }
 
 const page = ref(1);

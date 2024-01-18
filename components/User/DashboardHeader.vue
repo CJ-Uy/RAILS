@@ -52,18 +52,23 @@ async function redirectNotification(item) {
 
                     <template #panel>
                         <div class="m-4 max-h-[532px] overflow-auto px-2">
-                            <div
-                                v-for="notification in notifications"
-                                :key="notification.id"
-                                class="border-radius my-3 cursor-pointer rounded-sm p-2 px-3 drop-shadow-sm hover:drop-shadow-md"
-                                :class="
-                                    notification.isRead
-                                        ? 'text-gray bg-gray-100'
-                                        : 'bg-[#14245e] text-white'
-                                "
-                                @click="redirectNotification(notification)"
-                            >
-                                {{ notification.message }}
+                            <div v-if="notifications.length > 0">
+                                <div
+                                    v-for="notification in notifications"
+                                    :key="notification.id"
+                                    class="border-radius my-3 cursor-pointer rounded-sm p-2 px-3 drop-shadow-sm hover:drop-shadow-md"
+                                    :class="
+                                        notification.isRead
+                                            ? 'text-gray bg-gray-100'
+                                            : 'bg-[#14245e] text-white'
+                                    "
+                                    @click="redirectNotification(notification)"
+                                >
+                                    {{ notification.message }}
+                                </div>
+                            </div>
+                            <div v-else class="text-[#9c9c9c]">
+                                You have no notifications.
                             </div>
                         </div>
                     </template>
