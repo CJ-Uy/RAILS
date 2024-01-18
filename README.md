@@ -20,7 +20,7 @@ DATABASE_URL = "mysql://user:password@mysql-db:3306/rails_db"
 Install dependencies and initialize the database using the command:
 
 ```bash
-npm catchup
+npm run catchup
 ```
 <hr>
 
