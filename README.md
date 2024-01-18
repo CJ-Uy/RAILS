@@ -9,13 +9,6 @@ Reservation and Inventory for Laboratory Systems for the Philippine Science High
 
 ---
 
-Install the dependencies:
-
-```bash
-npm install
-```
-<hr>
-
 Create a `.env` file by following the instructions on the `.env.example`
 
 Note, if you are using codespaces or docker set in the `.env`
@@ -24,8 +17,11 @@ Note, if you are using codespaces or docker set in the `.env`
 DATABASE_URL = "mysql://user:password@mysql-db:3306/rails_db"
 ```
 <hr>
+Install dependencies and initialize the database using the command:
 
-Generate the database with prisma running the `npm run dbgenerate` or `npx prisma generate` command
+```bash
+npm catchup
+```
 <hr>
 
 Populate the database by running the file ```./dev/populateDB/[0]populateAll.js``` with node to populate the database with some dummy data
