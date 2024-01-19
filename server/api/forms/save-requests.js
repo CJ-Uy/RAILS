@@ -171,7 +171,6 @@ export default defineEventHandler(async (event) => {
                 independentTime: timeJSON,
                 independentLocation: location,
                 laboratoryRequestsTeacherApproval: "NOT_APPLICABLE",
-                
             },
         });
     }
