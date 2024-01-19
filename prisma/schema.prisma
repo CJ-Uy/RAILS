@@ -91,14 +91,15 @@ model Users {
 }
 
 model Admins {
-  id                        String               @id @default(uuid())
-  createdAt                 DateTime             @default(now())
-  updatedAt                 DateTime             @updatedAt
-  signature                 String?              @db.MediumText
-  userProfile               Users[]
-  equipmentRequestsApproved LaboratoryRequests[] @relation("equipment_approver")
-  materialRequestsApproved  LaboratoryRequests[] @relation("material_approver")
-  reagentRequestsApproved   LaboratoryRequests[] @relation("reagent_approver")
+  id                            String               @id @default(uuid())
+  createdAt                     DateTime             @default(now())
+  updatedAt                     DateTime             @updatedAt
+  signature                     String?              @db.MediumText
+  userProfile                   Users[]
+  equipmentRequestsApproved     LaboratoryRequests[] @relation("equipment_approver")
+  materialRequestsApproved      LaboratoryRequests[] @relation("material_approver")
+  reagentRequestsApproved       LaboratoryRequests[] @relation("reagent_approver")
+  laboratoryReservationApproved LaboratoryRequests[] @relation("laboratory_approver")
 }
 
 model Teachers {
@@ -455,6 +456,8 @@ model LaboratoryRequests {
   reagentRequestsTeacherApproval     SignedStatus @default(PENDING)
   reagentRequestsTeacherAnnotation   String?      @db.Text // 64KiB
 
+  laboratoryRequestsTeacherApproval SignedStatus @default(PENDING)
+
   // Admin Approval Fields
   equipmentRequestsAdminApproval   SignedStatus @default(PENDING)
   equipmentRequestsAdminAnnotation String?      @db.Text // 64KiB
@@ -470,6 +473,11 @@ model LaboratoryRequests {
   reagentRequestsAdminAnnotation String?      @db.Text // 64KiB
   reagentRequestsAdminApprover   Admins?      @relation("reagent_approver", fields: [reagentRequestsAdminApproverId], references: [id])
   reagentRequestsAdminApproverId String?
+
+  laboratoryRequestsAdminApproval   SignedStatus @default(PENDING)
+  laboratoryRequestsAdminAnnotation String?      @db.Text // 64KiB
+  laboratoryRequestsAdminApprover   Admins?      @relation("laboratory_approver", fields: [laboratoryRequestsAdminApproverId], references: [id])
+  laboratoryRequestsAdminApproverId String?
 
   schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
