@@ -170,7 +170,8 @@ export default defineEventHandler(async (event) => {
             data: {
                 independentTime: timeJSON,
                 independentLocation: location,
-                laboratoryRequestsTeacherApproval: "NOT_APPLICABLE",
+                laboratoryReservationsTeacherApproval: "NOT_APPLICABLE",
+                laboratoryReservationsAdminApproval: "NOT_APPLICABLE",
             },
         });
     }
@@ -206,6 +207,17 @@ export default defineEventHandler(async (event) => {
                 },
             });
         }
+    } else {
+        // Update the request
+        await prisma.laboratoryRequests.update({
+            where: {
+                id: request.id,
+            },
+            data: {
+                materialRequestsTeacherApproval: "NOT_APPLICABLE",
+                materialRequestsAdminApproval: "NOT_APPLICABLE",
+            },
+        });
     }
 
     // Make Equipment Request(s)
@@ -228,6 +240,17 @@ export default defineEventHandler(async (event) => {
                 },
             });
         }
+    } else {
+        // Update the request
+        await prisma.laboratoryRequests.update({
+            where: {
+                id: request.id,
+            },
+            data: {
+                equipmentRequestsTeacherApproval: "NOT_APPLICABLE",
+                equipmentRequestsAdminApproval: "NOT_APPLICABLE",
+            },
+        });
     }
 
     // Make Reagent Request(s)
@@ -254,6 +277,17 @@ export default defineEventHandler(async (event) => {
                 },
             });
         }
+    } else {
+        // Update the request
+        await prisma.laboratoryRequests.update({
+            where: {
+                id: request.id,
+            },
+            data: {
+                reagentRequestsTeacherApproval: "NOT_APPLICABLE",
+                reagentRequestsAdminApproval: "NOT_APPLICABLE",
+            },
+        });
     }
 
     return request.id;
