@@ -30,25 +30,40 @@ export default defineEventHandler(async (event) => {
     });
 
     // Make Laboratory Reservation Request(s)
-    if (
-        body.formValues.data.laboratorySetting.hasLaboratoryReservation ===
-        "false" // They DONT have a reservation make one
-    ) {
-        // Format dates
-        const formattedDates = {
-            startDate: [],
-            endDate: [],
-            startTime: [],
-            endTime: [],
-        };
-        for (const reservation of body.formValues.data.laboratorySetting
-            .allDates) {
-            if (reservation.ranged) {
+    // Format Time and Dates
+    const formattedDates = {
+        startDate: [],
+        endDate: [],
+        startTime: [],
+        endTime: [],
+    };
+    for (const reservation of body.formValues.data.laboratorySetting.allDates) {
+        if (reservation.ranged) {
+            formattedDates.startDate.push(
+                dayjs(reservation.requestDates[0]).format("YYYY-MM-DD"),
+            );
+            formattedDates.endDate.push(
+                dayjs(reservation.requestDates[1]).format("YYYY-MM-DD"),
+            );
+            formattedDates.startTime.push(
+                dayjs()
+                    .set("hour", reservation.startTime.hours)
+                    .set("minute", reservation.startTime.minutes)
+                    .format("HH:mm"),
+            );
+            formattedDates.endTime.push(
+                dayjs()
+                    .set("hour", reservation.endTime.hours)
+                    .set("minute", reservation.endTime.minutes)
+                    .format("HH:mm"),
+            );
+        } else {
+            for (const requestDate of reservation.requestDates) {
                 formattedDates.startDate.push(
-                    dayjs(reservation.requestDates[0]).format("YYYY-MM-DD"),
+                    dayjs(requestDate).format("YYYY-MM-DD"),
                 );
                 formattedDates.endDate.push(
-                    dayjs(reservation.requestDates[1]).format("YYYY-MM-DD"),
+                    dayjs(requestDate).format("YYYY-MM-DD"),
                 );
                 formattedDates.startTime.push(
                     dayjs()
@@ -62,30 +77,13 @@ export default defineEventHandler(async (event) => {
                         .set("minute", reservation.endTime.minutes)
                         .format("HH:mm"),
                 );
-            } else {
-                for (const requestDate of reservation.requestDates) {
-                    formattedDates.startDate.push(
-                        dayjs(requestDate).format("YYYY-MM-DD"),
-                    );
-                    formattedDates.endDate.push(
-                        dayjs(requestDate).format("YYYY-MM-DD"),
-                    );
-                    formattedDates.startTime.push(
-                        dayjs()
-                            .set("hour", reservation.startTime.hours)
-                            .set("minute", reservation.startTime.minutes)
-                            .format("HH:mm"),
-                    );
-                    formattedDates.endTime.push(
-                        dayjs()
-                            .set("hour", reservation.endTime.hours)
-                            .set("minute", reservation.endTime.minutes)
-                            .format("HH:mm"),
-                    );
-                }
             }
         }
-
+    }
+    if (
+        body.formValues.data.laboratorySetting.hasLaboratoryReservation ===
+        "false" // They DONT have a reservation make one
+    ) {
         // Create a Laboratory Reservation Request and connect to the Base Laboratory Request
         // Make control number
         const labResControlNumber = await getControlNumbers(
@@ -111,33 +109,6 @@ export default defineEventHandler(async (event) => {
         });
     } else {
         // If they already have a laboratory reservation, save the date time independently for forms
-        const timeJSON = {};
-        for (const timeOfUse of body.formValues.data.laboratorySetting
-            .allDates) {
-            const formatedDates = [];
-            for (const index in timeOfUse.requestDates) {
-                formatedDates[index] = dayjs(
-                    timeOfUse.requestDates[index],
-                ).format("MMMM DD, YYYY");
-            }
-
-            timeJSON[
-                `${String(timeOfUse.inclusiveTimeOfUse[0].hours).padStart(
-                    2,
-                    "0",
-                )}:${String(timeOfUse.inclusiveTimeOfUse[0].minutes).padStart(
-                    2,
-                    "0",
-                )}-${String(timeOfUse.inclusiveTimeOfUse[1].hours).padStart(
-                    2,
-                    "0",
-                )}:${String(timeOfUse.inclusiveTimeOfUse[0].minutes).padStart(
-                    2,
-                    "0",
-                )}`
-            ] = formatedDates;
-        }
-
         let location;
         // Save Location Independently
         if (
@@ -168,7 +139,14 @@ export default defineEventHandler(async (event) => {
                 id: request.id,
             },
             data: {
-                independentTime: timeJSON,
+                independentTime: {
+                    startTime: formattedDates.startTime,
+                    endTime: formattedDates.endTime,
+                },
+                independentDates: {
+                    startDate: formattedDates.startDate,
+                    endDate: formattedDates.endDate,
+                },
                 independentLocation: location,
                 laboratoryReservationsTeacherApproval: "NOT_APPLICABLE",
                 laboratoryReservationsAdminApproval: "NOT_APPLICABLE",

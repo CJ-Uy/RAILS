@@ -445,7 +445,8 @@ model LaboratoryRequests {
 
   // Independent Time and Location are for if someone else holds the labroatory reservation but they still need to request for materials, equipment, and reagents
   // Example is when the teacher reserves the Lab but students still need to make requests for the materials, equipment, and reagents needed in the class activity
-  independentTime     Json?   @default("{}") // Store here all the date and time as you would reservation without filing a lab reservation
+  independentTime     Json?   @default("{}") // { startTime: [], endTime: [] } Time: HH:mm
+  independentDates    Json?   @default("{}") // { startDates: [], endDates: [] } Date: YYYY-MM-DD (prisma doesnt allow String[])
   independentLocation String? @default("")
 
   // Teacher Approval and Annotations Fields
