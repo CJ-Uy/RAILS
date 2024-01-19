@@ -99,7 +99,7 @@ model Admins {
   equipmentRequestsApproved     LaboratoryRequests[] @relation("equipment_approver")
   materialRequestsApproved      LaboratoryRequests[] @relation("material_approver")
   reagentRequestsApproved       LaboratoryRequests[] @relation("reagent_approver")
-  laboratoryReservationApproved LaboratoryRequests[] @relation("laboratory_approver")
+  laboratoryReservationsApproved LaboratoryRequests[] @relation("laboratory_approver")
 }
 
 model Teachers {
@@ -474,10 +474,10 @@ model LaboratoryRequests {
   reagentRequestsAdminApprover   Admins?      @relation("reagent_approver", fields: [reagentRequestsAdminApproverId], references: [id])
   reagentRequestsAdminApproverId String?
 
-  laboratoryRequestsAdminApproval   SignedStatus @default(PENDING)
-  laboratoryRequestsAdminAnnotation String?      @db.Text // 64KiB
-  laboratoryRequestsAdminApprover   Admins?      @relation("laboratory_approver", fields: [laboratoryRequestsAdminApproverId], references: [id])
-  laboratoryRequestsAdminApproverId String?
+  laboratoryReservationAdminApproval   SignedStatus @default(PENDING)
+  laboratoryReservationAdminAnnotation String?      @db.Text // 64KiB
+  laboratoryReservationAdminApprover   Admins?      @relation("laboratory_approver", fields: [laboratoryReservationAdminApproverId], references: [id])
+  laboratoryReservationAdminApproverId String?
 
   schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
