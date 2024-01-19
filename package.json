@@ -14,7 +14,7 @@
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare",
-        "catchup": "npm i && npx prisma migrate dev $$ npx prisma generate"
+        "catchup": "npm i && npx prisma migrate dev && npx prisma generate"
     },
     "devDependencies": {
         "@iconify/json": "^2.2.164",
