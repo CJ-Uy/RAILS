@@ -337,7 +337,8 @@ updateTable();
             </div>
 
             <!-- DATA TABLE -->
-            <div v-if="!allowMultipleSelection">
+
+            <!-- <div v-if="!allowMultipleSelection">
                 <UTable
                     v-model:sort="sort"
                     :columns="selectedColumns"
@@ -357,7 +358,19 @@ updateTable();
                     :ui="{ tr: { active: 'hover:bg-gray-200' } }"
                     @select="addToSelectedRows"
                 />
-            </div>
+            </div> -->
+            <UTable
+                v-model:sort="sort"
+                :columns="props.listOfAllColumns"
+                :rows="allItems"
+                :loading="pending"
+                :ui="{ tr: { active: 'hover:bg-gray-200' } }"
+                @select="openModal"
+            />
+
+            <!-- END OF DATA TABLES -->
+
+            <!-- START OF FOOTERS -->
 
             <template #footer>
                 <div class="my-2 flex justify-end">
