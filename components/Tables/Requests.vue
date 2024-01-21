@@ -42,8 +42,6 @@ for (const i of props.startingColumns) {
 }
 const selectedColumnsTable = ref(selectedColumns.value);
 
-function toggleAddRecord() {}
-
 // Sort table columns according to the order of columns in list of all columns
 // Selected columns keys are also used in filtering search results
 const selectedColumnsKeys = ref([]);
@@ -167,10 +165,6 @@ const filteredRows = computed(() => {
         .slice((page.value - 1) * pageCount, page.value * pageCount);
 });
 
-function test(tester) {
-    // console.log(allItemsData.value);
-}
-
 // ---------- MODAL ---------- //
 const modalIsOpen = ref(false);
 const selectedData = ref();
@@ -247,7 +241,6 @@ updateTable();
 
             <div class="flex flex-col">
                 <div class="mb-5 mt-1 flex flex-col items-center">
-                    <!-- TODO: Maybe have the control panel in an accorion drop down if it gets too big? -->
                     <div class="mb-2 flex flex-row align-top">
                         <h3>Table Control Panel</h3>
                         <UTooltip>

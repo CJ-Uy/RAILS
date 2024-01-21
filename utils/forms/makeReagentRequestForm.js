@@ -29,7 +29,7 @@ export default async function makeAccountability(requestId) {
 
     if (request.isSignedByAdmin === "APPROVED") {
         approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
-        approverSignature = request.signedAdmin.signature; // TODO: Testing on this not done yet
+        approverSignature = request.signedAdmin.signature;
     }
 
     // Laboratory Setting
