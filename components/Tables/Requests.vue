@@ -11,7 +11,7 @@ const props = defineProps({
     defaultSortKey: {
         type: String,
         required: false,
-        default: "name",
+        default: "requestor-lastName",
     },
     startingColumns: {
         type: Array,
@@ -119,14 +119,26 @@ const filteredRows = computed(() => {
                 if (typeof a[sort.value.column] === "number") {
                     return b[sort.value.column] - a[sort.value.column];
                 }
-                return b[sort.value.column].localeCompare(a[sort.value.column]);
+                try {
+                    return b[sort.value.column].localeCompare(
+                        a[sort.value.column],
+                    );
+                } catch (e) {
+                    return 0;
+                }
             });
         } else {
             allItemsData.value = allItemsRawData.value.sort((a, b) => {
                 if (typeof a[sort.value.column] === "number") {
                     return a[sort.value.column] - b[sort.value.column];
                 }
-                return a[sort.value.column].localeCompare(b[sort.value.column]);
+                try {
+                    return a[sort.value.column].localeCompare(
+                        b[sort.value.column],
+                    );
+                } catch (e) {
+                    return 0;
+                }
             });
         }
         return allItemsData.value.slice(
@@ -152,15 +164,23 @@ const filteredRows = computed(() => {
     if (sort.value.direction === "desc") {
         return filtered
             .sort((a, b) => {
-                return a[sort.value.column].localeCompare(
-                    b[sort.value.column] * -1,
-                );
+                try {
+                    return a[sort.value.column].localeCompare(
+                        b[sort.value.column],
+                    );
+                } catch (e) {
+                    return 0;
+                }
             })
             .slice((page.value - 1) * pageCount, page.value * pageCount);
     }
     return filtered
         .sort((a, b) => {
-            return a[sort.value.column].localeCompare(b[sort.value.column]);
+            try {
+                return b[sort.value.column].localeCompare(a[sort.value.column]);
+            } catch (e) {
+                return 0;
+            }
         })
         .slice((page.value - 1) * pageCount, page.value * pageCount);
 });
@@ -172,17 +192,6 @@ function openModal(row) {
     modalIsOpen.value = true;
     selectedData.value = row;
 }
-
-const editModeIsOpen = ref(false);
-function enableEditMode() {
-    editModeIsOpen.value = true;
-}
-
-function discardChanges() {
-    editModeIsOpen.value = false;
-}
-
-function saveChanges() {}
 
 // ----- Multiple Selection Mode ----- //
 const allowMultipleSelection = ref(false);
@@ -338,10 +347,10 @@ updateTable();
 
             <!-- DATA TABLE -->
 
-            <!-- <div v-if="!allowMultipleSelection">
+            <div v-if="!allowMultipleSelection">
                 <UTable
                     v-model:sort="sort"
-                    :columns="selectedColumns"
+                    :columns="selectedColumnsTable"
                     :rows="filteredRows"
                     :loading="pending"
                     :ui="{ tr: { active: 'hover:bg-gray-200' } }"
@@ -352,21 +361,13 @@ updateTable();
                 <UTable
                     v-model:sort="sort"
                     v-model="selectedRows"
-                    :columns="selectedColumns"
+                    :columns="selectedColumnsTable"
                     :rows="filteredRows"
                     :loading="pending"
                     :ui="{ tr: { active: 'hover:bg-gray-200' } }"
                     @select="addToSelectedRows"
                 />
-            </div> -->
-            <UTable
-                v-model:sort="sort"
-                :columns="props.listOfAllColumns"
-                :rows="allItems"
-                :loading="pending"
-                :ui="{ tr: { active: 'hover:bg-gray-200' } }"
-                @select="openModal"
-            />
+            </div>
 
             <!-- END OF DATA TABLES -->
 
@@ -400,17 +401,13 @@ updateTable();
                         >
                             {{
                                 selectedData[listOfAllColumns[0].key] +
-                                (props.title === "GRADE & SECTIONS" ||
-                                props.title === "SCHOOL YEARS"
-                                    ? " - " +
-                                      selectedData[listOfAllColumns[1].key]
-                                    : "") +
-                                (props.title === "ALL USERS"
-                                    ? " - " +
-                                      selectedData[listOfAllColumns[1].key] +
-                                      ", " +
-                                      selectedData[listOfAllColumns[2].key]
-                                    : "")
+                                ", " +
+                                selectedData[listOfAllColumns[1].key] +
+                                " (" +
+                                selectedData[listOfAllColumns[12].key] +
+                                " - " +
+                                selectedData[listOfAllColumns[13].key] +
+                                ")"
                             }}
                         </h3>
                         <UButton
