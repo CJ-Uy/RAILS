@@ -4,6 +4,15 @@ const startingColumns = [
     "requestor-firstName",
     "teacherInCharge-userProfile-lastName",
     "teacherInCharge-userProfile-firstName",
+<<<<<<< Updated upstream
+=======
+    "equipmentRequestsAdminApproval",
+    "equipmentRequestsTeacherApproval",
+    "materialRequestsAdminApproval",
+    "materialRequestsTeacherApproval",
+    "reagentRequestsAdminApproval",
+    "reagentRequestsTeacherApproval",
+>>>>>>> Stashed changes
     "createdAt",
 ];
 
@@ -25,6 +34,39 @@ const listOfAllColumns = [
         label: "Teacher In Charge First Name",
         sortable: true,
     },
+<<<<<<< Updated upstream
+=======
+    {
+        key: "equipmentRequestsAdminApproval",
+        label: "Material Request - Admin Approval",
+        sortable: true,
+    },
+    {
+        key: "equipmentRequestsTeacherApproval",
+        label: "Material Request - Teacher Approval",
+        sortable: true,
+    },
+    {
+        key: "materialRequestsAdminApproval",
+        label: "Material Request - Admin Approval",
+        sortable: true,
+    },
+    {
+        key: "materialRequestsTeacherApproval",
+        label: "Material Request - Teacher Approval",
+        sortable: true,
+    },
+    {
+        key: "reagentRequestsAdminApproval",
+        label: "Reagent Request - Admin Approval",
+        sortable: true,
+    },
+    {
+        key: "reagentRequestsTeacherApproval",
+        label: "Reagent Request - Teacher Approval",
+        sortable: true,
+    },
+>>>>>>> Stashed changes
     { key: "forSubject", label: "Subject", sortable: true },
     { key: "concurrentTopic", label: "Topic", sortable: true },
     { key: "noOfStudents", label: "No. of Stu", sortable: true },
