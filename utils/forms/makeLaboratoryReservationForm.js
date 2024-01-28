@@ -26,8 +26,9 @@ export default async function makeLaboratoryReservationForm(requestId) {
     }
 
     if (request.laboratoryReservationsAdminApproval === "APPROVED") {
-        approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
-        approverSignature = request.signedAdmin.signature;
+        approver = `${request.laboratoryReservationsAdminApprover.userProfile[0].firstName} ${request.laboratoryReservationsAdminApprover.userProfile[0].lastName}`;
+        approverSignature =
+            request.laboratoryReservationsAdminApprover.signature;
     }
 
     // Laboratory Setting

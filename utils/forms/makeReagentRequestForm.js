@@ -28,8 +28,8 @@ export default async function makeAccountability(requestId) {
     }
 
     if (request.reagentRequestsAdminApproval === "APPROVED") {
-        approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
-        approverSignature = request.signedAdmin.signature;
+        approver = `${request.reagentRequestsAdminApprover.userProfile[0].firstName} ${request.reagentRequestsAdminApprover.userProfile[0].lastName}`;
+        approverSignature = request.reagentRequestsAdminApprover.signature;
     }
 
     // Laboratory Setting
