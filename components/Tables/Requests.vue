@@ -1,4 +1,5 @@
 <script setup>
+import dayjs from "dayjs";
 import downloadPDF from "~/utils/forms/downloadPDF.js";
 
 const user = inject("user");
@@ -11,7 +12,7 @@ const props = defineProps({
     defaultSortKey: {
         type: String,
         required: false,
-        default: "requestor-lastName",
+        default: "updatedAt",
     },
     startingColumns: {
         type: Array,
@@ -31,7 +32,7 @@ const props = defineProps({
     },
 });
 
-const sort = ref({ column: props.defaultSortKey, direction: "asc" });
+const sort = ref({ column: props.defaultSortKey, direction: "desc" });
 
 const selectedColumns = ref([]);
 // Initial starting columns
@@ -73,18 +74,27 @@ watch(selectedColumns, () => {
     selectedColumnsTable.value = selectedColumnsTableTemp.value;
 });
 
-const { pending, data: allItems } = await useLazyFetch(props.fetchPath);
+const { pending, data: allItems } = await useLazyFetch(props.fetchPath, {});
 const allItemsData = ref([]);
 const allItemsRawData = ref([]);
 watch(allItems, (updatedValues) => {
     allItemsData.value = updatedValues;
-    allItemsRawData.value = allItemsData.value;
-    if (props.title === "LABORATORIES") {
-        for (let i = 0; i < allItemsData.value.length; i++) {
-            allItemsData.value[i].locationName =
-                allItemsData.value[i].location.name;
+    for (let i = 0; i < allItemsData.value.length; i++) {
+        if (
+            allItemsData.value[i].reagentRequestsAdminApproval ===
+                "REVISION_NEEDED" ||
+            allItemsData.value[i].equipmentRequestsAdminApproval ===
+                "REVISION_NEEDED" ||
+            allItemsData.value[i].materialRequestsAdminApproval ===
+                "REVISION_NEEDED" ||
+            allItemsData.value[i].laboratoryReservationsAdminApproval ===
+                "REVISION_NEEDED"
+        ) {
+            allItemsData.value[i].class =
+                "bg-[#b1c6f2] hover:bg-[#93a4c7!important]";
         }
     }
+    allItemsRawData.value = allItemsData.value;
 });
 
 const totalItems = ref(allItemsData.value.length);
@@ -92,18 +102,23 @@ const totalItems = ref(allItemsData.value.length);
 async function updateTable() {
     const allItems = await useFetch(props.fetchPath);
     allItemsData.value = allItems.data.value;
-    if (props.title === "LABORATORIES") {
-        for (let i = 0; i < allItemsData.value.length; i++) {
-            allItemsData.value[i].locationName =
-                allItemsData.value[i].location.name;
+    for (let i = 0; i < allItemsData.value.length; i++) {
+        if (
+            allItemsData.value[i].reagentRequestsAdminApproval ===
+                "REVISION_NEEDED" ||
+            allItemsData.value[i].equipmentRequestsAdminApproval ===
+                "REVISION_NEEDED" ||
+            allItemsData.value[i].materialRequestsAdminApproval ===
+                "REVISION_NEEDED" ||
+            allItemsData.value[i].laboratoryReservationsAdminApproval ===
+                "REVISION_NEEDED"
+        ) {
+            allItemsData.value[i].class =
+                "bg-[#b1c6f2] hover:bg-[#93a4c7!important]";
         }
     }
     allItemsRawData.value = allItemsData.value;
-    try {
-        totalItems.value = allItemsData.value.length;
-    } catch (e) {
-        totalItems.value = 0;
-    }
+    totalItems.value = allItemsData.value.length;
 }
 
 const page = ref(1);
@@ -191,6 +206,7 @@ const selectedData = ref();
 function openModal(row) {
     modalIsOpen.value = true;
     selectedData.value = row;
+    console.log(selectedData.value);
 }
 
 // ----- Multiple Selection Mode ----- //
@@ -225,18 +241,77 @@ async function rejectAll() {
     updateTable();
 }
 
-async function downloadAll() {
-    const requests = selectedRows.value.map((element) => element.id);
-    for (const request of requests) {
-        const rawPDFBuffers = await useFetch("/api/forms/create-pdf-buffers", {
-            method: "POST",
-            body: {
-                id: request,
-            },
-        });
-
-        downloadPDF(rawPDFBuffers.data.value[0], rawPDFBuffers.data.value[1]);
+const materialRequestsAnnotation = ref("");
+const materialRequestsAnnotationStyle = ref("blue");
+const reagentRequestsAnnotation = ref("");
+const reagentRequestsAnnotationStyle = ref("blue");
+const equipmentRequestsAnnotation = ref("");
+const equipmentRequestsAnnotationStyle = ref("blue");
+const laboratoryReservationsAnnotation = ref("");
+function signRequest(requestType, status) {
+    if (status === "REVISION_NEEDED" || status === "REJECTED") {
+        if (
+            requestType === "materialRequestsAdminApproval" &&
+            materialRequestsAnnotation.value === ""
+        ) {
+            materialRequestsAnnotationStyle.value = "red";
+        } else if (
+            requestType === "reagentRequestsAdminApproval" &&
+            reagentRequestsAnnotation.value === ""
+        ) {
+            reagentRequestsAnnotationStyle.value = "red";
+        } else if (
+            requestType === "equipmentRequestsAdminApproval" &&
+            equipmentRequestsAnnotation.value === ""
+        ) {
+            equipmentRequestsAnnotationStyle.value = "red";
+        }
     }
+}
+
+async function downloadAll() {
+    // const requests = selectedRows.value.map((element) => element.id);
+    // for (const request of requests) {
+    //     const rawPDFBuffers = await useFetch("/api/forms/create-pdf-buffers", {
+    //         method: "POST",
+    //         body: {
+    //             id: request,
+    //         },
+    //     });
+
+    //     downloadPDF(rawPDFBuffers.data.value[0], rawPDFBuffers.data.value[1]);
+    // }
+    try {
+        const pdfBuffersRawData = await useFetch(
+            "/api/forms/create-pdf-buffers",
+            {
+                method: "POST",
+                body: {
+                    id: selectedData.value.id,
+                },
+            },
+        );
+        const pdfBuffers = pdfBuffersRawData.data.value;
+
+        try {
+            downloadPDF(pdfBuffers[0], pdfBuffers[1]);
+        } catch (error) {
+            console.error("There was an error downloading the pdf: ", error);
+        }
+    } catch (error) {
+        console.error("There was an error creating the pdf: ", error);
+    }
+}
+
+async function downloadRequest() {
+    const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
+        method: "POST",
+        body: {
+            id: selectedData.value.id,
+        },
+    });
+
+    downloadPDF(requestPDF.data.value);
 }
 updateTable();
 </script>
@@ -386,7 +461,6 @@ updateTable();
         <UModal
             v-model="modalIsOpen"
             :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
-            :prevent-close="editModeIsOpen"
         >
             <UCard
                 :ui="{
@@ -404,56 +478,390 @@ updateTable();
                                 ", " +
                                 selectedData[listOfAllColumns[1].key] +
                                 " (" +
-                                selectedData[listOfAllColumns[12].key] +
+                                selectedData[listOfAllColumns[20].key] +
                                 " - " +
-                                selectedData[listOfAllColumns[13].key] +
+                                selectedData[listOfAllColumns[21].key] +
                                 ")"
                             }}
                         </h3>
                         <UButton
-                            v-if="!editModeIsOpen"
                             color="gray"
                             variant="ghost"
                             icon="i-heroicons-x-mark-20-solid"
                             @click="modalIsOpen = false"
                         />
-                        <UButton
-                            v-else
-                            color="red"
-                            variant="soft"
-                            icon="i-material-symbols-delete-outline"
-                            label="DELETE RECORD"
-                        />
                     </div>
                 </template>
 
-                <template #footer>
-                    <div class="flex w-auto justify-center">
-                        <UButton
-                            v-if="!editModeIsOpen"
-                            color="green"
-                            label="EDIT"
-                            icon="i-material-symbols-edit"
-                            @click="enableEditMode"
-                        />
-                        <div v-else class="flex w-[100%] justify-between">
-                            <UButton
-                                variant="outline"
-                                icon="i-material-symbols-cancel"
-                                color="red"
-                                label="CANCEL"
-                                @click="discardChanges"
-                            />
-                            <UButton
-                                variant="outline"
-                                icon="i-material-symbols-save"
-                                label="SAVE"
-                                color="green"
-                                @click="saveChanges"
-                            />
+                <div class="ml-5 font-thin">
+                    {{ selectedData["requestor-lastName"] }},
+                    {{ selectedData["requestor-firstName"] }}<br />
+                    {{ selectedData["gradeSection-grade"] }} -
+                    {{ selectedData["gradeSection-section"] }}<br />
+                    <span class="font-bold">Subject:</span>
+                    {{ selectedData.forSubject }}<br />
+                    <span class="font-bold">Topic:</span>
+                    {{ selectedData.concurrentTopic }}<br />
+                    <span class="font-bold">Unit:</span>
+                    {{ selectedData["unit-name"] }}<br /><br />
+                    <span class="font-bold">Supervising Teacher:</span>
+                    {{ selectedData["teacherInCharge-userProfile-lastName"] }},
+                    {{ selectedData["teacherInCharge-userProfile-firstName"] }}
+                </div>
+
+                <!-- Materials Requested -->
+                <div class="mt-5">
+                    <UCard>
+                        <template #header>
+                            <h3
+                                class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                            >
+                                Materials
+                            </h3>
+                        </template>
+
+                        <div class="mt-[-20px]">
+                            <div
+                                v-for="material in selectedData.materialsRequested"
+                                :key="material.id"
+                                class="flex justify-between border-b-2 p-3 text-sm"
+                            >
+                                <div class="basis-[180px]">
+                                    {{ material.name }}
+                                </div>
+                                <div class="basis-[120px] text-gray-400">
+                                    {{ material.description }}
+                                </div>
+                                <div class="basis-[60px]">
+                                    x{{ material.quantity }}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </template>
+
+                        <template #footer>
+                            <div class="mb-4">
+                                <UTextarea
+                                    v-model="materialRequestsAnnotation"
+                                    :color="materialRequestsAnnotationStyle"
+                                    placeholder="Annotation for rejections and revisions..."
+                                />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <UButton
+                                    color="red"
+                                    label="REJECT"
+                                    variant="solid"
+                                    icon="i-material-symbols-delete-outline"
+                                    @click="
+                                        signRequest(
+                                            'materialRequestsAdminApproval',
+                                            'REJECTED',
+                                        )
+                                    "
+                                />
+                                <UTooltip
+                                    text="Set Request for Student Revision"
+                                >
+                                    <UButton
+                                        color="blue"
+                                        label="REVISE"
+                                        variant="solid"
+                                        icon="i-material-symbols-edit"
+                                        @click="
+                                            signRequest(
+                                                'materialRequestsAdminApproval',
+                                                'REVISION_NEEDED',
+                                            )
+                                        "
+                                    />
+                                </UTooltip>
+                                <UButton
+                                    color="green"
+                                    label="APPROVE"
+                                    variant="solid"
+                                    icon="i-material-symbols-approval"
+                                    @click="
+                                        signRequest(
+                                            'materialRequestsAdminApproval',
+                                            'APPROVED',
+                                        )
+                                    "
+                                />
+                            </div>
+                        </template>
+                    </UCard>
+                </div>
+                <!-- Equipment Requested -->
+                <div class="mt-5">
+                    <UCard>
+                        <template #header>
+                            <h3
+                                class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                            >
+                                Equipment
+                            </h3>
+                        </template>
+
+                        <div class="mt-[-20px]">
+                            <div
+                                v-for="equipment in selectedData.equipmentRequested"
+                                :key="equipment.id"
+                                class="flex justify-between border-b-2 p-3 text-sm"
+                            >
+                                <div class="basis-[180px]">
+                                    {{ equipment.name }}
+                                </div>
+                                <div class="basis-[120px] text-gray-400">
+                                    {{ equipment.description }}
+                                </div>
+                                <div class="basis-[60px]">
+                                    x{{ equipment.quantity }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <template #footer>
+                            <div class="mb-4">
+                                <UTextarea
+                                    v-model="equipmentRequestsAnnotation"
+                                    :color="equipmentRequestsAnnotationStyle"
+                                    placeholder="Annotation for rejections and revisions..."
+                                />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <UButton
+                                    color="red"
+                                    label="REJECT"
+                                    variant="solid"
+                                    icon="i-material-symbols-delete-outline"
+                                    @click="
+                                        signRequest(
+                                            'equipmentRequestsAdminApproval',
+                                            'REJECTED',
+                                        )
+                                    "
+                                />
+                                <UTooltip
+                                    text="Set Request for Student Revision"
+                                >
+                                    <UButton
+                                        color="blue"
+                                        label="REVISE"
+                                        variant="solid"
+                                        icon="i-material-symbols-edit"
+                                        @click="
+                                            signRequest(
+                                                'equipmentRequestsAdminApproval',
+                                                'REVISION_NEEDED',
+                                            )
+                                        "
+                                    />
+                                </UTooltip>
+                                <UButton
+                                    color="green"
+                                    label="APPROVE"
+                                    variant="solid"
+                                    icon="i-material-symbols-approval"
+                                    @click="
+                                        signRequest(
+                                            'equipmentRequestsAdminApproval',
+                                            'APPROVED',
+                                        )
+                                    "
+                                />
+                            </div>
+                        </template>
+                    </UCard>
+                </div>
+                <!-- Reagents Requested -->
+                <div class="mt-5">
+                    <UCard>
+                        <template #header>
+                            <h3
+                                class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                            >
+                                Reagents
+                            </h3>
+                        </template>
+
+                        <div class="mt-[-20px]">
+                            <div
+                                v-for="reagent in selectedData.reagentsRequested"
+                                :key="reagent.id"
+                                class="flex justify-between border-b-2 p-3 text-sm"
+                            >
+                                <div class="basis-[180px]">
+                                    {{ reagent.name }}
+                                </div>
+                                <div class="basis-[120px] text-gray-400">
+                                    {{ reagent.description }}
+                                </div>
+                                <div class="basis-[60px]">
+                                    {{ reagent.quantity }} {{ reagent.unit }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <template #footer>
+                            <div class="mb-4">
+                                <UTextarea
+                                    v-model="reagentRequestsAnnotation"
+                                    :color="reagentRequestsAnnotationStyle"
+                                    placeholder="Annotation for rejections and revisions..."
+                                />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <UButton
+                                    color="red"
+                                    label="REJECT"
+                                    variant="solid"
+                                    icon="i-material-symbols-delete-outline"
+                                    @click="
+                                        signRequest(
+                                            'reagentRequestsAdminApproval',
+                                            'REJECTED',
+                                        )
+                                    "
+                                />
+                                <UTooltip
+                                    text="Set Request for Student Revision"
+                                >
+                                    <UButton
+                                        color="blue"
+                                        label="REVISE"
+                                        variant="solid"
+                                        icon="i-material-symbols-edit"
+                                        @click="
+                                            signRequest(
+                                                'reagentRequestsAdminApproval',
+                                                'REVISION_NEEDED',
+                                            )
+                                        "
+                                    />
+                                </UTooltip>
+                                <UButton
+                                    color="green"
+                                    label="APPROVE"
+                                    variant="solid"
+                                    icon="i-material-symbols-approval"
+                                    @click="
+                                        signRequest(
+                                            'reagentRequestsAdminApproval',
+                                            'APPROVED',
+                                        )
+                                    "
+                                />
+                            </div>
+                        </template>
+                    </UCard>
+                </div>
+                <!-- Laboratory Reserved -->
+                <div class="mt-5">
+                    <UCard>
+                        <template #header>
+                            <h3
+                                class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                            >
+                                Laboratory
+                            </h3>
+                        </template>
+
+                        <div class="mt-[-20px]">
+                            <div
+                                v-for="laboratory in selectedData.laboratoryReservations"
+                                :key="laboratory.id"
+                                class="text-sm"
+                            >
+                                <div class="border-b-2 p-3">
+                                    {{ laboratory.laboratoryReserved.name }}
+                                </div>
+                                <div class="border-b-2 p-3 pl-8">
+                                    <div
+                                        v-for="(startDate, index) in laboratory
+                                            .dates.startDate"
+                                        :key="index"
+                                        class="flex items-center justify-between"
+                                    >
+                                        <div>
+                                            {{
+                                                dayjs(startDate).format(
+                                                    "MMM DD, YYYY",
+                                                )
+                                            }}
+                                            -
+                                            {{
+                                                dayjs(
+                                                    laboratory.dates.endDate[
+                                                        index
+                                                    ],
+                                                ).format("MMM DD, YYYY")
+                                            }}
+                                        </div>
+                                        <div>
+                                            {{
+                                                laboratory.time.startTime[index]
+                                            }}
+                                            -
+                                            {{ laboratory.time.endTime[index] }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <template #footer>
+                            <div class="mb-4">
+                                <UTextarea
+                                    v-model="equipmentRequestsAnnotation"
+                                    :color="equipmentRequestsAnnotationStyle"
+                                    placeholder="Annotation for rejections and revisions..."
+                                />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <UButton
+                                    color="red"
+                                    label="REJECT"
+                                    variant="solid"
+                                    icon="i-material-symbols-delete-outline"
+                                    @click="
+                                        signRequest(
+                                            'equipmentRequestsAdminApproval',
+                                            'REJECTED',
+                                        )
+                                    "
+                                />
+                                <UTooltip
+                                    text="Set Request for Student Revision"
+                                >
+                                    <UButton
+                                        color="blue"
+                                        label="REVISE"
+                                        variant="solid"
+                                        icon="i-material-symbols-edit"
+                                        @click="
+                                            signRequest(
+                                                'equipmentRequestsAdminApproval',
+                                                'REVISION_NEEDED',
+                                            )
+                                        "
+                                    />
+                                </UTooltip>
+                                <UButton
+                                    color="green"
+                                    label="APPROVE"
+                                    variant="solid"
+                                    icon="i-material-symbols-approval"
+                                    @click="
+                                        signRequest(
+                                            'equipmentRequestsAdminApproval',
+                                            'APPROVED',
+                                        )
+                                    "
+                                />
+                            </div>
+                        </template>
+                    </UCard>
+                </div>
             </UCard>
         </UModal>
     </div>

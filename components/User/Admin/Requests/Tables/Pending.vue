@@ -2,15 +2,11 @@
 const startingColumns = [
     "requestor-lastName",
     "requestor-firstName",
+    "gradeSection-grade",
+    "gradeSection-section",
     "teacherInCharge-userProfile-lastName",
-    "teacherInCharge-userProfile-firstName",
-    "equipmentRequestsAdminApproval",
-    "equipmentRequestsTeacherApproval",
-    "materialRequestsAdminApproval",
-    "materialRequestsTeacherApproval",
-    "reagentRequestsAdminApproval",
-    "reagentRequestsTeacherApproval",
-    "createdAt",
+    "unit-name",
+    "updatedAt",
 ];
 
 // TODO: Add labels
@@ -29,6 +25,16 @@ const listOfAllColumns = [
     {
         key: "teacherInCharge-userProfile-firstName",
         label: "Teacher In Charge First Name",
+        sortable: true,
+    },
+    {
+        key: "laboratoryReservationsAdminApproval",
+        label: "Laboratory Reservation - Admin Approval",
+        sortable: true,
+    },
+    {
+        key: "laboratoryReservationsTeacherApproval",
+        label: "Laboratory Reservation - Teacher Approval",
         sortable: true,
     },
     {
