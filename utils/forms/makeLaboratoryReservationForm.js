@@ -21,11 +21,11 @@ export default async function makeLaboratoryReservationForm(requestId) {
     let teacherSignature = "";
 
     // Notarization
-    if (request.isSignedByTeacher === "APPROVED") {
-        teacherSignature = request.signedTeacher.signature;
+    if (request.laboratoryReservationsTeacherApproval === "APPROVED") {
+        teacherSignature = request.teacherInCharge.signature;
     }
 
-    if (request.isSignedByAdmin === "APPROVED") {
+    if (request.laboratoryReservationsAdminApproval === "APPROVED") {
         approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
         approverSignature = request.signedAdmin.signature;
     }

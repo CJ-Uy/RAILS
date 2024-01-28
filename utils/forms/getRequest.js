@@ -23,12 +23,22 @@ export default async function getRequest(id) {
                     laboratoryRequest: true,
                 },
             },
-            signedTeacher: {
+            equipmentRequestsAdminApprover: {
                 include: {
                     userProfile: true,
                 },
             },
-            signedAdmin: {
+            materialRequestsAdminApprover: {
+                include: {
+                    userProfile: true,
+                },
+            },
+            reagentRequestsAdminApprover: {
+                include: {
+                    userProfile: true,
+                },
+            },
+            laboratoryReservationsAdminApprover: {
                 include: {
                     userProfile: true,
                 },
