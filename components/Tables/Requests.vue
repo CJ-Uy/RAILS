@@ -270,17 +270,6 @@ function signRequest(requestType, status) {
 }
 
 async function downloadAll() {
-    // const requests = selectedRows.value.map((element) => element.id);
-    // for (const request of requests) {
-    //     const rawPDFBuffers = await useFetch("/api/forms/create-pdf-buffers", {
-    //         method: "POST",
-    //         body: {
-    //             id: request,
-    //         },
-    //     });
-
-    //     downloadPDF(rawPDFBuffers.data.value[0], rawPDFBuffers.data.value[1]);
-    // }
     try {
         const pdfBuffersRawData = await useFetch(
             "/api/forms/create-pdf-buffers",
@@ -303,16 +292,6 @@ async function downloadAll() {
     }
 }
 
-async function downloadRequest() {
-    const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
-        method: "POST",
-        body: {
-            id: selectedData.value.id,
-        },
-    });
-
-    downloadPDF(requestPDF.data.value);
-}
 updateTable();
 </script>
 
@@ -458,6 +437,7 @@ updateTable();
                 </div>
             </template>
         </UCard>
+
         <UModal
             v-model="modalIsOpen"
             :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
@@ -508,6 +488,12 @@ updateTable();
                     {{ selectedData["teacherInCharge-userProfile-lastName"] }},
                     {{ selectedData["teacherInCharge-userProfile-firstName"] }}
                 </div>
+
+                <UButton
+                    class="mt-3"
+                    label="Download Request"
+                    @click="downloadAll"
+                />
 
                 <!-- Materials Requested -->
                 <div class="mt-5">
@@ -591,6 +577,7 @@ updateTable();
                         </template>
                     </UCard>
                 </div>
+
                 <!-- Equipment Requested -->
                 <div class="mt-5">
                     <UCard>
@@ -812,7 +799,7 @@ updateTable();
                         <template #footer>
                             <div class="mb-4">
                                 <UTextarea
-                                    v-model="equipmentRequestsAnnotation"
+                                    v-model="laboratoryReservationsAnnotation"
                                     :color="equipmentRequestsAnnotationStyle"
                                     placeholder="Annotation for rejections and revisions..."
                                 />
