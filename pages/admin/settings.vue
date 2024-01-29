@@ -17,6 +17,7 @@ async function handleSignOut() {
     <div>
         <UserDashboardHeader title="ADMIN | SETTINGS" />
         <UserAdminRequestsSaveSignature />
+        <UserAdminBackups />
         <UContainer class="mt-10 flex w-full items-center justify-center">
             <UButton
                 icon="i-ph-sign-out"
