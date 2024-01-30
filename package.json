@@ -51,6 +51,7 @@
         "@vuepic/vue-datepicker": "^7.4.0",
         "dayjs": "^1.11.10",
         "flat": "^6.0.1",
+        "mysqldump": "^3.2.0",
         "nuxt-mailer": "^0.11.0",
         "puppeteer": "^21.7.0",
         "signature_pad": "^4.1.7",

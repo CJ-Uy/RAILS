@@ -1,4 +1,10 @@
 <script setup>
+const test = ref();
+async function downloadBackUp() {
+    const dbBackup = await useFetch("/api/user/admin/backups/createBackup");
+    console.log(dbBackup);
+    test.value = dbBackup.data.value;
+}
 </script>
 
 <template>
@@ -8,7 +14,8 @@
         </template>
 
         <template #footer>
-            <UButton label="New Backup" />
+            <UButton label="New Backup" @click="downloadBackUp" />
         </template>
     </UCard>
+    {{ test }}
 </template>

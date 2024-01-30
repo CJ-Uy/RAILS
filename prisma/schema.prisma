@@ -64,7 +64,6 @@ model SchoolYear {
   equipmentRequests     EquipmentRequests[]
   materialRequests      MaterialRequests[]
   reagentRequests       ReagentRequests[]
-  inventoryTransactions InventoryTransactions[]
 }
 
 model Users {
@@ -261,7 +260,6 @@ model InventoryOfMaterials {
   requests              MaterialRequests[]
   schoolYear            SchoolYear?             @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
-  inventoryTransactions InventoryTransactions[]
 }
 
 model InventoryOfEquipment {
@@ -296,7 +294,6 @@ model InventoryOfEquipment {
   requests              EquipmentRequests[]
   schoolYear            SchoolYear?             @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
-  inventoryTransactions InventoryTransactions[]
 }
 
 model InventoryOfReagents {
@@ -340,7 +337,6 @@ model InventoryOfReagents {
   requests              ReagentRequests[]
   schoolYear            SchoolYear?             @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
-  inventoryTransactions InventoryTransactions[]
 }
 
 // -------------------- //
