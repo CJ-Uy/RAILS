@@ -68,7 +68,7 @@ function clearSig() {
 </script>
 
 <template>
-    <div>
+    <div class="w-[750px]">
         <!-- BUG: Even if the canvas is set to 500 X 250 the svg saved is 400 X 200 by croppping it
                 The issue is with the viewbox attribute so i just manually change it
         -->

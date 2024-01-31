@@ -64,7 +64,6 @@ model SchoolYear {
   equipmentRequests     EquipmentRequests[]
   materialRequests      MaterialRequests[]
   reagentRequests       ReagentRequests[]
-  inventoryTransactions InventoryTransactions[]
 }
 
 model Users {
@@ -261,7 +260,6 @@ model InventoryOfMaterials {
   requests              MaterialRequests[]
   schoolYear            SchoolYear?             @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
-  inventoryTransactions InventoryTransactions[]
 }
 
 model InventoryOfEquipment {
@@ -296,7 +294,6 @@ model InventoryOfEquipment {
   requests              EquipmentRequests[]
   schoolYear            SchoolYear?             @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
-  inventoryTransactions InventoryTransactions[]
 }
 
 model InventoryOfReagents {
@@ -340,32 +337,6 @@ model InventoryOfReagents {
   requests              ReagentRequests[]
   schoolYear            SchoolYear?             @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
-  inventoryTransactions InventoryTransactions[]
-}
-
-model InventoryTransactions {
-  id              String      @id @default(uuid())
-  schoolYear      SchoolYear? @relation(fields: [schoolYearId], references: [id])
-  schoolYearId    String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  transactionType String // "ADD", "REMOVE", "MODIFY", etc...
-  description     String?
-
-  equipment   InventoryOfEquipment? @relation(fields: [equipmentId], references: [id])
-  equipmentId String?
-
-  material   InventoryOfMaterials? @relation(fields: [materialId], references: [id])
-  materialId String?
-
-  reagent   InventoryOfReagents? @relation(fields: [reagentId], references: [id])
-  reagentId String?
-
-  quantityBeforeChange Float
-  quantityAfterChange  Float
-  quantityOfChange     Float
-
-  units String?
 }
 
 // -------------------- //

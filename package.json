@@ -39,7 +39,8 @@
         "prettier-plugin-tailwindcss": "^0.5.10",
         "prisma": "^5.7.1",
         "ts-node": "^10.9.2",
-        "typescript": "^5.3.3"
+        "typescript": "^5.3.3",
+        "vuetify-nuxt-module": "^0.10.3"
     },
     "dependencies": {
         "@formkit/addons": "^1.4.0",
@@ -48,8 +49,11 @@
         "@nuxt/ui": "^2.11.1",
         "@prisma/client": "^5.7.1",
         "@vuepic/vue-datepicker": "^7.4.0",
+        "@vueuse/nuxt": "^10.7.2",
         "dayjs": "^1.11.10",
         "flat": "^6.0.1",
+        "mysql": "^2.18.1",
+        "mysqldump": "^3.2.0",
         "nuxt-mailer": "^0.11.0",
         "puppeteer": "^21.7.0",
         "signature_pad": "^4.1.7",

@@ -5,7 +5,8 @@ Reservation and Inventory for Laboratory Systems for the Philippine Science High
 
 ## Setup
 
-**Be sure to install [Node.js](https://nodejs.org/en/download/) to continue**
+**Be sure to install [Node.js](https://nodejs.org/en/download/) (preferably with [chocolatey](https://community.chocolatey.org/)) to continue**
+**[MySQL](https://dev.mysql.com/downloads/installer/) and [MySQL CLI](https://community.chocolatey.org/packages/mysql-cli) will also be needed later**
 
 ---
 
