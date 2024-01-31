@@ -1,9 +1,26 @@
 <script setup>
-const test = ref();
+import dayjs from "dayjs";
+
+const downloadingBackup = ref(false);
 async function downloadBackUp() {
-    const dbBackup = await useFetch("/api/user/admin/backups/createBackup");
-    console.log(dbBackup);
-    test.value = dbBackup.data.value;
+    downloadingBackup.value = true;
+    const { data: dbBackup } = await useFetch(
+        "/api/user/admin/backups/createBackup",
+    );
+
+    // Download dbBackup.value as .sql
+    const url = window.URL.createObjectURL(
+        new Blob([JSON.stringify(dbBackup.value)]),
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+        "download",
+        `${dayjs().format("MMM-DD-YYYY-HH;mm;ss")}  RAILS Backup.sql`,
+    );
+    document.body.appendChild(link);
+    link.click();
+    downloadingBackup.value = false;
 }
 </script>
 
@@ -14,8 +31,11 @@ async function downloadBackUp() {
         </template>
 
         <template #footer>
-            <UButton label="New Backup" @click="downloadBackUp" />
+            <UButton
+                label="New Backup"
+                @click="downloadBackUp"
+                :disabled="downloadingBackup"
+            />
         </template>
     </UCard>
-    {{ test }}
 </template>
