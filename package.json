@@ -48,7 +48,6 @@
         "@nuxt/image": "^1.1.0",
         "@nuxt/ui": "^2.11.1",
         "@prisma/client": "^5.7.1",
-        "@vorlefan/prisma-backup": "^0.3.5",
         "@vuepic/vue-datepicker": "^7.4.0",
         "@vueuse/nuxt": "^10.7.2",
         "dayjs": "^1.11.10",
