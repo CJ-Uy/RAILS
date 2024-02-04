@@ -1,3 +1,37 @@
+<!-- 
+    DOCUMENTATION: HOW TO USE THIS COMPONENT
+
+    Parent Component (e.g. User/Admin/ManageUsers/AllUsers):
+    <script>
+        const startingColumns = [] // "key" of starting columns in list of all columns in strings
+        const listOfAllColumns = [{ key: "", label: "", sortable: bool }, ... ] // All the columns
+        
+        const selectedData = ref();
+        function selectedRow(data) {
+            selectedData.value = data;
+        }
+    </script>
+    <template>
+        <TablesSlottedInventory
+            title=""
+            default-sort-key=""                         // This should be in startingColumns
+            :starting-columns="startingColumns"
+            :list-of-all-columns="listOfAllColumns"
+            fetch-path=""                               // API path to fetch data
+            :allowed-editing=""                         // To be checked with user.ROLE
+            @selectedRow="selectedRow"
+        >
+            <template #detailsModal>
+                <div>
+                    < Code on Modal for viewing data >
+                </div>
+            </template>
+            <template #editModal>
+                    < Code on Editing Values for the Modal >
+            </template>
+        </TablesSlottedInventory>
+    </template>
+ -->
 <script setup>
 const props = defineProps({
     title: {
@@ -21,15 +55,18 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    updatePath: {
-        type: String,
-        required: true,
-    },
     allowedEditing: {
         type: Boolean,
         required: true,
     },
+    selectedRow: {
+        type: Object,
+        required: false,
+        default: null,
+    },
 });
+
+const emit = defineEmits(["selectedRow"]);
 
 const sort = ref({ column: props.defaultSortKey, direction: "asc" });
 
@@ -165,22 +202,20 @@ const filteredRows = computed(() => {
 
 // ---------- MODAL ---------- //
 const modalIsOpen = ref(false);
-const selectedData = ref();
 function openModal(row) {
     modalIsOpen.value = true;
-    selectedData.value = row;
+    emit("selectedRow", row);
 }
 
-const editModeIsOpen = ref(false);
-function enableEditMode() {
-    editModeIsOpen.value = true;
-}
+const editModalIsOpen = ref(false);
+watch(
+    () => props.editModeIsOpen,
+    (newValue) => {
+        modalIsOpen.value = !newValue;
+        editModalIsOpen.value = newValue;
+    },
+);
 
-function discardChanges() {
-    editModeIsOpen.value = false;
-}
-
-function saveChanges() {}
 updateTable();
 </script>
 
@@ -253,6 +288,7 @@ updateTable();
                     @select="openModal"
                     @update:sort="test"
                 />
+                <!--TODO: @toffee05 wat is theis @update:sort="test"-->
             </div>
 
             <template #footer>
@@ -268,79 +304,15 @@ updateTable();
         <UModal
             v-model="modalIsOpen"
             :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
-            :prevent-close="editModeIsOpen"
         >
-            <UCard
-                :ui="{
-                    ring: '',
-                    divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-                }"
-            >
-                <template #header>
-                    <div class="flex items-center justify-between">
-                        <h3
-                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
-                        >
-                            {{
-                                selectedData[listOfAllColumns[0].key] +
-                                (props.title === "GRADE & SECTIONS" ||
-                                props.title === "SCHOOL YEARS"
-                                    ? " - " +
-                                      selectedData[listOfAllColumns[1].key]
-                                    : "") +
-                                (props.title === "ALL USERS"
-                                    ? " - " +
-                                      selectedData[listOfAllColumns[1].key] +
-                                      ", " +
-                                      selectedData[listOfAllColumns[2].key]
-                                    : "")
-                            }}
-                        </h3>
-                        <UButton
-                            v-if="!editModeIsOpen"
-                            color="gray"
-                            variant="ghost"
-                            icon="i-heroicons-x-mark-20-solid"
-                            @click="modalIsOpen = false"
-                        />
-                        <UButton
-                            v-else
-                            color="red"
-                            variant="soft"
-                            icon="i-material-symbols-delete-outline"
-                            label="DELETE RECORD"
-                        />
-                    </div>
-                </template>
-
-                <template v-if="allowedEditing" #footer>
-                    <div class="flex w-auto justify-center">
-                        <UButton
-                            v-if="!editModeIsOpen"
-                            color="green"
-                            label="EDIT"
-                            icon="i-material-symbols-edit"
-                            @click="enableEditMode"
-                        />
-                        <div v-else class="flex w-[100%] justify-between">
-                            <UButton
-                                variant="outline"
-                                icon="i-material-symbols-cancel"
-                                color="red"
-                                label="CANCEL"
-                                @click="discardChanges"
-                            />
-                            <UButton
-                                variant="outline"
-                                icon="i-material-symbols-save"
-                                label="SAVE"
-                                color="green"
-                                @click="saveChanges"
-                            />
-                        </div>
-                    </div>
-                </template>
-            </UCard>
+            <slot name="detailsModal" />
+        </UModal>
+        <UModal
+            v-model="editModalIsOpen"
+            :ui="{ transition: { enter: 'duration-0', leave: 'duration-0' } }"
+            prevent-close
+        >
+            <slot name="editModeModal" />
         </UModal>
     </div>
 </template>
