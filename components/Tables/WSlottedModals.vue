@@ -10,24 +10,26 @@
         function selectedRow(data) {
             selectedData.value = data;
         }
+        
+        const tableRef = ref();
+        tableRef.value.updateTable(); // This updated the table
+        tableRef.value.closeDataModal(); // This closes the modal
     </script>
     <template>
         <TablesSlottedInventory
+            ref="tableRef"
             title=""
             default-sort-key=""                         // This should be in startingColumns
             :starting-columns="startingColumns"
             :list-of-all-columns="listOfAllColumns"
             fetch-path=""                               // API path to fetch data
             :allowed-editing=""                         // To be checked with user.ROLE
-            @selectedRow="selectedRow"
+            @selected-row="selectedRow"
         >
-            <template #detailsModal>
+            <template #dataModal>
                 <div>
-                    < Code on Modal for viewing data >
+                    < Code on Modal for viewing and editing data >
                 </div>
-            </template>
-            <template #editModal>
-                    < Code on Editing Values for the Modal >
             </template>
         </TablesSlottedInventory>
     </template>
@@ -59,14 +61,16 @@ const props = defineProps({
         type: Boolean,
         required: true,
     },
-    selectedRow: {
-        type: Object,
+    editModeIsOpen: {
+        type: Boolean,
         required: false,
-        default: null,
+        default: false,
     },
 });
 
-const emit = defineEmits(["selectedRow"]);
+const emit = defineEmits(["selected-row"]); // This allows the sending of data from the child to the parent
+
+defineExpose({ updateTable, closeDataModal }); // This allows the use of this function in a parent component
 
 const sort = ref({ column: props.defaultSortKey, direction: "asc" });
 
@@ -204,17 +208,12 @@ const filteredRows = computed(() => {
 const modalIsOpen = ref(false);
 function openModal(row) {
     modalIsOpen.value = true;
-    emit("selectedRow", row);
+    emit("selected-row", row);
 }
 
-const editModalIsOpen = ref(false);
-watch(
-    () => props.editModeIsOpen,
-    (newValue) => {
-        modalIsOpen.value = !newValue;
-        editModalIsOpen.value = newValue;
-    },
-);
+function closeDataModal() {
+    modalIsOpen.value = false;
+}
 
 updateTable();
 </script>
@@ -304,15 +303,9 @@ updateTable();
         <UModal
             v-model="modalIsOpen"
             :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
+            :prevent-close="props.editModeIsOpen"
         >
-            <slot name="detailsModal" />
-        </UModal>
-        <UModal
-            v-model="editModalIsOpen"
-            :ui="{ transition: { enter: 'duration-0', leave: 'duration-0' } }"
-            prevent-close
-        >
-            <slot name="editModeModal" />
+            <slot name="dataModal" />
         </UModal>
     </div>
 </template>

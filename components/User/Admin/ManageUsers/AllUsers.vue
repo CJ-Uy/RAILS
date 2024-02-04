@@ -49,15 +49,34 @@ const listOfAllColumns = [
     },
 ];
 
+const allUsersTableRef = ref();
+
+// ----- Modal details ---- //
 const selectedData = ref();
 function selectedRow(data) {
     selectedData.value = data;
 }
+
+// Editing Mode
+const editModeIsOpen = ref(false);
+function enableEditMode() {
+    editModeIsOpen.value = true;
+    colorEditable.value = "red";
+}
+function discardChanges() {
+    editModeIsOpen.value = false;
+    colorEditable.value = "gray";
+    allUsersTableRef.value.closeDataModal();
+    allUsersTableRef.value.updateTable();
+}
+// Editing Mode Apperances
+const colorEditable = ref("gray");
 </script>
 
 <template>
     <div>
         <TablesWSlottedModals
+            ref="allUsersTableRef"
             title="ALL USERS"
             default-sort-key="role"
             :starting-columns="startingColumns"
@@ -65,9 +84,10 @@ function selectedRow(data) {
             fetch-path="/api/db/manageUsers/getAll"
             update-path="/api/db/updateData/updateLaboratories"
             :allowed-editing="allowedEditing"
-            @selectedRow="selectedRow"
+            :editModeIsOpen="editModeIsOpen"
+            @selected-row="selectedRow"
         >
-            <template #detailsModal>
+            <template #dataModal>
                 <UCard>
                     <template #header>
                         <div class="flex flex-row items-center space-x-3">
@@ -90,113 +110,134 @@ function selectedRow(data) {
                         <div>Last Name</div>
                         <div>
                             <UInput
-                                color="gray"
-                                :disabled="true"
+                                v-model="selectedData.lastName"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
                                 variant="outline"
-                                :placeholder="selectedData.lastName"
                             />
                         </div>
 
                         <div>First Name</div>
                         <div>
                             <UInput
-                                color="gray"
-                                :disabled="true"
+                                v-model="selectedData.firstName"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
                                 variant="outline"
-                                :placeholder="selectedData.firstName"
                             />
                         </div>
 
                         <div>Role</div>
                         <div>
-                            <UInput
-                                color="gray"
-                                :disabled="true"
+                            <USelect
+                                v-model="selectedData.role"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
                                 variant="outline"
-                                :placeholder="selectedData.role"
+                                :options="['ADMIN', 'TEACHER', 'STUDENT']"
                             />
                         </div>
 
                         <div>Email</div>
                         <div>
                             <UInput
-                                color="gray"
-                                :disabled="true"
+                                v-model="selectedData.email"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
                                 variant="outline"
-                                :placeholder="selectedData.email"
                             />
                         </div>
 
                         <div>User ID</div>
                         <div>
                             <UInput
+                                v-model="selectedData.id"
                                 color="gray"
-                                :disabled="true"
+                                disabled="true"
                                 variant="outline"
-                                :placeholder="selectedData.id"
                             />
                         </div>
 
+                        <!-- IDs -->
                         <div>Student ID</div>
                         <div>
                             <UInput
+                                v-model="selectedData.studentsId"
                                 color="gray"
                                 :disabled="true"
                                 variant="outline"
-                                :placeholder="selectedData.studentsId"
                             />
                         </div>
 
                         <div>Teacher ID</div>
                         <div>
                             <UInput
+                                v-model="selectedData.teachersId"
                                 color="gray"
                                 :disabled="true"
                                 variant="outline"
-                                :placeholder="selectedData.teachersId"
                             />
                         </div>
 
                         <div>Admin ID</div>
                         <div>
                             <UInput
+                                v-model="selectedData.adminsId"
                                 color="gray"
                                 :disabled="true"
                                 variant="outline"
-                                :placeholder="selectedData.adminsId"
                             />
                         </div>
 
                         <div>Created At</div>
                         <div>
                             <UInput
+                                v-model="selectedData.createdAt"
                                 color="gray"
                                 :disabled="true"
                                 variant="outline"
-                                :placeholder="selectedData.createdAt"
                             />
                         </div>
 
                         <div>Last Updated</div>
                         <div>
                             <UInput
+                                v-model="selectedData.updatedAt"
                                 color="gray"
                                 :disabled="true"
                                 variant="outline"
-                                :placeholder="selectedData.updatedAt"
                             />
                         </div>
                     </div>
 
                     <template #footer>
-                        <div>
-                            <UButton @click="">Edit</UButton>
+                        <div class="flex w-auto justify-center">
+                            <UButton
+                                v-if="!editModeIsOpen"
+                                color="green"
+                                label="EDIT"
+                                icon="i-material-symbols-edit"
+                                @click="enableEditMode"
+                            />
+                            <div v-else class="flex w-[100%] justify-between">
+                                <UButton
+                                    variant="outline"
+                                    icon="i-material-symbols-cancel"
+                                    color="red"
+                                    label="CANCEL"
+                                    @click="discardChanges"
+                                />
+                                <UButton
+                                    variant="outline"
+                                    icon="i-material-symbols-save"
+                                    label="SAVE"
+                                    color="green"
+                                    @click="saveChanges"
+                                />
+                            </div>
                         </div>
                     </template>
                 </UCard>
-            </template>
-            <template #editModal>
-                <h1>YES</h1>
             </template>
         </TablesWSlottedModals>
     </div>
