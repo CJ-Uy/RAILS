@@ -120,9 +120,12 @@ export default defineEventHandler(async (event) => {
             lastName: newData.lastName,
             firstName: newData.firstName,
             role: newData.role,
-            email: newData.email,
         },
     });
+
+    // ------ DELETING USERS ----- //
+    // Here's the idea, try to delete normally and if it doesnt work cause its connected to different values then to protect data
+    // just change the email so that the user can no longer login and would have a fresh acount when logging in again
 
     return "SUCCESS";
 });

@@ -175,10 +175,11 @@ const colorEditable = ref("gray");
 
                         <div>Email</div>
                         <div>
+                            <!-- Editing the email will make a new account when the person sign in -->
                             <UInput
                                 v-model="selectedData.email"
-                                :color="colorEditable"
-                                :disabled="!editModeIsOpen"
+                                color="gray"
+                                disabled="true"
                                 variant="outline"
                             />
                         </div>
