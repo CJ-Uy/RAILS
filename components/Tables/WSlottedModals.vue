@@ -6,6 +6,8 @@
         const startingColumns = [] // "key" of starting columns in list of all columns in strings
         const listOfAllColumns = [{ key: "", label: "", sortable: bool }, ... ] // All the columns
         
+        const editModeIsOpen = ref(false); // Edit mode current status
+
         const selectedData = ref();
         function selectedRow(data) {
             selectedData.value = data;
@@ -24,6 +26,7 @@
             :list-of-all-columns="listOfAllColumns"
             fetch-path=""                               // API path to fetch data
             :allowed-editing=""                         // To be checked with user.ROLE
+            :edit-mode-is-open="editModeIsOpen"         // Tracks if edit mode is open
             @selected-row="selectedRow"
         >
             <template #dataModal>

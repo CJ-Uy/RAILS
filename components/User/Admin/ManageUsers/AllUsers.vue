@@ -69,6 +69,41 @@ function discardChanges() {
     allUsersTableRef.value.closeDataModal();
     allUsersTableRef.value.updateTable();
 }
+async function updateChanges() {
+    await useFetch("/api/db/manageUsers/update", {
+        method: "POST",
+        body: JSON.stringify(selectedData.value),
+    });
+    editModeIsOpen.value = false;
+    colorEditable.value = "gray";
+    allUsersTableRef.value.closeDataModal();
+    allUsersTableRef.value.updateTable();
+}
+
+// TODO: Test a bit more and maybe its not secure cause it's on the fron end? But i have some safe ctaches in the backend too
+// BUG: You can delete yourself and make u no longger admin and it affects only after refresh. But even after refresh you can just "go back" on the browser maybe a watch function just in this page for roles?
+function adaptRolesToNewIdRequest() {
+    if (
+        selectedData.value.role === "STUDENT" &&
+        selectedData.value.studentsId === null
+    ) {
+        selectedData.value.studentsId = "NEW STUDENT ID";
+        selectedData.value.teachersId = null;
+        selectedData.value.adminsId = null;
+    } else if (
+        selectedData.value.role === "TEACHER" &&
+        selectedData.value.teachersId === null
+    ) {
+        selectedData.value.teachersId = "NEW TEACHER ID";
+        selectedData.value.adminsId = null;
+    } else if (
+        selectedData.value.role === "ADMIN" &&
+        selectedData.value.adminsId === null
+    ) {
+        selectedData.value.adminsId = "NEW ADMIN ID";
+    }
+}
+
 // Editing Mode Apperances
 const colorEditable = ref("gray");
 </script>
@@ -82,9 +117,8 @@ const colorEditable = ref("gray");
             :starting-columns="startingColumns"
             :list-of-all-columns="listOfAllColumns"
             fetch-path="/api/db/manageUsers/getAll"
-            update-path="/api/db/updateData/updateLaboratories"
             :allowed-editing="allowedEditing"
-            :editModeIsOpen="editModeIsOpen"
+            :edit-mode-is-open="editModeIsOpen"
             @selected-row="selectedRow"
         >
             <template #dataModal>
@@ -134,7 +168,8 @@ const colorEditable = ref("gray");
                                 :color="colorEditable"
                                 :disabled="!editModeIsOpen"
                                 variant="outline"
-                                :options="['ADMIN', 'TEACHER', 'STUDENT']"
+                                :options="['STUDENT', 'TEACHER', 'ADMIN']"
+                                @click="adaptRolesToNewIdRequest"
                             />
                         </div>
 
@@ -160,33 +195,107 @@ const colorEditable = ref("gray");
 
                         <!-- IDs -->
                         <div>Student ID</div>
-                        <div>
-                            <UInput
-                                v-model="selectedData.studentsId"
-                                color="gray"
-                                :disabled="true"
-                                variant="outline"
-                            />
+                        <div class="flex flex-row justify-between">
+                            <div class="w-full">
+                                <UInput
+                                    v-model="selectedData.studentsId"
+                                    color="gray"
+                                    :disabled="true"
+                                    variant="outline"
+                                />
+                            </div>
+                            <div v-if="editModeIsOpen">
+                                <UButton
+                                    v-if="selectedData.studentsId == null"
+                                    icon="i-material-symbols-align-flex-center-rounded"
+                                    size="sm"
+                                    color="green"
+                                    square
+                                    variant="solid"
+                                    @click="
+                                        selectedData.studentsId =
+                                            'NEW STUDENT ID'
+                                    "
+                                />
+                                <UButton
+                                    v-else
+                                    icon="i-material-symbols-delete"
+                                    size="sm"
+                                    color="red"
+                                    square
+                                    variant="solid"
+                                    @click="selectedData.studentsId = null"
+                                />
+                            </div>
                         </div>
 
                         <div>Teacher ID</div>
-                        <div>
-                            <UInput
-                                v-model="selectedData.teachersId"
-                                color="gray"
-                                :disabled="true"
-                                variant="outline"
-                            />
+                        <div class="flex flex-row justify-between">
+                            <div class="w-full">
+                                <UInput
+                                    v-model="selectedData.teachersId"
+                                    color="gray"
+                                    :disabled="true"
+                                    variant="outline"
+                                />
+                            </div>
+                            <div v-if="editModeIsOpen">
+                                <UButton
+                                    v-if="selectedData.teachersId == null"
+                                    icon="i-material-symbols-align-flex-center-rounded"
+                                    size="sm"
+                                    color="green"
+                                    square
+                                    variant="solid"
+                                    @click="
+                                        selectedData.teachersId =
+                                            'NEW TEACHER ID'
+                                    "
+                                />
+                                <UButton
+                                    v-else
+                                    icon="i-material-symbols-delete"
+                                    size="sm"
+                                    color="red"
+                                    square
+                                    variant="solid"
+                                    @click="selectedData.teachersId = null"
+                                />
+                            </div>
                         </div>
 
                         <div>Admin ID</div>
-                        <div>
-                            <UInput
-                                v-model="selectedData.adminsId"
-                                color="gray"
-                                :disabled="true"
-                                variant="outline"
-                            />
+                        <div class="flex flex-row justify-between">
+                            <div class="w-full">
+                                <UInput
+                                    v-model="selectedData.adminsId"
+                                    color="gray"
+                                    :disabled="true"
+                                    variant="outline"
+                                />
+                            </div>
+                            <div v-if="editModeIsOpen">
+                                <UButton
+                                    v-if="selectedData.adminsId == null"
+                                    icon="i-material-symbols-align-flex-center-rounded"
+                                    size="sm"
+                                    color="green"
+                                    square
+                                    variant="solid"
+                                    @click="
+                                        selectedData.adminsId = 'NEW ADMIN ID'
+                                    "
+                                />
+                                <UButton
+                                    v-else
+                                    icon="i-material-symbols-delete"
+                                    size="sm"
+                                    color="red"
+                                    square
+                                    variant="solid"
+                                    @click="selectedData.adminsId = null"
+                                />
+                            </div>
                         </div>
 
                         <div>Created At</div>
@@ -232,7 +341,7 @@ const colorEditable = ref("gray");
                                     icon="i-material-symbols-save"
                                     label="SAVE"
                                     color="green"
-                                    @click="saveChanges"
+                                    @click="updateChanges"
                                 />
                             </div>
                         </div>
