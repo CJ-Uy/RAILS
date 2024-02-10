@@ -36,22 +36,37 @@ const listOfAllColumns = [
     },
 ];
 
+const editModeIsOpen = ref(false);
+
+const selectedData = ref();
+function selectedRow(data) {
+    selectedData.value = data;
+}
+
 // Only allow editing if the user is an administrator
 const allowedEditing = ref(user.role === "ADMIN");
+
+const tableRef = ref();
 </script>
 
 <template>
     <div>
-        <TablesInventory
+        <TablesWSlottedModals
+            ref="tableRef"
             title="LABORATORIES"
             default-sort-key="name"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
             fetch-path="/api/db/rawData/getAllLaboratories"
-            update-path="/api/db/updateData/updateLaboratories"
             :allowedEditing="allowedEditing"
-        />
+            :edit-mode-is-open="editModeIsOpen"
+            @selected-row="selectedRow"
+        >
+            <template #dataModal>
+                <div>
+                    <h3 class="text-center">MATERIALS Information</h3>
+                </div>
+            </template>
+        </TablesWSlottedModals>
     </div>
 </template>
-
-<style scoped></style>

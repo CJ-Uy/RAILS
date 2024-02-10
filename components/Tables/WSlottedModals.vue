@@ -18,7 +18,7 @@
         tableRef.value.closeDataModal(); // This closes the modal
     </script>
     <template>
-        <TablesSlottedInventory
+        <TablesWSlottedInventory
             ref="tableRef"
             title=""
             default-sort-key=""                         // This should be in startingColumns
@@ -34,7 +34,7 @@
                     < Code on Modal for viewing and editing data >
                 </div>
             </template>
-        </TablesSlottedInventory>
+        </TablesWSlottedInventory>
     </template>
  -->
 <script setup>
@@ -269,7 +269,14 @@ updateTable();
                         />
                     </div>
                 </div>
-                <div v-if="allowedEditing == true">
+
+                <!--  -->
+                <div
+                    v-if="
+                        props.allowedEditing == true &&
+                        props.title !== 'ALL USERS'
+                    "
+                >
                     <UButton
                         label="ADD RECORD"
                         icon="i-material-symbols-add"

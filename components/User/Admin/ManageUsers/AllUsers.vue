@@ -2,7 +2,7 @@
 // Check if user is admin and should eb allowed to edit
 const user = inject("user");
 const allowedEditing = ref();
-if (user.ROLE === "ADMIN") {
+if (user.role === "ADMIN") {
     allowedEditing.value = true;
 } else {
     allowedEditing.value = false;
