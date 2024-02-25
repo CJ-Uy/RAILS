@@ -153,7 +153,6 @@ const listOfAllColumns = [
     },
 ];
 
-
 const editModeIsOpen = ref(false);
 
 const selectedData = ref();

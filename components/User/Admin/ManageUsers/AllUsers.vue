@@ -80,7 +80,7 @@ async function updateChanges() {
     allUsersTableRef.value.updateTable();
 }
 
-// TODO: Test a bit more and maybe its not secure cause it's on the fron end? But i have some safe ctaches in the backend too
+// TODO: Test a bit more and maybe its not secure cause it's on the front end? But i have some safe ctaches in the backend too
 // BUG: You can delete yourself and make u no longger admin and it affects only after refresh. But even after refresh you can just "go back" on the browser maybe a watch function just in this page for roles?
 function adaptRolesToNewIdRequest() {
     if (

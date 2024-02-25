@@ -73,7 +73,7 @@ const props = defineProps({
 
 const emit = defineEmits(["selected-row"]); // This allows the sending of data from the child to the parent
 
-defineExpose({ updateTable, closeDataModal }); // This allows the use of this function in a parent component
+defineExpose({ updateTable, closeDataModal, closeAddRecord }); // This allows the use of this function in a parent component
 
 const sort = ref({ column: props.defaultSortKey, direction: "asc" });
 
@@ -85,8 +85,6 @@ for (const i of props.startingColumns) {
     );
 }
 const selectedColumnsTable = ref(selectedColumns.value);
-
-function toggleAddRecord() {}
 
 // Sort table columns according to the order of columns in list of all columns
 // Selected columns keys are also used in filtering search results
@@ -218,6 +216,14 @@ function closeDataModal() {
     modalIsOpen.value = false;
 }
 
+const addRecordModalIsOpen = ref(false);
+function addNewRecord() {
+    addRecordModalIsOpen.value = true;
+}
+function closeAddRecord() {
+    addRecordModalIsOpen.value = false;
+}
+
 updateTable();
 </script>
 
@@ -280,8 +286,7 @@ updateTable();
                     <UButton
                         label="ADD RECORD"
                         icon="i-material-symbols-add"
-                        class=""
-                        @click="toggleAddRecord"
+                        @click="addNewRecord"
                     />
                 </div>
             </div>
@@ -316,6 +321,13 @@ updateTable();
             :prevent-close="props.editModeIsOpen"
         >
             <slot name="dataModal" />
+        </UModal>
+        <UModal
+            v-model="addRecordModalIsOpen"
+            :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
+            :prevent-close="true"
+        >
+            <slot name="addRecordModal" />
         </UModal>
     </div>
 </template>
