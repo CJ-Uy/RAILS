@@ -109,6 +109,15 @@ async function addNewLab() {
     tableRef.value.closeAddRecord();
     tableRef.value.updateTable();
 }
+async function deleteLab() {
+    const deletion = await useFetch("/api/db/manageLocations/deleteLab", {
+        method: "POST",
+        body: JSON.stringify(selectedData.value),
+    });
+    console.log(deletion);
+    tableRef.value.closeDataModal();
+    tableRef.value.updateTable();
+}
 </script>
 
 <template>
@@ -195,6 +204,16 @@ async function addNewLab() {
                                 variant="outline"
                             />
                         </div>
+
+                        <div v-if="editModeIsOpen">
+                            <UButton
+                                label="Delete Laboratory"
+                                variant="outline"
+                                color="red"
+                                @click="deleteLab"
+                            />
+                        </div>
+                        <div v-if="editModeIsOpen"></div>
                     </div>
 
                     <template #footer>
