@@ -2,8 +2,12 @@ import { flatten } from "flat";
 import dayjs from "dayjs";
 import prisma from "~/server/db/prisma";
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+    const data = await readBody(event);
     const allRequestsData = await prisma.laboratoryRequests.findMany({
+        where: {
+            id: data.requestId,
+        },
         include: {
             requestor: true,
             gradeSection: true,

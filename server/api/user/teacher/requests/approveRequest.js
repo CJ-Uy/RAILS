@@ -1,27 +1,17 @@
 import prisma from "~/server/db/prisma";
-import SignedStatus from "~/server/db/signedStatus";
 
 export default defineEventHandler(async (event) => {
-    const body = await readBody(event);
-    return prisma.laboratoryRequests.update({
+    const data = await readBody(event);
+
+    await prisma.laboratoryRequests.update({
         where: {
-            id: body.id,
+            id: data.id,
         },
         data: {
-            isSignedByTeacher: SignedStatus.APPROVED,
-            signedTeacherId: body.user.teachersId,
-        },
-        include: {
-            requestor: true,
-            gradeSection: true,
-            materialsRequested: true,
-            reagentsRequested: true,
-            equipmentRequested: true,
-            teacherInCharge: true,
-            laboratoryReservations: true,
-            signedTeacher: true,
-            signedAdmin: true,
-            schoolYear: true,
+            equipmentRequestsTeacherApproval: "APPROVED",
+            reagentRequestsTeacherApproval: "APPROVED",
+            materialRequestsTeacherApproval: "APPROVED",
+            laboratoryReservationsTeacherApproval: "APPROVED",
         },
     });
 });

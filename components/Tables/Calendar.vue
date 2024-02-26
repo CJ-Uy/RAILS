@@ -22,19 +22,28 @@ reservationsValue.value = reservations.data.value;
 const items = ref([]);
 for (const i in reservationsValue.value) {
     const reservation = ref(reservationsValue.value[i]);
-    items.value.push({
-        id: reservation.value.id,
-        startDate: reservation.value.startTime,
-        endDate: reservation.value.endTime,
-        title: " ",
-        style:
-            "background-color: " +
-            reservation.value.laboratoryReserved.colorCode +
-            ";",
-        reservation,
-        colorCode: reservation.value.laboratoryReserved.colorCode,
-    });
+    for (const j in reservation.value.dates.startDate) {
+        items.value.push({
+            id: i.toString() + j.toString(),
+            startDate:
+                reservation.value.dates.startDate[j] +
+                " " +
+                reservation.value.time.startTime[j],
+            endDate:
+                reservation.value.dates.endDate[j] +
+                " " +
+                reservation.value.time.endTime[j],
+            title: " ",
+            style:
+                "background-color: " +
+                reservation.value.laboratoryReserved.colorCode +
+                "; border: 1px solid white;",
+            reservation: reservation.value,
+            colorCode: reservation.value.laboratoryReserved.colorCode,
+        });
+    }
 }
+console.log(items.value);
 
 // Allow hover effects
 const allowHoverEvents = ref(true);
@@ -76,6 +85,7 @@ function checkItem(item) {
                 :items="items"
                 :do-emit-item-mouse-events="allowHoverEvents"
                 item-top="3.3em"
+                item-content-height="20px"
                 class="mx-auto h-full w-[90%]"
                 @item-mouseenter="itemHoverEnter"
                 @item-mouseleave="itemHoverLeave"
@@ -102,7 +112,7 @@ function checkItem(item) {
                 <template #header>
                     <div class="flex items-center justify-between">
                         <div
-                            class="flex h-[32px] w-[120px] items-center justify-between rounded-[40px] p-3 text-[0.8em] text-white"
+                            class="flex h-[32px] w-[200px] items-center justify-between rounded-[40px] p-3 text-[0.8em] text-white"
                             :style="
                                 'background-color: ' +
                                 reservation.value.originalItem.colorCode +
@@ -116,10 +126,24 @@ function checkItem(item) {
                                     )
                                 }}
                             </div>
-                            <div>-</div>
                             <div class="font-black">
                                 {{
                                     dayjs(reservation.value.startDate).format(
+                                        "DD",
+                                    )
+                                }}
+                            </div>
+                            -
+                            <div class="font-thin">
+                                {{
+                                    dayjs(reservation.value.endDate).format(
+                                        "MMMM",
+                                    )
+                                }}
+                            </div>
+                            <div class="font-black">
+                                {{
+                                    dayjs(reservation.value.endDate).format(
                                         "DD",
                                     )
                                 }}
@@ -137,7 +161,9 @@ function checkItem(item) {
                 <div class="flex flex-col px-3 leading-7">
                     <div class="flex justify-between">
                         <div>Reservation ID:</div>
-                        <div>{{ reservation.value.id }}</div>
+                        <div>
+                            {{ reservation.value.originalItem.reservation.id }}
+                        </div>
                     </div>
                     <div class="flex justify-between">
                         <div>Created:</div>
@@ -373,25 +399,25 @@ function checkItem(item) {
     left: calc((600% / 7));
 }
 .cv-item.span1 {
-    width: calc((100% / 7) - 2em);
+    width: calc((90% / 7) - 0.05em);
 }
 .cv-item.span2 {
-    width: calc((200% / 7) - 0.5em);
+    width: calc((190% / 7) - 0.05em);
 }
 .cv-item.span3 {
-    width: calc((300% / 7) - 0.5em);
+    width: calc((290% / 7) - 0.05em);
 }
 .cv-item.span4 {
-    width: calc((400% / 7) - 0.5em);
+    width: calc((390% / 7) - 0.05em);
 }
 .cv-item.span5 {
-    width: calc((500% / 7) - 0.5em);
+    width: calc((490% / 7) - 0.05em);
 }
 .cv-item.span6 {
-    width: calc((600% / 7) - 0.5em);
+    width: calc((590% / 7) - 0.05em);
 }
 .cv-item.span7 {
-    width: calc(100% - 0.5em);
+    width: calc((690% / 7) - 0.05em);
 }
 .cv-weeks::-webkit-scrollbar,
 .cv-weekdays::-webkit-scrollbar {
@@ -513,9 +539,6 @@ function checkItem(item) {
     align-items: center;
     justify-content: center;
     border-right: 2px solid white;
-    transition: width 0.3s;
-}
-.cv-item:hover {
-    width: calc((175% / 7) - 2em);
+    border-bottom: 5px !important;
 }
 </style>

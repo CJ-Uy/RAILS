@@ -74,7 +74,12 @@ watch(selectedColumns, () => {
     selectedColumnsTable.value = selectedColumnsTableTemp.value;
 });
 
-const { pending, data: allItems } = await useLazyFetch(props.fetchPath, {});
+const { pending, data: allItems } = await useLazyFetch(props.fetchPath, {
+    method: "POST",
+    data: {
+        table: props.title,
+    },
+});
 const allItemsData = ref([]);
 const allItemsRawData = ref([]);
 watch(allItems, (updatedValues) => {
@@ -100,7 +105,13 @@ watch(allItems, (updatedValues) => {
 const totalItems = ref(allItemsData.value.length);
 
 async function updateTable() {
-    const allItems = await useFetch(props.fetchPath);
+    const allItems = await useFetch(props.fetchPath, {
+        method: "POST",
+        body: {
+            table: props.title,
+            userRole: user.role,
+        },
+    });
     allItemsData.value = allItems.data.value;
     for (let i = 0; i < allItemsData.value.length; i++) {
         if (
@@ -201,12 +212,25 @@ const filteredRows = computed(() => {
 });
 
 // ---------- MODAL ---------- //
+const annotationPlaceholder = ref();
+if (props.title === "PENDING REQUESTS") {
+    annotationPlaceholder.value = "Annotation for revisions...";
+} else if (props.title === "SCHEDULED REQUESTS") {
+    annotationPlaceholder.value = "Remarks upon distribution...";
+}
+const materialRequestsAnnotation = ref("");
+const reagentRequestsAnnotation = ref("");
+const equipmentRequestsAnnotation = ref("");
+const laboratoryReservationsAnnotation = ref("");
 const modalIsOpen = ref(false);
 const selectedData = ref();
 function openModal(row) {
+    materialRequestsAnnotation.value = "";
+    reagentRequestsAnnotation.value = "";
+    equipmentRequestsAnnotation.value = "";
+    laboratoryReservationsAnnotation.value = "";
     modalIsOpen.value = true;
     selectedData.value = row;
-    console.log(selectedData.value);
 }
 
 // ----- Multiple Selection Mode ----- //
@@ -229,44 +253,66 @@ async function approveAll() {
     updateTable();
 }
 
-async function rejectAll() {
-    await useFetch(props.updatePath, {
+async function approveRequest() {
+    await useFetch("/api/user/admin/requests/approveRequest", {
         method: "POST",
         body: {
-            action: "REJECT",
-            items: selectedRows.value.map((element) => element.id),
-            user: user.adminsId,
+            id: selectedData.value.id,
+            approverId: user.adminsId,
         },
     });
+    await useFetch("/api/db/notifications/addNotification", {
+        method: "POST",
+        body: {
+            requestorId: selectedData.value["requestor-id"],
+            message:
+                "Your request has been approved by " +
+                (user.role === "ADMIN"
+                    ? " an Admin and is now scheduled."
+                    : " your supervising Teacher. It will now await Admin Approval."),
+            redirect: "",
+        },
+    });
+    modalIsOpen.value = false;
     updateTable();
 }
 
-const materialRequestsAnnotation = ref("");
-const materialRequestsAnnotationStyle = ref("blue");
-const reagentRequestsAnnotation = ref("");
-const reagentRequestsAnnotationStyle = ref("blue");
-const equipmentRequestsAnnotation = ref("");
-const equipmentRequestsAnnotationStyle = ref("blue");
-const laboratoryReservationsAnnotation = ref("");
-function signRequest(requestType, status) {
-    if (status === "REVISION_NEEDED" || status === "REJECTED") {
-        if (
-            requestType === "materialRequestsAdminApproval" &&
-            materialRequestsAnnotation.value === ""
-        ) {
-            materialRequestsAnnotationStyle.value = "red";
-        } else if (
-            requestType === "reagentRequestsAdminApproval" &&
-            reagentRequestsAnnotation.value === ""
-        ) {
-            reagentRequestsAnnotationStyle.value = "red";
-        } else if (
-            requestType === "equipmentRequestsAdminApproval" &&
-            equipmentRequestsAnnotation.value === ""
-        ) {
-            equipmentRequestsAnnotationStyle.value = "red";
-        }
-    }
+async function reviseRequest() {
+    await useFetch("/api/user/admin/requests/reviseRequest", {
+        method: "POST",
+        body: {
+            id: selectedData.value.id,
+            materialRequestsAnnotation: materialRequestsAnnotation.value,
+            reagentRequestsAnnotation: reagentRequestsAnnotation.value,
+            equipmentRequestsAnnotation: equipmentRequestsAnnotation.value,
+            laboratoryReservationsAnnotation:
+                laboratoryReservationsAnnotation.value,
+        },
+    });
+    modalIsOpen.value = false;
+    updateTable();
+}
+
+async function underwayRequest() {
+    await useFetch("/api/user/admin/requests/underwayRequest", {
+        method: "POST",
+        body: {
+            id: selectedData.value.id,
+        },
+    });
+    modalIsOpen.value = false;
+    updateTable();
+}
+
+async function completeRequest() {
+    await useFetch("/api/user/admin/requests/completeRequest", {
+        method: "POST",
+        body: {
+            id: selectedData.value.id,
+        },
+    });
+    modalIsOpen.value = false;
+    updateTable();
 }
 
 async function downloadAll() {
@@ -323,7 +369,8 @@ updateTable();
                 <h2 class="text-center font-bold">{{ title }}</h2>
             </template>
 
-            <div class="flex flex-col">
+            <!-- Unfinished so remove for now -->
+            <!-- <div v-if="title === 'Pending Requests'" class="flex flex-col">
                 <div class="mb-5 mt-1 flex flex-col items-center">
                     <div class="mb-2 flex flex-row align-top">
                         <h3>Table Control Panel</h3>
@@ -364,18 +411,11 @@ updateTable();
                                     color="emerald"
                                     @click="approveAll"
                                 />
-                                <UButton
-                                    label="Reject ALL"
-                                    :disabled="!allowMultipleSelection"
-                                    color="red"
-                                    variant="outline"
-                                    @click="rejectAll"
-                                />
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="flex flex-row justify-between">
                 <div class="flex flex-row">
@@ -542,50 +582,8 @@ updateTable();
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="materialRequestsAnnotation"
-                                    :color="materialRequestsAnnotationStyle"
-                                    placeholder="Annotation for rejections and revisions..."
-                                />
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <UButton
-                                    color="red"
-                                    label="REJECT"
-                                    variant="solid"
-                                    icon="i-material-symbols-delete-outline"
-                                    @click="
-                                        signRequest(
-                                            'materialRequestsAdminApproval',
-                                            'REJECTED',
-                                        )
-                                    "
-                                />
-                                <UTooltip
-                                    text="Set Request for Student Revision"
-                                >
-                                    <UButton
-                                        color="blue"
-                                        label="REVISE"
-                                        variant="solid"
-                                        icon="i-material-symbols-edit"
-                                        @click="
-                                            signRequest(
-                                                'materialRequestsAdminApproval',
-                                                'REVISION_NEEDED',
-                                            )
-                                        "
-                                    />
-                                </UTooltip>
-                                <UButton
-                                    color="green"
-                                    label="APPROVE"
-                                    variant="solid"
-                                    icon="i-material-symbols-approval"
-                                    @click="
-                                        signRequest(
-                                            'materialRequestsAdminApproval',
-                                            'APPROVED',
-                                        )
-                                    "
+                                    placeholder="Annotation for revisions..."
+                                    color="blue"
                                 />
                             </div>
                         </template>
@@ -624,50 +622,8 @@ updateTable();
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="equipmentRequestsAnnotation"
-                                    :color="equipmentRequestsAnnotationStyle"
-                                    placeholder="Annotation for rejections and revisions..."
-                                />
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <UButton
-                                    color="red"
-                                    label="REJECT"
-                                    variant="solid"
-                                    icon="i-material-symbols-delete-outline"
-                                    @click="
-                                        signRequest(
-                                            'equipmentRequestsAdminApproval',
-                                            'REJECTED',
-                                        )
-                                    "
-                                />
-                                <UTooltip
-                                    text="Set Request for Student Revision"
-                                >
-                                    <UButton
-                                        color="blue"
-                                        label="REVISE"
-                                        variant="solid"
-                                        icon="i-material-symbols-edit"
-                                        @click="
-                                            signRequest(
-                                                'equipmentRequestsAdminApproval',
-                                                'REVISION_NEEDED',
-                                            )
-                                        "
-                                    />
-                                </UTooltip>
-                                <UButton
-                                    color="green"
-                                    label="APPROVE"
-                                    variant="solid"
-                                    icon="i-material-symbols-approval"
-                                    @click="
-                                        signRequest(
-                                            'equipmentRequestsAdminApproval',
-                                            'APPROVED',
-                                        )
-                                    "
+                                    placeholder="Annotation for revisions..."
+                                    color="blue"
                                 />
                             </div>
                         </template>
@@ -706,50 +662,8 @@ updateTable();
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="reagentRequestsAnnotation"
-                                    :color="reagentRequestsAnnotationStyle"
-                                    placeholder="Annotation for rejections and revisions..."
-                                />
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <UButton
-                                    color="red"
-                                    label="REJECT"
-                                    variant="solid"
-                                    icon="i-material-symbols-delete-outline"
-                                    @click="
-                                        signRequest(
-                                            'reagentRequestsAdminApproval',
-                                            'REJECTED',
-                                        )
-                                    "
-                                />
-                                <UTooltip
-                                    text="Set Request for Student Revision"
-                                >
-                                    <UButton
-                                        color="blue"
-                                        label="REVISE"
-                                        variant="solid"
-                                        icon="i-material-symbols-edit"
-                                        @click="
-                                            signRequest(
-                                                'reagentRequestsAdminApproval',
-                                                'REVISION_NEEDED',
-                                            )
-                                        "
-                                    />
-                                </UTooltip>
-                                <UButton
-                                    color="green"
-                                    label="APPROVE"
-                                    variant="solid"
-                                    icon="i-material-symbols-approval"
-                                    @click="
-                                        signRequest(
-                                            'reagentRequestsAdminApproval',
-                                            'APPROVED',
-                                        )
-                                    "
+                                    placeholder="Annotation for revisions..."
+                                    color="blue"
                                 />
                             </div>
                         </template>
@@ -812,56 +726,75 @@ updateTable();
                         <template #footer>
                             <div class="mb-4">
                                 <UTextarea
-                                    v-model="equipmentRequestsAnnotation"
-                                    :color="equipmentRequestsAnnotationStyle"
-                                    placeholder="Annotation for rejections and revisions..."
-                                />
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <UButton
-                                    color="red"
-                                    label="REJECT"
-                                    variant="solid"
-                                    icon="i-material-symbols-delete-outline"
-                                    @click="
-                                        signRequest(
-                                            'equipmentRequestsAdminApproval',
-                                            'REJECTED',
-                                        )
-                                    "
-                                />
-                                <UTooltip
-                                    text="Set Request for Student Revision"
-                                >
-                                    <UButton
-                                        color="blue"
-                                        label="REVISE"
-                                        variant="solid"
-                                        icon="i-material-symbols-edit"
-                                        @click="
-                                            signRequest(
-                                                'equipmentRequestsAdminApproval',
-                                                'REVISION_NEEDED',
-                                            )
-                                        "
-                                    />
-                                </UTooltip>
-                                <UButton
-                                    color="green"
-                                    label="APPROVE"
-                                    variant="solid"
-                                    icon="i-material-symbols-approval"
-                                    @click="
-                                        signRequest(
-                                            'equipmentRequestsAdminApproval',
-                                            'APPROVED',
-                                        )
-                                    "
+                                    v-model="laboratoryReservationsAnnotation"
+                                    placeholder="Annotation for revisions..."
+                                    color="blue"
                                 />
                             </div>
                         </template>
                     </UCard>
                 </div>
+
+                <template #footer>
+                    <div
+                        v-if="props.title === 'Pending Requests'"
+                        class="flex items-center justify-center"
+                    >
+                        <UButton
+                            v-if="
+                                materialRequestsAnnotation !== '' ||
+                                equipmentRequestsAnnotation !== '' ||
+                                reagentRequestsAnnotation !== '' ||
+                                laboratoryReservationsAnnotation !== ''
+                            "
+                            color="blue"
+                            label="REVISE"
+                            variant="solid"
+                            icon="i-material-symbols-edit"
+                            @click="reviseRequest"
+                        />
+                        <UButton
+                            v-else
+                            color="green"
+                            label="APPROVE"
+                            variant="solid"
+                            icon="i-material-symbols-approval"
+                            @click="approveRequest"
+                        />
+                    </div>
+                    <div
+                        v-else-if="props.title === 'Scheduled Requests'"
+                        class="flex items-center justify-center"
+                    >
+                        <UButton
+                            color="green"
+                            label="MARK AS UNDERWAY"
+                            variant="solid"
+                            icon="i-heroicons-flag"
+                            @click="underwayRequest"
+                        />
+                    </div>
+                    <div
+                        v-else-if="props.title === 'Underway Requests'"
+                        class="flex items-center justify-center"
+                    >
+                        <UButton
+                            color="green"
+                            label="MARK AS COMPLETED"
+                            variant="solid"
+                            icon="i-heroicons-flag"
+                            @click="completeRequest"
+                        />
+                    </div>
+                    <div v-else class="flex items-center justify-center">
+                        <UButton
+                            color="blue"
+                            label="CLOSE REQUEST"
+                            variant="solid"
+                            icon="i-heroicons-lock-closed"
+                        />
+                    </div>
+                </template>
             </UCard>
         </UModal>
     </div>

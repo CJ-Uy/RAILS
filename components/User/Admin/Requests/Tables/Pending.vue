@@ -119,7 +119,7 @@ const listOfAllColumns = [
     <div>
         <TablesRequests
             title="Pending Requests"
-            fetch-path="/api/user/admin/requests/getAllRequests"
+            fetch-path="/api/user/admin/requests/getAllPendingRequests"
             update-path="/api/user/admin/requests/update"
             :starting-columns="startingColumns"
             :list-of-all-columns="listOfAllColumns"

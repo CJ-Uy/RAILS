@@ -148,8 +148,8 @@ export default defineEventHandler(async (event) => {
                     endDate: formattedDates.endDate,
                 },
                 independentLocation: location,
-                laboratoryReservationsTeacherApproval: "NOT_APPLICABLE",
-                laboratoryReservationsAdminApproval: "NOT_APPLICABLE",
+                laboratoryReservationsTeacherApproval: "PENDING",
+                laboratoryReservationsAdminApproval: "PENDING",
             },
         });
     }
@@ -192,8 +192,8 @@ export default defineEventHandler(async (event) => {
                 id: request.id,
             },
             data: {
-                materialRequestsTeacherApproval: "NOT_APPLICABLE",
-                materialRequestsAdminApproval: "NOT_APPLICABLE",
+                materialRequestsTeacherApproval: "PENDING",
+                materialRequestsAdminApproval: "PENDING",
             },
         });
     }
@@ -225,8 +225,8 @@ export default defineEventHandler(async (event) => {
                 id: request.id,
             },
             data: {
-                equipmentRequestsTeacherApproval: "NOT_APPLICABLE",
-                equipmentRequestsAdminApproval: "NOT_APPLICABLE",
+                equipmentRequestsTeacherApproval: "PENDING",
+                equipmentRequestsAdminApproval: "PENDING",
             },
         });
     }
@@ -262,8 +262,8 @@ export default defineEventHandler(async (event) => {
                 id: request.id,
             },
             data: {
-                reagentRequestsTeacherApproval: "NOT_APPLICABLE",
-                reagentRequestsAdminApproval: "NOT_APPLICABLE",
+                reagentRequestsTeacherApproval: "PENDING",
+                reagentRequestsAdminApproval: "PENDING",
             },
         });
     }
