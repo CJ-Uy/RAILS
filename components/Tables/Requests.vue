@@ -316,17 +316,6 @@ async function completeRequest() {
 }
 
 async function downloadAll() {
-    // const requests = selectedRows.value.map((element) => element.id);
-    // for (const request of requests) {
-    //     const rawPDFBuffers = await useFetch("/api/forms/create-pdf-buffers", {
-    //         method: "POST",
-    //         body: {
-    //             id: request,
-    //         },
-    //     });
-
-    //     downloadPDF(rawPDFBuffers.data.value[0], rawPDFBuffers.data.value[1]);
-    // }
     try {
         const pdfBuffersRawData = await useFetch(
             "/api/forms/create-pdf-buffers",
@@ -349,16 +338,6 @@ async function downloadAll() {
     }
 }
 
-async function downloadRequest() {
-    const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
-        method: "POST",
-        body: {
-            id: selectedData.value.id,
-        },
-    });
-
-    downloadPDF(requestPDF.data.value);
-}
 updateTable();
 </script>
 
@@ -498,6 +477,7 @@ updateTable();
                 </div>
             </template>
         </UCard>
+
         <UModal
             v-model="modalIsOpen"
             :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
@@ -549,6 +529,12 @@ updateTable();
                     {{ selectedData["teacherInCharge-userProfile-firstName"] }}
                 </div>
 
+                <UButton
+                    class="mt-3"
+                    label="Download Request"
+                    @click="downloadAll"
+                />
+
                 <!-- Materials Requested -->
                 <div class="mt-5">
                     <UCard>
@@ -589,6 +575,7 @@ updateTable();
                         </template>
                     </UCard>
                 </div>
+
                 <!-- Equipment Requested -->
                 <div class="mt-5">
                     <UCard>
@@ -729,6 +716,51 @@ updateTable();
                                     v-model="laboratoryReservationsAnnotation"
                                     placeholder="Annotation for revisions..."
                                     color="blue"
+
+                                    :color="equipmentRequestsAnnotationStyle"
+                                    placeholder="Annotation for rejections and revisions..."
+                                />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <UButton
+                                    color="red"
+                                    label="REJECT"
+                                    variant="solid"
+                                    icon="i-material-symbols-delete-outline"
+                                    @click="
+                                        signRequest(
+                                            'equipmentRequestsAdminApproval',
+                                            'REJECTED',
+                                        )
+                                    "
+                                />
+                                <UTooltip
+                                    text="Set Request for Student Revision"
+                                >
+                                    <UButton
+                                        color="blue"
+                                        label="REVISE"
+                                        variant="solid"
+                                        icon="i-material-symbols-edit"
+                                        @click="
+                                            signRequest(
+                                                'equipmentRequestsAdminApproval',
+                                                'REVISION_NEEDED',
+                                            )
+                                        "
+                                    />
+                                </UTooltip>
+                                <UButton
+                                    color="green"
+                                    label="APPROVE"
+                                    variant="solid"
+                                    icon="i-material-symbols-approval"
+                                    @click="
+                                        signRequest(
+                                            'equipmentRequestsAdminApproval',
+                                            'APPROVED',
+                                        )
+                                    "
                                 />
                             </div>
                         </template>

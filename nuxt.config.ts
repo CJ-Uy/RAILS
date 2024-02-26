@@ -13,7 +13,8 @@ export default defineNuxtConfig({
         // "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
         // "@nuxtjs/color-mode", // https://nuxt.com/modules/color-mode (dark mode and other themes)
         // https://ui.nuxtlabs.com/getting-started (Component Library) contains the above 2
-        "@nuxt/ui",
+        "@nuxt/ui", // main ui component library
+        "vuetify-nuxt-module", // ui library for more niche components
         // Optimization modules
         // https://image.nuxt.com/ (Image loading optimization)
         "@nuxt/image",
@@ -27,7 +28,7 @@ export default defineNuxtConfig({
         "@nuxt/image",
         "nuxt-scheduler", // Scheduler of events
         // Useful but not yet used modules
-        // "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
+        "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
         // "@nuxtjs/device", // https://nuxt.com/modules/device (Device type detection)
         // Add website optimizations (https://nuxt.com/modules?category=Performance)
         // Add SEO [search engine optimizations] when complete (https://nuxt.com/modules/seo-kit)

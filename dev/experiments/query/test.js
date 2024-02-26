@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const request = await prisma.laboratoryRequests.findUnique({
     where: {
-        id: "97e87157-361e-427e-9896-26047559abbc",
+        id: "f80c5064-0549-48c3-9c09-ef670efa81e8",
     },
     include: {
         requestor: true,
@@ -24,8 +24,28 @@ const request = await prisma.laboratoryRequests.findUnique({
                 laboratoryRequest: true,
             },
         },
+        equipmentRequestsAdminApprover: {
+            include: {
+                userProfile: true,
+            },
+        },
+        materialRequestsAdminApprover: {
+            include: {
+                userProfile: true,
+            },
+        },
+        reagentRequestsAdminApprover: {
+            include: {
+                userProfile: true,
+            },
+        },
+        laboratoryReservationsAdminApprover: {
+            include: {
+                userProfile: true,
+            },
+        },
         schoolYear: true,
     },
 });
 
-console.log(request);
+console.dir(request, { depth: null });

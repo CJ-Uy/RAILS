@@ -24,13 +24,19 @@ export default async function makeAccountability(requestId) {
     let teacherSignature = "";
 
     // Notarization
-    if (request.isSignedByTeacher === "APPROVED") {
-        teacherSignature = request.signedTeacher.signature;
+    if (
+        request.equipmentRequestsTeacherApproval === "APPROVED" &&
+        request.materialRequestsTeacherApproval === "APPROVED"
+    ) {
+        teacherSignature = request.teacherInCharge.signature;
     }
 
-    if (request.isSignedByAdmin === "APPROVED") {
-        approver = `${request.signedAdmin.userProfile[0].firstName} ${request.signedAdmin.userProfile[0].lastName}`;
-        approverSignature = request.signedAdmin.signature;
+    if (
+        request.equipmentRequestsAdminApproval === "APPROVED" &&
+        request.materialRequestsAdminApproval === "APPROVED"
+    ) {
+        approver = `${request.materialRequestsAdminApprover.userProfile[0].firstName} ${request.materialRequestsAdminApprover.userProfile[0].lastName}`;
+        approverSignature = request.materialRequestsAdminApprover.signature;
     }
 
     // Laboratory Setting
@@ -218,11 +224,11 @@ export default async function makeAccountability(requestId) {
     }
     #endorserSignature {
         position: absolute; 
-        transform: scale(0.3)  translateY(-400px);
+        transform: scale(0.3)  translateY(-300px);
     }
     #approverSignature {
         position: absolute;
-        transform: scale(0.3) translateY(-400px);
+        transform: scale(0.3) translateY(-300px);
     }
     .svgSig {
         display: flex;

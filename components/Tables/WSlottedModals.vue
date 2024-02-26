@@ -1,3 +1,42 @@
+<!-- 
+    DOCUMENTATION: HOW TO USE THIS COMPONENT
+
+    Parent Component (e.g. User/Admin/ManageUsers/AllUsers):
+    <script>
+        const startingColumns = [] // "key" of starting columns in list of all columns in strings
+        const listOfAllColumns = [{ key: "", label: "", sortable: bool }, ... ] // All the columns
+        
+        const editModeIsOpen = ref(false); // Edit mode current status
+
+        const selectedData = ref();
+        function selectedRow(data) {
+            selectedData.value = data;
+        }
+        
+        const tableRef = ref();
+        tableRef.value.updateTable(); // This updated the table
+        tableRef.value.closeDataModal(); // This closes the modal
+    </script>
+    <template>
+        <TablesWSlottedInventory
+            ref="tableRef"
+            title=""
+            default-sort-key=""                         // This should be in startingColumns
+            :starting-columns="startingColumns"
+            :list-of-all-columns="listOfAllColumns"
+            fetch-path=""                               // API path to fetch data
+            :allowed-editing=""                         // To be checked with user.ROLE
+            :edit-mode-is-open="editModeIsOpen"         // Tracks if edit mode is open
+            @selected-row="selectedRow"
+        >
+            <template #dataModal>
+                <div>
+                    < Code on Modal for viewing and editing data >
+                </div>
+            </template>
+        </TablesWSlottedInventory>
+    </template>
+ -->
 <script setup>
 const props = defineProps({
     title: {
@@ -21,15 +60,20 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    updatePath: {
-        type: String,
-        required: true,
-    },
     allowedEditing: {
         type: Boolean,
         required: true,
     },
+    editModeIsOpen: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 });
+
+const emit = defineEmits(["selected-row"]); // This allows the sending of data from the child to the parent
+
+defineExpose({ updateTable, closeDataModal, closeAddRecord }); // This allows the use of this function in a parent component
 
 const sort = ref({ column: props.defaultSortKey, direction: "asc" });
 
@@ -41,8 +85,6 @@ for (const i of props.startingColumns) {
     );
 }
 const selectedColumnsTable = ref(selectedColumns.value);
-
-function toggleAddRecord() {}
 
 // Sort table columns according to the order of columns in list of all columns
 // Selected columns keys are also used in filtering search results
@@ -165,22 +207,23 @@ const filteredRows = computed(() => {
 
 // ---------- MODAL ---------- //
 const modalIsOpen = ref(false);
-const selectedData = ref();
 function openModal(row) {
     modalIsOpen.value = true;
-    selectedData.value = row;
+    emit("selected-row", row);
 }
 
-const editModeIsOpen = ref(false);
-function enableEditMode() {
-    editModeIsOpen.value = true;
+function closeDataModal() {
+    modalIsOpen.value = false;
 }
 
-function discardChanges() {
-    editModeIsOpen.value = false;
+const addRecordModalIsOpen = ref(false);
+function addNewRecord() {
+    addRecordModalIsOpen.value = true;
+}
+function closeAddRecord() {
+    addRecordModalIsOpen.value = false;
 }
 
-function saveChanges() {}
 updateTable();
 </script>
 
@@ -232,12 +275,18 @@ updateTable();
                         />
                     </div>
                 </div>
-                <div v-if="allowedEditing == true">
+
+                <!--  -->
+                <div
+                    v-if="
+                        props.allowedEditing == true &&
+                        props.title !== 'ALL USERS'
+                    "
+                >
                     <UButton
                         label="ADD RECORD"
                         icon="i-material-symbols-add"
-                        class=""
-                        @click="toggleAddRecord"
+                        @click="addNewRecord"
                     />
                 </div>
             </div>
@@ -253,6 +302,7 @@ updateTable();
                     @select="openModal"
                     @update:sort="test"
                 />
+                <!--TODO: @toffee05 wat is theis @update:sort="test"-->
             </div>
 
             <template #footer>
@@ -268,79 +318,16 @@ updateTable();
         <UModal
             v-model="modalIsOpen"
             :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
-            :prevent-close="editModeIsOpen"
+            :prevent-close="props.editModeIsOpen"
         >
-            <UCard
-                :ui="{
-                    ring: '',
-                    divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-                }"
-            >
-                <template #header>
-                    <div class="flex items-center justify-between">
-                        <h3
-                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
-                        >
-                            {{
-                                selectedData[listOfAllColumns[0].key] +
-                                (props.title === "GRADE & SECTIONS" ||
-                                props.title === "SCHOOL YEARS"
-                                    ? " - " +
-                                      selectedData[listOfAllColumns[1].key]
-                                    : "") +
-                                (props.title === "ALL USERS"
-                                    ? " - " +
-                                      selectedData[listOfAllColumns[1].key] +
-                                      ", " +
-                                      selectedData[listOfAllColumns[2].key]
-                                    : "")
-                            }}
-                        </h3>
-                        <UButton
-                            v-if="!editModeIsOpen"
-                            color="gray"
-                            variant="ghost"
-                            icon="i-heroicons-x-mark-20-solid"
-                            @click="modalIsOpen = false"
-                        />
-                        <UButton
-                            v-else
-                            color="red"
-                            variant="soft"
-                            icon="i-material-symbols-delete-outline"
-                            label="DELETE RECORD"
-                        />
-                    </div>
-                </template>
-
-                <template v-if="allowedEditing" #footer>
-                    <div class="flex w-auto justify-center">
-                        <UButton
-                            v-if="!editModeIsOpen"
-                            color="green"
-                            label="EDIT"
-                            icon="i-material-symbols-edit"
-                            @click="enableEditMode"
-                        />
-                        <div v-else class="flex w-[100%] justify-between">
-                            <UButton
-                                variant="outline"
-                                icon="i-material-symbols-cancel"
-                                color="red"
-                                label="CANCEL"
-                                @click="discardChanges"
-                            />
-                            <UButton
-                                variant="outline"
-                                icon="i-material-symbols-save"
-                                label="SAVE"
-                                color="green"
-                                @click="saveChanges"
-                            />
-                        </div>
-                    </div>
-                </template>
-            </UCard>
+            <slot name="dataModal" />
+        </UModal>
+        <UModal
+            v-model="addRecordModalIsOpen"
+            :ui="{ transition: { leave: 'duration-0', enter: 'duration-0' } }"
+            :prevent-close="true"
+        >
+            <slot name="addRecordModal" />
         </UModal>
     </div>
 </template>
