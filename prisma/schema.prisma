@@ -37,11 +37,14 @@ enum Role {
 
 enum SignedStatus {
   APPROVED
-  REJECTED
   PENDING
   REVISION_NEEDED
-  REVISION_APPLIED
-  NOT_APPLICABLE
+}
+
+enum CompleteStatus {
+  PENDING
+  UNDERWAY
+  COMPLETED
 }
 
 model SchoolYear {
@@ -430,6 +433,7 @@ model LaboratoryRequests {
   reagentRequestsTeacherAnnotation   String?      @db.Text // 64KiB
 
   laboratoryReservationsTeacherApproval SignedStatus @default(PENDING)
+  laboratoryReservationsTeacherAnnotation   String?      @db.Text // 64KiB
 
   // Admin Approval Fields
   equipmentRequestsAdminApproval   SignedStatus @default(PENDING)
@@ -454,4 +458,6 @@ model LaboratoryRequests {
 
   schoolYear   SchoolYear? @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
+
+  completeStatus CompleteStatus @default(PENDING)
 }

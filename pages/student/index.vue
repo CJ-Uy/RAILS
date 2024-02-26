@@ -11,5 +11,6 @@ const user = inject("user");
 <template>
     <div>
         <UserDashboardHeader title="DASHBOARD" />
+        <UserStudentDashboard />
     </div>
 </template>

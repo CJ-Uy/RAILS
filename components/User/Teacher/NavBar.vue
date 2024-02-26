@@ -18,8 +18,8 @@ const links = [
                 icon: "i-heroicons-chart-bar-solid",
             },
             {
-                label: "REQUESTS",
-                to: "/teacher/requests",
+                label: "PENDING REQUESTS",
+                to: "/teacher/current-requests",
                 icon: "i-material-symbols-manage-search",
             },
         ],

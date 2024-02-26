@@ -4,8 +4,17 @@ export default defineEventHandler(async () => {
     return await prisma.laboratoryReservations.findMany({
         where: {
             laboratoryRequest: {
-                isSignedByAdmin: "APPROVED",
-                isSignedByTeacher: "APPROVED",
+                completeStatus: {
+                    in: ["PENDING", "UNDERWAY"],
+                },
+                materialRequestsAdminApproval: "APPROVED",
+                equipmentRequestsAdminApproval: "APPROVED",
+                reagentRequestsAdminApproval: "APPROVED",
+                laboratoryReservationsAdminApproval: "APPROVED",
+                materialRequestsTeacherApproval: "APPROVED",
+                equipmentRequestsTeacherApproval: "APPROVED",
+                reagentRequestsTeacherApproval: "APPROVED",
+                laboratoryReservationsTeacherApproval: "APPROVED",
             },
         },
         include: {

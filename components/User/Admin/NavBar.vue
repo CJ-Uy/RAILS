@@ -28,7 +28,7 @@ const links = [
                 icon: "i-material-symbols-manage-search",
             },
             {
-                label: "COMPLETED",
+                label: "UNDERWAY & COMPLETED",
                 to: "/admin/complete-requests",
                 icon: "i-material-symbols-check-box-outline",
             },
