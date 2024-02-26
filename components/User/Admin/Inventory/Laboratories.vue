@@ -114,7 +114,7 @@ async function deleteLab() {
         method: "POST",
         body: JSON.stringify(selectedData.value),
     });
-    console.log(deletion);
+    console.log(deletion); // TODO: do some magic when u cant delete it cause its connected to some other data
     tableRef.value.closeDataModal();
     tableRef.value.updateTable();
 }
