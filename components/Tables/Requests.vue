@@ -714,9 +714,6 @@ updateTable();
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="laboratoryReservationsAnnotation"
-                                    placeholder="Annotation for revisions..."
-                                    color="blue"
-
                                     :color="equipmentRequestsAnnotationStyle"
                                     placeholder="Annotation for rejections and revisions..."
                                 />
