@@ -31,7 +31,7 @@
         "eslint-plugin-prettier": "^5.1.2",
         "nodemon": "^3.0.2",
         "npm-check-updates": "^16.14.12",
-        "nuxt": "^3.9.0",
+        "nuxt": "^3.10.3",
         "nuxt-icon": "^0.5.0",
         "nuxt-icons": "^3.2.1",
         "nuxt-scheduler": "^0.1.9",
