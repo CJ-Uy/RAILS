@@ -107,7 +107,7 @@ model Admins {
   reagentRequestsApproved        LaboratoryRequests[] @relation("reagent_approver")
   laboratoryReservationsApproved LaboratoryRequests[] @relation("laboratory_approver")
 
-  hidden Boolean @default(true)
+  hidden Boolean @default(false)
 }
 
 model Teachers {
@@ -122,7 +122,7 @@ model Teachers {
   userProfile                Users[]
   receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge")
 
-  hidden Boolean @default(true)
+  hidden Boolean @default(false)
 }
 
 model Students {
@@ -172,7 +172,7 @@ model GradeSection {
   students           Students[]
   laboratoryRequests LaboratoryRequests[]
 
-  hidden Boolean @default(true)
+  hidden Boolean @default(false)
 }
 
 model Units {
@@ -184,7 +184,7 @@ model Units {
   teachers           Teachers[]
   laboratoryRequests LaboratoryRequests[]
 
-  hidden Boolean @default(true)
+  hidden Boolean @default(false)
 }
 
 // -------------------- //
@@ -206,7 +206,7 @@ model Laboratories {
   reagents               InventoryOfReagents[]
   laboratoryReservations LaboratoryReservations[]
 
-  hidden Boolean @default(true)
+  hidden Boolean @default(false)
 }
 
 model LaboratoryLocations {
@@ -223,7 +223,7 @@ model LaboratoryLocations {
   inventoryOfReagents          InventoryOfReagents?  @relation(fields: [reagentId], references: [id])
   reagentId                    String?
 
-  hidden Boolean @default(true)
+  hidden Boolean @default(false)
 }
 
 model LaboratoryReservations {
@@ -281,7 +281,7 @@ model InventoryOfMaterials {
   schoolYear   SchoolYear?        @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 
-  hidden Boolean @default(true)
+  hidden Boolean @default(false)
 }
 
 model InventoryOfEquipment {
@@ -319,7 +319,7 @@ model InventoryOfEquipment {
   schoolYear   SchoolYear?         @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 
-  hidden Boolean @default(true)
+  hidden Boolean @default(false)
 }
 
 model InventoryOfReagents {
@@ -366,7 +366,7 @@ model InventoryOfReagents {
   schoolYear   SchoolYear?       @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 
-  hidden Boolean @default(true)
+  hidden Boolean @default(false)
 }
 
 model InventoryTransactions {
