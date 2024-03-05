@@ -12,8 +12,6 @@
 // https://github.com/notiz-dev/prisma-dbml-generator?fbclid=IwAR1XWxS0eVJ3p2HaAJtFKKc38PtgdFscBkLeIqdvSaHR7MIRiM-pVq-guP4
 // Copy Paste ./prisma/dbml/schema.dbml to https://dbdiagram.io/ to generate the diagram
 // I uninstalled the dependency though since it had 4 high severity vulnerabilities just reinstall every time you need it
-// npm install -D prisma-dbml-generator
-// npm remove prisma-dbml-generator
 // generator dbml {
 //   provider = "prisma-dbml-generator"
 // }
@@ -69,7 +67,6 @@ model SchoolYear {
   equipmentRequests     EquipmentRequests[]
   materialRequests      MaterialRequests[]
   reagentRequests       ReagentRequests[]
-  inventoryTransactions InventoryTransactions[]
 }
 
 model Users {
@@ -106,8 +103,6 @@ model Admins {
   materialRequestsApproved       LaboratoryRequests[] @relation("material_approver")
   reagentRequestsApproved        LaboratoryRequests[] @relation("reagent_approver")
   laboratoryReservationsApproved LaboratoryRequests[] @relation("laboratory_approver")
-
-  hidden Boolean @default(true)
 }
 
 model Teachers {
@@ -121,8 +116,6 @@ model Teachers {
 
   userProfile                Users[]
   receivedLaboratoryRequests LaboratoryRequests[] @relation("teacher_in_charge")
-
-  hidden Boolean @default(true)
 }
 
 model Students {
@@ -171,8 +164,6 @@ model GradeSection {
   section            String
   students           Students[]
   laboratoryRequests LaboratoryRequests[]
-
-  hidden Boolean @default(true)
 }
 
 model Units {
@@ -183,8 +174,6 @@ model Units {
   frequencyRank      Int                  @unique @default(autoincrement())
   teachers           Teachers[]
   laboratoryRequests LaboratoryRequests[]
-
-  hidden Boolean @default(true)
 }
 
 // -------------------- //
@@ -205,8 +194,6 @@ model Laboratories {
   equipment              InventoryOfEquipment[]
   reagents               InventoryOfReagents[]
   laboratoryReservations LaboratoryReservations[]
-
-  hidden Boolean @default(true)
 }
 
 model LaboratoryLocations {
@@ -222,8 +209,6 @@ model LaboratoryLocations {
   equipmentId                  String?
   inventoryOfReagents          InventoryOfReagents?  @relation(fields: [reagentId], references: [id])
   reagentId                    String?
-
-  hidden Boolean @default(true)
 }
 
 model LaboratoryReservations {
@@ -269,19 +254,15 @@ model InventoryOfMaterials {
   balancePerCard     Int?
   balancePerCount    Int?
 
-  inventoryTransactions InventoryTransactions[]
-
   //Location
   location       LaboratoryLocations[]
   laboratories   Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId String?
 
   //Related Requests
-  requests     MaterialRequests[]
-  schoolYear   SchoolYear?        @relation(fields: [schoolYearId], references: [id])
-  schoolYearId String?
-
-  hidden Boolean @default(true)
+  requests              MaterialRequests[]
+  schoolYear            SchoolYear?             @relation(fields: [schoolYearId], references: [id])
+  schoolYearId          String?
 }
 
 model InventoryOfEquipment {
@@ -307,19 +288,15 @@ model InventoryOfEquipment {
   supplier              String?
   status                String?
 
-  inventoryTransactions InventoryTransactions[]
-
   //Location
   location       LaboratoryLocations[]
   laboratories   Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId String?
 
   //Related Requests
-  requests     EquipmentRequests[]
-  schoolYear   SchoolYear?         @relation(fields: [schoolYearId], references: [id])
-  schoolYearId String?
-
-  hidden Boolean @default(true)
+  requests              EquipmentRequests[]
+  schoolYear            SchoolYear?             @relation(fields: [schoolYearId], references: [id])
+  schoolYearId          String?
 }
 
 model InventoryOfReagents {
@@ -359,39 +336,10 @@ model InventoryOfReagents {
   laboratories   Laboratories?         @relation(fields: [laboratoriesId], references: [id])
   laboratoriesId String?
 
-  inventoryTransactions InventoryTransactions[]
-
   //Related Requests
-  requests     ReagentRequests[]
-  schoolYear   SchoolYear?       @relation(fields: [schoolYearId], references: [id])
-  schoolYearId String?
-
-  hidden Boolean @default(true)
-}
-
-model InventoryTransactions {
-  id              String      @id @default(uuid())
-  schoolYear      SchoolYear? @relation(fields: [schoolYearId], references: [id])
-  schoolYearId    String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  transactionType String // "ADD", "REMOVE", "MODIFY", etc...
-  description     String?
-
-  equipment   InventoryOfEquipment? @relation(fields: [equipmentId], references: [id])
-  equipmentId String?
-
-  material   InventoryOfMaterials? @relation(fields: [materialId], references: [id])
-  materialId String?
-
-  reagent   InventoryOfReagents? @relation(fields: [reagentId], references: [id])
-  reagentId String?
-
-  quantityBeforeChange Float
-  quantityAfterChange  Float
-  quantityOfChange     Float
-
-  units String?
+  requests              ReagentRequests[]
+  schoolYear            SchoolYear?             @relation(fields: [schoolYearId], references: [id])
+  schoolYearId          String?
 }
 
 // -------------------- //
@@ -484,8 +432,8 @@ model LaboratoryRequests {
   reagentRequestsTeacherApproval     SignedStatus @default(PENDING)
   reagentRequestsTeacherAnnotation   String?      @db.Text // 64KiB
 
-  laboratoryReservationsTeacherApproval   SignedStatus @default(PENDING)
-  laboratoryReservationsTeacherAnnotation String?      @db.Text // 64KiB
+  laboratoryReservationsTeacherApproval SignedStatus @default(PENDING)
+  laboratoryReservationsTeacherAnnotation   String?      @db.Text // 64KiB
 
   // Admin Approval Fields
   equipmentRequestsAdminApproval   SignedStatus @default(PENDING)
