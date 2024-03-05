@@ -13,7 +13,7 @@ Table SchoolYear {
   reagentRequestControlNumberCounter Int [not null, default: 0]
   laboratoryRequestControlNumberCounter Int [not null, default: 0]
   materialsAdded InventoryOfMaterials [not null]
-  equipmentAdded InventoryOfEqupiment [not null]
+  equipmentAdded InventoryOfEquipment [not null]
   reagentsAdded InventoryOfReagents [not null]
   laboratoryRequests LaboratoryRequests [not null]
   equipmentRequests EquipmentRequests [not null]
@@ -47,8 +47,12 @@ Table Admins {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   signature String
-  signedRequests LaboratoryRequests [not null]
   userProfile Users [not null]
+  equipmentRequestsApproved LaboratoryRequests [not null]
+  materialRequestsApproved LaboratoryRequests [not null]
+  reagentRequestsApproved LaboratoryRequests [not null]
+  laboratoryReservationsApproved LaboratoryRequests [not null]
+  show Boolean [not null, default: true]
 }
 
 Table Teachers {
@@ -56,9 +60,11 @@ Table Teachers {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   signature String
-  receivedLaboratoryRequests LaboratoryRequests [not null]
-  signedLaboratoryRequests LaboratoryRequests [not null]
+  unit Units
+  unitId String
   userProfile Users [not null]
+  receivedLaboratoryRequests LaboratoryRequests [not null]
+  show Boolean [not null, default: true]
 }
 
 Table Students {
@@ -89,6 +95,7 @@ Table Notifications {
   user Users [not null]
   userId String [not null]
   message String [not null]
+  redirect String
 }
 
 Table GradeSection {
@@ -99,6 +106,7 @@ Table GradeSection {
   section String [not null]
   students Students [not null]
   laboratoryRequests LaboratoryRequests [not null]
+  show Boolean [not null, default: true]
 }
 
 Table Units {
@@ -107,7 +115,9 @@ Table Units {
   updatedAt DateTime [not null]
   name String [not null]
   frequencyRank Int [increment, unique, not null]
+  teachers Teachers [not null]
   laboratoryRequests LaboratoryRequests [not null]
+  show Boolean [not null, default: true]
 }
 
 Table Laboratories {
@@ -120,9 +130,10 @@ Table Laboratories {
   location LaboratoryLocations [not null]
   locationId String [not null]
   supplies InventoryOfMaterials [not null]
-  equipment InventoryOfEqupiment [not null]
+  equipment InventoryOfEquipment [not null]
   reagents InventoryOfReagents [not null]
   laboratoryReservations LaboratoryReservations [not null]
+  show Boolean [not null, default: true]
 }
 
 Table LaboratoryLocations {
@@ -134,10 +145,11 @@ Table LaboratoryLocations {
   laboratories Laboratories [not null]
   inventoryOfMaterials InventoryOfMaterials
   inventoryOfMaterialsSupplyId String
-  inventoryOfEqupiment InventoryOfEqupiment
+  inventoryOfEquipment InventoryOfEquipment
   equipmentId String
   inventoryOfReagents InventoryOfReagents
   reagentId String
+  show Boolean [not null, default: true]
 }
 
 Table LaboratoryReservations {
@@ -147,8 +159,8 @@ Table LaboratoryReservations {
   controlNumber String [not null]
   laboratoryReserved Laboratories [not null]
   laboratoryId String [not null]
-  startTime String [not null]
-  endTime String [not null]
+  dates Json [not null]
+  time Json [not null]
   laboratoryRequest LaboratoryRequests [not null]
   laboratoryRequestId String [not null]
 }
@@ -173,16 +185,17 @@ Table InventoryOfMaterials {
   damage String
   balancePerCard Int
   balancePerCount Int
+  inventoryTransactions InventoryTransactions [not null]
   location LaboratoryLocations [not null]
   laboratories Laboratories
   laboratoriesId String
   requests MaterialRequests [not null]
   schoolYear SchoolYear
   schoolYearId String
-  inventoryTransactions InventoryTransactions [not null]
+  show Boolean [not null, default: true]
 }
 
-Table InventoryOfEqupiment {
+Table InventoryOfEquipment {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -201,13 +214,14 @@ Table InventoryOfEqupiment {
   acquisitionType String
   supplier String
   status String
+  inventoryTransactions InventoryTransactions [not null]
   location LaboratoryLocations [not null]
   laboratories Laboratories
   laboratoriesId String
   requests EquipmentRequests [not null]
   schoolYear SchoolYear
   schoolYearId String
-  inventoryTransactions InventoryTransactions [not null]
+  show Boolean [not null, default: true]
 }
 
 Table InventoryOfReagents {
@@ -240,10 +254,11 @@ Table InventoryOfReagents {
   location LaboratoryLocations [not null]
   laboratories Laboratories
   laboratoriesId String
+  inventoryTransactions InventoryTransactions [not null]
   requests ReagentRequests [not null]
   schoolYear SchoolYear
   schoolYearId String
-  inventoryTransactions InventoryTransactions [not null]
+  show Boolean [not null, default: true]
 }
 
 Table InventoryTransactions {
@@ -254,7 +269,7 @@ Table InventoryTransactions {
   updatedAt DateTime [not null]
   transactionType String [not null]
   description String
-  equipment InventoryOfEqupiment
+  equipment InventoryOfEquipment
   equipmentId String
   material InventoryOfMaterials
   materialId String
@@ -272,7 +287,7 @@ Table EquipmentRequests {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   quantity Int [not null]
-  equipment InventoryOfEqupiment [not null]
+  equipment InventoryOfEquipment [not null]
   name String [not null]
   description String
   modelNoOrManufacturer String
@@ -334,17 +349,50 @@ Table LaboratoryRequests {
   reagentsRequested ReagentRequests [not null]
   laboratoryReservations LaboratoryReservations [not null]
   independentTime Json [default: '{}']
+  independentDates Json [default: '{}']
   independentLocation String [default: '']
-  isSignedByTeacher SignedStatus [not null, default: 'PENDING']
-  isSignedByAdmin SignedStatus [not null, default: 'PENDING']
-  signedTeacher Teachers
-  signedTeacherId String
-  signedAdmin Admins
-  signedAdminId String
-  teacherAnnotation String
-  adminAnnotation String
+  equipmentRequestsTeacherApproval SignedStatus [not null, default: 'PENDING']
+  equipmentRequestsTeacherAnnotation String
+  materialRequestsTeacherApproval SignedStatus [not null, default: 'PENDING']
+  materialRequestsTeacherAnnotation String
+  reagentRequestsTeacherApproval SignedStatus [not null, default: 'PENDING']
+  reagentRequestsTeacherAnnotation String
+  laboratoryReservationsTeacherApproval SignedStatus [not null, default: 'PENDING']
+  laboratoryReservationsTeacherAnnotation String
+  equipmentRequestsAdminApproval SignedStatus [not null, default: 'PENDING']
+  equipmentRequestsAdminAnnotation String
+  equipmentRequestsAdminApprover Admins
+  equipmentRequestsAdminApproverId String
+  materialRequestsAdminApproval SignedStatus [not null, default: 'PENDING']
+  materialRequestsAdminAnnotation String
+  materialRequestsAdminApprover Admins
+  materialRequestsAdminApproverId String
+  reagentRequestsAdminApproval SignedStatus [not null, default: 'PENDING']
+  reagentRequestsAdminAnnotation String
+  reagentRequestsAdminApprover Admins
+  reagentRequestsAdminApproverId String
+  laboratoryReservationsAdminApproval SignedStatus [not null, default: 'PENDING']
+  laboratoryReservationsAdminAnnotation String
+  laboratoryReservationsAdminApprover Admins
+  laboratoryReservationsAdminApproverId String
   schoolYear SchoolYear
   schoolYearId String
+  completeStatus CompleteStatus [not null, default: 'PENDING']
+}
+
+Table InventoryOfMaterialsToMaterialRequests {
+  requestsId String [ref: > MaterialRequests.id]
+  materialsId String [ref: > InventoryOfMaterials.id]
+}
+
+Table EquipmentRequestsToInventoryOfEquipment {
+  requestsId String [ref: > EquipmentRequests.id]
+  equipmentId String [ref: > InventoryOfEquipment.id]
+}
+
+Table InventoryOfReagentsToReagentRequests {
+  requestsId String [ref: > ReagentRequests.id]
+  reagentsId String [ref: > InventoryOfReagents.id]
 }
 
 Enum Role {
@@ -355,8 +403,14 @@ Enum Role {
 
 Enum SignedStatus {
   APPROVED
-  REJECTED
   PENDING
+  REVISION_NEEDED
+}
+
+Enum CompleteStatus {
+  PENDING
+  UNDERWAY
+  COMPLETED
 }
 
 Ref: Users.studentsId > Students.id
@@ -364,6 +418,8 @@ Ref: Users.studentsId > Students.id
 Ref: Users.teachersId > Teachers.id
 
 Ref: Users.adminsId > Admins.id
+
+Ref: Teachers.unitId > Units.id
 
 Ref: Students.gradeSectionId > GradeSection.id
 
@@ -375,7 +431,7 @@ Ref: Laboratories.locationId > LaboratoryLocations.id
 
 Ref: LaboratoryLocations.inventoryOfMaterialsSupplyId > InventoryOfMaterials.id
 
-Ref: LaboratoryLocations.equipmentId > InventoryOfEqupiment.id
+Ref: LaboratoryLocations.equipmentId > InventoryOfEquipment.id
 
 Ref: LaboratoryLocations.reagentId > InventoryOfReagents.id
 
@@ -387,9 +443,9 @@ Ref: InventoryOfMaterials.laboratoriesId > Laboratories.id
 
 Ref: InventoryOfMaterials.schoolYearId > SchoolYear.id
 
-Ref: InventoryOfEqupiment.laboratoriesId > Laboratories.id
+Ref: InventoryOfEquipment.laboratoriesId > Laboratories.id
 
-Ref: InventoryOfEqupiment.schoolYearId > SchoolYear.id
+Ref: InventoryOfEquipment.schoolYearId > SchoolYear.id
 
 Ref: InventoryOfReagents.laboratoriesId > Laboratories.id
 
@@ -397,7 +453,7 @@ Ref: InventoryOfReagents.schoolYearId > SchoolYear.id
 
 Ref: InventoryTransactions.schoolYearId > SchoolYear.id
 
-Ref: InventoryTransactions.equipmentId > InventoryOfEqupiment.id
+Ref: InventoryTransactions.equipmentId > InventoryOfEquipment.id
 
 Ref: InventoryTransactions.materialId > InventoryOfMaterials.id
 
@@ -423,8 +479,12 @@ Ref: LaboratoryRequests.unitId > Units.id
 
 Ref: LaboratoryRequests.teacherInChargeId > Teachers.id
 
-Ref: LaboratoryRequests.signedTeacherId > Teachers.id
+Ref: LaboratoryRequests.equipmentRequestsAdminApproverId > Admins.id
 
-Ref: LaboratoryRequests.signedAdminId > Admins.id
+Ref: LaboratoryRequests.materialRequestsAdminApproverId > Admins.id
+
+Ref: LaboratoryRequests.reagentRequestsAdminApproverId > Admins.id
+
+Ref: LaboratoryRequests.laboratoryReservationsAdminApproverId > Admins.id
 
 Ref: LaboratoryRequests.schoolYearId > SchoolYear.id

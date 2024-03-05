@@ -33,9 +33,8 @@ export default defineEventHandler(async () => {
     // Filter to only needed data
     const filteredTeachers = {};
     for (const teacher of sortedTeachers) {
-        filteredTeachers[
-            teacher.id
-        ] = `${teacher.userProfile[0].firstName} ${teacher.userProfile[0].lastName}`;
+        filteredTeachers[teacher.id] =
+            `${teacher.userProfile[0].firstName} ${teacher.userProfile[0].lastName}`;
     }
 
     // Return the sorted teachers as an object with the teacher id as the key
