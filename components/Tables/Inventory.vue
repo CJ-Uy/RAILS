@@ -251,8 +251,9 @@ updateTable();
                     :loading="pending"
                     :ui="{ tr: { active: 'hover:bg-gray-200' } }"
                     @select="openModal"
-                    @update:sort="test"
+                    @update:sort=""
                 />
+                <!-- TODO: @toffee05 wat is test in @update:sort? I removed it cause it was giving the error -->
             </div>
 
             <template #footer>
