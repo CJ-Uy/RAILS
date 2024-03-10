@@ -41,8 +41,8 @@ export default defineNuxtConfig({
     // NUXT-AUTH CONFIGURATION
     auth: {
         // The origin is set to the development origin. Change this when deploying to production by setting `origin` in this config before build-time or by exporting `AUTH_ORIGIN` by running `export AUTH_ORIGIN=...`
-        origin: "http://localhost:3000", // This doesn't change unlike the IP per network
-        // origin: "http://172.20.10.2:3000", // CJ-Uy hot spot IP address fo when hosted
+        // origin: "http://localhost:3000", // For development only
+        origin: "https://rails-ten.vercel.app/", // For production only
         // (for new networks add .nip.io to URI to https://console.cloud.google.com/apis/credentials?project=rails-382915)
 
         isEnabled: true, // The module is enabled. Change this to disable the module
