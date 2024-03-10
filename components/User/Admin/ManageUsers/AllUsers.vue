@@ -85,7 +85,7 @@ function getProfileOptions(profile) {
         // If the profile does not exist
         return ["NO PROFILE"];
     } else {
-        return ["ACTIVE", "INACTIVE"];
+        return ["ACTIVE", "INACTIVE", "DELETE"];
     }
 }
 
@@ -403,9 +403,6 @@ const colorEditable = ref("gray");
                             ></USelect>
                         </div>
 
-                        <pre>
-                            {{ selectedData }}
-                        </pre>
                         <!-- Previous code for ID manipulation and account creation -->
                         <!-- <div>Student ID</div>
                         <div class="flex flex-row justify-between">
@@ -530,6 +527,23 @@ const colorEditable = ref("gray");
                                 variant="outline"
                             />
                         </div>
+                    </div>
+                    <div
+                        v-if="
+                            currentStudentProfileStatus == 'DELETE' ||
+                            currentTeacherProfileStatus == 'DELETE' ||
+                            currentAdminProfileStatus == 'DELETE'
+                        "
+                    >
+                        <p class="text-justify">
+                            <br />
+                            <span class="text-red-500">NOTICE:</span> An attempt
+                            to delete a profile will be attempted. If the
+                            profile is connected to any other data such as
+                            existing laboratory requests, deletion will fail and
+                            the profile will instead automatically be set to the
+                            "INACTIVE" status.
+                        </p>
                     </div>
 
                     <template #footer>
