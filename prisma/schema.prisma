@@ -137,6 +137,8 @@ model Students {
   section String?
 
   userProfile Users[]
+  
+  hidden Boolean @default(false)
 }
 
 model ChangeRoleRequests {

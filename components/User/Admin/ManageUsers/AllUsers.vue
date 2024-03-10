@@ -80,29 +80,195 @@ async function updateChanges() {
     allUsersTableRef.value.updateTable();
 }
 
-// TODO: Test a bit more and maybe its not secure cause it's on the front end? But i have some safe ctaches in the backend too
-// BUG: You can delete yourself and make u no longger admin and it affects only after refresh. But even after refresh you can just "go back" on the browser maybe a watch function just in this page for roles?
-function adaptRolesToNewIdRequest() {
-    if (
-        selectedData.value.role === "STUDENT" &&
-        selectedData.value.studentsId === null
-    ) {
-        selectedData.value.studentsId = "NEW STUDENT ID";
-        selectedData.value.teachersId = null;
-        selectedData.value.adminsId = null;
-    } else if (
-        selectedData.value.role === "TEACHER" &&
-        selectedData.value.teachersId === null
-    ) {
-        selectedData.value.teachersId = "NEW TEACHER ID";
-        selectedData.value.adminsId = null;
-    } else if (
-        selectedData.value.role === "ADMIN" &&
-        selectedData.value.adminsId === null
-    ) {
-        selectedData.value.adminsId = "NEW ADMIN ID";
+function getProfileOptions(profile) {
+    if (profile == null) {
+        // If the profile does not exist
+        return ["NO PROFILE"];
+    } else {
+        return ["ACTIVE", "INACTIVE"];
     }
 }
+
+const currentStudentProfileStatus = ref();
+const currentTeacherProfileStatus = ref();
+const currentAdminProfileStatus = ref();
+
+function getCurrentProfileStatus(profile) {
+    if (profile == null) {
+        return "NO PROFILE";
+    } else if (profile.hidden === false) {
+        return "ACTIVE";
+    } else {
+        return "INACTIVE";
+    }
+}
+
+// BUG: You can delete yourself and make u no longger admin and it affects only after refresh. But even after refresh you can just "go back" on the browser maybe a watch function just in this page for roles?
+function adaptProfileStatusToRoleChange() {
+    // If the role is changed, the profile status should be changed to reflect said change
+    // Each block follows the steps
+    //  1. Change to or give the "hidden: false"
+    //  2. Reset all other profiles statuses to their original states
+    //  3. Change all other profiles statuses to most likely scenario
+    //  4. Display the changes to the modal
+
+    // Student Role
+    if (selectedData.value.role === "STUDENT") {
+        // Change to or give the "hidden: false"
+        if (selectedData.value.studentProfile == null) {
+            selectedData.value.studentProfile = {
+                hidden: false,
+                defaultStatus: "NO PROFILE",
+            };
+        } else {
+            selectedData.value.studentProfile.hidden = false;
+        }
+
+        // Reset all other profiles statuses to their original states
+        if (
+            selectedData.value.teacherProfile &&
+            Object.prototype.hasOwnProperty.call(
+                selectedData.value.teacherProfile,
+                "defaultStatus",
+            )
+        ) {
+            selectedData.value.teacherProfile = null;
+        }
+        if (
+            selectedData.value.adminProfile &&
+            Object.prototype.hasOwnProperty.call(
+                selectedData.value.adminProfile,
+                "defaultStatus",
+            )
+        ) {
+            selectedData.value.adminProfile = null;
+        }
+
+        // Change all other profiles statuses to most likely scenario
+        if (selectedData.value.adminProfile != null) {
+            selectedData.value.adminProfile.hidden = true;
+        }
+
+        // Display the changes to the modal
+        setCurrentProfileStatuses();
+    }
+
+    // Teacher Role
+    else if (selectedData.value.role === "TEACHER") {
+        // Change to or give the "hidden: false"
+        if (selectedData.value.teacherProfile == null) {
+            selectedData.value.teacherProfile = {
+                hidden: false,
+                defaultStatus: "NO PROFILE",
+            };
+        } else {
+            selectedData.value.teacherProfile.hidden = false;
+        }
+
+        // Reset all other profiles statuses to their original states
+        if (
+            selectedData.value.studentProfile &&
+            Object.prototype.hasOwnProperty.call(
+                selectedData.value.studentProfile,
+                "defaultStatus",
+            )
+        ) {
+            selectedData.value.studentProfile = null;
+        }
+        if (
+            selectedData.value.adminProfile &&
+            Object.prototype.hasOwnProperty.call(
+                selectedData.value.adminProfile,
+                "defaultStatus",
+            )
+        ) {
+            selectedData.value.adminProfile = null;
+        }
+
+        // Change all other profiles statuses to most likely scenario
+        if (selectedData.value.adminProfile != null) {
+            selectedData.value.adminProfile.hidden = true;
+        }
+        // Display the changes to the modal
+        setCurrentProfileStatuses();
+    }
+
+    // Admin Role
+    else if (selectedData.value.role === "ADMIN") {
+        // Change to or give the "hidden: false"
+        if (selectedData.value.adminProfile == null) {
+            selectedData.value.adminProfile = {
+                hidden: false,
+                defaultStatus: "NO PROFILE",
+            };
+        } else {
+            selectedData.value.adminProfile.hidden = false;
+        }
+
+        // Reset all other profiles statuses to their original states
+        if (
+            selectedData.value.studentProfile &&
+            Object.prototype.hasOwnProperty.call(
+                selectedData.value.studentProfile,
+                "defaultStatus",
+            )
+        ) {
+            selectedData.value.studentProfile = null;
+        }
+        if (
+            selectedData.value.teacherProfile &&
+            Object.prototype.hasOwnProperty.call(
+                selectedData.value.teacherProfile,
+                "defaultStatus",
+            )
+        ) {
+            selectedData.value.teacherProfile = null;
+        }
+
+        // Change all other profiles statuses to most likely scenario
+        if (selectedData.value.teacherProfile != null) {
+            selectedData.value.teacherProfile.hidden = true;
+        }
+
+        // Display the changes to the modal
+        setCurrentProfileStatuses();
+    }
+
+    // Previous ID manipulation and account creation
+    // if (
+    //     selectedData.value.role === "STUDENT" &&
+    //     selectedData.value.studentsId === null
+    // ) {
+    //     selectedData.value.studentsId = "NEW STUDENT ID";
+    //     selectedData.value.teachersId = null;
+    //     selectedData.value.adminsId = null;
+    // } else if (
+    //     selectedData.value.role === "TEACHER" &&
+    //     selectedData.value.teachersId === null
+    // ) {
+    //     selectedData.value.teachersId = "NEW TEACHER ID";
+    //     selectedData.value.adminsId = null;
+    // } else if (
+    //     selectedData.value.role === "ADMIN" &&
+    //     selectedData.value.adminsId === null
+    // ) {
+    //     selectedData.value.adminsId = "NEW ADMIN ID";
+    // }
+}
+function setCurrentProfileStatuses() {
+    currentStudentProfileStatus.value = getCurrentProfileStatus(
+        selectedData.value.studentProfile,
+    );
+    currentTeacherProfileStatus.value = getCurrentProfileStatus(
+        selectedData.value.teacherProfile,
+    );
+    currentAdminProfileStatus.value = getCurrentProfileStatus(
+        selectedData.value.adminProfile,
+    );
+}
+watch(selectedData, () => {
+    setCurrentProfileStatuses();
+});
 
 // Editing Mode Apperances
 const colorEditable = ref("gray");
@@ -161,18 +327,6 @@ const colorEditable = ref("gray");
                             />
                         </div>
 
-                        <div>Role</div>
-                        <div>
-                            <USelect
-                                v-model="selectedData.role"
-                                :color="colorEditable"
-                                :disabled="!editModeIsOpen"
-                                variant="outline"
-                                :options="['STUDENT', 'TEACHER', 'ADMIN']"
-                                @click="adaptRolesToNewIdRequest"
-                            />
-                        </div>
-
                         <div>Email</div>
                         <div>
                             <!-- Editing the email will make a new account when the person sign in -->
@@ -184,18 +338,76 @@ const colorEditable = ref("gray");
                             />
                         </div>
 
-                        <div>User ID</div>
+                        <div>Role</div>
                         <div>
-                            <UInput
-                                v-model="selectedData.id"
-                                color="gray"
-                                disabled="true"
+                            <USelect
+                                v-model="selectedData.role"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
                                 variant="outline"
+                                :options="['STUDENT', 'TEACHER', 'ADMIN']"
+                                @click="adaptProfileStatusToRoleChange"
                             />
                         </div>
 
                         <!-- IDs -->
-                        <div>Student ID</div>
+                        <div>Student Profile Status</div>
+                        <div>
+                            <!--Having a profile options of length 1 means its only "NO PROFILE"-->
+                            <USelect
+                                v-model="currentStudentProfileStatus"
+                                :disabled="
+                                    !editModeIsOpen ||
+                                    getProfileOptions(
+                                        selectedData.studentProfile,
+                                    ).length === 1
+                                "
+                                :options="
+                                    getProfileOptions(
+                                        selectedData.studentProfile,
+                                    )
+                                "
+                            ></USelect>
+                        </div>
+
+                        <div>Teacher Profile Status</div>
+                        <div>
+                            <USelect
+                                v-model="currentTeacherProfileStatus"
+                                :disabled="
+                                    !editModeIsOpen ||
+                                    getProfileOptions(
+                                        selectedData.teacherProfile,
+                                    ).length === 1
+                                "
+                                :options="
+                                    getProfileOptions(
+                                        selectedData.teacherProfile,
+                                    )
+                                "
+                            ></USelect>
+                        </div>
+
+                        <div>Admin Profile Status</div>
+                        <div>
+                            <USelect
+                                v-model="currentAdminProfileStatus"
+                                :disabled="
+                                    !editModeIsOpen ||
+                                    getProfileOptions(selectedData.adminProfile)
+                                        .length === 1
+                                "
+                                :options="
+                                    getProfileOptions(selectedData.adminProfile)
+                                "
+                            ></USelect>
+                        </div>
+
+                        <pre>
+                            {{ selectedData }}
+                        </pre>
+                        <!-- Previous code for ID manipulation and account creation -->
+                        <!-- <div>Student ID</div>
                         <div class="flex flex-row justify-between">
                             <div class="w-full">
                                 <UInput
@@ -297,7 +509,7 @@ const colorEditable = ref("gray");
                                     @click="selectedData.adminsId = null"
                                 />
                             </div>
-                        </div>
+                        </div> -->
 
                         <div>Created At</div>
                         <div>
