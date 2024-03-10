@@ -1,3 +1,5 @@
+nuxt.config.ts
+
 # Prisma Backups
 .db
 
