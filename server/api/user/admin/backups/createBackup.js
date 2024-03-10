@@ -8,11 +8,11 @@ export default defineEventHandler(() => {
     // spawn a subprocess that runs the mysqldump command with the connection object
     const mysqldump = spawn("mysqldump", [
         "-h",
-        process.env.HOST,
+        process.env.DB_HOST,
         "-u",
-        process.env.USER,
-        "-p" + process.env.PASSWORD,
-        process.env.DATABASE,
+        process.env.DB_USER,
+        "-p" + process.env.DB_PASSWORD,
+        process.env.DB_DATABASE,
     ]);
 
     // listen to the stdout stream of the subprocess and append the data to the dump variable
