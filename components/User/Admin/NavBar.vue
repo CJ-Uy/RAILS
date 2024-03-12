@@ -23,12 +23,12 @@ const links = [
         label: "Requests",
         children: [
             {
-                label: "PENDING & SCHEDULED",
+                label: "PENDING",
                 to: "/admin/current-requests",
                 icon: "i-material-symbols-manage-search",
             },
             {
-                label: "UNDERWAY & COMPLETED",
+                label: "COMPLETED",
                 to: "/admin/complete-requests",
                 icon: "i-material-symbols-check-box-outline",
             },
@@ -57,6 +57,11 @@ const links = [
     {
         label: "Management",
         children: [
+            {
+                label: "HISTORY",
+                to: "/admin/history",
+                icon: "i-material-symbols-history-rounded",
+            },
             {
                 label: "EDIT FORMS",
                 to: "/admin/edit-forms",

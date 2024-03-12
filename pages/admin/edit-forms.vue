@@ -10,6 +10,10 @@ const user = inject("user");
 // Tabs
 const editFormsTabs = [
     {
+        label: "Locations",
+        slot: "locations",
+    },
+    {
         label: "SY & Campus",
         slot: "syCampus",
     },
@@ -32,6 +36,9 @@ const editFormsTabs = [
                 :items="editFormsTabs"
                 :ui="{ list: { tab: { active: 'bg-white' } } }"
             >
+                <template #locations>
+                    <UserAdminEditFormsLocations />
+                </template>
                 <template #syCampus>
                     <UserAdminEditFormsSyCampus />
                 </template>

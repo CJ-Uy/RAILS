@@ -11,7 +11,7 @@ definePageMeta({ layout: "admin-pages" });
     <div class="flex flex-col">
         <UserDashboardHeader title="ADMIN | COMPLETED REQUESTS" />
         <div>
-            <UserAdminRequestsTablesUnderwayCompleted />
+            <UserAdminRequestsCompleted />
         </div>
     </div>
 </template>

@@ -2,12 +2,12 @@
 // Tabs
 const inventoryCategories = [
     {
-        label: "Underway",
-        slot: "underway",
+        label: "Teacher Pending",
+        slot: "teacherPending",
     },
     {
-        label: "Completed",
-        slot: "completed",
+        label: "Admin Pending",
+        slot: "adminPending",
     },
 ];
 
@@ -41,11 +41,9 @@ onMounted(() => {
             :ui="{ list: { tab: { active: 'bg-white' } } }"
             :orientation="tabsOrientation"
         >
-            <template #underway>
-                <UserAdminRequestsTablesUnderway />
-            </template>
-            <template #completed>
-                <UserAdminRequestsTablesCompleted />
+            <template #teacherPending> </template>
+            <template #adminPending>
+                <UserAdminRequestsPendingTeacher />
             </template>
         </UTabs>
     </UContainer>

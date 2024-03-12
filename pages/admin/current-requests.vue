@@ -11,7 +11,7 @@ definePageMeta({ layout: "admin-pages" });
     <div class="flex flex-col">
         <UserDashboardHeader title="ADMIN | CURRENT REQUESTS" />
         <div>
-            <UserAdminRequestsTables />
+            <UserAdminRequestsPending />
         </div>
     </div>
 </template>
