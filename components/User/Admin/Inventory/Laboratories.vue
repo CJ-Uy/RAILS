@@ -144,9 +144,9 @@ async function deleteLab() {
                         </div>
                     </template>
 
-                    <div class="grid grid-cols-2">
-                        <div>Name</div>
-                        <div>
+                    <div class="grid grid-cols-3 gap-1 gap-y-2">
+                        <div class="flex items-center">Name</div>
+                        <div class="col-span-2">
                             <UInput
                                 v-model="selectedData.name"
                                 :color="colorEditable"
@@ -155,8 +155,8 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div>Location</div>
-                        <div>
+                        <div class="flex items-center">Location</div>
+                        <div class="col-span-2">
                             <USelect
                                 v-model="selectedData.location.name"
                                 :color="colorEditable"
@@ -166,8 +166,8 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div>Decription</div>
-                        <div>
+                        <div class="flex items-center">Decription</div>
+                        <div class="col-span-2">
                             <UTextarea
                                 v-model="selectedData.description"
                                 :color="colorEditable"
@@ -176,8 +176,8 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div>Lab ID</div>
-                        <div>
+                        <div class="flex items-center">Lab ID</div>
+                        <div class="col-span-2">
                             <UInput
                                 v-model="selectedData.id"
                                 color="gray"
@@ -186,8 +186,8 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div>Created At</div>
-                        <div>
+                        <div class="flex items-center">Created At</div>
+                        <div class="col-span-2">
                             <UInput
                                 v-model="selectedData.createdAt"
                                 color="gray"
@@ -196,8 +196,8 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div>Last Updated</div>
-                        <div>
+                        <div class="flex items-center">Last Updated</div>
+                        <div class="col-span-2">
                             <UInput
                                 v-model="selectedData.updatedAt"
                                 color="gray"
@@ -206,7 +206,18 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div v-if="editModeIsOpen">
+                        <div class="flex items-center">Hide</div>
+                        <div class="col-span-2">
+                            <v-switch
+                                v-model="selectedData.hidden"
+                                :disabled="!editModeIsOpen"
+                                color="primary"
+                                hide-details
+                            />
+                        </div>
+
+                        <div></div>
+                        <div v-if="editModeIsOpen" class="col-span-2">
                             <UButton
                                 label="Delete Laboratory"
                                 variant="outline"

@@ -2,12 +2,12 @@ import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async (event) => {
     const newData = await readBody(event);
-
     /*
     Values that can change:
         newData.name
         newData.description
         newData.location.name
+        newData.hidden
     */
     const locationId = await prisma.laboratoryLocations.findFirst({
         where: {
@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
                     id: locationId.id,
                 },
             },
+            hidden: newData.hidden,
         },
     });
 });
