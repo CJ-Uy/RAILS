@@ -40,11 +40,6 @@ const listOfAllColumns = [
         sortable: true,
     },
     {
-        key: "available",
-        label: "Availability",
-        sortable: true,
-    },
-    {
         key: "code",
         label: "Code",
         sortable: true,
@@ -104,6 +99,16 @@ const listOfAllColumns = [
         label: "Entry Updated",
         sortable: true,
     },
+    {
+        key: "available",
+        label: "Availability",
+        sortable: true,
+    },
+    {
+        key: "hidden",
+        label: "Hidden",
+        sortable: true,
+    },
 ];
 
 // Only allow editing if the user is an administrator
@@ -150,10 +155,10 @@ function selectedRow(data) {
 const tableRef = ref();
 
 // Add Record Modal
-const newEquipmentData = ref({});
+const newEquipmentData = ref({ available: true, hidden: false });
 const addRecordModalIsOpen = ref(false);
 function closeAddRecordModal() {
-    newEquipmentData.value = {};
+    newEquipmentData.value = { available: true, hidden: false };
     addRecordModalIsOpen.value = false;
     tableRef.value.closeAddRecord();
 }
@@ -163,7 +168,7 @@ async function addNewEquipment() {
         body: JSON.stringify(newEquipmentData.value),
     });
 
-    newEquipmentData.value = {};
+    newEquipmentData.value = { available: true, hidden: false };
     tableRef.value.closeAddRecord();
     tableRef.value.updateTable();
 }
@@ -459,6 +464,7 @@ async function deleteEquipment() {
                                 v-model="newEquipmentData.equipmentName"
                                 :color="colorEditable"
                                 variant="outline"
+                                placeholder="Required"
                             />
                         </div>
 
@@ -600,11 +606,19 @@ async function deleteEquipment() {
                             />
                         </div>
 
+                        <div class="flex items-center">Availability</div>
+                        <div class="col-span-2">
+                            <v-switch
+                                v-model="newEquipmentData.available"
+                                color="primary"
+                                hide-details
+                            />
+                        </div>
+
                         <div class="flex items-center">Hide</div>
                         <div class="col-span-2">
                             <v-switch
                                 v-model="newEquipmentData.hidden"
-                                :readonly="!editModeIsOpen"
                                 color="primary"
                                 hide-details
                             />

@@ -33,4 +33,6 @@ export default defineEventHandler(async (event) => {
             hidden: newData.hidden,
         },
     });
+
+    return "SUCCESS";
 });

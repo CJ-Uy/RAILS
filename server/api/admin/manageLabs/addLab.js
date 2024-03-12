@@ -21,6 +21,9 @@ export default defineEventHandler(async (event) => {
                     id: locationId.id,
                 },
             },
+            hidden: newData.hidden,
         },
     });
+
+    return "SUCCESS";
 });

@@ -128,7 +128,7 @@ function discardChanges() {
 }
 
 async function updateChanges() {
-    await useFetch("/api/admin/manageMaterials/updateLab", {
+    await useFetch("/api/admin/manageMaterials/updateItem", {
         method: "POST",
         body: JSON.stringify(selectedData.value),
     });
@@ -158,10 +158,10 @@ const colorEditable = ref("gray");
 const tableRef = ref();
 
 // Add Record Modal
-const newItemData = ref({});
+const newItemData = ref({ available: true, hidden: false });
 const addRecordModalIsOpen = ref(false);
 function closeAddRecordModal() {
-    newItemData.value = {};
+    newItemData.value = { available: true, hidden: false };
     addRecordModalIsOpen.value = false;
     tableRef.value.closeAddRecord();
 }
@@ -171,7 +171,7 @@ async function addNewItem() {
         body: JSON.stringify(newItemData.value),
     });
 
-    newItemData.value = {};
+    newItemData.value = { available: true, hidden: false };
     tableRef.value.closeAddRecord();
     tableRef.value.updateTable();
 }
@@ -367,7 +367,7 @@ async function deleteItem() {
                 <UCard>
                     <template #header>
                         <div class="flex items-center justify-between">
-                            <h1>ADD A NEW LABORATORY</h1>
+                            <h1>ADD A NEW ITEM</h1>
                         </div>
                     </template>
 
@@ -403,9 +403,18 @@ async function deleteItem() {
                             class="col-span-2 p-1"
                         >
                             <UInput
+                                v-if="!['itemName', 'unit'].includes(item.key)"
                                 v-model="newItemData[item.key]"
                                 :color="colorEditable"
                                 variant="outline"
+                            />
+
+                            <UInput
+                                v-else
+                                v-model="newItemData[item.key]"
+                                :color="colorEditable"
+                                variant="outline"
+                                placeholder="Required"
                             />
                         </div>
 

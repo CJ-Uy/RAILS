@@ -310,6 +310,15 @@ async function deleteLab() {
                                 placeholder="Enter Laboratory Description"
                             />
                         </div>
+
+                        <div class="flex items-center">Hide</div>
+                        <div class="col-span-2">
+                            <v-switch
+                                v-model="newLabData.hidden"
+                                color="primary"
+                                hide-details
+                            />
+                        </div>
                     </div>
 
                     <template #footer>

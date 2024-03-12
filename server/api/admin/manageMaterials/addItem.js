@@ -25,5 +25,5 @@ export default defineEventHandler(async (event) => {
         },
     });
 
-    return newItem;
+    return "SUCCESS";
 });
