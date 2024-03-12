@@ -70,7 +70,7 @@ function discardChanges() {
     allUsersTableRef.value.updateTable();
 }
 async function updateChanges() {
-    await useFetch("/api/db/manageUsers/update", {
+    await useFetch("/api/admin/manageUsers/update", {
         method: "POST",
         body: {
             ...selectedData.value,
@@ -290,7 +290,7 @@ const colorEditable = ref("gray");
             default-sort-key="role"
             :starting-columns="startingColumns"
             :list-of-all-columns="listOfAllColumns"
-            fetch-path="/api/db/manageUsers/getAll"
+            fetch-path="/api/admin/manageUsers/getAll"
             :allowed-editing="allowedEditing"
             :edit-mode-is-open="editModeIsOpen"
             @selected-row="selectedRow"

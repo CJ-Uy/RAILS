@@ -63,7 +63,7 @@ function discardChanges() {
 }
 
 async function updateChanges() {
-    await useFetch("/api/db/manageLocations/updateLab", {
+    await useFetch("/api/admin/manageLabs/updateLab", {
         method: "POST",
         body: JSON.stringify(selectedData.value),
     });
@@ -101,16 +101,17 @@ function closeAddRecordModal() {
     tableRef.value.closeAddRecord();
 }
 async function addNewLab() {
-    await useFetch("/api/db/manageLocations/addLab", {
+    await useFetch("/api/admin/manageLabs/addLab", {
         method: "POST",
         body: JSON.stringify(newLabData.value),
     });
 
+    newLabData.value = {};
     tableRef.value.closeAddRecord();
     tableRef.value.updateTable();
 }
 async function deleteLab() {
-    const deletion = await useFetch("/api/db/manageLocations/deleteLab", {
+    const deletion = await useFetch("/api/admin/manageLabs/deleteLab", {
         method: "POST",
         body: JSON.stringify(selectedData.value),
     });
@@ -294,6 +295,9 @@ async function deleteLab() {
                                 icon="i-material-symbols-save"
                                 label="SAVE"
                                 color="green"
+                                :disabled="
+                                    !newLabData.name || !newLabData.location
+                                "
                                 @click="addNewLab"
                             />
                         </div>
