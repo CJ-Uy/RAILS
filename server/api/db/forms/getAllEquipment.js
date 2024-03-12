@@ -4,6 +4,7 @@ export default defineEventHandler(async () => {
     const allEquipment = await prisma.InventoryOfEquipment.findMany({
         where: {
             available: true,
+            hidden: false,
         },
     });
 

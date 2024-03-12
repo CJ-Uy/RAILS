@@ -1,7 +1,11 @@
 import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async () => {
-    const allLaboratories = await prisma.laboratories.findMany();
+    const allLaboratories = await prisma.laboratories.findMany({
+        where: {
+            hidden: false
+        },
+    });
 
     const formattedLaboratories = {};
     for (const { id, name } of allLaboratories) {

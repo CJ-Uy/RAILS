@@ -4,6 +4,7 @@ export default defineEventHandler(async () => {
     const allMaterials = await prisma.inventoryOfMaterials.findMany({
         where: {
             available: true,
+            hidden: false,
         },
         select: {
             id: true,

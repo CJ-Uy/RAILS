@@ -2,6 +2,9 @@ import prisma from "~/server/db/prisma";
 
 export default defineEventHandler(async () => {
     const allTeachers = await prisma.teachers.findMany({
+        where: {
+            hidden: false,
+        },
         select: {
             id: true,
             userProfile: {

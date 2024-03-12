@@ -1,4 +1,5 @@
 <script setup>
+import dayjs from "dayjs";
 const user = inject("user");
 
 const startingColumns = [
@@ -10,7 +11,6 @@ const startingColumns = [
     "available",
 ]; // Key of starting columns in list of all columns
 
-// TODO: add location Names
 // Index of each object dictates its position in the Select Menu
 const listOfAllColumns = [
     {
@@ -108,19 +108,533 @@ const listOfAllColumns = [
 
 // Only allow editing if the user is an administrator
 const allowedEditing = ref(user.role === "ADMIN");
+
+// Editing Mode Apperances
+const colorEditable = ref("gray");
+
+// Editing Mode
+const editModeIsOpen = ref(false);
+function enableEditMode() {
+    editModeIsOpen.value = true;
+    colorEditable.value = "red";
+}
+function discardChanges() {
+    editModeIsOpen.value = false;
+    colorEditable.value = "gray";
+    tableRef.value.closeDataModal();
+    tableRef.value.updateTable();
+}
+
+async function updateChanges() {
+    await useFetch("/api/admin/manageEquipment/updateEquipment", {
+        method: "POST",
+        body: JSON.stringify(selectedData.value),
+    });
+    editModeIsOpen.value = false;
+    colorEditable.value = "gray";
+    tableRef.value.closeDataModal();
+    tableRef.value.updateTable();
+}
+
+const selectedData = ref();
+function selectedRow(data) {
+    selectedData.value = data;
+    selectedData.value.createdAt = dayjs(data.createdAt).format(
+        "MMM DD, YYYY ; HH:mm",
+    );
+    selectedData.value.updatedAt = dayjs(data.updatedAt).format(
+        "MMM DD, YYYY ; HH:mm",
+    );
+}
+
+const tableRef = ref();
+
+// Add Record Modal
+const newEquipmentData = ref({});
+const addRecordModalIsOpen = ref(false);
+function closeAddRecordModal() {
+    newEquipmentData.value = [];
+    addRecordModalIsOpen.value = false;
+    tableRef.value.closeAddRecord();
+}
+async function addNewEquipment() {
+    await useFetch("/api/admin/manageEquipment/addEquipment", {
+        method: "POST",
+        body: JSON.stringify(newEquipmentData.value),
+    });
+
+    newEquipmentData.value = {};
+    tableRef.value.closeAddRecord();
+    tableRef.value.updateTable();
+}
+
+const failedDeletion = ref(false);
+async function deleteEquipment() {
+    const deletion = await useFetch(
+        "/api/admin/manageEquipment/deleteEquipment",
+        {
+            method: "POST",
+            body: JSON.stringify(selectedData.value),
+        },
+    );
+    editModeIsOpen.value = false;
+    colorEditable.value = "gray";
+    if (deletion.data.value === "DELETION FAILED; MARKED HIDDEN") {
+        failedDeletion.value = true;
+    }
+
+    tableRef.value.closeDataModal();
+    tableRef.value.updateTable();
+}
 </script>
 
 <template>
     <div>
-        <TablesInventory
+        <!-- Failed Deletion Modal -->
+        <UModal v-model="failedDeletion">
+            <UCard>
+                <template #header>
+                    <span class="text-red-500"
+                        >LABORATORY DELETEION FAILED</span
+                    >
+                </template>
+                <p>
+                    Failed to delete {{ selectedData.name }} due to its
+                    connection to existing data. Thus its forced deletion may
+                    cause unwanted changes in other records.
+                    <br />
+                    <br />
+                    <span class="font-bold">
+                        It has instead been marked as hidden and will not be
+                        seen by anyone except admins.
+                    </span>
+                </p>
+            </UCard>
+        </UModal>
+
+        <!-- Data Table -->
+        <TablesWSlottedModals
+            ref="tableRef"
             title="EQUIPMENT"
             default-sort-key="equipmentName"
             :startingColumns="startingColumns"
             :listOfAllColumns="listOfAllColumns"
             fetch-path="/api/db/rawData/getAllEquipment"
-            update-path="/api/db/updateData/updateEquipment"
             :allowedEditing="allowedEditing"
+            :edit-mode-is-open="editModeIsOpen"
+            @selected-row="selectedRow"
         >
-        </TablesInventory>
+            <template #dataModal>
+                <UCard>
+                    <template #header>
+                        <div class="flex flex-row items-center space-x-3">
+                            <h1>
+                                {{ selectedData.equipmentName }}
+                            </h1>
+                        </div>
+                    </template>
+
+                    <div class="grid grid-cols-3 gap-1 gap-y-2">
+                        <div class="flex items-center">Name</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.equipmentName"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Decription</div>
+                        <div class="col-span-2">
+                            <UTextarea
+                                v-model="selectedData.description"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Serial Number</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.serialNumber"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Quantity</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.quantity"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Code</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.code"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Model/Manufacturer</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.modelNoOrManufacturer"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Unit</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.unit"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Unit Cost</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.unitCost"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Date Received</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.dateReceived"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Property Number</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.propertyNumber"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Acquisition Type</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.acquisitionType"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Supplier</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.supplier"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Status</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.status"
+                                :color="colorEditable"
+                                :disabled="!editModeIsOpen"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Created At</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.createdAt"
+                                color="gray"
+                                :disabled="true"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Last Updated</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="selectedData.updatedAt"
+                                color="gray"
+                                :disabled="true"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Availability</div>
+                        <div class="col-span-2">
+                            <v-switch
+                                v-model="selectedData.available"
+                                :readonly="!editModeIsOpen"
+                                color="primary"
+                                hide-details
+                            />
+                        </div>
+
+                        <div class="flex items-center">Hide</div>
+                        <div class="col-span-2">
+                            <v-switch
+                                v-model="selectedData.hidden"
+                                :readonly="!editModeIsOpen"
+                                color="primary"
+                                hide-details
+                            />
+                        </div>
+
+                        <div></div>
+                        <div v-if="editModeIsOpen" class="col-span-2">
+                            <UButton
+                                label="Delete Equipment"
+                                variant="outline"
+                                color="red"
+                                @click="deleteEquipment"
+                            />
+                        </div>
+                        <div v-if="editModeIsOpen"></div>
+                    </div>
+
+                    <template #footer>
+                        <div class="flex w-auto justify-center">
+                            <UButton
+                                v-if="!editModeIsOpen"
+                                color="green"
+                                label="EDIT"
+                                icon="i-material-symbols-edit"
+                                @click="enableEditMode"
+                            />
+                            <div v-else class="flex w-[100%] justify-between">
+                                <UButton
+                                    variant="outline"
+                                    icon="i-material-symbols-cancel"
+                                    color="red"
+                                    label="CANCEL"
+                                    @click="discardChanges"
+                                />
+                                <UButton
+                                    variant="outline"
+                                    icon="i-material-symbols-save"
+                                    label="SAVE"
+                                    color="green"
+                                    @click="updateChanges"
+                                />
+                            </div>
+                        </div>
+                    </template>
+                </UCard>
+            </template>
+
+            <template #addRecordModal>
+                <UCard>
+                    <template #header>
+                        <div class="flex items-center justify-between">
+                            <h1>ADD A NEW EQUIPMENT</h1>
+                        </div>
+                    </template>
+
+                    <div class="grid grid-cols-3 gap-1 gap-y-2">
+                        <div class="flex items-center">Name</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.equipmentName"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Decription</div>
+                        <div class="col-span-2">
+                            <UTextarea
+                                v-model="newEquipmentData.description"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Serial Number</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.serialNumber"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Quantity</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.quantity"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Code</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.code"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Model/Manufacturer</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.modelNoOrManufacturer"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Unit</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.unit"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Unit Cost</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.unitCost"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Date Received</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.dateReceived"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Property Number</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.propertyNumber"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Acquisition Type</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.acquisitionType"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Supplier</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.supplier"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Status</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.status"
+                                :color="colorEditable"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Availability</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.available"
+                                :color="colorEditable"
+                                :disabled="true"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Created At</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.createdAt"
+                                color="gray"
+                                :disabled="true"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Last Updated</div>
+                        <div class="col-span-2">
+                            <UInput
+                                v-model="newEquipmentData.updatedAt"
+                                color="gray"
+                                :disabled="true"
+                                variant="outline"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Hide</div>
+                        <div class="col-span-2">
+                            <v-switch
+                                v-model="newEquipmentData.hidden"
+                                :readonly="!editModeIsOpen"
+                                color="primary"
+                                hide-details
+                            />
+                        </div>
+                    </div>
+
+                    <template #footer>
+                        <div class="flex w-[100%] justify-between">
+                            <UButton
+                                variant="outline"
+                                icon="i-material-symbols-cancel"
+                                color="red"
+                                label="CANCEL"
+                                @click="closeAddRecordModal"
+                            />
+                            <UButton
+                                variant="outline"
+                                icon="i-material-symbols-save"
+                                label="SAVE"
+                                color="green"
+                                :disabled="!newEquipmentData.equipmentName"
+                                @click="addNewEquipment"
+                            />
+                        </div>
+                    </template>
+                </UCard>
+            </template>
+        </TablesWSlottedModals>
     </div>
 </template>

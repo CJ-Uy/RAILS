@@ -12,7 +12,11 @@ function sortDataByGradeAndSection(arr) {
 }
 
 export default defineEventHandler(async () => {
-    const allGradeSection = await prisma.gradeSection.findMany();
+    const allGradeSection = await prisma.gradeSection.findMany({
+        where: {
+            hidden: false,
+        },
+    });
 
     const sortedGradeSection = sortDataByGradeAndSection(allGradeSection);
 

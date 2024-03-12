@@ -4,6 +4,7 @@ export default defineEventHandler(async () => {
     const allReagents = await prisma.InventoryOfReagents.findMany({
         where: {
             available: true,
+            hidden: false,
         },
         select: {
             id: true,
