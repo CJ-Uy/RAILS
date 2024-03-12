@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
             acquisitionType: newData.acquisitionType,
             supplier: newData.supplier,
             status: newData.status,
+            hidden: newData.hidden,
         },
     });
 

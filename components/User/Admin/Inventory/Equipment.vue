@@ -153,7 +153,7 @@ const tableRef = ref();
 const newEquipmentData = ref({});
 const addRecordModalIsOpen = ref(false);
 function closeAddRecordModal() {
-    newEquipmentData.value = [];
+    newEquipmentData.value = {};
     addRecordModalIsOpen.value = false;
     tableRef.value.closeAddRecord();
 }
@@ -194,12 +194,10 @@ async function deleteEquipment() {
         <UModal v-model="failedDeletion">
             <UCard>
                 <template #header>
-                    <span class="text-red-500"
-                        >LABORATORY DELETEION FAILED</span
-                    >
+                    <span class="text-red-500">EQUIPMENT DELETEION FAILED</span>
                 </template>
                 <p>
-                    Failed to delete {{ selectedData.name }} due to its
+                    Failed to delete {{ selectedData.equipmentName }} due to its
                     connection to existing data. Thus its forced deletion may
                     cause unwanted changes in other records.
                     <br />
@@ -405,7 +403,7 @@ async function deleteEquipment() {
                             />
                         </div>
 
-                        <div></div>
+                        <div v-if="editModeIsOpen"></div>
                         <div v-if="editModeIsOpen" class="col-span-2">
                             <UButton
                                 label="Delete Equipment"
@@ -414,7 +412,6 @@ async function deleteEquipment() {
                                 @click="deleteEquipment"
                             />
                         </div>
-                        <div v-if="editModeIsOpen"></div>
                     </div>
 
                     <template #footer>

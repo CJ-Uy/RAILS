@@ -96,7 +96,7 @@ const tableRef = ref();
 const newLabData = ref({});
 const addRecordModalIsOpen = ref(false);
 function closeAddRecordModal() {
-    newLabData.value = [];
+    newLabData.value = {};
     addRecordModalIsOpen.value = false;
     tableRef.value.closeAddRecord();
 }
@@ -207,16 +207,6 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div class="flex items-center">Lab ID</div>
-                        <div class="col-span-2">
-                            <UInput
-                                v-model="selectedData.id"
-                                color="gray"
-                                disabled="true"
-                                variant="outline"
-                            />
-                        </div>
-
                         <div class="flex items-center">Created At</div>
                         <div class="col-span-2">
                             <UInput
@@ -247,7 +237,7 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div></div>
+                        <div v-if="editModeIsOpen"></div>
                         <div v-if="editModeIsOpen" class="col-span-2">
                             <UButton
                                 label="Delete Laboratory"
@@ -256,7 +246,6 @@ async function deleteLab() {
                                 @click="deleteLab"
                             />
                         </div>
-                        <div v-if="editModeIsOpen"></div>
                     </div>
 
                     <template #footer>

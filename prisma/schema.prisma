@@ -259,7 +259,6 @@ model InventoryOfMaterials {
   unit           String //Unit of measurement like "mL", "mg", etc..
   supplier       String?
   dateReceived   DateTime?
-  available      Boolean   @default(true)
 
   //Quantity
   quantity           Int     @default(1)
@@ -283,6 +282,7 @@ model InventoryOfMaterials {
   schoolYear   SchoolYear?        @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 
+  available      Boolean   @default(true)
   hidden Boolean @default(false)
 }
 
