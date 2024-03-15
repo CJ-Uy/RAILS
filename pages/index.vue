@@ -19,9 +19,7 @@ const gmailRes = ref();
 </script>
 
 <template>
-    <div
-        class="flex h-screen items-start justify-start bg-[url('/images/01.png')] bg-cover bg-center"
-    >
+    <div class="flex h-screen items-start justify-start">
         <div class="ml-14 mt-[255px]">
             <h1 class="font-gilroy-extrabold text-9xl font-bold text-gray-800">
                 SIGN UP NOW

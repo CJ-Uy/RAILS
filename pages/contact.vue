@@ -10,9 +10,7 @@ definePageMeta({ auth: false, layout: "landing-pages" });
 </script>
 
 <template>
-    <div
-        class="flex h-screen items-center justify-center bg-[url('/images/01.png')] bg-cover bg-center"
-    >
+    <div class="flex h-screen items-center justify-center">
         <div
             class="relative inset-0 top-[-135px] flex h-max w-[90%] items-center justify-center"
         >
