@@ -457,6 +457,7 @@ async function transactNewQuantity() {
                                 ![
                                     'id',
                                     'description',
+                                    'quantity',
                                     'laboratoriesId',
                                     'schoolYearId',
                                     'createdAt',
@@ -489,6 +490,7 @@ async function transactNewQuantity() {
                         </div>
                         <div
                             v-if="
+                                item.key == 'quantity' ||
                                 item.key == 'createdAt' ||
                                 item.key == 'updatedAt'
                             "

@@ -422,7 +422,7 @@ async function transactNewQuantity() {
                             <UInput
                                 v-model="selectedData.quantity"
                                 :color="colorEditable"
-                                :disabled="!editModeIsOpen"
+                                disabled="true"
                                 variant="outline"
                             />
                         </div>

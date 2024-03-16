@@ -408,6 +408,7 @@ async function transactNewQuantity() {
                                     'description',
                                     'createdAt',
                                     'updatedAt',
+                                    'quantity',
                                     'available',
                                     'hidden',
                                 ].includes(item.key)
@@ -436,6 +437,7 @@ async function transactNewQuantity() {
                         </div>
                         <div
                             v-if="
+                                item.key == 'quantity' ||
                                 item.key == 'createdAt' ||
                                 item.key == 'updatedAt'
                             "
