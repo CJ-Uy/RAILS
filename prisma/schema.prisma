@@ -137,7 +137,7 @@ model Students {
   section String?
 
   userProfile Users[]
-  
+
   hidden Boolean @default(false)
 }
 
@@ -282,8 +282,8 @@ model InventoryOfMaterials {
   schoolYear   SchoolYear?        @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 
-  available      Boolean   @default(true)
-  hidden Boolean @default(false)
+  available Boolean @default(true)
+  hidden    Boolean @default(false)
 }
 
 model InventoryOfEquipment {
@@ -377,7 +377,7 @@ model InventoryTransactions {
   schoolYearId    String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
-  transactionType String // "ADD", "REMOVE", "MODIFY", etc...
+  transactionType String // "ADD", "REMOVE", "MODIFY TO", etc...
   description     String?
 
   equipment   InventoryOfEquipment? @relation(fields: [equipmentId], references: [id])

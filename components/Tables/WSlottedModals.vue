@@ -187,7 +187,6 @@ const filteredRows = computed(() => {
         });
     });
 
-    // TODO: Slice the values into pages
     totalItems.value = filtered.length;
     if (sort.value.direction === "desc") {
         return filtered
@@ -300,9 +299,7 @@ updateTable();
                     :loading="pending"
                     :ui="{ tr: { active: 'hover:bg-gray-200' } }"
                     @select="openModal"
-                    @update:sort=""
                 />
-                <!--TODO: @toffee05 wat is theis @update:sort="test"-->
             </div>
 
             <template #footer>

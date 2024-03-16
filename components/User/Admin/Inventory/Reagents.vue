@@ -1,4 +1,5 @@
 <script setup>
+import dayjs from "dayjs";
 const user = inject("user");
 
 const startingColumns = [
@@ -236,6 +237,52 @@ async function deleteItem() {
     tableRef.value.closeDataModal();
     tableRef.value.updateTable();
 }
+
+// Transactions
+const transactionWindowIsOpen = ref(false);
+const newTransaction = ref({
+    newQuantity: computed(() => {
+        if (newTransaction.value.transactionType === "ADD") {
+            return (
+                selectedData.value.quantity +
+                newTransaction.value.changeInQuantity
+            );
+        } else if (newTransaction.value.transactionType === "REMOVE") {
+            return (
+                selectedData.value.quantity -
+                newTransaction.value.changeInQuantity
+            );
+        } else if (newTransaction.value.transactionType === "MODIFY TO") {
+            return newTransaction.value.changeInQuantity;
+        }
+    }),
+});
+
+function openTransactionWindow() {
+    tableRef.value.closeDataModal();
+    transactionWindowIsOpen.value = true;
+    newTransaction.value.transactionType = null;
+    newTransaction.value.changeInQuantity = null;
+}
+function closeTransactionWindow() {
+    tableRef.value.closeDataModal();
+    transactionWindowIsOpen.value = false;
+    newTransaction.value.transactionType = null;
+    newTransaction.value.changeInQuantity = null;
+}
+
+async function transactNewQuantity() {
+    await useFetch("/api/admin/transact/reagents", {
+        method: "POST",
+        body: {
+            data: selectedData.value,
+            transaction: newTransaction.value,
+        },
+    });
+    tableRef.value.updateTable();
+    tableRef.value.closeDataModal();
+    transactionWindowIsOpen.value = false;
+}
 </script>
 
 <template>
@@ -260,6 +307,103 @@ async function deleteItem() {
             </UCard>
         </UModal>
 
+        <!-- Quantity Transaction -->
+        <UModal v-model="transactionWindowIsOpen" prevent-close>
+            <UCard>
+                <template #header>
+                    <span class="text-dark-primary">
+                        Quantity Transaction
+                    </span>
+                </template>
+                <div class="flex flex-col">
+                    <div class="mb-5 flex flex-col items-center justify-center">
+                        <h2 class="text-2xl">
+                            {{ selectedData.chemicalName }}
+                        </h2>
+                        <p>
+                            {{ selectedData.description || "No Description" }}
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-1">
+                        <div class="flex items-center">Transaction Type</div>
+                        <div class="flex items-center">
+                            <USelect
+                                v-model="newTransaction.transactionType"
+                                placeholder="Required"
+                                :options="['ADD', 'REMOVE', 'MODIFY TO']"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Change in Quantity</div>
+                        <div class="flex items-center">
+                            <UInput
+                                v-model="newTransaction.changeInQuantity"
+                                type="number"
+                                :placeholder="selectedData.unit"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Description</div>
+                        <div class="flex items-center">
+                            <UTextarea
+                                v-model="newTransaction.description"
+                                type="number"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-5 grid grid-cols-3 content-center">
+                    <div class="text-center">Before</div>
+                    <div></div>
+                    <div class="text-center">After</div>
+
+                    <div class="flex items-center">
+                        <UInput
+                            v-model="selectedData.quantity"
+                            disabled="true"
+                            :ui="{ form: 'text-center' }"
+                        />
+                    </div>
+                    <div class="w-full text-center">
+                        <Icon
+                            name="material-symbols:arrow-right-alt"
+                            class="text-5xl"
+                        />
+                    </div>
+                    <div class="flex items-center">
+                        <UInput
+                            v-model="newTransaction.newQuantity"
+                            disabled="true"
+                            :ui="{ form: 'text-center' }"
+                        />
+                    </div>
+                </div>
+
+                <template #footer>
+                    <div class="flex w-[100%] justify-between">
+                        <UButton
+                            variant="outline"
+                            icon="i-material-symbols-cancel"
+                            color="red"
+                            label="CANCEL"
+                            @click="closeTransactionWindow"
+                        />
+                        <UButton
+                            variant="outline"
+                            icon="i-material-symbols-save"
+                            label="SAVE"
+                            color="green"
+                            :disabled="
+                                newTransaction.transactionType == null ||
+                                newTransaction.changeInQuantity == null
+                            "
+                            @click="transactNewQuantity"
+                        />
+                    </div>
+                </template>
+            </UCard>
+        </UModal>
+
         <!-- Data Table -->
         <TablesWSlottedModals
             ref="tableRef"
@@ -275,10 +419,17 @@ async function deleteItem() {
             <template #dataModal>
                 <UCard>
                     <template #header>
-                        <div class="flex flex-row items-center space-x-3">
+                        <div
+                            class="flex flex-row items-center justify-between space-x-3"
+                        >
                             <h1>
                                 {{ selectedData.chemicalName }}
                             </h1>
+                            <UButton
+                                label="TRANSACT"
+                                color="green"
+                                @click="openTransactionWindow()"
+                            />
                         </div>
                     </template>
                     <div
