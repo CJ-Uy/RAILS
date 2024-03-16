@@ -8,7 +8,6 @@ const startingColumns = [
     "updatedAt",
 ];
 
-// TODO: Add labels
 const listOfAllColumns = [
     { key: "requestor-lastName", label: "Requestor Last Name", sortable: true },
     {

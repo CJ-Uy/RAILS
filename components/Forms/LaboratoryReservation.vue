@@ -1,7 +1,5 @@
 <script setup>
-import dayjs from "dayjs";
-
-const labResStatus = ref(true);
+const labResStatus = ref();
 const showLabRes = computed(() => labResStatus.value === "false"); // Manual ! sign idk why it doesn't work
 
 const laboratories = await useFetch("/api/db/forms/getAllLaboratories");
@@ -55,7 +53,7 @@ function removeDateTime(index) {
                 custom: 'I will not be using a Laboratory for this activity',
             }"
             help="If this is for a class activity select the first option"
-            validation="required" 
+            validation="required"
         />
         <div v-if="showLabRes">
             <h2 class="font-bold">
@@ -211,29 +209,32 @@ function removeDateTime(index) {
                 <tr>
                     <td>
                         <div class="mr-3">
-                            <!-- Selected Date Validat -->
-                            <div class="mb-3">
-                                <UCheckbox
+                            <!-- Selected Date Validation -->
+                            <div>
+                                <v-checkbox
                                     v-if="dateTime.requestDates.length > 0"
+                                    label="Date(s) Selected"
+                                    :readonly="true"
+                                    required
                                     :model-value="true"
-                                    label="Date(s) Selected"
-                                    disabled
-                                    color="emerald"
-                                    required
+                                    color="success"
+                                    hide-details
                                 />
-                                <UCheckbox
+
+                                <v-checkbox
                                     v-else
-                                    :model-value="false"
                                     label="Date(s) Selected"
-                                    disabled
-                                    color="emerald"
+                                    :readonly="true"
                                     required
+                                    :model-value="false"
+                                    color="success"
+                                    hide-details
                                 />
                             </div>
 
                             <!-- Start and End Time Validation -->
                             <div v-if="dateTime.startTime && dateTime.endTime">
-                                <UCheckbox
+                                <v-checkbox
                                     v-if="
                                         // eslint-disable
                                         dateTime.startTime.hours <
@@ -246,26 +247,29 @@ function removeDateTime(index) {
                                     "
                                     :model-value="true"
                                     label="Start Time is BEFORE End Time"
-                                    disabled
-                                    color="emerald"
+                                    :readonly="true"
+                                    color="success"
                                     required
+                                    hide-details
                                 />
-                                <UCheckbox
+                                <v-checkbox
                                     v-else
                                     :model-value="false"
                                     label="Start Time is BEFORE End Time"
-                                    disabled
-                                    color="emerald"
+                                    :readonly="true"
+                                    color="success"
                                     required
+                                    hide-details
                                 />
                             </div>
-                            <UCheckbox
+                            <v-checkbox
                                 v-else
                                 :model-value="false"
                                 label="Select Start and End Time"
-                                disabled
-                                color="emerald"
+                                :readonly="true"
+                                color="success"
                                 required
+                                hide-details
                             />
                         </div>
                     </td>
