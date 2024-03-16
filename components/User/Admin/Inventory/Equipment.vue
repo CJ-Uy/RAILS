@@ -245,7 +245,7 @@ async function transactNewQuantity() {
         <UModal v-model="failedDeletion">
             <UCard>
                 <template #header>
-                    <span class="text-red-500">EQUIPMENT DELETEION FAILED</span>
+                    <span class="text-red-500">EQUIPMENT DELETION FAILED</span>
                 </template>
                 <p>
                     Failed to delete {{ selectedData.equipmentName }} due to its
@@ -397,7 +397,7 @@ async function transactNewQuantity() {
                             />
                         </div>
 
-                        <div class="flex items-center">Decription</div>
+                        <div class="flex items-center">Description</div>
                         <div class="col-span-2">
                             <UTextarea
                                 v-model="selectedData.description"
@@ -617,7 +617,7 @@ async function transactNewQuantity() {
                             />
                         </div>
 
-                        <div class="flex items-center">Decription</div>
+                        <div class="flex items-center">Description</div>
                         <div class="col-span-2">
                             <UTextarea
                                 v-model="newEquipmentData.description"

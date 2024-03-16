@@ -248,7 +248,7 @@ async function transactNewQuantity() {
         <UModal v-model="failedDeletion">
             <UCard>
                 <template #header>
-                    <span class="text-red-500">MATERIALS DELETEION FAILED</span>
+                    <span class="text-red-500">MATERIALS DELETION FAILED</span>
                 </template>
                 <p>
                     Failed to delete {{ selectedData.itemName }} due to its
