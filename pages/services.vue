@@ -16,37 +16,55 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                 class="flex h-full w-[50%] min-w-[512px] flex-col justify-around border-r-2 border-r-gray-300"
             >
                 <div class="flex h-[30%] w-full flex-row justify-evenly">
-                    <div
-                        class="ml-[-24px] w-[30%] justify-self-start rounded-r-3xl bg-[url('/images/labPhotos/BioLab.jpg')] bg-cover bg-center"
-                    ></div>
-                    <div
-                        class="w-[30%] rounded-3xl bg-[url('/images/labPhotos/ChemLab.jpg')] bg-cover bg-center"
-                    ></div>
-                    <div
-                        class="w-[30%] rounded-3xl bg-[url('/images/labPhotos/EqptRoom.jpg')] bg-cover bg-center"
-                    ></div>
+                    <NuxtImg
+                        src="/images/labPhotos/BioLab.jpg"
+                        class="ml-[-24px] w-[30%] justify-self-start rounded-r-3xl object-cover"
+                        format="webp"
+                    />
+                    <NuxtImg
+                        src="/images/labPhotos/ChemLab.jpg"
+                        class="w-[30%] rounded-3xl object-cover"
+                        format="webp"
+                    />
+                    <NuxtImg
+                        src="/images/labPhotos/EqptRoom.jpg"
+                        class="w-[30%] rounded-3xl object-cover"
+                        format="webp"
+                    />
                 </div>
                 <div class="flex h-[30%] w-full flex-row justify-evenly">
-                    <div
-                        class="ml-[-24px] w-[10%] justify-self-start rounded-r-3xl bg-[url('/images/labPhotos/ChemicalRoom.jpg')] bg-cover bg-center"
-                    ></div>
-                    <div
-                        class="inline-block w-[30%] rounded-3xl bg-[url('/images/labPhotos/PhysicsLab.jpg')] bg-cover bg-center"
-                    ></div>
-                    <div
-                        class="inline-block w-[50%] rounded-3xl bg-[url('/images/labPhotos/FabLab.jpg')] bg-cover bg-center"
-                    ></div>
+                    <NuxtImg
+                        src="/images/labPhotos/ChemicalRoom.jpg"
+                        class="ml-[-24px] w-[10%] justify-self-start rounded-r-3xl object-cover"
+                        format="webp"
+                    />
+                    <NuxtImg
+                        src="/images/labPhotos/PhysicsLab.jpg"
+                        class="inline-block w-[30%] rounded-3xl object-cover"
+                        format="webp"
+                    />
+                    <NuxtImg
+                        src="/images/labPhotos/FabLab.jpg"
+                        class="inline-block w-[50%] rounded-3xl object-cover"
+                        format="webp"
+                    />
                 </div>
                 <div class="flex h-[30%] w-full flex-row justify-evenly">
-                    <div
-                        class="ml-[-24px] w-[15%] justify-self-start rounded-r-3xl bg-[url('/images/labPhotos/ChemicalRoom.jpg')] bg-cover bg-center"
-                    ></div>
-                    <div
-                        class="inline-block w-[40%] rounded-3xl bg-[url('/images/labPhotos/InstruRoom.jpg')] bg-cover bg-center"
-                    ></div>
-                    <div
-                        class="inline-block w-[35%] rounded-3xl bg-[url('/images/labPhotos/ResLab.jpg')] bg-cover bg-center"
-                    ></div>
+                    <NuxtImg
+                        src="/images/labPhotos/ChemicalRoom.jpg"
+                        class="ml-[-24px] w-[15%] justify-self-start rounded-r-3xl object-cover"
+                        format="webp"
+                    />
+                    <NuxtImg
+                        src="/images/labPhotos/InstruRoom.jpg"
+                        class="inline-block w-[40%] rounded-3xl object-cover"
+                        format="webp"
+                    />
+                    <NuxtImg
+                        src="/images/labPhotos/ResLab.jpg"
+                        class="inline-block w-[35%] rounded-3xl object-cover"
+                        format="webp"
+                    />
                 </div>
             </div>
             <div
