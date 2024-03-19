@@ -7,7 +7,6 @@ CREATE TABLE `SchoolYear` (
     `currentSchoolYear` BOOLEAN NOT NULL DEFAULT false,
     `campus` VARCHAR(191) NOT NULL DEFAULT 'EASTERN VISAYAS CAMPUS',
     `materialEquipmentRequestControlNumberCounter` INTEGER NOT NULL DEFAULT 0,
-    `equipmentRequestControlNumberCounter` INTEGER NOT NULL DEFAULT 0,
     `reagentRequestControlNumberCounter` INTEGER NOT NULL DEFAULT 0,
     `laboratoryRequestControlNumberCounter` INTEGER NOT NULL DEFAULT 0,
 
@@ -37,6 +36,7 @@ CREATE TABLE `Admins` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `signature` MEDIUMTEXT NULL,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -47,6 +47,8 @@ CREATE TABLE `Teachers` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `signature` MEDIUMTEXT NULL,
+    `unitId` VARCHAR(191) NULL,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -59,6 +61,7 @@ CREATE TABLE `Students` (
     `gradeSectionId` VARCHAR(191) NULL,
     `grade` INTEGER NULL,
     `section` VARCHAR(191) NULL,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -75,12 +78,26 @@ CREATE TABLE `ChangeRoleRequests` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Notifications` (
+    `id` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `isRead` BOOLEAN NOT NULL DEFAULT false,
+    `userId` VARCHAR(191) NOT NULL,
+    `message` VARCHAR(191) NOT NULL,
+    `redirect` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `GradeSection` (
     `id` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `grade` INTEGER NOT NULL,
     `section` VARCHAR(191) NOT NULL,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -92,6 +109,7 @@ CREATE TABLE `Units` (
     `updatedAt` DATETIME(3) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `frequencyRank` INTEGER NOT NULL AUTO_INCREMENT,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
 
     UNIQUE INDEX `Units_frequencyRank_key`(`frequencyRank`),
     PRIMARY KEY (`id`)
@@ -104,7 +122,9 @@ CREATE TABLE `Laboratories` (
     `updatedAt` DATETIME(3) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
+    `colorCode` VARCHAR(191) NULL,
     `locationId` VARCHAR(191) NOT NULL,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -119,6 +139,7 @@ CREATE TABLE `LaboratoryLocations` (
     `inventoryOfMaterialsSupplyId` VARCHAR(191) NULL,
     `equipmentId` VARCHAR(191) NULL,
     `reagentId` VARCHAR(191) NULL,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -130,8 +151,8 @@ CREATE TABLE `LaboratoryReservations` (
     `updatedAt` DATETIME(3) NOT NULL,
     `controlNumber` VARCHAR(191) NOT NULL,
     `laboratoryId` VARCHAR(191) NOT NULL,
-    `startTime` VARCHAR(191) NOT NULL,
-    `endTime` VARCHAR(191) NOT NULL,
+    `dates` JSON NOT NULL,
+    `time` JSON NOT NULL,
     `laboratoryRequestId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -142,39 +163,42 @@ CREATE TABLE `InventoryOfMaterials` (
     `id` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
-    `code` VARCHAR(191) NOT NULL,
     `itemName` VARCHAR(191) NOT NULL,
+    `code` VARCHAR(191) NULL,
     `description` VARCHAR(191) NULL,
-    `additionalPurchase` INTEGER NULL,
-    `make` VARCHAR(191) NULL,
+    `classification` VARCHAR(191) NULL,
+    `unit` VARCHAR(191) NOT NULL,
     `supplier` VARCHAR(191) NULL,
     `dateReceived` DATETIME(3) NULL,
-    `quantity` INTEGER NULL DEFAULT 1,
-    `unit` VARCHAR(191) NOT NULL,
+    `quantity` INTEGER NOT NULL DEFAULT 1,
+    `currentlyInUse` INTEGER NOT NULL DEFAULT 0,
+    `additionalPurchase` INTEGER NULL,
+    `make` VARCHAR(191) NULL,
     `unitCost` DOUBLE NULL,
-    `borrowed` BOOLEAN NOT NULL DEFAULT false,
-    `available` BOOLEAN NOT NULL DEFAULT true,
     `damage` VARCHAR(191) NULL,
     `balancePerCard` INTEGER NULL,
     `balancePerCount` INTEGER NULL,
     `laboratoriesId` VARCHAR(191) NULL,
     `schoolYearId` VARCHAR(191) NULL,
+    `available` BOOLEAN NOT NULL DEFAULT true,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `InventoryOfEqupiment` (
+CREATE TABLE `InventoryOfEquipment` (
     `id` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
-    `code` VARCHAR(191) NOT NULL,
+    `code` VARCHAR(191) NULL,
     `equipmentName` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
     `available` BOOLEAN NOT NULL DEFAULT true,
     `serialNumber` VARCHAR(191) NULL,
     `modelNoOrManufacturer` VARCHAR(191) NULL,
     `quantity` INTEGER NULL DEFAULT 1,
+    `currentlyInUse` INTEGER NULL DEFAULT 0,
     `unit` VARCHAR(191) NULL,
     `unitCost` DOUBLE NULL,
     `dateReceived` DATETIME(3) NULL,
@@ -184,6 +208,7 @@ CREATE TABLE `InventoryOfEqupiment` (
     `status` VARCHAR(191) NULL,
     `laboratoriesId` VARCHAR(191) NULL,
     `schoolYearId` VARCHAR(191) NULL,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -194,15 +219,15 @@ CREATE TABLE `InventoryOfReagents` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `casNumber` VARCHAR(191) NULL,
-    `code` VARCHAR(191) NOT NULL,
+    `code` VARCHAR(191) NULL,
     `chemicalName` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
     `classification` VARCHAR(191) NULL,
     `manufacturerName` VARCHAR(191) NULL,
     `supplier` VARCHAR(191) NULL,
     `available` BOOLEAN NOT NULL DEFAULT true,
-    `currentQuantity` DOUBLE NULL,
-    `maxQuantity` DOUBLE NULL,
+    `quantity` DOUBLE NULL,
+    `reservedQuantity` DOUBLE NULL DEFAULT 0,
     `unit` VARCHAR(191) NULL,
     `DGClass` VARCHAR(191) NULL,
     `subRisk` VARCHAR(191) NULL,
@@ -218,6 +243,26 @@ CREATE TABLE `InventoryOfReagents` (
     `status` VARCHAR(191) NULL,
     `laboratoriesId` VARCHAR(191) NULL,
     `schoolYearId` VARCHAR(191) NULL,
+    `hidden` BOOLEAN NOT NULL DEFAULT false,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `InventoryTransactions` (
+    `id` VARCHAR(191) NOT NULL,
+    `schoolYearId` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `transactionType` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NULL,
+    `equipmentId` VARCHAR(191) NULL,
+    `materialId` VARCHAR(191) NULL,
+    `reagentId` VARCHAR(191) NULL,
+    `quantityBeforeChange` DOUBLE NOT NULL,
+    `quantityAfterChange` DOUBLE NOT NULL,
+    `quantityOfChange` DOUBLE NOT NULL,
+    `units` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -232,7 +277,7 @@ CREATE TABLE `EquipmentRequests` (
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
     `modelNoOrManufacturer` VARCHAR(191) NULL,
-    `laboratoryRequestsId` VARCHAR(191) NOT NULL,
+    `laboratoryRequestId` VARCHAR(191) NOT NULL,
     `schoolYearId` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
@@ -263,7 +308,7 @@ CREATE TABLE `ReagentRequests` (
     `unit` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
-    `laboratoryRequestsId` VARCHAR(191) NOT NULL,
+    `laboratoryRequestId` VARCHAR(191) NOT NULL,
     `schoolYearId` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
@@ -283,12 +328,30 @@ CREATE TABLE `LaboratoryRequests` (
     `unitId` VARCHAR(191) NOT NULL,
     `teacherInChargeId` VARCHAR(191) NOT NULL,
     `independentTime` JSON NULL,
-    `independentLocation` VARCHAR(191) NULL,
-    `isSignedByTeacher` BOOLEAN NOT NULL DEFAULT false,
-    `isSignedByAdmin` BOOLEAN NOT NULL DEFAULT false,
-    `signedTeacherId` VARCHAR(191) NULL,
-    `signedAdminId` VARCHAR(191) NULL,
+    `independentDates` JSON NULL,
+    `independentLocation` VARCHAR(191) NULL DEFAULT '',
+    `equipmentRequestsTeacherApproval` ENUM('APPROVED', 'PENDING', 'REVISION_NEEDED') NOT NULL DEFAULT 'PENDING',
+    `equipmentRequestsTeacherAnnotation` TEXT NULL,
+    `materialRequestsTeacherApproval` ENUM('APPROVED', 'PENDING', 'REVISION_NEEDED') NOT NULL DEFAULT 'PENDING',
+    `materialRequestsTeacherAnnotation` TEXT NULL,
+    `reagentRequestsTeacherApproval` ENUM('APPROVED', 'PENDING', 'REVISION_NEEDED') NOT NULL DEFAULT 'PENDING',
+    `reagentRequestsTeacherAnnotation` TEXT NULL,
+    `laboratoryReservationsTeacherApproval` ENUM('APPROVED', 'PENDING', 'REVISION_NEEDED') NOT NULL DEFAULT 'PENDING',
+    `laboratoryReservationsTeacherAnnotation` TEXT NULL,
+    `equipmentRequestsAdminApproval` ENUM('APPROVED', 'PENDING', 'REVISION_NEEDED') NOT NULL DEFAULT 'PENDING',
+    `equipmentRequestsAdminAnnotation` TEXT NULL,
+    `equipmentRequestsAdminApproverId` VARCHAR(191) NULL,
+    `materialRequestsAdminApproval` ENUM('APPROVED', 'PENDING', 'REVISION_NEEDED') NOT NULL DEFAULT 'PENDING',
+    `materialRequestsAdminAnnotation` TEXT NULL,
+    `materialRequestsAdminApproverId` VARCHAR(191) NULL,
+    `reagentRequestsAdminApproval` ENUM('APPROVED', 'PENDING', 'REVISION_NEEDED') NOT NULL DEFAULT 'PENDING',
+    `reagentRequestsAdminAnnotation` TEXT NULL,
+    `reagentRequestsAdminApproverId` VARCHAR(191) NULL,
+    `laboratoryReservationsAdminApproval` ENUM('APPROVED', 'PENDING', 'REVISION_NEEDED') NOT NULL DEFAULT 'PENDING',
+    `laboratoryReservationsAdminAnnotation` TEXT NULL,
+    `laboratoryReservationsAdminApproverId` VARCHAR(191) NULL,
     `schoolYearId` VARCHAR(191) NULL,
+    `completeStatus` ENUM('PENDING', 'UNDERWAY', 'COMPLETED') NOT NULL DEFAULT 'PENDING',
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -312,12 +375,12 @@ CREATE TABLE `_InventoryOfReagentsToReagentRequests` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `_EquipmentRequestsToInventoryOfEqupiment` (
+CREATE TABLE `_EquipmentRequestsToInventoryOfEquipment` (
     `A` VARCHAR(191) NOT NULL,
     `B` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `_EquipmentRequestsToInventoryOfEqupiment_AB_unique`(`A`, `B`),
-    INDEX `_EquipmentRequestsToInventoryOfEqupiment_B_index`(`B`)
+    UNIQUE INDEX `_EquipmentRequestsToInventoryOfEquipment_AB_unique`(`A`, `B`),
+    INDEX `_EquipmentRequestsToInventoryOfEquipment_B_index`(`B`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
@@ -330,10 +393,16 @@ ALTER TABLE `Users` ADD CONSTRAINT `Users_teachersId_fkey` FOREIGN KEY (`teacher
 ALTER TABLE `Users` ADD CONSTRAINT `Users_adminsId_fkey` FOREIGN KEY (`adminsId`) REFERENCES `Admins`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Teachers` ADD CONSTRAINT `Teachers_unitId_fkey` FOREIGN KEY (`unitId`) REFERENCES `Units`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Students` ADD CONSTRAINT `Students_gradeSectionId_fkey` FOREIGN KEY (`gradeSectionId`) REFERENCES `GradeSection`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ChangeRoleRequests` ADD CONSTRAINT `ChangeRoleRequests_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `Users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Notifications` ADD CONSTRAINT `Notifications_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `Users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Laboratories` ADD CONSTRAINT `Laboratories_locationId_fkey` FOREIGN KEY (`locationId`) REFERENCES `LaboratoryLocations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -342,7 +411,7 @@ ALTER TABLE `Laboratories` ADD CONSTRAINT `Laboratories_locationId_fkey` FOREIGN
 ALTER TABLE `LaboratoryLocations` ADD CONSTRAINT `LaboratoryLocations_inventoryOfMaterialsSupplyId_fkey` FOREIGN KEY (`inventoryOfMaterialsSupplyId`) REFERENCES `InventoryOfMaterials`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `LaboratoryLocations` ADD CONSTRAINT `LaboratoryLocations_equipmentId_fkey` FOREIGN KEY (`equipmentId`) REFERENCES `InventoryOfEqupiment`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `LaboratoryLocations` ADD CONSTRAINT `LaboratoryLocations_equipmentId_fkey` FOREIGN KEY (`equipmentId`) REFERENCES `InventoryOfEquipment`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `LaboratoryLocations` ADD CONSTRAINT `LaboratoryLocations_reagentId_fkey` FOREIGN KEY (`reagentId`) REFERENCES `InventoryOfReagents`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -360,10 +429,10 @@ ALTER TABLE `InventoryOfMaterials` ADD CONSTRAINT `InventoryOfMaterials_laborato
 ALTER TABLE `InventoryOfMaterials` ADD CONSTRAINT `InventoryOfMaterials_schoolYearId_fkey` FOREIGN KEY (`schoolYearId`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `InventoryOfEqupiment` ADD CONSTRAINT `InventoryOfEqupiment_laboratoriesId_fkey` FOREIGN KEY (`laboratoriesId`) REFERENCES `Laboratories`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `InventoryOfEquipment` ADD CONSTRAINT `InventoryOfEquipment_laboratoriesId_fkey` FOREIGN KEY (`laboratoriesId`) REFERENCES `Laboratories`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `InventoryOfEqupiment` ADD CONSTRAINT `InventoryOfEqupiment_schoolYearId_fkey` FOREIGN KEY (`schoolYearId`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `InventoryOfEquipment` ADD CONSTRAINT `InventoryOfEquipment_schoolYearId_fkey` FOREIGN KEY (`schoolYearId`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `InventoryOfReagents` ADD CONSTRAINT `InventoryOfReagents_laboratoriesId_fkey` FOREIGN KEY (`laboratoriesId`) REFERENCES `Laboratories`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -372,7 +441,19 @@ ALTER TABLE `InventoryOfReagents` ADD CONSTRAINT `InventoryOfReagents_laboratori
 ALTER TABLE `InventoryOfReagents` ADD CONSTRAINT `InventoryOfReagents_schoolYearId_fkey` FOREIGN KEY (`schoolYearId`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `EquipmentRequests` ADD CONSTRAINT `EquipmentRequests_laboratoryRequestsId_fkey` FOREIGN KEY (`laboratoryRequestsId`) REFERENCES `LaboratoryRequests`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `InventoryTransactions` ADD CONSTRAINT `InventoryTransactions_schoolYearId_fkey` FOREIGN KEY (`schoolYearId`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `InventoryTransactions` ADD CONSTRAINT `InventoryTransactions_equipmentId_fkey` FOREIGN KEY (`equipmentId`) REFERENCES `InventoryOfEquipment`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `InventoryTransactions` ADD CONSTRAINT `InventoryTransactions_materialId_fkey` FOREIGN KEY (`materialId`) REFERENCES `InventoryOfMaterials`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `InventoryTransactions` ADD CONSTRAINT `InventoryTransactions_reagentId_fkey` FOREIGN KEY (`reagentId`) REFERENCES `InventoryOfReagents`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `EquipmentRequests` ADD CONSTRAINT `EquipmentRequests_laboratoryRequestId_fkey` FOREIGN KEY (`laboratoryRequestId`) REFERENCES `LaboratoryRequests`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `EquipmentRequests` ADD CONSTRAINT `EquipmentRequests_schoolYearId_fkey` FOREIGN KEY (`schoolYearId`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -384,7 +465,7 @@ ALTER TABLE `MaterialRequests` ADD CONSTRAINT `MaterialRequests_laboratoryReques
 ALTER TABLE `MaterialRequests` ADD CONSTRAINT `MaterialRequests_schoolYearId_fkey` FOREIGN KEY (`schoolYearId`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `ReagentRequests` ADD CONSTRAINT `ReagentRequests_laboratoryRequestsId_fkey` FOREIGN KEY (`laboratoryRequestsId`) REFERENCES `LaboratoryRequests`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `ReagentRequests` ADD CONSTRAINT `ReagentRequests_laboratoryRequestId_fkey` FOREIGN KEY (`laboratoryRequestId`) REFERENCES `LaboratoryRequests`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ReagentRequests` ADD CONSTRAINT `ReagentRequests_schoolYearId_fkey` FOREIGN KEY (`schoolYearId`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -402,10 +483,16 @@ ALTER TABLE `LaboratoryRequests` ADD CONSTRAINT `LaboratoryRequests_unitId_fkey`
 ALTER TABLE `LaboratoryRequests` ADD CONSTRAINT `LaboratoryRequests_teacherInChargeId_fkey` FOREIGN KEY (`teacherInChargeId`) REFERENCES `Teachers`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `LaboratoryRequests` ADD CONSTRAINT `LaboratoryRequests_signedTeacherId_fkey` FOREIGN KEY (`signedTeacherId`) REFERENCES `Teachers`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `LaboratoryRequests` ADD CONSTRAINT `LaboratoryRequests_equipmentRequestsAdminApproverId_fkey` FOREIGN KEY (`equipmentRequestsAdminApproverId`) REFERENCES `Admins`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `LaboratoryRequests` ADD CONSTRAINT `LaboratoryRequests_signedAdminId_fkey` FOREIGN KEY (`signedAdminId`) REFERENCES `Admins`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `LaboratoryRequests` ADD CONSTRAINT `LaboratoryRequests_materialRequestsAdminApproverId_fkey` FOREIGN KEY (`materialRequestsAdminApproverId`) REFERENCES `Admins`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `LaboratoryRequests` ADD CONSTRAINT `LaboratoryRequests_reagentRequestsAdminApproverId_fkey` FOREIGN KEY (`reagentRequestsAdminApproverId`) REFERENCES `Admins`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `LaboratoryRequests` ADD CONSTRAINT `LaboratoryRequests_laboratoryReservationsAdminApproverId_fkey` FOREIGN KEY (`laboratoryReservationsAdminApproverId`) REFERENCES `Admins`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `LaboratoryRequests` ADD CONSTRAINT `LaboratoryRequests_schoolYearId_fkey` FOREIGN KEY (`schoolYearId`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -423,7 +510,7 @@ ALTER TABLE `_InventoryOfReagentsToReagentRequests` ADD CONSTRAINT `_InventoryOf
 ALTER TABLE `_InventoryOfReagentsToReagentRequests` ADD CONSTRAINT `_InventoryOfReagentsToReagentRequests_B_fkey` FOREIGN KEY (`B`) REFERENCES `ReagentRequests`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `_EquipmentRequestsToInventoryOfEqupiment` ADD CONSTRAINT `_EquipmentRequestsToInventoryOfEqupiment_A_fkey` FOREIGN KEY (`A`) REFERENCES `EquipmentRequests`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `_EquipmentRequestsToInventoryOfEquipment` ADD CONSTRAINT `_EquipmentRequestsToInventoryOfEquipment_A_fkey` FOREIGN KEY (`A`) REFERENCES `EquipmentRequests`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `_EquipmentRequestsToInventoryOfEqupiment` ADD CONSTRAINT `_EquipmentRequestsToInventoryOfEqupiment_B_fkey` FOREIGN KEY (`B`) REFERENCES `InventoryOfEqupiment`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `_EquipmentRequestsToInventoryOfEquipment` ADD CONSTRAINT `_EquipmentRequestsToInventoryOfEquipment_B_fkey` FOREIGN KEY (`B`) REFERENCES `InventoryOfEquipment`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
