@@ -54,6 +54,7 @@ model SchoolYear {
   yearStart         Int
   yearEnd           Int
   createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
   currentSchoolYear Boolean  @default(false)
   campus            String   @default("EASTERN VISAYAS CAMPUS")
 

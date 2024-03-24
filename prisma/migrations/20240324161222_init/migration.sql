@@ -4,6 +4,7 @@ CREATE TABLE `SchoolYear` (
     `yearStart` INTEGER NOT NULL,
     `yearEnd` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
     `currentSchoolYear` BOOLEAN NOT NULL DEFAULT false,
     `campus` VARCHAR(191) NOT NULL DEFAULT 'EASTERN VISAYAS CAMPUS',
     `materialEquipmentRequestControlNumberCounter` INTEGER NOT NULL DEFAULT 0,
