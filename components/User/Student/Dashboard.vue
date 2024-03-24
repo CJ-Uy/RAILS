@@ -116,6 +116,13 @@ getAllRequests();
     <div>
         <UContainer>
             <div
+                v-if="allRequestsData.length == 0"
+                class="mt-20 flex items-center justify-center text-3xl"
+            >
+                <h1>YOU CURRENTLY HAVE NO REQUESTS</h1>
+            </div>
+            <div
+                v-else
                 class="m-auto flex w-[95%] flex-row items-start justify-between"
             >
                 <!-- Display Pending Requests -->
@@ -273,6 +280,7 @@ getAllRequests();
                         </UCard>
                     </div>
                 </div>
+
                 <!-- Display Approved Requests -->
                 <div class="w-[31%]">
                     <span class="bold mb-[-15px] block text-lg text-gray-500"
