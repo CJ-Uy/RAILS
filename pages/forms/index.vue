@@ -14,7 +14,6 @@ const user = inject("user");
 
 const value = ref();
 
-// TODO: Add error management
 async function submitHandler(formValues) {
     // Save response to database
     const requestId = await useFetch("/api/forms/save-requests", {
@@ -52,6 +51,9 @@ async function submitHandler(formValues) {
     // if (formValues.data.submission.email) {
     //     // TODO: Make it so they send the info to their email
     // }
+
+    // Redirect to the home page
+    await navigateTo("/redirect");
 }
 
 // Remove progress bad labels on mobile
@@ -71,6 +73,23 @@ if (process.client) {
 
 // Update the value on initial load
 updateHideLabels();
+
+function downloadOrdinaryPDF() {
+    const files = [
+        "Laboratory Request and Equipment Accountability Form",
+        "Laboratory Reservation Form",
+        "Regeant Request Form",
+    ];
+
+    files.forEach((file) => {
+        const link = document.createElement("a");
+        link.href = `/officialForms/laboratoryUnit/${file}.pdf`;
+        link.download = file;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+}
 </script>
 
 <template>
@@ -140,26 +159,52 @@ updateHideLabels();
                     </FormKit>
 
                     <FormKit type="step" name="submission">
-                        <pre>
-                            {{ value }}
-                        </pre>
-                        <h2 class="mb-3">
-                            NOTE: Selecting more options may increase your wait
-                            time
-                        </h2>
-                        <FormKit
-                            type="checkbox"
-                            label="Download a copy of my request"
-                            name="download"
-                            value="false"
-                        />
+                        <div class="mx-[20%]">
+                            <h1 class="mb-5 text-3xl text-light-primary">
+                                SUBMISSION REMINDERS
+                            </h1>
+                            <ul class="mb-5 list-disc space-y-2 pl-5 text-lg">
+                                <li>
+                                    Please be sure to review your request in the
+                                    previous steps carefully before submitting.
+                                </li>
+                                <li>
+                                    After submitting, be sure to inform your
+                                    assigned teacher in charge of your
+                                    submission.
+                                </li>
+                                <li>
+                                    If submission does not work, please
+                                    double-check if all markers in each
+                                    reservation in the Laboratory Setting are
+                                    checked. If not, please choose valid times.
+                                </li>
+                                <li>
+                                    If all fails you may download the official
+                                    forms at this
+                                    <a
+                                        class="cursor-pointer text-light-primary underline hover:text-accent-500 active:text-accent-300"
+                                        @click="downloadOrdinaryPDF"
+                                        >link</a
+                                    >
+                                    and fill them out physically.
+                                </li>
+                            </ul>
 
-                        <FormKit
+                            <FormKit
+                                type="checkbox"
+                                label="Download a copy of my request"
+                                name="download"
+                                value="false"
+                            />
+                        </div>
+
+                        <!-- <FormKit
                             type="checkbox"
                             label="Email a copy of my request"
                             name="email"
                             value="false"
-                        />
+                        /> -->
 
                         <!-- using step slot for submit button-->
                         <template #stepNext>
