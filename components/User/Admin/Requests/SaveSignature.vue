@@ -68,13 +68,15 @@ function clearSig() {
 </script>
 
 <template>
-    <div class="w-[750px]">
-        <!-- BUG: Even if the canvas is set to 500 X 250 the svg saved is 400 X 200 by croppping it
+    <div>
+        <!-- BUG: Even if the canvas is set to 500 X 250 the svg saved is 400 X 200 by cropping it
                 The issue is with the viewbox attribute so i just manually change it
         -->
-        <div class="mx-[2.5%] flex items-center justify-center text-center">
-            <UCard class="w-[50%]">
-                <template #header> E-Signature </template>
+        <div class="flex items-center justify-center text-center">
+            <UCard>
+                <template #header>
+                    <h1 class="font-bold">E-Signature</h1>
+                </template>
                 <div
                     v-if="signature[0]"
                     class="flex items-center justify-center"
@@ -83,17 +85,19 @@ function clearSig() {
                 </div>
                 <div v-else>{{ signature[1] }}</div>
                 <template #footer>
-                    <UButton
-                        label="Save New Signature"
-                        @click="sigModalIsOpen = true"
-                        class="mr-2"
-                    />
-                    <UButton
-                        label="Delete Signature"
-                        @click="deleteSig"
-                        variant="outline"
-                        color="red"
-                    />
+                    <div class="flex flex-row">
+                        <UButton
+                            label="Save New Signature"
+                            @click="sigModalIsOpen = true"
+                            class="mr-2"
+                        />
+                        <UButton
+                            label="Delete Signature"
+                            @click="deleteSig"
+                            variant="outline"
+                            color="red"
+                        />
+                    </div>
                 </template>
             </UCard>
         </div>

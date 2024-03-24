@@ -32,26 +32,31 @@ function onChangeFile(event: Event) {
 }
 
 async function loadBackupFile() {
+    processingLoadedBackupFile.value = true;
     const body = new FormData();
     body.append("file", loadedBackupFile.value, loadedBackupFile.value.name);
     await useFetch("/api/user/admin/backups/loadFromBackup", {
         method: "POST",
         body,
     });
+    reloadNuxtApp();
+    loadBackupModalIsOpen.value = false;
+    processingLoadedBackupFile.value = false;
 }
 </script>
 
 <template>
-    <div class="w-[300px]">
-        <UCard>
+    <div>
+        <UCard class="w-[300px]">
             <template #header>
-                <h1 class="font-bold">BACKUPS</h1>
+                <h1 class="text-center font-bold">Data Backup</h1>
             </template>
-            <div class="flex-col">
+            <div class="flex flex-col items-center justify-center">
                 <UButton
+                    class="my-3"
                     label="Download Current Backup"
-                    @click="downloadBackUp"
                     :disabled="downloadingBackup"
+                    @click="downloadBackUp"
                 />
                 <UButton
                     label="Load from Backup"
@@ -72,15 +77,15 @@ async function loadBackupFile() {
                         it with the contents inside the uploaded backup file. We
                         suggest saving first a backup file of the current
                         database before replacing it. If you only wish to view
-                        contents in a backup file, run a local insance of RAILS
+                        contents in a backup file, run a local instance of RAILS
                         (this web app) and load the backup file there.
                     </p>
                     <!-- mb-[1/4 of height] -->
                     <v-file-input
-                        @change="onChangeFile"
                         class="mb-[-25px] mt-10 h-[100px]"
                         label="Upload .sql Backup File"
                         accept=".sql"
+                        @change="onChangeFile"
                     />
                 </div>
                 <template #footer>
@@ -88,8 +93,8 @@ async function loadBackupFile() {
                         label="Replace Database with Back Up File"
                         variant="outline"
                         color="red"
-                        @click="loadBackupFile"
                         :disabled="processingLoadedBackupFile"
+                        @click="loadBackupFile"
                     />
                 </template>
             </UCard>

@@ -1,11 +1,11 @@
 import "dotenv/config";
-import mysql from "mysql";
+import mysql from "mysql2/promise";
 
 export default defineEventHandler(async (event) => {
     const body = await readMultipartFormData(event);
     const dbBackup = body[0].data.toString("utf8");
 
-    const connection = mysql.createConnection({
+    const connection = await mysql.createConnection({
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
@@ -13,49 +13,13 @@ export default defineEventHandler(async (event) => {
         multipleStatements: true,
     });
 
-    connection.connect();
-
-    connection.query(
-        "DROP DATABASE IF EXISTS " + process.env.DATABASE,
-        (err, results, fields) => {
-            if (err) {
-                return "CRITICAL ERROR";
-            }
-        },
-    );
-
-    connection.query(
-        "DROP DATABASE IF EXISTS " + process.env.DATABASE,
-        (err, results, fields) => {
-            if (err) {
-                return "CRITICAL ERROR";
-            }
-        },
-    );
-
-    connection.query(
-        "CREATE DATABASE " + process.env.DATABASE,
-        (err, results, fields) => {
-            if (err) {
-                return "CRITICAL ERROR";
-            }
-        },
-    );
-
-    connection.query("USE " + process.env.DATABASE, (err, results, fields) => {
-        if (err) {
-            return "CRITICAL ERROR";
-        }
-    });
-
-    connection.query(dbBackup, (err, results, fields) => {
-        if (err) {
-            console.error(err);
-            return "CRITICAL ERROR";
-        }
-    });
-
-    connection.end();
-
-    return "Loading from backup was successful!";
+    try {
+        await connection.query(dbBackup);
+        console.log("Backup loaded");
+        await connection.end();
+        return "Loading from backup was successful!";
+    } catch (err) {
+        await connection.end();
+        return "CRITICAL ERROR: " + err.message;
+    }
 });
