@@ -7,21 +7,69 @@ useHead({
 // [auth: false] allows the page to be seen by "Authenticated" and "Unauthenticated" users
 definePageMeta({ auth: false, layout: "landing-pages" });
 // PAGE META END
+
+const services = [
+    {
+        label: "MAJOR",
+        slot: "MajorEquipments",
+    },
+    {
+        label: "FABLAB",
+        slot: "FabLab",
+    },
+    {
+        label: "LABS",
+        slot: "Labs",
+    },
+];
 </script>
 
 <template>
     <div class="flex h-[100vh] flex-col">
         <div class="flex w-full flex-1 flex-col justify-between md:flex-row">
             <div
-                class="flex h-full w-[50%] min-w-[300px] flex-col items-center justify-center text-center text-gray-800"
+                class="flex h-full w-full min-w-[300px] flex-col items-center justify-center space-y-3 text-center text-gray-800 md:w-[50%]"
             >
                 <h1 class="text-6xl font-extrabold text-light-primary">
                     SERVICES
                 </h1>
-                <p class="mx-5 text-2xl">
+                <p class="mx-[10%] text-2xl">
                     Scholars are offered state-of-the-art tools and equipment,
                     as well as laboratories fit for any scientific work.
                 </p>
+                <UTabs :items="services" class="h-[250px] w-[80%]">
+                    <template #MajorEquipments>
+                        <ul>
+                            <li>Rotary Evaporator</li>
+                            <li>Autoclave</li>
+                            <li>Incubator</li>
+                            <li>Water Sonicator</li>
+                            <li>Vortex Mixer</li>
+                            <li>Oven</li>
+                            <li>Analytical Balance</li>
+                        </ul>
+                    </template>
+                    <template #FabLab>
+                        <ul>
+                            <li>3D Printer</li>
+                            <li>Laser Precision Milling</li>
+                            <li>CNC-Milling</li>
+                            <li>Vinyl Cutting</li>
+                            <li>Tarpaulin Printing</li>
+                        </ul>
+                    </template>
+                    <template #Labs>
+                        <ul>
+                            <li>
+                                Research Room & Instrument Unit Equipment (Crest
+                                3rd Floor)
+                            </li>
+                            <li>Chemistry Unit Equipment</li>
+                            <li>Biology Unit Equipment</li>
+                            <li>Physics Unit Equipment</li>
+                        </ul>
+                    </template>
+                </UTabs>
             </div>
             <div
                 class="flex h-full w-[50%] min-w-[512px] flex-col justify-around border-r-2 border-r-gray-300"
