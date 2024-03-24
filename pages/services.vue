@@ -35,12 +35,16 @@ const services = [
                 </h1>
                 <p class="mx-[10%] text-2xl">
                     Scholars are offered state-of-the-art tools and equipment,
-                    as well as laboratories fit for any scientific work.
+                    as well as laboratories fit for any scientific work. For any
+                    further inquires please email
+                    <span class="font-extrabold text-light-primary"
+                        >reslab@evc.pshs.edu.ph</span
+                    >
                 </p>
-                <UTabs :items="services" class="h-[250px] w-[80%]">
+                <UTabs :items="services" class="h-[275px] w-[80%] md:h-[450px]">
                     <template #MajorEquipments>
-                        <ul>
-                            <li>Rotary Evaporator</li>
+                        <ul class="text-lg">
+                            <li class="mt-3">Rotary Evaporator</li>
                             <li>Autoclave</li>
                             <li>Incubator</li>
                             <li>Water Sonicator</li>
@@ -50,8 +54,8 @@ const services = [
                         </ul>
                     </template>
                     <template #FabLab>
-                        <ul>
-                            <li>3D Printer</li>
+                        <ul class="text-lg">
+                            <li class="mt-3">3D Printer</li>
                             <li>Laser Precision Milling</li>
                             <li>CNC-Milling</li>
                             <li>Vinyl Cutting</li>
@@ -59,8 +63,8 @@ const services = [
                         </ul>
                     </template>
                     <template #Labs>
-                        <ul>
-                            <li>
+                        <ul class="text-lg">
+                            <li class="mt-3">
                                 Research Room & Instrument Unit Equipment (Crest
                                 3rd Floor)
                             </li>
@@ -72,7 +76,7 @@ const services = [
                 </UTabs>
             </div>
             <div
-                class="flex h-full w-[50%] min-w-[512px] flex-col justify-around border-r-2 border-r-gray-300"
+                class="flex h-full w-full min-w-[512px] flex-col items-center justify-center border-l-2 border-l-gray-300 pl-5 md:w-[50%]"
             >
                 <div class="flex h-[30%] w-full flex-row justify-evenly">
                     <NuxtImg
