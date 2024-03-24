@@ -278,7 +278,7 @@ watch(selectedData, () => {
     setCurrentProfileStatuses();
 });
 
-// Editing Mode Apperances
+// Editing Mode Appearances
 const colorEditable = ref("gray");
 </script>
 

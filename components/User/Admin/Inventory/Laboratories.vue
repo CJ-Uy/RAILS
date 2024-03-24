@@ -87,7 +87,7 @@ function selectedRow(data) {
 // Only allow editing if the user is an administrator
 const allowedEditing = ref(user.role === "ADMIN");
 
-// Editing Mode Apperances
+// Editing Mode Appearances
 const colorEditable = ref("gray");
 
 const tableRef = ref();

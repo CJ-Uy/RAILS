@@ -114,7 +114,7 @@ const listOfAllColumns = [
 // Only allow editing if the user is an administrator
 const allowedEditing = ref(user.role === "ADMIN");
 
-// Editing Mode Apperances
+// Editing Mode Appearances
 const colorEditable = ref("gray");
 
 // Editing Mode
@@ -293,16 +293,15 @@ async function transactNewQuantity() {
                             <UInput
                                 v-model="newTransaction.changeInQuantity"
                                 type="number"
+                                min="0"
+                                oninput="validity.valid||(value='');"
                                 :placeholder="selectedData.unit"
                             />
                         </div>
 
                         <div class="flex items-center">Description</div>
                         <div class="flex items-center">
-                            <UTextarea
-                                v-model="newTransaction.description"
-                                type="number"
-                            />
+                            <UTextarea v-model="newTransaction.description" />
                         </div>
                     </div>
                     <div class="mt-5 grid grid-cols-3 content-center">

@@ -154,7 +154,7 @@ function selectedRow(data) {
 // Only allow editing if the user is an administrator
 const allowedEditing = ref(user.role === "ADMIN");
 
-// Editing Mode Apperances
+// Editing Mode Appearances
 const colorEditable = ref("gray");
 
 const tableRef = ref();
@@ -294,16 +294,15 @@ async function transactNewQuantity() {
                             <UInput
                                 v-model="newTransaction.changeInQuantity"
                                 type="number"
+                                min="0"
+                                oninput="validity.valid||(value='');"
                                 :placeholder="selectedData.unit"
                             />
                         </div>
 
                         <div class="flex items-center">Description</div>
                         <div class="flex items-center">
-                            <UTextarea
-                                v-model="newTransaction.description"
-                                type="number"
-                            />
+                            <UTextarea v-model="newTransaction.description" />
                         </div>
                     </div>
                 </div>
@@ -479,7 +478,7 @@ async function transactNewQuantity() {
                             class="col-span-2"
                         >
                             <UButton
-                                label="Delete Laboratory"
+                                label="Delete Item"
                                 variant="outline"
                                 color="red"
                                 @click="deleteItem"
