@@ -70,9 +70,14 @@ function discardChanges() {
     allUsersTableRef.value.updateTable();
 }
 async function updateChanges() {
-    await useFetch("/api/db/manageUsers/update", {
+    await useFetch("/api/admin/manageUsers/update", {
         method: "POST",
-        body: JSON.stringify(selectedData.value),
+        body: {
+            ...selectedData.value,
+            studentProfileStatus: currentStudentProfileStatus.value,
+            teacherProfileStatus: currentTeacherProfileStatus.value,
+            adminProfileStatus: currentAdminProfileStatus.value,
+        },
     });
     editModeIsOpen.value = false;
     colorEditable.value = "gray";
@@ -145,6 +150,9 @@ function adaptProfileStatusToRoleChange() {
         }
 
         // Change all other profiles statuses to most likely scenario
+        if (selectedData.value.teacherProfile != null) {
+            selectedData.value.teacherProfile.hidden = true;
+        }
         if (selectedData.value.adminProfile != null) {
             selectedData.value.adminProfile.hidden = true;
         }
@@ -270,7 +278,7 @@ watch(selectedData, () => {
     setCurrentProfileStatuses();
 });
 
-// Editing Mode Apperances
+// Editing Mode Appearances
 const colorEditable = ref("gray");
 </script>
 
@@ -282,7 +290,7 @@ const colorEditable = ref("gray");
             default-sort-key="role"
             :starting-columns="startingColumns"
             :list-of-all-columns="listOfAllColumns"
-            fetch-path="/api/db/manageUsers/getAll"
+            fetch-path="/api/admin/manageUsers/getAll"
             :allowed-editing="allowedEditing"
             :edit-mode-is-open="editModeIsOpen"
             @selected-row="selectedRow"

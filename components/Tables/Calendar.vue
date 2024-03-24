@@ -43,7 +43,7 @@ for (const i in reservationsValue.value) {
         });
     }
 }
-console.log(items.value);
+// console.log(items.value);
 
 // Allow hover effects
 const allowHoverEvents = ref(true);
@@ -72,7 +72,7 @@ const checkItemModalIsOpen = ref(false);
 const reservation = ref();
 function checkItem(item) {
     reservation.value = ref(item);
-    console.log(reservation.value);
+    // console.log(reservation.value);
     checkItemModalIsOpen.value = true;
 }
 </script>

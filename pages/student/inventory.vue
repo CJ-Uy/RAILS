@@ -59,16 +59,16 @@ onMounted(() => {
                 :orientation="tabsOrientation"
             >
                 <template #laboratories>
-                    <UserAdminInventoryLaboratories />
+                    <UserStudentInventoryLaboratories />
                 </template>
                 <template #equipmentInventory>
-                    <UserAdminInventoryEquipment />
+                    <UserStudentInventoryEquipment />
                 </template>
                 <template #materialsInventory>
-                    <UserAdminInventoryMaterials />
+                    <UserStudentInventoryMaterials />
                 </template>
                 <template #reagentsInventory>
-                    <UserAdminInventoryReagents />
+                    <UserStudentInventoryReagents />
                 </template>
             </UTabs>
         </UContainer>

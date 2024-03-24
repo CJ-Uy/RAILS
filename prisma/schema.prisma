@@ -54,6 +54,7 @@ model SchoolYear {
   yearStart         Int
   yearEnd           Int
   createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
   currentSchoolYear Boolean  @default(false)
   campus            String   @default("EASTERN VISAYAS CAMPUS")
 
@@ -137,7 +138,7 @@ model Students {
   section String?
 
   userProfile Users[]
-  
+
   hidden Boolean @default(false)
 }
 
@@ -259,7 +260,6 @@ model InventoryOfMaterials {
   unit           String //Unit of measurement like "mL", "mg", etc..
   supplier       String?
   dateReceived   DateTime?
-  available      Boolean   @default(true)
 
   //Quantity
   quantity           Int     @default(1)
@@ -283,7 +283,8 @@ model InventoryOfMaterials {
   schoolYear   SchoolYear?        @relation(fields: [schoolYearId], references: [id])
   schoolYearId String?
 
-  hidden Boolean @default(false)
+  available Boolean @default(true)
+  hidden    Boolean @default(false)
 }
 
 model InventoryOfEquipment {
@@ -377,7 +378,7 @@ model InventoryTransactions {
   schoolYearId    String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
-  transactionType String // "ADD", "REMOVE", "MODIFY", etc...
+  transactionType String // "ADD", "REMOVE", "MODIFY TO", etc...
   description     String?
 
   equipment   InventoryOfEquipment? @relation(fields: [equipmentId], references: [id])
@@ -409,7 +410,7 @@ model EquipmentRequests {
   name                  String
   description           String?
   modelNoOrManufacturer String?
-  laboratoryRequest     LaboratoryRequests     @relation(fields: [laboratoryRequestId], references: [id])
+  laboratoryRequest     LaboratoryRequests     @relation(fields: [laboratoryRequestId], references: [id], onDelete: Cascade)
   laboratoryRequestId   String
   schoolYear            SchoolYear?            @relation(fields: [schoolYearId], references: [id])
   schoolYearId          String?
@@ -424,7 +425,7 @@ model MaterialRequests {
   materials           InventoryOfMaterials[]
   name                String
   description         String?
-  laboratoryRequest   LaboratoryRequests     @relation(fields: [laboratoryRequestId], references: [id])
+  laboratoryRequest   LaboratoryRequests     @relation(fields: [laboratoryRequestId], references: [id], onDelete: Cascade)
   laboratoryRequestId String
   schoolYear          SchoolYear?            @relation(fields: [schoolYearId], references: [id])
   schoolYearId        String?
@@ -440,7 +441,7 @@ model ReagentRequests {
   reagents            InventoryOfReagents[]
   name                String
   description         String?
-  LaboratoryRequest   LaboratoryRequests    @relation(fields: [laboratoryRequestId], references: [id])
+  LaboratoryRequest   LaboratoryRequests    @relation(fields: [laboratoryRequestId], references: [id], onDelete: Cascade)
   laboratoryRequestId String
   schoolYear          SchoolYear?           @relation(fields: [schoolYearId], references: [id])
   schoolYearId        String?

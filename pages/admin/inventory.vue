@@ -24,10 +24,6 @@ const inventoryCategories = [
         label: "Reagents",
         slot: "reagentsInventory",
     },
-    {
-        label: "Transaction History",
-        slot: "transactionHistory",
-    },
 ];
 
 // Remove progress bad labels on mobile
@@ -73,9 +69,6 @@ onMounted(() => {
                 </template>
                 <template #reagentsInventory>
                     <UserAdminInventoryReagents />
-                </template>
-                <template #transactionHistory>
-                    <UserAdminInventoryTransactions />
                 </template>
             </UTabs>
         </UContainer>

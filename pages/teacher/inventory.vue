@@ -1,6 +1,6 @@
 <script setup>
 useHead({
-    title: "EVC LABS Teacher | Inventory",
+    title: "EVC LABS | Inventory",
 });
 
 // authentication and the navbar is addedd through the layout
@@ -59,16 +59,16 @@ onMounted(() => {
                 :orientation="tabsOrientation"
             >
                 <template #laboratories>
-                    <UserAdminInventoryLaboratories />
+                    <UserTeacherInventoryLaboratories />
                 </template>
                 <template #equipmentInventory>
-                    <UserAdminInventoryEquipment />
+                    <UserTeacherInventoryEquipment />
                 </template>
                 <template #materialsInventory>
-                    <UserAdminInventoryMaterials />
+                    <UserTeacherInventoryMaterials />
                 </template>
                 <template #reagentsInventory>
-                    <UserAdminInventoryReagents />
+                    <UserTeacherInventoryReagents />
                 </template>
             </UTabs>
         </UContainer>
@@ -76,4 +76,3 @@ onMounted(() => {
 </template>
 
 <style scoped></style>
-

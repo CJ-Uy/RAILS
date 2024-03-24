@@ -63,7 +63,7 @@ function discardChanges() {
 }
 
 async function updateChanges() {
-    await useFetch("/api/db/manageLocations/updateLab", {
+    await useFetch("/api/admin/manageLabs/updateLab", {
         method: "POST",
         body: JSON.stringify(selectedData.value),
     });
@@ -87,7 +87,7 @@ function selectedRow(data) {
 // Only allow editing if the user is an administrator
 const allowedEditing = ref(user.role === "ADMIN");
 
-// Editing Mode Apperances
+// Editing Mode Appearances
 const colorEditable = ref("gray");
 
 const tableRef = ref();
@@ -96,25 +96,34 @@ const tableRef = ref();
 const newLabData = ref({});
 const addRecordModalIsOpen = ref(false);
 function closeAddRecordModal() {
-    newLabData.value = [];
+    newLabData.value = {};
     addRecordModalIsOpen.value = false;
     tableRef.value.closeAddRecord();
 }
 async function addNewLab() {
-    await useFetch("/api/db/manageLocations/addLab", {
+    await useFetch("/api/admin/manageLabs/addLab", {
         method: "POST",
         body: JSON.stringify(newLabData.value),
     });
 
+    newLabData.value = {};
     tableRef.value.closeAddRecord();
     tableRef.value.updateTable();
 }
+
+const failedDeletion = ref(false);
 async function deleteLab() {
-    const deletion = await useFetch("/api/db/manageLocations/deleteLab", {
+    editModeIsOpen.value = false;
+    colorEditable.value = "gray";
+    const deletion = await useFetch("/api/admin/manageLabs/deleteLab", {
         method: "POST",
         body: JSON.stringify(selectedData.value),
     });
-    console.log(deletion); // TODO: do some magic when u cant delete it cause its connected to some other data
+
+    if (deletion.data.value === "DELETION FAILED; MARKED HIDDEN") {
+        failedDeletion.value = true;
+    }
+
     tableRef.value.closeDataModal();
     tableRef.value.updateTable();
 }
@@ -122,6 +131,27 @@ async function deleteLab() {
 
 <template>
     <div>
+        <!-- Failed Deletion Modal -->
+        <UModal v-model="failedDeletion">
+            <UCard>
+                <template #header>
+                    <span class="text-red-500">LABORATORY DELETION FAILED</span>
+                </template>
+                <p>
+                    Failed to delete {{ selectedData.name }} due to its
+                    connection to existing data. Thus its forced deletion may
+                    cause unwanted changes in other records.
+                    <br />
+                    <br />
+                    <span class="font-bold">
+                        It has instead been marked as hidden and will not be
+                        seen by anyone except admins.
+                    </span>
+                </p>
+            </UCard>
+        </UModal>
+
+        <!-- Data Table -->
         <TablesWSlottedModals
             ref="tableRef"
             title="LABORATORIES"
@@ -143,9 +173,9 @@ async function deleteLab() {
                         </div>
                     </template>
 
-                    <div class="grid grid-cols-2">
-                        <div>Name</div>
-                        <div>
+                    <div class="grid grid-cols-3 gap-1 gap-y-2">
+                        <div class="flex items-center">Name</div>
+                        <div class="col-span-2">
                             <UInput
                                 v-model="selectedData.name"
                                 :color="colorEditable"
@@ -154,8 +184,8 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div>Location</div>
-                        <div>
+                        <div class="flex items-center">Location</div>
+                        <div class="col-span-2">
                             <USelect
                                 v-model="selectedData.location.name"
                                 :color="colorEditable"
@@ -165,8 +195,8 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div>Decription</div>
-                        <div>
+                        <div class="flex items-center">Description</div>
+                        <div class="col-span-2">
                             <UTextarea
                                 v-model="selectedData.description"
                                 :color="colorEditable"
@@ -175,18 +205,8 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div>Lab ID</div>
-                        <div>
-                            <UInput
-                                v-model="selectedData.id"
-                                color="gray"
-                                disabled="true"
-                                variant="outline"
-                            />
-                        </div>
-
-                        <div>Created At</div>
-                        <div>
+                        <div class="flex items-center">Created At</div>
+                        <div class="col-span-2">
                             <UInput
                                 v-model="selectedData.createdAt"
                                 color="gray"
@@ -195,8 +215,8 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div>Last Updated</div>
-                        <div>
+                        <div class="flex items-center">Last Updated</div>
+                        <div class="col-span-2">
                             <UInput
                                 v-model="selectedData.updatedAt"
                                 color="gray"
@@ -205,7 +225,18 @@ async function deleteLab() {
                             />
                         </div>
 
-                        <div v-if="editModeIsOpen">
+                        <div class="flex items-center">Hide</div>
+                        <div class="col-span-2">
+                            <v-switch
+                                v-model="selectedData.hidden"
+                                :readonly="!editModeIsOpen"
+                                color="primary"
+                                hide-details
+                            />
+                        </div>
+
+                        <div v-if="editModeIsOpen"></div>
+                        <div v-if="editModeIsOpen" class="col-span-2">
                             <UButton
                                 label="Delete Laboratory"
                                 variant="outline"
@@ -213,7 +244,6 @@ async function deleteLab() {
                                 @click="deleteLab"
                             />
                         </div>
-                        <div v-if="editModeIsOpen"></div>
                     </div>
 
                     <template #footer>
@@ -254,28 +284,37 @@ async function deleteLab() {
                         </div>
                     </template>
 
-                    <div class="grid grid-cols-2 space-y-2">
-                        <div>Name</div>
-                        <div>
+                    <div class="grid grid-cols-3 space-y-2">
+                        <div class="flex items-center">Name</div>
+                        <div class="col-span-2">
                             <UInput
                                 v-model="newLabData.name"
                                 placeholder="Laboratory Name Name"
                             />
                         </div>
 
-                        <div>Location</div>
-                        <div>
+                        <div class="flex items-center">Location</div>
+                        <div class="col-span-2">
                             <USelect
                                 v-model="newLabData.location"
                                 :options="allLabLocationNames"
                             />
                         </div>
 
-                        <div>Decription</div>
-                        <div>
+                        <div class="flex items-center">Description</div>
+                        <div class="col-span-2">
                             <UTextarea
                                 v-model="newLabData.description"
                                 placeholder="Enter Laboratory Description"
+                            />
+                        </div>
+
+                        <div class="flex items-center">Hide</div>
+                        <div class="col-span-2">
+                            <v-switch
+                                v-model="newLabData.hidden"
+                                color="primary"
+                                hide-details
                             />
                         </div>
                     </div>
@@ -294,6 +333,9 @@ async function deleteLab() {
                                 icon="i-material-symbols-save"
                                 label="SAVE"
                                 color="green"
+                                :disabled="
+                                    !newLabData.name || !newLabData.location
+                                "
                                 @click="addNewLab"
                             />
                         </div>

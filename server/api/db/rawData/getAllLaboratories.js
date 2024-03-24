@@ -13,6 +13,7 @@ export default defineEventHandler(async () => {
             equipment: true,
             reagents: true,
             laboratoryReservations: true,
+            hidden: true,
         },
     });
     return allLaboratories;

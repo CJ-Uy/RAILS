@@ -10,20 +10,22 @@ function toggleMenu() {
         <!-- Navigation Bar -->
         <nav class="container relative ml-2 min-w-full bg-white p-6">
             <!-- Flex box container -->
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col items-center justify-between lg:flex-row">
                 <!-- Logo -->
                 <div>
                     <NuxtLink to="/">
-                        <img
+                        <NuxtImg
                             src="/images/header.png"
+                            format="webp"
                             alt="Logo"
                             class="logo cursor-pointer"
                             style="height: 60px; width: auto"
                         />
                     </NuxtLink>
                 </div>
+
                 <!-- Menu items -->
-                <div class="-ml-24 space-x-16 md:flex">
+                <div class="space-x-5 lg:flex lg:space-x-16">
                     <NuxtLink
                         to="/"
                         class="menu-item cursor-pointer hover:text-light-accent"
@@ -52,7 +54,7 @@ function toggleMenu() {
                 <!-- Sign in Button -->
                 <NuxtLink to="/login" class="p-3 px-6 pt-2">
                     <button
-                        class="hidden rounded bg-light-accent px-4 py-2 font-bold text-white hover:bg-blue-600 md:flex"
+                        class="rounded bg-light-accent px-4 py-2 font-bold text-white hover:bg-blue-600"
                     >
                         Go to Dashboard
                     </button>
