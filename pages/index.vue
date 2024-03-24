@@ -19,14 +19,32 @@ const gmailRes = ref();
 </script>
 
 <template>
-    <div class="flex h-screen items-start justify-start">
-        <div class="ml-14 mt-[255px]">
+    <div class="flex items-start justify-start">
+        <div class="ml-14 flex flex-col justify-center md:h-[85vh]">
             <h1 class="font-gilroy-extrabold text-9xl font-bold text-gray-800">
                 SIGN UP NOW
             </h1>
             <p class="text-3xl text-gray-800">
                 Welcome to the PSHS-EVC<br />Online Laboratory Reservation
                 System
+            </p>
+            <NuxtImg
+                src="/images/seal.png"
+                format="webp"
+                class="w-[50%] md:w-[30%]"
+            />
+            <p class="mb-20 w-[80%] text-justify text-gray-400">
+                This website is owned and operated by the Philippine Science
+                High School - Eastern Visayas Campus (PSHS-EVC). The views,
+                opinions, and content presented on this website are solely those
+                of the authors and contributors and do not necessarily reflect
+                the official policy or position of PSHS-EVC. While we strive to
+                ensure the accuracy and reliability of the information provided,
+                we make no representations or warranties of any kind, express or
+                implied, about the completeness, accuracy, reliability,
+                suitability, or availability with respect to the website or the
+                information, products, services, or related graphics contained
+                on the website for any purpose.
             </p>
         </div>
     </div>

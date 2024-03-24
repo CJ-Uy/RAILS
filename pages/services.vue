@@ -11,7 +11,18 @@ definePageMeta({ auth: false, layout: "landing-pages" });
 
 <template>
     <div class="flex h-[100vh] flex-col">
-        <div class="flex w-full flex-1 flex-row justify-between">
+        <div class="flex w-full flex-1 flex-col justify-between md:flex-row">
+            <div
+                class="flex h-full w-[50%] min-w-[300px] flex-col items-center justify-center text-center text-gray-800"
+            >
+                <h1 class="text-6xl font-extrabold text-light-primary">
+                    SERVICES
+                </h1>
+                <p class="mx-5 text-2xl">
+                    Scholars are offered state-of-the-art tools and equipment,
+                    as well as laboratories fit for any scientific work.
+                </p>
+            </div>
             <div
                 class="flex h-full w-[50%] min-w-[512px] flex-col justify-around border-r-2 border-r-gray-300"
             >
@@ -66,12 +77,6 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                         format="webp"
                     />
                 </div>
-            </div>
-            <div
-                class="flex h-full w-[50%] min-w-[300px] items-center justify-center text-center text-xl text-gray-800"
-            >
-                Scholars are offered state-of-the-art tools and equipment,<br />
-                as well as laboratories fit for any scientific work.
             </div>
         </div>
     </div>
