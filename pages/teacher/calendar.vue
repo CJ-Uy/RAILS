@@ -3,10 +3,13 @@ useHead({
     title: "EVC LABS Teacher | Calendar",
 });
 
-// authentication and the navbar is addedd through the layout
+// authentication and the navbar is added through the layout
 definePageMeta({ layout: "teacher-pages" });
 </script>
 
 <template>
-    <h1>Calendar</h1>
+    <div>
+        <UserDashboardHeader title="CALENDAR" />
+        <TablesCalendar />
+    </div>
 </template>
