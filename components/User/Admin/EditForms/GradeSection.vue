@@ -230,14 +230,6 @@ async function deleteItem() {
                                 variant="outline"
                             />
                         </div>
-                        <div v-if="item.key == 'hidden'" class="col-span-2 p-1">
-                            <v-switch
-                                v-model="selectedData[item.key]"
-                                :readonly="!editModeIsOpen"
-                                color="primary"
-                                hide-details
-                            />
-                        </div>
 
                         <!-- Delete Entry Button -->
                         <div
