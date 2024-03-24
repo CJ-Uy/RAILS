@@ -129,7 +129,14 @@ function closeDeleteAllRequestsModal() {
     deleteAllRequestsModalIsOpen.value = false;
 }
 function deleteAllRequestsFromSchoolYear() {
-    // TODO: THIS
+    // BUG: This is not working
+    const deletionRequests = useFetch(
+        "/api/admin/editForms/manageSY/deleteAllRequests",
+        {
+            method: "POST",
+            body: JSON.stringify(selectedData.value),
+        },
+    );
 }
 </script>
 
@@ -316,7 +323,9 @@ function deleteAllRequestsFromSchoolYear() {
                             <h1 class="text-red-500">DANGER ZONE</h1>
                             <p>
                                 The button below will delete all requests
-                                related to that school year. This includes all
+                                related to that school year but not the school
+                                year itself as it may still be connected to
+                                database transactions. This includes all
                                 laboratory requests, equipment requests,
                                 material requests, and reagent requests. We
                                 recommend saving a backup in the "Settings >
