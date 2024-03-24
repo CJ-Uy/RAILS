@@ -80,51 +80,51 @@ const services = [
             >
                 <div class="flex h-[30%] w-full flex-row justify-evenly">
                     <NuxtImg
-                        src="/images/labPhotos/BioLab.jpg"
+                        src="/images/labphotos/bioLab.jpg"
                         class="ml-[-24px] w-[30%] justify-self-start rounded-r-3xl object-cover"
                         format="webp"
                     />
                     <NuxtImg
-                        src="/images/labPhotos/ChemLab.jpg"
+                        src="/images/labphotos/chemLab.jpg"
                         class="w-[30%] rounded-3xl object-cover"
                         format="webp"
                     />
                     <NuxtImg
-                        src="/images/labPhotos/EqptRoom.jpg"
+                        src="/images/labphotos/eqptRoom.jpg"
                         class="w-[30%] rounded-3xl object-cover"
                         format="webp"
                     />
                 </div>
                 <div class="flex h-[30%] w-full flex-row justify-evenly">
                     <NuxtImg
-                        src="/images/labPhotos/ChemicalRoom.jpg"
+                        src="/images/labphotos/chemicalRoom.jpg"
                         class="ml-[-24px] w-[10%] justify-self-start rounded-r-3xl object-cover"
                         format="webp"
                     />
                     <NuxtImg
-                        src="/images/labPhotos/PhysicsLab.jpg"
+                        src="/images/labphotos/physicsLab.jpg"
                         class="inline-block w-[30%] rounded-3xl object-cover"
                         format="webp"
                     />
                     <NuxtImg
-                        src="/images/labPhotos/FabLab.jpg"
+                        src="/images/labphotos/fabLab.jpg"
                         class="inline-block w-[50%] rounded-3xl object-cover"
                         format="webp"
                     />
                 </div>
                 <div class="flex h-[30%] w-full flex-row justify-evenly">
                     <NuxtImg
-                        src="/images/labPhotos/ChemicalRoom.jpg"
+                        src="/images/labphotos/chemicalRoom.jpg"
                         class="ml-[-24px] w-[15%] justify-self-start rounded-r-3xl object-cover"
                         format="webp"
                     />
                     <NuxtImg
-                        src="/images/labPhotos/InstruRoom.jpg"
+                        src="/images/labphotos/instruRoom.jpg"
                         class="inline-block w-[40%] rounded-3xl object-cover"
                         format="webp"
                     />
                     <NuxtImg
-                        src="/images/labPhotos/ResLab.jpg"
+                        src="/images/labphotos/resLab.jpg"
                         class="inline-block w-[35%] rounded-3xl object-cover"
                         format="webp"
                     />
