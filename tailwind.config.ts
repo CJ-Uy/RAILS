@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
-
+/** @type {import('tailwindcss').Config} */
 // Default are on https://tailwindcss.nuxtjs.org/tailwind/config#default-configuration
-// Allowing ddark modde https://tailwindcss.nuxtjs.org/examples/dark-mode
+// Allowing dark mode https://tailwindcss.nuxtjs.org/examples/dark-mode
 export default <Partial<Config>>{
     darkMode: "class",
     theme: {
@@ -14,7 +14,7 @@ export default <Partial<Config>>{
             },
             colors: {
                 // https://javisperez.github.io/tailwindcolorshades/?bay-of-many=23397D&accent=027ffd
-                // Naming it "primary" causes a contradiction with the default "primary" color 
+                // Naming it "primary" causes a contradiction with the default "primary" color
                 main: {
                     DEFAULT: "#23397D",
                     50: "#EDF3F7",
@@ -30,7 +30,7 @@ export default <Partial<Config>>{
                     950: "#030824",
                 },
                 accent: {
-                    DEAFULT: "#027ffd",
+                    DEFAULT: "#027ffd",
                     50: "#f2fcff",
                     100: "#e6f8ff",
                     200: "#bfebff",
@@ -61,5 +61,5 @@ export default <Partial<Config>>{
         },
     },
     plugins: [],
-    content: [],
+    content: ["./app.vue"],
 };

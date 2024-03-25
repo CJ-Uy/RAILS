@@ -1,23 +1,30 @@
 <script setup>
+import "@formkit/themes/genesis";
+
 const user = ref(inject("user"));
 
 // ----- Dynamic Selections -----
-const schoolYear = await useFetch("/api/db/forms/getCurrentSchoolYear");
-const schoolYearOptions = ref(makeSelectionOptions(schoolYear));
+const schoolYearOptions = ref(
+    await makeSelectionOptions("/api/db/forms/getCurrentSchoolYear"),
+);
 
 // Grade Sections
-const gradeSections = await useFetch("/api/db/forms/getAllGradeSections");
-const gradeSectionsOptions = ref(makeSelectionOptions(gradeSections));
+const gradeSectionsOptions = ref(
+    await makeSelectionOptions("/api/db/forms/getAllGradeSections"),
+);
 
 // Units
-const units = await useFetch("/api/db/forms/getAllUnits");
-const unitsOptions = ref(makeSelectionOptions(units));
+const unitsOptions = ref(
+    await makeSelectionOptions("/api/db/forms/getAllUnits"),
+);
 
 // Teachers
-const teachers = await useFetch("/api/db/forms/getAllTeachers");
-const teachersOptions = ref(makeSelectionOptions(teachers));
+const teachersOptions = ref(
+    await makeSelectionOptions("/api/db/forms/getAllTeachers"),
+);
 
-function makeSelectionOptions(response) {
+async function makeSelectionOptions(url) {
+    const response = await useFetch(url);
     const options = [];
     for (const key in response.data.value) {
         options.push({
@@ -113,7 +120,7 @@ function makeSelectionOptions(response) {
             validation="required"
             :options="teachersOptions"
             help="NOTE: if your teacher is not within the options below please fill
-            out a hardcopy form manually instead an go through the usual
+            out a hard copy form manually instead an go through the usual
             process."
         />
 

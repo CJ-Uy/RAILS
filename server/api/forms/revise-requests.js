@@ -45,7 +45,6 @@ export default defineEventHandler(async (event) => {
             reagentRequestsTeacherAnnotation: null,
             materialRequestsTeacherAnnotation: null,
             laboratoryReservationsTeacherAnnotation: null,
-
         },
     });
 
@@ -69,7 +68,8 @@ export default defineEventHandler(async (event) => {
             startTime: [],
             endTime: [],
         };
-        for (const reservation of body.formValues.data.laboratorySetting.allDates) {
+        for (const reservation of body.formValues.data.laboratorySetting
+            .allDates) {
             if (reservation.ranged) {
                 formattedDates.startDate.push(
                     dayjs(reservation.requestDates[0]).format("YYYY-MM-DD"),
@@ -144,8 +144,8 @@ export default defineEventHandler(async (event) => {
             let location;
             // Save Location Independently
             if (
-                body.formValues.data.laboratorySetting.hasLaboratoryReservation ===
-                "true"
+                body.formValues.data.laboratorySetting
+                    .hasLaboratoryReservation === "true"
             ) {
                 // They already have a reservation
                 const findLocation = await prisma.laboratories.findUnique({
@@ -158,11 +158,12 @@ export default defineEventHandler(async (event) => {
                 });
                 location = findLocation.name;
             } else if (
-                body.formValues.data.laboratorySetting.hasLaboratoryReservation ===
-                "custom"
+                body.formValues.data.laboratorySetting
+                    .hasLaboratoryReservation === "custom"
             ) {
                 // They have a custom location
-                location = body.formValues.data.laboratorySetting.customLocation;
+                location =
+                    body.formValues.data.laboratorySetting.customLocation;
             }
 
             // Update the request

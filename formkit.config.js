@@ -1,12 +1,12 @@
-import "@formkit/themes/genesis";
-import { defaultConfig, createInput } from "@formkit/vue";
+import { genesisIcons } from "@formkit/icons";
+import { defineFormKitConfig, createInput } from "@formkit/vue";
 import {
     createAutoAnimatePlugin,
     createAutoHeightTextareaPlugin,
     createFloatingLabelsPlugin,
     createMultiStepPlugin,
-    createLocalStoragePlugin,
 } from "@formkit/addons";
+// import { rootClasses } from "./formkit.theme";
 
 import "@formkit/addons/css/multistep";
 import "@formkit/addons/css/floatingLabels";
@@ -15,23 +15,15 @@ import Calendar from "./components/Forms/Templates/DatePicker/Calendar.vue";
 import RangedCalendar from "./components/Forms/Templates/DatePicker/RangedCalendar.vue";
 import Time from "./components/Forms/Templates/DatePicker/Time.vue";
 
-const config = defaultConfig({
+export default defineFormKitConfig(() => ({
     plugins: [
         createAutoAnimatePlugin(),
         createAutoHeightTextareaPlugin(),
         createFloatingLabelsPlugin(),
         createMultiStepPlugin(),
-        createLocalStoragePlugin({
-            // plugin defaults:
-            prefix: "formkit",
-            key: undefined,
-            control: undefined,
-            maxAge: 3600000, // 1 hour
-            debounce: 200,
-            beforeSave: undefined,
-            beforeLoad: undefined,
-        }),
     ],
+    icons: { ...genesisIcons },
+    // config: { rootClasses },
 
     // This code adds the VueDatPicker as a Formkit type
     inputs: {
@@ -39,6 +31,4 @@ const config = defaultConfig({
         RangedCalendarDatePicker: createInput(RangedCalendar),
         timeDatePicker: createInput(Time),
     },
-});
-
-export default config;
+}));
