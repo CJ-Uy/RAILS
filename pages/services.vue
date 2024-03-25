@@ -10,7 +10,7 @@ definePageMeta({ auth: false, layout: "landing-pages" });
 
 const services = [
     {
-        label: "MAJOR",
+        label: "LAB EQUIPMENT",
         slot: "MajorEquipments",
     },
     {
@@ -18,7 +18,7 @@ const services = [
         slot: "FabLab",
     },
     {
-        label: "LABS",
+        label: "SCIENCE LABS",
         slot: "Labs",
     },
 ];
