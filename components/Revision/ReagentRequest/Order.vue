@@ -21,7 +21,7 @@ function validateQuantity(reagent) {
                 Finalize the quantity of the requested Reagents here. Be sure to
                 note the units you are requesting.<br />
                 <span class="font-semibold">
-                    A Regeant Request Form will automatically be created.
+                    A Reagent Request Form will automatically be created.
                 </span>
             </p>
         </div>
