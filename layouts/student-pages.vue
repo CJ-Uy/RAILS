@@ -25,7 +25,7 @@ provide("user", user.data.value);
 </script>
 
 <template>
-<div>
+    <div>
         <!-- Desktop Layout -->
         <div class="hidden md:flex md:flex-row">
             <div class="flex basis-[15.276146%] flex-col md:block">
@@ -44,26 +44,25 @@ provide("user", user.data.value);
             <UButton
                 v-if="!showMenu"
                 icon="i-charm-menu-hamburger"
-                @click="toggleMenu"
-                class="fixed bottom-7 right-7 z-10 md:hidden"
+                class="fixed bottom-7 right-7 z-[100] md:hidden"
                 size="xl"
+                @click="toggleMenu"
             />
             <UButton
                 v-else
                 icon="i-material-symbols-cancel"
-                @click="toggleMenu"
-                class="fixed bottom-7 right-7 z-10 md:hidden"
+                class="fixed bottom-7 right-7 z-[100] md:hidden"
                 size="xl"
+                @click="toggleMenu"
             />
             <div
                 v-if="showMenu"
-                class="z-9 fixed left-0 top-0 h-full w-full bg-black bg-opacity-50"
                 v-auto-animate
+                class="fixed left-0 top-0 z-[99] h-full w-[50%] bg-white bg-opacity-50"
             >
-                <div class="absolute left-0 top-0 h-full w-[50%]">
-                    <UserStudentNavBar />
-                </div>
+                <UserStudentNavBar />
             </div>
+
             <div>
                 <slot v-if="user.data.value" />
             </div>
