@@ -128,15 +128,17 @@ function openDeleteAllRequestsModal() {
 function closeDeleteAllRequestsModal() {
     deleteAllRequestsModalIsOpen.value = false;
 }
-function deleteAllRequestsFromSchoolYear() {
-    // BUG: This is not working
-    const deletionRequests = useFetch(
+async function deleteAllRequestsFromSchoolYear() {
+    const deletionRequests = await useFetch(
         "/api/admin/editForms/manageSY/deleteAllRequests",
         {
             method: "POST",
             body: JSON.stringify(selectedData.value),
         },
     );
+    console.log(deletionRequests);
+    closeDeleteAllRequestsModal();
+    tableRef.value.closeDataModal();
 }
 </script>
 
