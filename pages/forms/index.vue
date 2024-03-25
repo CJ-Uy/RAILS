@@ -1,6 +1,7 @@
 <!-- eslint-disable camelcase -->
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
+import "@formkit/themes/genesis";
 import downloadPDF from "~/utils/forms/downloadPDF.js";
 
 // PAGE META

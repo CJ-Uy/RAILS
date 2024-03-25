@@ -1,3 +1,4 @@
+import "@formkit/themes/genesis";
 import { defaultConfig, createInput } from "@formkit/vue";
 import {
     createAutoAnimatePlugin,
@@ -31,7 +32,6 @@ const config = defaultConfig({
             beforeLoad: undefined,
         }),
     ],
-    theme: "genesis",
 
     // This code adds the VueDatPicker as a Formkit type
     inputs: {
