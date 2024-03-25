@@ -48,7 +48,8 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                     class="mb-5 flex flex-col justify-center text-center text-2xl text-gray-800"
                 >
                     <h1 class="font-extrabold">Mr. Nestor P. Carlon Jr.</h1>
-                    <h2>Science Research Specialist I - SRS I</h2>
+                    <h2>Science Research Specialist I</h2>
+                    <h2>SRS I</h2>
                 </div>
 
                 <!-- Maam Niña -->
@@ -61,7 +62,8 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                     class="mb-5 flex flex-col justify-center text-center text-2xl text-gray-800"
                 >
                     <h1 class="font-extrabold">Mrs. Filipinas M. Petilla</h1>
-                    <h2>Science Research Specialist I - SRS I</h2>
+                    <h2>Science Research Specialist I</h2>
+                    <h2>SRS I</h2>
                 </div>
 
                 <!-- Sir Israel -->
@@ -74,7 +76,8 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                     class="mb-5 flex flex-col justify-center text-center text-2xl text-gray-800"
                 >
                     <h1 class="font-extrabold">Mr. Israel Gilvani D. Malaca</h1>
-                    <h2>Science Research Assistant I - SRA I</h2>
+                    <h2>Science Research Assistant I</h2>
+                    <h2>SRA I</h2>
                 </div>
 
                 <!-- Maam Cyrill -->
@@ -87,7 +90,8 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                     class="mb-5 flex flex-col justify-center text-center text-2xl text-gray-800"
                 >
                     <h1 class="font-extrabold">Mrs. Cyrill D. Tapales</h1>
-                    <h2>Science Research Assistant I - SRA I</h2>
+                    <h2>Science Research Assistant I</h2>
+                    <h2>SRA I</h2>
                 </div>
             </div>
 
@@ -107,7 +111,8 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                     class="flex flex-col justify-center text-center text-2xl text-gray-800"
                 >
                     <h1 class="font-extrabold">Mr. Nestor P. Carlon Jr.</h1>
-                    <h2>Science Research Specialist I - SRS I</h2>
+                    <h2>Science Research Specialist I</h2>
+                    <h2>SRS I</h2>
                 </div>
 
                 <!-- Maam Niña -->
@@ -115,7 +120,8 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                     class="flex flex-col justify-center text-center text-2xl text-gray-800"
                 >
                     <h1 class="font-extrabold">Mrs. Filipinas Petilla</h1>
-                    <h2>Science Research Specialist I - SRS I</h2>
+                    <h2>Science Research Specialist I</h2>
+                    <h2>SRS I</h2>
                 </div>
                 <div>
                     <NuxtImg
@@ -137,7 +143,8 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                     class="flex flex-col justify-center text-center text-2xl text-gray-800"
                 >
                     <h1 class="font-extrabold">Mr. Israel Gilvani D. Malaca</h1>
-                    <h2>Science Research Assistant I - SRA I</h2>
+                    <h2>Science Research Assistant I</h2>
+                    <h2>SRA I</h2>
                 </div>
 
                 <!-- Maam Cyrill -->
@@ -145,7 +152,8 @@ definePageMeta({ auth: false, layout: "landing-pages" });
                     class="flex flex-col justify-center text-center text-2xl text-gray-800"
                 >
                     <h1 class="font-extrabold">Mrs. Cyrill D. Tapales</h1>
-                    <h2>Science Research Assistant I - SRA I</h2>
+                    <h2>Science Research Assistant I</h2>
+                    <h2>SRA I</h2>
                 </div>
                 <div>
                     <NuxtImg
