@@ -86,7 +86,7 @@ export default async function makeAccountability(requestId) {
     }
 
     const pageScript = fs.readFileSync(
-        "./utils/forms/addPageNumbers/page.polyfill.txt",
+        "./addPageNumbers/page.polyfill.txt",
         "utf8",
     );
 

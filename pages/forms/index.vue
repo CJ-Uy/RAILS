@@ -78,7 +78,7 @@ function downloadOrdinaryPDF() {
     const files = [
         "Laboratory Request and Equipment Accountability Form",
         "Laboratory Reservation Form",
-        "Regeant Request Form",
+        "Reagent Request Form",
     ];
 
     files.forEach((file) => {
