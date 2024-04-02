@@ -92,7 +92,9 @@ export default async function makeAccountability(requestId) {
         }
     }
 
-    const absolutePath = `${process.cwd()}/utils/forms/addPageNumbers/page.polyfill.txt`;
+    const absolutePath = require.resolve(
+        "./utils/forms/addPageNumbers/page.polyfill.txt",
+    );
     const pageScript = fs.readFileSync(absolutePath, "utf8");
 
     let html =
