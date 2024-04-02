@@ -1,4 +1,3 @@
-import fs from "fs";
 import dayjs from "dayjs";
 
 import getRequest from "./getRequest.js";
@@ -85,15 +84,10 @@ export default async function makeAccountability(requestId) {
         }
     }
 
-    const pageScript = fs.readFileSync("public/page.polyfill.txt", "utf8");
-
-    let html =
-        `<!doctype html>
+    let html = `<!doctype html>
 <html lang="en">
 <head>
-<script>` +
-        pageScript +
-        `</script>
+<script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
 <style>
     * {
         font-family: "Calibri";
