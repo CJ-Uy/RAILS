@@ -1,4 +1,5 @@
-export default function downloadPDF(pdfBuffers, lastname) {
+export default function downloadPDF(pdfBuffers, lastName) {
+    console.log("Attempting to download PDFs", pdfBuffers, lastName);
     for (const property in pdfBuffers) {
         const buffer = pdfBuffers[property].data;
         const url = window.URL.createObjectURL(
@@ -6,7 +7,7 @@ export default function downloadPDF(pdfBuffers, lastname) {
         );
         const link = document.createElement("a");
         link.href = url;
-        const filename = `${lastname}-${property}-Request.pdf`;
+        const filename = `${lastName}-${property}-Request.pdf`;
 
         link.setAttribute("download", filename);
         document.body.appendChild(link);
