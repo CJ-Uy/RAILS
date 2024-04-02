@@ -1,7 +1,10 @@
 import fs from "fs";
+import { createRequire } from "module";
 import dayjs from "dayjs";
 
 import getRequest from "./getRequest.js";
+
+const require = createRequire(import.meta.url);
 
 export default async function makeAccountability(requestId) {
     const request = await getRequest(requestId);
