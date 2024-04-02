@@ -1,10 +1,8 @@
 import fs from "fs";
-import { createRequire } from "module";
+import path from "path";
 import dayjs from "dayjs";
 
 import getRequest from "./getRequest.js";
-
-const require = createRequire(import.meta.url);
 
 export default async function makeLaboratoryReservationForm(requestId) {
     const request = await getRequest(requestId);
@@ -87,8 +85,9 @@ export default async function makeLaboratoryReservationForm(requestId) {
         }
     }
 
-    const absolutePath = require.resolve(
-        "./utils/forms/addPageNumbers/page.polyfill.txt",
+    const absolutePath = path.resolve(
+        process.cwd(),
+        "utils/forms/addPageNumbers/page.polyfill.txt",
     );
     const pageScript = fs.readFileSync(absolutePath, "utf8");
 
