@@ -7,6 +7,7 @@ Table SchoolYear {
   yearStart Int [not null]
   yearEnd Int [not null]
   createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   currentSchoolYear Boolean [not null, default: false]
   campus String [not null, default: 'EASTERN VISAYAS CAMPUS']
   materialEquipmentRequestControlNumberCounter Int [not null, default: 0]
@@ -52,7 +53,7 @@ Table Admins {
   materialRequestsApproved LaboratoryRequests [not null]
   reagentRequestsApproved LaboratoryRequests [not null]
   laboratoryReservationsApproved LaboratoryRequests [not null]
-  show Boolean [not null, default: true]
+  hidden Boolean [not null, default: false]
 }
 
 Table Teachers {
@@ -64,7 +65,7 @@ Table Teachers {
   unitId String
   userProfile Users [not null]
   receivedLaboratoryRequests LaboratoryRequests [not null]
-  show Boolean [not null, default: true]
+  hidden Boolean [not null, default: false]
 }
 
 Table Students {
@@ -76,6 +77,7 @@ Table Students {
   grade Int
   section String
   userProfile Users [not null]
+  hidden Boolean [not null, default: false]
 }
 
 Table ChangeRoleRequests {
@@ -106,7 +108,7 @@ Table GradeSection {
   section String [not null]
   students Students [not null]
   laboratoryRequests LaboratoryRequests [not null]
-  show Boolean [not null, default: true]
+  hidden Boolean [not null, default: false]
 }
 
 Table Units {
@@ -117,7 +119,7 @@ Table Units {
   frequencyRank Int [increment, unique, not null]
   teachers Teachers [not null]
   laboratoryRequests LaboratoryRequests [not null]
-  show Boolean [not null, default: true]
+  hidden Boolean [not null, default: false]
 }
 
 Table Laboratories {
@@ -133,7 +135,7 @@ Table Laboratories {
   equipment InventoryOfEquipment [not null]
   reagents InventoryOfReagents [not null]
   laboratoryReservations LaboratoryReservations [not null]
-  show Boolean [not null, default: true]
+  hidden Boolean [not null, default: false]
 }
 
 Table LaboratoryLocations {
@@ -149,7 +151,7 @@ Table LaboratoryLocations {
   equipmentId String
   inventoryOfReagents InventoryOfReagents
   reagentId String
-  show Boolean [not null, default: true]
+  hidden Boolean [not null, default: false]
 }
 
 Table LaboratoryReservations {
@@ -176,7 +178,6 @@ Table InventoryOfMaterials {
   unit String [not null]
   supplier String
   dateReceived DateTime
-  available Boolean [not null, default: true]
   quantity Int [not null, default: 1]
   currentlyInUse Int [not null, default: 0]
   additionalPurchase Int
@@ -192,7 +193,8 @@ Table InventoryOfMaterials {
   requests MaterialRequests [not null]
   schoolYear SchoolYear
   schoolYearId String
-  show Boolean [not null, default: true]
+  available Boolean [not null, default: true]
+  hidden Boolean [not null, default: false]
 }
 
 Table InventoryOfEquipment {
@@ -221,7 +223,7 @@ Table InventoryOfEquipment {
   requests EquipmentRequests [not null]
   schoolYear SchoolYear
   schoolYearId String
-  show Boolean [not null, default: true]
+  hidden Boolean [not null, default: false]
 }
 
 Table InventoryOfReagents {
@@ -258,7 +260,7 @@ Table InventoryOfReagents {
   requests ReagentRequests [not null]
   schoolYear SchoolYear
   schoolYearId String
-  show Boolean [not null, default: true]
+  hidden Boolean [not null, default: false]
 }
 
 Table InventoryTransactions {
@@ -437,7 +439,7 @@ Ref: LaboratoryLocations.reagentId > InventoryOfReagents.id
 
 Ref: LaboratoryReservations.laboratoryId > Laboratories.id
 
-Ref: LaboratoryReservations.laboratoryRequestId > LaboratoryRequests.id
+Ref: LaboratoryReservations.laboratoryRequestId > LaboratoryRequests.id [delete: Cascade]
 
 Ref: InventoryOfMaterials.laboratoriesId > Laboratories.id
 
@@ -459,15 +461,15 @@ Ref: InventoryTransactions.materialId > InventoryOfMaterials.id
 
 Ref: InventoryTransactions.reagentId > InventoryOfReagents.id
 
-Ref: EquipmentRequests.laboratoryRequestId > LaboratoryRequests.id
+Ref: EquipmentRequests.laboratoryRequestId > LaboratoryRequests.id [delete: Cascade]
 
 Ref: EquipmentRequests.schoolYearId > SchoolYear.id
 
-Ref: MaterialRequests.laboratoryRequestId > LaboratoryRequests.id
+Ref: MaterialRequests.laboratoryRequestId > LaboratoryRequests.id [delete: Cascade]
 
 Ref: MaterialRequests.schoolYearId > SchoolYear.id
 
-Ref: ReagentRequests.laboratoryRequestId > LaboratoryRequests.id
+Ref: ReagentRequests.laboratoryRequestId > LaboratoryRequests.id [delete: Cascade]
 
 Ref: ReagentRequests.schoolYearId > SchoolYear.id
 

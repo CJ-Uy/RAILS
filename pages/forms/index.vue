@@ -33,7 +33,7 @@ async function submitHandler(formValues) {
                 },
             );
             const pdfBuffers = pdfBuffers_rawData.data.value;
-
+            console.log("pdfBuffers: ", pdfBuffers);
             try {
                 downloadPDF(pdfBuffers[0], pdfBuffers[1]);
             } catch (error) {
