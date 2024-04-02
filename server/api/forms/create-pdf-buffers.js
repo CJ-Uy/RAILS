@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
         pdfBuffers.CID19 = pdfBuffer;
     }
 
-    // Make CID 20 - Accounatbility for Materials and Equipment Request Form
+    // Make CID 20 - Accountability for Materials and Equipment Request Form
     if (
         request.materialsRequested.length > 0 ||
         request.equipmentRequested.length > 0

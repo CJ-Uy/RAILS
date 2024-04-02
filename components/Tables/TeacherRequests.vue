@@ -230,8 +230,13 @@ function openModal(row) {
 // ----- Multiple Selection Mode ----- //
 const allowMultipleSelection = ref(false);
 const selectedRows = ref([]);
-function addToSelectedRows(row) {
-    selectedRows.value.push(row);
+function addSelectRow(row) {
+    const index = selectedRows.value.findIndex((item) => item.id === row.id);
+    if (index === -1) {
+        selectedRows.value.push(row);
+    } else {
+        selectedRows.value.splice(index, 1);
+    }
 }
 
 // ----- Table Control Panel ---- //
@@ -299,37 +304,42 @@ async function reviseRequest() {
 }
 
 async function downloadAll() {
-    // const requests = selectedRows.value.map((element) => element.id);
-    // for (const request of requests) {
-    //     const rawPDFBuffers = await useFetch("/api/forms/create-pdf-buffers", {
-    //         method: "POST",
-    //         body: {
-    //             id: request,
-    //         },
-    //     });
-
-    //     downloadPDF(rawPDFBuffers.data.value[0], rawPDFBuffers.data.value[1]);
-    // }
-    try {
-        const pdfBuffersRawData = await useFetch(
-            "/api/forms/create-pdf-buffers",
-            {
-                method: "POST",
-                body: {
-                    id: selectedData.value.id,
-                },
+    const requests = selectedRows.value.map((element) => element.id);
+    let counter = 0;
+    for (const request of requests) {
+        const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
+            method: "POST",
+            body: {
+                id: request,
             },
-        );
-        const pdfBuffers = pdfBuffersRawData.data.value;
+        });
 
-        try {
-            downloadPDF(pdfBuffers[0], pdfBuffers[1]);
-        } catch (error) {
-            console.error("There was an error downloading the pdf: ", error);
-        }
-    } catch (error) {
-        console.error("There was an error creating the pdf: ", error);
+        await downloadPDF(
+            requestPDF.data.value,
+            `${selectedRows.value[counter]["requestor-lastName"]},${selectedRows.value[counter]["requestor-firstName"]}`,
+        );
+        counter += 1;
     }
+    // try {
+    //     const pdfBuffersRawData = await useFetch(
+    //         "/api/forms/create-pdf-buffers",
+    //         {
+    //             method: "POST",
+    //             body: {
+    //                 id: selectedData.value.id,
+    //             },
+    //         },
+    //     );
+    //     const pdfBuffers = pdfBuffersRawData.data.value;
+
+    //     try {
+    //         downloadPDF(pdfBuffers[0], pdfBuffers[1]);
+    //     } catch (error) {
+    //         console.error("There was an error downloading the pdf: ", error);
+    //     }
+    // } catch (error) {
+    //     console.error("There was an error creating the pdf: ", error);
+    // }
 }
 
 async function downloadRequest() {
@@ -339,8 +349,10 @@ async function downloadRequest() {
             id: selectedData.value.id,
         },
     });
-
-    downloadPDF(requestPDF.data.value);
+    downloadPDF(
+        requestPDF.data.value,
+        `${selectedData.value["requestor-lastName"]},${selectedData.value["requestor-firstName"]}`,
+    );
 }
 updateTable();
 </script>
@@ -353,7 +365,7 @@ updateTable();
             </template>
 
             <div class="flex flex-col">
-                <div class="mb-5 mt-1 flex flex-col items-center">
+                <div class="mb-5 mt-1 flex w-full flex-col items-center">
                     <div class="mb-2 flex flex-row align-top">
                         <h3>Table Control Panel</h3>
                         <UTooltip>
@@ -374,9 +386,12 @@ updateTable();
                     <div class="my-1 flex w-full flex-row items-start">
                         <div class="flex h-[32px] flex-row items-center">
                             <h4 class="mr-2">Selection</h4>
-                            <UToggle
+                            <v-switch
                                 v-model="allowMultipleSelection"
+                                color="primary"
                                 size="lg"
+                                hide-details
+                                class="mr-3"
                             />
                             <div
                                 v-if="allowMultipleSelection"
@@ -457,7 +472,12 @@ updateTable();
                     :columns="selectedColumnsTable"
                     :rows="filteredRows"
                     :loading="pending"
-                    :ui="{ tr: { active: 'hover:bg-gray-200' } }"
+                    :ui="{
+                        tr: {
+                            active: 'hover:bg-gray-200',
+                            selected: 'bg-gray-200',
+                        },
+                    }"
                     @select="openModal"
                 />
             </div>
@@ -468,11 +488,18 @@ updateTable();
                     :columns="selectedColumnsTable"
                     :rows="filteredRows"
                     :loading="pending"
-                    :ui="{ tr: { active: 'hover:bg-gray-200' } }"
-                    @select="addToSelectedRows"
+                    :ui="{
+                        tr: {
+                            active: 'hover:bg-gray-200',
+                            selected: 'bg-gray-200',
+                        },
+                        checkbox: {
+                            padding: 'p-4',
+                        },
+                    }"
+                    @select="addSelectRow"
                 />
             </div>
-
             <!-- END OF DATA TABLES -->
 
             <!-- START OF FOOTERS -->
@@ -499,20 +526,29 @@ updateTable();
             >
                 <template #header>
                     <div class="flex items-center justify-between">
-                        <h3
-                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                        <div
+                            class="flex flex-row items-center justify-start space-x-3"
                         >
-                            {{
-                                selectedData[listOfAllColumns[0].key] +
-                                ", " +
-                                selectedData[listOfAllColumns[1].key] +
-                                " (" +
-                                selectedData[listOfAllColumns[20].key] +
-                                " - " +
-                                selectedData[listOfAllColumns[21].key] +
-                                ")"
-                            }}
-                        </h3>
+                            <UButton
+                                icon="i-material-symbols-download"
+                                @click="downloadRequest"
+                            />
+                            <h3
+                                class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                            >
+                                {{
+                                    selectedData[listOfAllColumns[0].key] +
+                                    ", " +
+                                    selectedData[listOfAllColumns[1].key] +
+                                    " (" +
+                                    selectedData[listOfAllColumns[20].key] +
+                                    " - " +
+                                    selectedData[listOfAllColumns[21].key] +
+                                    ")"
+                                }}
+                            </h3>
+                        </div>
+
                         <UButton
                             color="gray"
                             variant="ghost"

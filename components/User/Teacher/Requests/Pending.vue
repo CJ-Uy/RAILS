@@ -121,9 +121,6 @@ const listOfAllColumns = [
             update-path="/api/user/teacher/requests/update"
             :starting-columns="startingColumns"
             :list-of-all-columns="listOfAllColumns"
-        >
-        </TablesTeacherRequests>
+        />
     </div>
 </template>
-
-<style scoped></style>
