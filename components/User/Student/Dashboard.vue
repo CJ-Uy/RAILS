@@ -1,5 +1,6 @@
 <script setup>
 import dayjs from "dayjs";
+import downloadPDF from "~/utils/forms/downloadPDF.js";
 
 const user = inject("user");
 
@@ -107,6 +108,19 @@ async function navigateToRevision() {
     await navigateTo({
         path: "/revisions",
     });
+}
+
+async function downloadRequest() {
+    const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
+        method: "POST",
+        body: {
+            id: selectedData.value.id,
+        },
+    });
+    downloadPDF(
+        requestPDF.data.value,
+        `${selectedData.value["requestor-lastName"]},${selectedData.value["requestor-firstName"]}`,
+    );
 }
 
 getAllRequests();
@@ -505,20 +519,28 @@ getAllRequests();
             >
                 <template #header>
                     <div class="flex items-center justify-between">
-                        <h3
-                            class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                        <div
+                            class="flex flex-row items-center justify-start space-x-3"
                         >
-                            {{
-                                selectedData["requestor-lastName"] +
-                                ", " +
-                                selectedData["requestor-firstName"] +
-                                " (" +
-                                selectedData["gradeSection-grade"] +
-                                " - " +
-                                selectedData["gradeSection-section"] +
-                                ")"
-                            }}
-                        </h3>
+                            <UButton
+                                icon="i-material-symbols-download"
+                                @click="downloadRequest"
+                            />
+                            <h3
+                                class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                            >
+                                {{
+                                    selectedData["requestor-lastName"] +
+                                    ", " +
+                                    selectedData["requestor-firstName"] +
+                                    " (" +
+                                    selectedData["gradeSection-grade"] +
+                                    " - " +
+                                    selectedData["gradeSection-section"] +
+                                    ")"
+                                }}
+                            </h3>
+                        </div>
                         <UButton
                             color="gray"
                             variant="ghost"
