@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import dayjs from "dayjs";
 
 import getRequest from "./getRequest.js";
@@ -93,11 +92,7 @@ export default async function makeAccountability(requestId) {
         }
     }
 
-    const absolutePath = path.resolve(
-        process.cwd(),
-        "utils/forms/addPageNumbers/page.polyfill.txt",
-    );
-    const pageScript = fs.readFileSync(absolutePath, "utf8");
+    const pageScript = fs.readFileSync("public/page.polyfill.txt", "utf8");
 
     let html =
         `<!doctype html>
