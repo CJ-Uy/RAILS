@@ -14,6 +14,4 @@ const user = inject("user");
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

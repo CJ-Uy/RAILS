@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
         default:
             throw new Error("Invalid role");
     }
-    
 
     await prisma.changeRoleRequests.create({
         data: {

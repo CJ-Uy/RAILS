@@ -1,41 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body {
-            background-color: aqua;
-        }
-    </style>
-</head>
-<body>
-    <table class="sigs-table">
-        <tr>
-            <td></td>
-            <td> <div id="endorserSignature"></div> </td>
-            <td></td>
-            <td></td>
-            <td> <div id="approverSignature"></div> </td>
-        <tr>
-        <tr>
-            <td class="sigs-who">Endorsed by:</td>
-            <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${teacherInCharge}</td>
-            <td class="sigs-gap"></td>
-            <td class="sigs-who">Approved by:</td> 
-            <td class="input sigs-input" style="display: inline-block; word-break: break-word; width: 100%;">${approver}</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td class="sigs-title">Subject Teacher/Unit Head</td>
-            <td class="sigs-gap"></td>
-            <td></td>
-            <td class="sigs-title">Laboratory Technician</td>
-        </tr>
-    </table>
-    <script>
-         document.getElementById("endorserSignature").innerHTML = 
-    </script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            body {
+                background-color: aqua;
+            }
+        </style>
+    </head>
+    <body>
+        <table class="sigs-table">
+            <tr>
+                <td></td>
+                <td><div id="endorserSignature"></div></td>
+                <td></td>
+                <td></td>
+                <td><div id="approverSignature"></div></td>
+            </tr>
+
+            <tr></tr>
+            <tr>
+                <td class="sigs-who">Endorsed by:</td>
+                <td
+                    class="input sigs-input"
+                    style="
+                        display: inline-block;
+                        word-break: break-word;
+                        width: 100%;
+                    "
+                >
+                    ${teacherInCharge}
+                </td>
+                <td class="sigs-gap"></td>
+                <td class="sigs-who">Approved by:</td>
+                <td
+                    class="input sigs-input"
+                    style="
+                        display: inline-block;
+                        word-break: break-word;
+                        width: 100%;
+                    "
+                >
+                    ${approver}
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="sigs-title">Subject Teacher/Unit Head</td>
+                <td class="sigs-gap"></td>
+                <td></td>
+                <td class="sigs-title">Laboratory Technician</td>
+            </tr>
+        </table>
+        <script>
+            document.getElementById("endorserSignature").innerHTML =
+        </script>
+    </body>
 </html>

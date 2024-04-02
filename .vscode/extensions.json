@@ -1,41 +1,41 @@
 {
-  // See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
-  // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+    // See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
+    // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
 
-  // List of extensions which should be recommended for users of this workspace.
-  "recommendations": [
-    "aaron-bond.better-comments",
-    "adpyke.codesnap",
-    "bradlc.vscode-tailwindcss",
-    "ChakrounAnas.turbo-console-log",
-    "christian-kohler.npm-intellisense",
-    "christian-kohler.path-intellisense",
-    "codezombiech.gitignore",
-    "cschlosser.doxdocgen",
-    "dbaeumer.vscode-eslint",
-    "eamodio.gitlens",
-    "esbenp.prettier-vscode",
-    "formulahendry.auto-close-tag",
-    "formulahendry.code-runner",
-    "Gruntfuggly.todo-tree",
-    "mikestead.dotenv",
-    "ms-vscode.vscode-typescript-next",
-    "mtxr.sqltools",
-    "mtxr.sqltools-driver-mysql",
-    "Prisma.prisma",
-    "RapidAPI.vscode-rapidapi-client",
-    "ritwickdey.LiveServer",
-    "sdras.vue-vscode-snippets",
-    "streetsidesoftware.code-spell-checker",
-    "vincaslt.highlight-matching-tag",
-    "VisualStudioExptTeam.intellicode-api-usage-examples",
-    "VisualStudioExptTeam.vscodeintellicode",
-    "Vue.volar",
-    "wix.vscode-import-cost",
-    "xabikos.JavaScriptSnippets",
-    "ms-azuretools.vscode-docker",
-    "PKief.material-icon-theme"
-  ],
-  // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
-  "unwantedRecommendations": []
+    // List of extensions which should be recommended for users of this workspace.
+    "recommendations": [
+        "aaron-bond.better-comments",
+        "adpyke.codesnap",
+        "bradlc.vscode-tailwindcss",
+        "ChakrounAnas.turbo-console-log",
+        "christian-kohler.npm-intellisense",
+        "christian-kohler.path-intellisense",
+        "codezombiech.gitignore",
+        "cschlosser.doxdocgen",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "formulahendry.auto-close-tag",
+        "formulahendry.code-runner",
+        "Gruntfuggly.todo-tree",
+        "mikestead.dotenv",
+        "ms-vscode.vscode-typescript-next",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-mysql",
+        "Prisma.prisma",
+        "RapidAPI.vscode-rapidapi-client",
+        "ritwickdey.LiveServer",
+        "sdras.vue-vscode-snippets",
+        "streetsidesoftware.code-spell-checker",
+        "vincaslt.highlight-matching-tag",
+        "VisualStudioExptTeam.intellicode-api-usage-examples",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "Vue.volar",
+        "wix.vscode-import-cost",
+        "xabikos.JavaScriptSnippets",
+        "ms-azuretools.vscode-docker",
+        "PKief.material-icon-theme"
+    ],
+    // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
+    "unwantedRecommendations": []
 }

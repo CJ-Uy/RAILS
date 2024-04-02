@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
                 },
             },
         });
-    } else if ((wantedRole === Role.ADMIN) && !user.adminProfile) {
+    } else if (wantedRole === Role.ADMIN && !user.adminProfile) {
         await prisma.admins.create({
             data: {
                 userProfile: {
