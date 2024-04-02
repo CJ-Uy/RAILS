@@ -11,5 +11,6 @@ const user = inject("user");
 <template>
     <div>
         <UserDashboardHeader title="ADMIN | DASHBOARD" />
+        <UserAdminRequestsPending></UserAdminRequestsPending>
     </div>
 </template>

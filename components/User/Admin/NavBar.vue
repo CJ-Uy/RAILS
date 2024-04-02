@@ -17,16 +17,6 @@ const links = [
                 to: "/admin",
                 icon: "i-heroicons-chart-bar-solid",
             },
-        ],
-    },
-    {
-        label: "Requests",
-        children: [
-            {
-                label: "PENDING",
-                to: "/admin/current-requests",
-                icon: "i-material-symbols-manage-search",
-            },
             {
                 label: "COMPLETED",
                 to: "/admin/complete-requests",

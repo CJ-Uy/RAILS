@@ -2,10 +2,6 @@
 // Tabs
 const inventoryCategories = [
     {
-        label: "Scheduled",
-        slot: "scheduled",
-    },
-    {
         label: "Underway",
         slot: "underway",
     },
@@ -45,9 +41,6 @@ onMounted(() => {
             :ui="{ list: { tab: { active: 'bg-white' } } }"
             :orientation="tabsOrientation"
         >
-            <template #scheduled>
-                <UserAdminRequestsCompletedScheduled />
-            </template>
             <template #underway>
                 <UserAdminRequestsCompletedUnderway />
             </template>
