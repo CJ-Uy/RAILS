@@ -5,7 +5,7 @@ import { NuxtAuthHandler } from "#auth";
 import "dotenv/config";
 
 export default NuxtAuthHandler({
-    secret: process.env.AUTH_SECRET,
+    secret: "secretPassword",
     pages: {
         // Change the default behavior to use "/login" as the path for the sign-in page
         signIn: "/login",
