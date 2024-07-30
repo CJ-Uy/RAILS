@@ -4,7 +4,8 @@ const startingColumns = [
     "requestor-firstName",
     "gradeSection-grade",
     "gradeSection-section",
-    "unit-name",
+    "teacherInCharge-userProfile-lastName",
+    "forSubject",
     "updatedAt",
 ];
 
@@ -115,12 +116,13 @@ const listOfAllColumns = [
 
 <template>
     <div>
-        <TablesTeacherRequests
-            title="Teacher Pending Requests"
-            fetch-path="/api/user/teacher/requests/getAllPendingRequests"
-            update-path="/api/user/teacher/requests/update"
+        <TablesRequests
+            title="Users Not Cleared"
+            fetch-path="/api/user/admin/requests/getAllUnclearedRequests"
+            update-path="/api/user/admin/requests/update"
             :starting-columns="startingColumns"
             :list-of-all-columns="listOfAllColumns"
-        />
+        >
+        </TablesRequests>
     </div>
 </template>

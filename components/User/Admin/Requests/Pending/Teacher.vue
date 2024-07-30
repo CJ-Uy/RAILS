@@ -9,7 +9,6 @@ const startingColumns = [
     "updatedAt",
 ];
 
-// TODO: Add labels
 const listOfAllColumns = [
     { key: "requestor-lastName", label: "Requestor Last Name", sortable: true },
     {
@@ -118,7 +117,7 @@ const listOfAllColumns = [
 <template>
     <div>
         <TablesRequests
-            title="Pending Requests"
+            title="Admin Pending Requests"
             fetch-path="/api/user/admin/requests/getAllPendingRequests"
             update-path="/api/user/admin/requests/update"
             :starting-columns="startingColumns"

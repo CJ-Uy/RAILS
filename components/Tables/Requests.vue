@@ -213,11 +213,16 @@ const filteredRows = computed(() => {
 
 // ---------- MODAL ---------- //
 const annotationPlaceholder = ref();
-if (props.title === "PENDING REQUESTS") {
+if (props.title === "Pending Requests") {
     annotationPlaceholder.value = "Annotation for revisions...";
-} else if (props.title === "SCHEDULED REQUESTS") {
+} else if (props.title === "Scheduled Requests") {
     annotationPlaceholder.value = "Remarks upon distribution...";
+} else if (props.title === "To Review") {
+    annotationPlaceholder.value = "Issues for accountability record...";
+} else if (props.title === "Users Not Cleared") {
+    annotationPlaceholder.value = "Issues for accountability record...";
 }
+
 const materialRequestsAnnotation = ref("");
 const reagentRequestsAnnotation = ref("");
 const equipmentRequestsAnnotation = ref("");
@@ -225,10 +230,18 @@ const laboratoryReservationsAnnotation = ref("");
 const modalIsOpen = ref(false);
 const selectedData = ref();
 function openModal(row) {
-    materialRequestsAnnotation.value = "";
-    reagentRequestsAnnotation.value = "";
-    equipmentRequestsAnnotation.value = "";
-    laboratoryReservationsAnnotation.value = "";
+    if (user.role === "ADMIN") {
+        materialRequestsAnnotation.value = row.materialRequestsAdminAnnotation;
+        reagentRequestsAnnotation.value = row.reagentRequestsAdminAnnotation;
+        equipmentRequestsAnnotation.value =
+            row.equipmentRequestsAdminAnnotation;
+    } else if (user.role === "TEACHER") {
+        materialRequestsAnnotation.value =
+            row.materialRequestsTeacherAnnotation;
+        reagentRequestsAnnotation.value = row.reagentRequestsTeacherAnnotation;
+        equipmentRequestsAnnotation.value =
+            row.equipmentRequestsTeacherAnnotation;
+    }
     modalIsOpen.value = true;
     selectedData.value = row;
 }
@@ -336,6 +349,33 @@ async function downloadAll() {
     } catch (error) {
         console.error("There was an error creating the pdf: ", error);
     }
+}
+
+async function closeRequest() {
+    await useFetch("/api/user/admin/requests/closeRequest", {
+        method: "POST",
+        body: {
+            id: selectedData.value.id,
+            materialRequestsAnnotation: materialRequestsAnnotation.value,
+            equipmentRequestsAnnotation: equipmentRequestsAnnotation.value,
+            reagentRequestsAnnotation: reagentRequestsAnnotation.value,
+            laboratoryReservationsAnnotation:
+                laboratoryReservationsAnnotation.value,
+        },
+    });
+    modalIsOpen.value = false;
+    updateTable();
+}
+
+async function clearRequestor() {
+    await useFetch("/api/user/admin/requests/clearRequestor", {
+        method: "POST",
+        body: {
+            id: selectedData.value.id,
+        },
+    });
+    modalIsOpen.value = false;
+    updateTable();
 }
 
 updateTable();
@@ -568,7 +608,7 @@ updateTable();
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="materialRequestsAnnotation"
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="blue"
                                 />
                             </div>
@@ -609,7 +649,7 @@ updateTable();
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="equipmentRequestsAnnotation"
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="blue"
                                 />
                             </div>
@@ -649,7 +689,7 @@ updateTable();
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="reagentRequestsAnnotation"
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="blue"
                                 />
                             </div>
@@ -715,49 +755,7 @@ updateTable();
                                 <UTextarea
                                     v-model="laboratoryReservationsAnnotation"
                                     :color="equipmentRequestsAnnotationStyle"
-                                    placeholder="Annotation for rejections and revisions..."
-                                />
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <UButton
-                                    color="red"
-                                    label="REJECT"
-                                    variant="solid"
-                                    icon="i-material-symbols-delete-outline"
-                                    @click="
-                                        signRequest(
-                                            'equipmentRequestsAdminApproval',
-                                            'REJECTED',
-                                        )
-                                    "
-                                />
-                                <UTooltip
-                                    text="Set Request for Student Revision"
-                                >
-                                    <UButton
-                                        color="blue"
-                                        label="REVISE"
-                                        variant="solid"
-                                        icon="i-material-symbols-edit"
-                                        @click="
-                                            signRequest(
-                                                'equipmentRequestsAdminApproval',
-                                                'REVISION_NEEDED',
-                                            )
-                                        "
-                                    />
-                                </UTooltip>
-                                <UButton
-                                    color="green"
-                                    label="APPROVE"
-                                    variant="solid"
-                                    icon="i-material-symbols-approval"
-                                    @click="
-                                        signRequest(
-                                            'equipmentRequestsAdminApproval',
-                                            'APPROVED',
-                                        )
-                                    "
+                                    :placeholder="annotationPlaceholder"
                                 />
                             </div>
                         </template>
@@ -766,14 +764,17 @@ updateTable();
 
                 <template #footer>
                     <div
-                        v-if="props.title === 'Pending Requests'"
+                        v-if="
+                            props.title === 'Admin Pending Requests' &&
+                            user.role === 'ADMIN'
+                        "
                         class="flex items-center justify-center"
                     >
                         <UButton
                             v-if="
-                                materialRequestsAnnotation !== '' ||
-                                equipmentRequestsAnnotation !== '' ||
-                                reagentRequestsAnnotation !== '' ||
+                                materialRequestsAnnotation !== null ||
+                                equipmentRequestsAnnotation !== null ||
+                                reagentRequestsAnnotation !== null ||
                                 laboratoryReservationsAnnotation !== ''
                             "
                             color="blue"
@@ -815,12 +816,60 @@ updateTable();
                             @click="completeRequest"
                         />
                     </div>
-                    <div v-else class="flex items-center justify-center">
+                    <div
+                        v-else-if="props.title === 'To Review'"
+                        class="flex items-center justify-center"
+                    >
                         <UButton
+                            v-if="
+                                materialRequestsAnnotation !== '' ||
+                                equipmentRequestsAnnotation !== '' ||
+                                reagentRequestsAnnotation !== '' ||
+                                laboratoryReservationsAnnotation !== ''
+                            "
+                            color="red"
+                            label="REQUESTOR NOT CLEARED"
+                            variant="solid"
+                            icon="i-material-symbols-warning-outline-rounded"
+                            @click="closeRequest"
+                        />
+                        <UButton
+                            v-else
                             color="blue"
-                            label="CLOSE REQUEST"
+                            label="REQUESTOR CLEARED"
                             variant="solid"
                             icon="i-heroicons-lock-closed"
+                            @click="closeRequest"
+                        />
+                    </div>
+                    <div
+                        v-else-if="props.title === 'Reviewed Requests'"
+                        class="flex items-center justify-center"
+                    >
+                        <UButton
+                            v-if="
+                                materialRequestsAnnotation !== '' ||
+                                equipmentRequestsAnnotation !== '' ||
+                                reagentRequestsAnnotation !== '' ||
+                                laboratoryReservationsAnnotation !== ''
+                            "
+                            color="red"
+                            label="UNCLEAR REQUESTOR"
+                            variant="solid"
+                            icon="i-material-symbols-warning-outline-rounded"
+                            @click="closeRequest"
+                        />
+                    </div>
+                    <div
+                        v-else-if="props.title === 'Users Not Cleared'"
+                        class="flex items-center justify-center"
+                    >
+                        <UButton
+                            color="blue"
+                            label="CLEAR REQUESTOR"
+                            variant="solid"
+                            icon="i-material-symbols-person-check-rounded"
+                            @click="clearRequestor"
                         />
                     </div>
                 </template>

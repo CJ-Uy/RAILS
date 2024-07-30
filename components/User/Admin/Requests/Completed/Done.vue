@@ -118,7 +118,7 @@ const listOfAllColumns = [
 <template>
     <div>
         <TablesRequests
-            title="Completed Requests"
+            title="To Review"
             fetch-path="/api/user/admin/requests/getAllCompletedRequests"
             update-path="/api/user/admin/requests/update"
             :starting-columns="startingColumns"

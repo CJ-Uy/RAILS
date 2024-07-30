@@ -1,5 +1,5 @@
-# Use node 16 alpine image as base image
-FROM node:16-alpine as base
+# Use node 22 slim image as base image
+FROM node:22-slim as base
 
 # Create work directory in app folder
 WORKDIR /app
@@ -17,8 +17,8 @@ COPY . /app
 # Build the project
 RUN npm run build
 
-# Use node 16 alpine image as app image
-FROM node:16-alpine as app
+# Use node 22 alpine image as app image
+FROM node:22-alpine as app
 
 # Copy over build files from base image
 COPY --from=base /app/.output /app/.output

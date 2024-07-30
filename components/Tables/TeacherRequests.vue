@@ -604,13 +604,13 @@ updateTable();
                         </div>
 
                         <template
-                            v-if="props.title === 'Pending Requests'"
+                            v-if="props.title === 'Teacher Pending Requests'"
                             #footer
                         >
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="materialRequestsAnnotation"
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="blue"
                                 />
                             </div>
@@ -647,13 +647,13 @@ updateTable();
                         </div>
 
                         <template
-                            v-if="props.title === 'Pending Requests'"
+                            v-if="props.title === 'Teacher Pending Requests'"
                             #footer
                         >
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="equipmentRequestsAnnotation"
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="blue"
                                 />
                             </div>
@@ -690,13 +690,13 @@ updateTable();
                         </div>
 
                         <template
-                            v-if="props.title === 'Pending Requests'"
+                            v-if="props.title === 'Teacher Pending Requests'"
                             #footer
                         >
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="reagentRequestsAnnotation"
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="blue"
                                 />
                             </div>
@@ -758,13 +758,13 @@ updateTable();
                         </div>
 
                         <template
-                            v-if="props.title === 'Pending Requests'"
+                            v-if="props.title === 'Teacher Pending Requests'"
                             #footer
                         >
                             <div class="mb-4">
                                 <UTextarea
                                     v-model="laboratoryReservationsAnnotation"
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="blue"
                                 />
                             </div>
@@ -774,7 +774,7 @@ updateTable();
 
                 <template #footer>
                     <div
-                        v-if="props.title === 'Pending Requests'"
+                        v-if="props.title === 'Teacher Pending Requests'"
                         class="flex items-center justify-center"
                     >
                         <UButton

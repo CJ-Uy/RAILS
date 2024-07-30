@@ -12,7 +12,11 @@ export default defineEventHandler(async (event) => {
                         id: request,
                     },
                     data: {
-                        isSignedByAdmin: signedStatus.APPROVED,
+                        equipmentRequestsTeacherApproval: signedStatus.APPROVED,
+                        materialRequestsTeacherApproval: signedStatus.APPROVED,
+                        reagentRequestsTeacherApproval: signedStatus.APPROVED,
+                        laboratoryReservationsTeacherApproval:
+                            signedStatus.APPROVED,
                     },
                 });
             }
@@ -24,8 +28,11 @@ export default defineEventHandler(async (event) => {
                         id: request,
                     },
                     data: {
-                        isSignedByAdmin: signedStatus.REJECTED,
-                        signedAdminId: body.user,
+                        equipmentRequestsTeacherApproval: signedStatus.REJECTED,
+                        materialRequestsTeacherApproval: signedStatus.REJECTED,
+                        reagentRequestsTeacherApproval: signedStatus.REJECTED,
+                        laboratoryReservationsTeacherApproval:
+                            signedStatus.REJECTED,
                     },
                 });
             }

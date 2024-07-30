@@ -6,8 +6,8 @@ const inventoryCategories = [
         slot: "underway",
     },
     {
-        label: "Completed",
-        slot: "completed",
+        label: "To Review",
+        slot: "finalReview",
     },
 ];
 
@@ -44,7 +44,7 @@ onMounted(() => {
             <template #underway>
                 <UserAdminRequestsCompletedUnderway />
             </template>
-            <template #completed>
+            <template #finalReview>
                 <UserAdminRequestsCompletedDone />
             </template>
         </UTabs>

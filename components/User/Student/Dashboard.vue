@@ -607,7 +607,7 @@ getAllRequests();
                                 <UTextarea
                                     v-model="materialRevision"
                                     disabled
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="red"
                                 />
                             </div>
@@ -655,7 +655,7 @@ getAllRequests();
                                 <UTextarea
                                     v-model="equipmentRevision"
                                     disabled
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="red"
                                 />
                             </div>
@@ -703,7 +703,7 @@ getAllRequests();
                                 <UTextarea
                                     v-model="reagentRevision"
                                     disabled
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="red"
                                 />
                             </div>
@@ -776,7 +776,7 @@ getAllRequests();
                                 <UTextarea
                                     v-model="laboratoryRevision"
                                     disabled
-                                    placeholder="Annotation for revisions..."
+                                    :placeholder="annotationPlaceholder"
                                     color="red"
                                 />
                             </div>

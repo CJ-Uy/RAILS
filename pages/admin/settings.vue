@@ -16,9 +16,8 @@ async function handleSignOut() {
 <template>
     <div>
         <UserDashboardHeader title="ADMIN | SETTINGS" />
-        <div
-            class="flex w-full flex-col items-center justify-center md:flex-row"
-        >
+
+        <div class="flex w-full items-center justify-center md:flex-row">
             <div class="mb-5 md:mr-2">
                 <UserAdminRequestsSaveSignature />
             </div>
@@ -26,6 +25,7 @@ async function handleSignOut() {
                 <UserAdminBackups />
             </div>
         </div>
+
         <UContainer class="mt-5 flex w-full items-center justify-center">
             <UButton
                 icon="i-ph-sign-out"

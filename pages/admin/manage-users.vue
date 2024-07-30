@@ -32,7 +32,7 @@ const adminUserSettings = [
                     <UserAdminManageUsersAllUsers />
                 </template>
                 <template #accountability>
-                    <h1>Accountability of who broke what</h1>
+                    <UserAdminManageUsersAccountability />
                 </template>
             </UTabs>
         </UContainer>
