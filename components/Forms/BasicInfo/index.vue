@@ -5,34 +5,34 @@ const user = ref(inject("user"));
 
 // ----- Dynamic Selections -----
 const schoolYearOptions = ref(
-    await makeSelectionOptions("/api/db/forms/getCurrentSchoolYear"),
+	await makeSelectionOptions("/api/db/forms/getCurrentSchoolYear"),
 );
 
 // Grade Sections
 const gradeSectionsOptions = ref(
-    await makeSelectionOptions("/api/db/forms/getAllGradeSections"),
+	await makeSelectionOptions("/api/db/forms/getAllGradeSections"),
 );
 
 // Units
 const unitsOptions = ref(
-    await makeSelectionOptions("/api/db/forms/getAllUnits"),
+	await makeSelectionOptions("/api/db/forms/getAllUnits"),
 );
 
 // Teachers
 const teachersOptions = ref(
-    await makeSelectionOptions("/api/db/forms/getAllTeachers"),
+	await makeSelectionOptions("/api/db/forms/getAllTeachers"),
 );
 
 async function makeSelectionOptions(url) {
-    const response = await useFetch(url);
-    const options = [];
-    for (const key in response.data.value) {
-        options.push({
-            label: response.data.value[key],
-            value: key,
-        });
-    }
-    return options;
+	const response = await useFetch(url);
+	const options = [];
+	for (const key in response.data.value) {
+		options.push({
+			label: response.data.value[key],
+			value: key,
+		});
+	}
+	return options;
 }
 </script>
 

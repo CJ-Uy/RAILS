@@ -1,39 +1,30 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    compatibilityDate: "2025-07-28",
     components: true,
     devtools: { enabled: true },
 
     modules: [
-        // https://github.com/jurassicjs/nuxt-mailer (Nodemailer wrapper for email functionality)
-        "nuxt-mailer",
         // https://nuxt.com/modules/fontaine (Optimized font fallbacks to keep layout consistent)
-        "@nuxtjs/fontaine",
         // https://nuxt.com/modules/nuxt-auth (Next-auth wrapper for user authentication)
-        "@sidebase/nuxt-auth",
         // CSS and styling modules
-        // "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
-        // "@nuxtjs/color-mode", // https://nuxt.com/modules/color-mode (dark mode and other themes)
+        "@nuxtjs/fontaine", // "@nuxtjs/tailwindcss", // https://nuxt.com/modules/tailwindcss (CSS class based framework)
+        "@sidebase/nuxt-auth", // "@nuxtjs/color-mode", // https://nuxt.com/modules/color-mode (dark mode and other themes)
         // https://ui.nuxtlabs.com/getting-started (Component Library) contains the above 2
-        "@nuxt/ui", // main ui component library
-        "vuetify-nuxt-module", // ui library for more niche components
+        // main ui component library
+        // ui library for more niche components
         // Optimization modules
-        // https://image.nuxt.com/ (Image loading optimization)
-        "@nuxt/image",
-        // https://nuxt.com/modules/icon (Icons from iconify) [DATASET: https://icones.js.org/]
-        "nuxt-icon",
-        // https://nuxt.com/modules/icons Automatically import SVG icons from assets/icons
-        "nuxt-icons",
-        // Forms framework
+        "@nuxt/ui", // https://image.nuxt.com/ (Image loading optimization)
+        "vuetify-nuxt-module", // Forms framework
         // https://formkit.com/ (Vue forms framework)
-        "@formkit/nuxt",
-        "@nuxt/image",
-        "nuxt-scheduler", // Scheduler of events
-        // Useful but not yet used modules
-        "@vueuse/nuxt", // https://nuxt.com/modules/vueuse (Vue composition utilities)
-        // "@nuxtjs/device", // https://nuxt.com/modules/device (Device type detection)
+        "@nuxt/image", // Useful but not yet used modules
+        // https://nuxt.com/modules/vueuse (Vue composition utilities)
+        "@formkit/nuxt", // "@nuxtjs/device", // https://nuxt.com/modules/device (Device type detection)
         // Add website optimizations (https://nuxt.com/modules?category=Performance)
-        // Add SEO [search engine optimizations] when complete (https://nuxt.com/modules/seo-kit)
+        "@vueuse/nuxt", // Add SEO [search engine optimizations] when complete (https://nuxt.com/modules/seo-kit)
         "@nuxtjs/seo",
+        "nuxt-og-image",
+        "@nuxt/icon",
     ],
 
     build: {
@@ -43,14 +34,11 @@ export default defineNuxtConfig({
     // NUXT-AUTH CONFIGURATION
     auth: {
         // The origin is set to the development origin. Change this when deploying to production by setting `origin` in this config before build-time or by exporting `AUTH_ORIGIN` by running `export AUTH_ORIGIN=...`
-        // origin: "http://localhost:3000", // For development only
-        origin: "https://rails-ten.vercel.app/", // For production only
-        // (for new networks add .nip.io to URI to https://console.cloud.google.com/apis/credentials?project=rails-382915)
-
-        isEnabled: true, // The module is enabled. Change this to disable the module
+        baseURL: process.env.ORIGIN,
+        secret: process.env.AUTH_SECRET,
+        isEnabled: process.env.ENABLE_AUTH === "true", // The module is enabled. Change this to disable the module
 
         enableGlobalAppMiddleware: true, // Whether to add a global authentication middleware that will protect all pages without exclusion
-
         basePath: "/api/auth", // The base path to the authentication endpoints. Change this if you want to add your auth-endpoints at a non-default location
         defaultProvider: "google", // Select the default-provider to use when `signIn` is called. Setting this here will also effect the global middleware behavior: E.g., when you set it to `github` and the user is unauthorized, they will be directly forwarded to the Github OAuth page instead of seeing the app-login page
 
@@ -80,12 +68,6 @@ export default defineNuxtConfig({
 
     formkit: {
         configFile: "./formkit.config.js",
-    },
-
-    // NUXT-MAILER CONFIGURATION [DON'T REMOVE]
-    runtimeConfig: {
-        mailerUser: "",
-        mailerPass: "",
-        mailerLog: "",
+        autoImport: true,
     },
 });
