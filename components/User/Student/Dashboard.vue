@@ -1,6 +1,6 @@
 <script setup>
 import dayjs from "dayjs";
-import { useDownloader } from '~/composables/useDownloader';
+import { useDownloader } from "~/composables/useDownloader";
 const { loading, loadingMessage, download } = useDownloader();
 
 const user = inject("user");
@@ -110,8 +110,6 @@ async function navigateToRevision() {
         path: "/revisions",
     });
 }
-
-
 
 getAllRequests();
 </script>
@@ -512,11 +510,6 @@ getAllRequests();
                         <div
                             class="flex flex-row items-center justify-start space-x-3"
                         >
-                            <UButton
-                        :label="loading ? loadingMessage : 'Download Request'"
-                        :loading="loading"
-                        @click="download(selectedData.id)"
-                    />
                             <h3
                                 class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                             >
@@ -541,7 +534,7 @@ getAllRequests();
                     </div>
                 </template>
 
-                <div class="ml-5 font-thin">
+                <div class="mb-5 font-thin">
                     {{ selectedData["requestor-lastName"] }},
                     {{ selectedData["requestor-firstName"] }}<br />
                     {{ selectedData["gradeSection-grade"] }} -
@@ -556,6 +549,12 @@ getAllRequests();
                     {{ selectedData["teacherInCharge-userProfile-lastName"] }},
                     {{ selectedData["teacherInCharge-userProfile-firstName"] }}
                 </div>
+
+                <UButton
+                    :label="loading ? loadingMessage : 'Download Request'"
+                    :loading="loading"
+                    @click="download(selectedData.id)"
+                />
 
                 <!-- Materials Requested -->
                 <div class="mt-5">

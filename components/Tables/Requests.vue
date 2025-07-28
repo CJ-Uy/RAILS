@@ -457,6 +457,15 @@ updateTable();
                         />
                     </div>
                 </div>
+                <div v-if="user.role === 'STUDENT'">
+                    <UButton
+                        :label="
+                            loading ? loadingMessage : 'Download Request'
+                        "
+                        :loading="loading"
+                        @click="download(selectedData.id)"
+                    />
+                </div>
             </div>
 
             <!-- DATA TABLE -->
@@ -533,7 +542,7 @@ updateTable();
                     </div>
                 </template>
 
-                <div class="ml-5 font-thin">
+                <div class="font-thin">
                     {{ selectedData["requestor-lastName"] }},
                     {{ selectedData["requestor-firstName"] }}<br />
                     {{ selectedData["gradeSection-grade"] }} -
@@ -549,12 +558,16 @@ updateTable();
                     {{ selectedData["teacherInCharge-userProfile-firstName"] }}
                 </div>
 
-                <UButton
-                    class="mt-3"
-                    :label="loading ? loadingMessage : 'Download Request'"
-                    :loading="loading"
-                    @click="download(selectedData.id)"
-                />
+                <div v-if="user.role !== 'STUDENT'">
+                    <UButton
+                        class="mt-3"
+                        :label="
+                            loading ? loadingMessage : 'Download Request'
+                        "
+                        :loading="loading"
+                        @click="download(selectedData.id)"
+                    />
+                </div>
 
                 <!-- Materials Requested -->
                 <div class="mt-5">

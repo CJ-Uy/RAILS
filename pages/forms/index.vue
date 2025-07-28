@@ -138,56 +138,82 @@ function downloadOrdinaryPDF() {
                     </FormKit>
 
                     <FormKit type="step" name="submission">
-                        <div class="mx-[20%]">
-                            <h1 class="mb-5 text-3xl text-light-primary">
-                                SUBMISSION REMINDERS
-                            </h1>
-                            <ul class="mb-5 list-disc space-y-2 pl-5 text-lg">
-                                <li>
-                                    Please be sure to review your request in the
-                                    previous steps carefully before submitting.
-                                </li>
-                                <li>
-                                    After submitting, be sure to inform your
-                                    assigned teacher in charge of your
-                                    submission.
-                                </li>
-                                <li>
-                                    If submission does not work, please
-                                    double-check if all markers in each
-                                    reservation in the Laboratory Setting are
-                                    checked. If not, please choose valid times.
-                                </li>
-                                <li>
-                                    If all fails you may download the official
-                                    forms at this
-                                    <a
-                                        class="cursor-pointer text-light-primary underline hover:text-accent-500 active:text-accent-300"
-                                        @click="downloadOrdinaryPDF"
-                                        >link</a
+                        <div class="flex justify-center p-4">
+                            <div
+                                class="w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg"
+                            >
+                                <div class="flex items-center justify-center">
+                                    <h1
+                                        class="mb-6 text-center text-3xl font-bold text-gray-700"
                                     >
-                                    and fill them out physically.
-                                </li>
-                            </ul>
+                                        Final Step: Submit Your Request
+                                    </h1>
+                                </div>
+                                <p class="mb-6 text-center text-gray-600">
+                                    You're just one step away! Please review the
+                                    reminders below before submitting.
+                                </p>
 
-                            <FormKit
-                                type="checkbox"
-                                label="Download a copy of my request"
-                                name="download"
-                                value="false"
-                            />
+                                <div
+                                    class="rounded-lg border border-blue-200 bg-blue-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-blue-800"
+                                    >
+                                        Submission Reminders
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-3 text-blue-700"
+                                    >
+                                        <li>
+                                            Please be sure to review your
+                                            request in the previous steps
+                                            carefully before submitting.
+                                        </li>
+                                        <li>
+                                            After submitting, be sure to inform
+                                            your assigned teacher in charge of
+                                            your submission.
+                                        </li>
+                                        <li>
+                                            If submission does not work, please
+                                            double-check if all markers in each
+                                            reservation in the Laboratory
+                                            Setting are checked. If not, please
+                                            choose valid times.
+                                        </li>
+                                        <li>
+                                            If all else fails, you may download
+                                            the official forms at this
+                                            <a
+                                                class="cursor-pointer font-semibold text-blue-600 underline hover:text-blue-800"
+                                                @click="downloadOrdinaryPDF"
+                                                >link</a
+                                            >
+                                            and fill them out physically.
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="mt-8">
+                                    <FormKit
+                                        type="checkbox"
+                                        label="Download a copy of my request"
+                                        name="download"
+                                        :value="false"
+                                        label-class="text-gray-700"
+                                    />
+                                </div>
+                            </div>
                         </div>
-
-                        <!-- <FormKit
-                            type="checkbox"
-                            label="Email a copy of my request"
-                            name="email"
-                            value="false"
-                        /> -->
 
                         <!-- using step slot for submit button-->
                         <template #stepNext>
-                            <FormKit type="submit" label="Submit" />
+                            <FormKit
+                                type="submit"
+                                label="Submit Request"
+                                input-class="!bg-blue-600 !hover:bg-blue-700"
+                            />
                         </template>
                     </FormKit>
                 </FormKit>
