@@ -72,11 +72,14 @@ const formattedLabSummary = computed(() => {
     };
 
     const result = {
-        venue: labSetting.venue,
-        customLocation: labSetting.customLocation,
+        venue: undefined, // Initialize to undefined
+        customLocation: undefined, // Initialize to undefined
+        formattedDates: undefined, // Initialize to undefined
+        message: undefined, // Initialize to undefined
         hasReservation: labSetting.hasLaboratoryReservation === 'true'
     };
 
+    // Always process dates if they exist
     if (labSetting.allDates && labSetting.allDates.length) {
         result.formattedDates = labSetting.allDates.map(dateEntry => {
             let datesString;
@@ -94,10 +97,14 @@ const formattedLabSummary = computed(() => {
         });
     }
 
-    if (labSetting.hasLaboratoryReservation === 'false') {
-        result.message = "No laboratory reservation made.";
+    if (labSetting.hasLaboratoryReservation === 'true') {
+        result.venue = labSetting.venue;
+    } else if (labSetting.hasLaboratoryReservation === 'false') {
+        result.venue = labSetting.venue; // Still show venue if selected
+        result.message = "A Laboratory Reservation will be made.";
     } else if (labSetting.hasLaboratoryReservation === 'custom') {
-        result.message = "A custom laboratory reservation will be made.";
+        result.customLocation = labSetting.customLocation;
+        result.message = `Custom Location: ${labSetting.customLocation || 'N/A'}`;
     }
 
     return result;

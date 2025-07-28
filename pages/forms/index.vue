@@ -18,17 +18,14 @@ const labReservationRef = ref(null);
 const labVenue = ref(null);
 const labCustomLocation = ref(null);
 
-
-
-
-
 async function submitHandler(formValues) {
     // Ensure venue and customLocation are updated in formValues
     if (labVenue.value) {
         formValues.data.laboratorySetting.venue = labVenue.value;
     }
     if (labCustomLocation.value) {
-        formValues.data.laboratorySetting.customLocation = labCustomLocation.value;
+        formValues.data.laboratorySetting.customLocation =
+            labCustomLocation.value;
     }
 
     // Save response to database
@@ -102,7 +99,8 @@ function downloadOrdinaryPDF() {
                 :actions="false"
                 name="requestData"
                 use-local-storage
-                @submit="submitHandler" @keydown.enter.prevent
+                @submit="submitHandler"
+                @keydown.enter.prevent
             >
                 <FormKit
                     v-model="value"
@@ -173,22 +171,40 @@ function downloadOrdinaryPDF() {
                                 </p>
 
                                 <div
-                                    v-if="labReservationRef?.formattedLabSummary && labReservationRef.formattedLabSummary.hasReservation"
-                                    class="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-4"
+                                    v-if="
+                                        labReservationRef?.formattedLabSummary &&
+                                        labReservationRef.formattedLabSummary
+                                            .hasReservation
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
                                 >
-                                    <h2 class="mb-4 text-xl font-semibold text-gray-800">Overall Request Dates/Times</h2>
-                                    <ul class="list-inside list-disc space-y-2 text-gray-700">
-                                        <li v-for="(dateEntry, index) in labReservationRef.formattedLabSummary.formattedDates" :key="index">
-                                            Dates: {{ dateEntry.datesString }}<br>
-                                            Time: {{ dateEntry.startTime }} - {{ dateEntry.endTime }}<br>
-                                            Ranged: {{ dateEntry.ranged }}
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Overall Request Dates/Times
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-for="(
+                                                dateEntry, index
+                                            ) in labReservationRef
+                                                .formattedLabSummary
+                                                .formattedDates"
+                                            :key="index"
+                                        >
+                                            Dates: {{ dateEntry.datesString
+                                            }}<br />
+                                            Time: {{ dateEntry.startTime }} -
+                                            {{ dateEntry.endTime }}<br />
                                         </li>
                                     </ul>
                                 </div>
 
                                 <div
                                     v-if="value && value.basicInfo"
-                                    class="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-4"
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
                                 >
                                     <h2
                                         class="mb-4 text-xl font-semibold text-gray-800"
@@ -287,27 +303,93 @@ function downloadOrdinaryPDF() {
                                         </li>
                                     </ul>
                                 </div>
-                                
+
                                 <div
-                                    v-if="labReservationRef?.formattedLabSummary"
-                                    class="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-4"
+                                    v-if="
+                                        labReservationRef?.formattedLabSummary
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
                                 >
-                                    <h2 class="mb-4 text-xl font-semibold text-gray-800">Laboratory Reservation</h2>
-                                    <ul class="list-inside list-disc space-y-2 text-gray-700">
-                                        <li v-if="labReservationRef.formattedLabSummary.venue"><strong>Venue:</strong> {{ labReservationRef.formattedLabSummary.venue }}</li>
-                                        <li v-if="labReservationRef.formattedLabSummary.customLocation"><strong>Custom Location:</strong> {{ labReservationRef.formattedLabSummary.customLocation }}</li>
-                                        <li v-if="labReservationRef.formattedLabSummary.formattedDates && labReservationRef.formattedLabSummary.formattedDates.length">
-                                            <strong>Requested Dates/Times:</strong>
-                                            <ul class="list-inside list-circle ml-4 space-y-1">
-                                                <li v-for="(dateEntry, index) in labReservationRef.formattedLabSummary.formattedDates" :key="index">
-                                                    Dates: {{ dateEntry.datesString }}<br>
-                                                    Time: {{ dateEntry.startTime }} - {{ dateEntry.endTime }}<br>
-                                                    Ranged: {{ dateEntry.ranged }}
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Laboratory Reservation
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-if="
+                                                labReservationRef
+                                                    .formattedLabSummary.venue
+                                            "
+                                        >
+                                            <strong>Venue:</strong>
+                                            {{
+                                                labReservationRef
+                                                    .formattedLabSummary.venue
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                labReservationRef
+                                                    .formattedLabSummary
+                                                    .customLocation
+                                            "
+                                        >
+                                            <strong>Custom Location:</strong>
+                                            {{
+                                                labReservationRef
+                                                    .formattedLabSummary
+                                                    .customLocation
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                labReservationRef
+                                                    .formattedLabSummary
+                                                    .formattedDates &&
+                                                labReservationRef
+                                                    .formattedLabSummary
+                                                    .formattedDates.length
+                                            "
+                                        >
+                                            <strong
+                                                >Requested Dates/Times:</strong
+                                            >
+                                            <ul
+                                                class="list-circle ml-4 list-inside space-y-1"
+                                            >
+                                                <li
+                                                    v-for="(
+                                                        dateEntry, index
+                                                    ) in labReservationRef
+                                                        .formattedLabSummary
+                                                        .formattedDates"
+                                                    :key="index"
+                                                >
+                                                    Dates:
+                                                    {{ dateEntry.datesString
+                                                    }}<br />
+                                                    Time:
+                                                    {{ dateEntry.startTime }} -
+                                                    {{ dateEntry.endTime
+                                                    }}<br />
+                                                    Ranged:
+                                                    {{ dateEntry.ranged }}
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li v-else-if="labReservationRef.formattedLabSummary.message">
-                                            {{ labReservationRef.formattedLabSummary.message }}
+                                        <li
+                                            v-else-if="
+                                                labReservationRef
+                                                    .formattedLabSummary.message
+                                            "
+                                        >
+                                            {{
+                                                labReservationRef
+                                                    .formattedLabSummary.message
+                                            }}
                                         </li>
                                     </ul>
                                 </div>
