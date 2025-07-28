@@ -1,7 +1,7 @@
 <!-- eslint-disable camelcase -->
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
-import { useDownloader } from '~/composables/useDownloader';
+import { useDownloader } from "~/composables/useDownloader";
 const { loading, loadingMessage, download } = useDownloader();
 
 // PAGE META
@@ -23,8 +23,8 @@ async function submitHandler(formValues) {
     });
     // Downloaing pdfs
     if (formValues.data.submission.download === true) {
-            download(formValues.data.submission.id);
-        }
+        download(formValues.data.submission.id);
+    }
 
     // // Emailing pdfs
     // if (formValues.data.submission.email) {
@@ -151,8 +151,238 @@ function downloadOrdinaryPDF() {
                                 </div>
                                 <p class="mb-6 text-center text-gray-600">
                                     You're just one step away! Please review the
-                                    reminders below before submitting.
+                                    information below before submitting.
                                 </p>
+
+                                <div
+                                    v-if="value && value.basicInfo"
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Basic Information
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li v-if="value.basicInfo.campus">
+                                            <strong>Campus:</strong>
+                                            {{ value.basicInfo.campus }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.schoolYear &&
+                                                value.basicInfo.schoolYear[0]
+                                            "
+                                        >
+                                            <strong>School Year:</strong>
+                                            {{
+                                                value.basicInfo.schoolYear[0]
+                                                    .label
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.firstname ||
+                                                value.basicInfo.lastname
+                                            "
+                                        >
+                                            <strong>Name:</strong>
+                                            {{ value.basicInfo.firstname }}
+                                            {{ value.basicInfo.lastname }}
+                                        </li>
+                                        <li v-if="value.basicInfo.email">
+                                            <strong>Email:</strong>
+                                            {{ value.basicInfo.email }}
+                                        </li>
+                                        <li v-if="value.basicInfo.gradeSection">
+                                            <strong>Grade/Section:</strong>
+                                            {{ value.basicInfo.gradeSection }}
+                                        </li>
+                                        <li v-if="value.basicInfo.unit">
+                                            <strong>Unit:</strong>
+                                            {{ value.basicInfo.unit }}
+                                        </li>
+                                        <li v-if="value.basicInfo.subject">
+                                            <strong>Subject:</strong>
+                                            {{ value.basicInfo.subject }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.concurrentTopic
+                                            "
+                                        >
+                                            <strong>Concurrent Topic:</strong>
+                                            {{
+                                                value.basicInfo.concurrentTopic
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.teacherInCharge
+                                            "
+                                        >
+                                            <strong>Teacher In Charge:</strong>
+                                            {{
+                                                value.basicInfo.teacherInCharge
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.numberOfStudents
+                                            "
+                                        >
+                                            <strong>Number of Students:</strong>
+                                            {{
+                                                value.basicInfo.numberOfStudents
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo
+                                                    .nameOfStudents &&
+                                                value.basicInfo.nameOfStudents
+                                                    .length
+                                            "
+                                        >
+                                            <strong>Names of Students:</strong>
+                                            {{
+                                                value.basicInfo.nameOfStudents.join(
+                                                    ", ",
+                                                )
+                                            }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div
+                                    v-if="value && value.laboratorySetting && value.laboratorySetting.hasLaboratoryReservation === 'false'"
+                                    class="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-4"
+                                >
+                                    <h2 class="mb-4 text-xl font-semibold text-gray-800">Laboratory Reservation</h2>
+                                    <ul class="list-inside list-disc space-y-2 text-gray-700">
+                                        <li v-if="value.laboratorySetting.venue"><strong>Venue:</strong> {{ value.laboratorySetting.venue }}</li>
+                                        <li v-if="value.laboratorySetting.allDates && value.laboratorySetting.allDates.length">
+                                            <strong>Requested Dates/Times:</strong>
+                                            <ul class="list-inside list-circle ml-4 space-y-1">
+                                                <li v-for="(dateEntry, index) in value.laboratorySetting.allDates" :key="index">
+                                                    Dates:
+                                                    <template v-if="dateEntry.ranged">
+                                                        {{ new Date(dateEntry.requestDates[0]).toLocaleDateString() }} to {{ new Date(dateEntry.requestDates[1]).toLocaleDateString() }}
+                                                    </template>
+                                                    <template v-else>
+                                                        {{ dateEntry.requestDates.map(d => new Date(d).toLocaleDateString()).join(', ') }}
+                                                    </template><br>
+                                                    Time: {{ dateEntry.startTime.hours }}:{{ String(dateEntry.startTime.minutes).padStart(2, '0') }} - {{ dateEntry.endTime.hours }}:{{ String(dateEntry.endTime.minutes).padStart(2, '0') }}<br>
+                                                    Ranged: {{ dateEntry.ranged ? 'Yes' : 'No' }}
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
+                                    v-if="
+                                        value &&
+                                        value.materials &&
+                                        value.materials.details &&
+                                        value.materials.details.length
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Materials Requested
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-for="(item, index) in value
+                                                .materials.details"
+                                            :key="index"
+                                        >
+                                            <strong>{{ item.itemName }}</strong>
+                                            ({{
+                                                item.description ||
+                                                "No description"
+                                            }}) - Quantity:
+                                            {{ item.requestedQuantity }}
+                                            {{ item.unit }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
+                                    v-if="
+                                        value &&
+                                        value.equipment &&
+                                        value.equipment.details &&
+                                        value.equipment.details.length
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Equipment Requested
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-for="(item, index) in value
+                                                .equipment.details"
+                                            :key="index"
+                                        >
+                                            <strong>{{
+                                                item.equipmentName
+                                            }}</strong>
+                                            ({{
+                                                item.description ||
+                                                "No description"
+                                            }}) - Quantity:
+                                            {{ item.requestedQuantity }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
+                                    v-if="
+                                        value &&
+                                        value.reagents &&
+                                        value.reagents.details &&
+                                        value.reagents.details.length
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Reagents Requested
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-for="(item, index) in value
+                                                .reagents.details"
+                                            :key="index"
+                                        >
+                                            <strong>{{
+                                                item.chemicalName
+                                            }}</strong>
+                                            ({{
+                                                item.description ||
+                                                "No description"
+                                            }}) - Quantity:
+                                            {{ item.requestedQuantity }}
+                                            {{ item.unit }}
+                                        </li>
+                                    </ul>
+                                </div>
 
                                 <div
                                     class="rounded-lg border border-blue-200 bg-blue-50 p-6"
