@@ -15,6 +15,39 @@ const user = inject("user");
 
 const value = ref();
 
+const formattedLaboratorySetting = computed(() => {
+    if (value.value && value.value.laboratorySetting) {
+        const labSetting = value.value.laboratorySetting;
+        const result = {
+            venue: labSetting.venue,
+            hasReservation: labSetting.hasLaboratoryReservation === 'true'
+        };
+
+        if (result.hasReservation) {
+            result.formattedDates = labSetting.allDates.map(dateEntry => {
+                let datesString;
+                if (dateEntry.ranged) {
+                    datesString = `${new Date(dateEntry.requestDates[0]).toLocaleDateString()} to ${new Date(dateEntry.requestDates[1]).toLocaleDateString()}`;
+                } else {
+                    datesString = dateEntry.requestDates.map(d => new Date(d).toLocaleDateString()).join(', ');
+                }
+                return {
+                    datesString,
+                    startTime: `${dateEntry.startTime.hours}:${String(dateEntry.startTime.minutes).padStart(2, '0')}`,
+                    endTime: `${dateEntry.endTime.hours}:${String(dateEntry.endTime.minutes).padStart(2, '0')}`,
+                    ranged: dateEntry.ranged ? 'Yes' : 'No'
+                };
+            });
+        } else if (labSetting.venue) {
+            result.message = "A laboratory reservation will be made for the venue.";
+        } else {
+            result.message = "No laboratory reservation made.";
+        }
+        return result;
+    }
+    return null;
+});
+
 async function submitHandler(formValues) {
     // Save response to database
     const requestId = await useFetch("/api/forms/save-requests", {
@@ -155,8 +188,22 @@ function downloadOrdinaryPDF() {
                                 </p>
 
                                 <div
+                                    v-if="formattedLaboratorySetting && formattedLaboratorySetting.hasReservation && formattedLaboratorySetting.formattedDates && formattedLaboratorySetting.formattedDates.length"
+                                    class="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-4"
+                                >
+                                    <h2 class="mb-4 text-xl font-semibold text-gray-800">Overall Request Dates/Times</h2>
+                                    <ul class="list-inside list-disc space-y-2 text-gray-700">
+                                        <li v-for="(dateEntry, index) in formattedLaboratorySetting.formattedDates" :key="index">
+                                            Dates: {{ dateEntry.datesString }}<br>
+                                            Time: {{ dateEntry.startTime }} - {{ dateEntry.endTime }}<br>
+                                            Ranged: {{ dateEntry.ranged }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
                                     v-if="value && value.basicInfo"
-                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                    class="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-4"
                                 >
                                     <h2
                                         class="mb-4 text-xl font-semibold text-gray-800"
@@ -257,27 +304,24 @@ function downloadOrdinaryPDF() {
                                 </div>
                                 
                                 <div
-                                    v-if="value && value.laboratorySetting && value.laboratorySetting.hasLaboratoryReservation === 'false'"
+                                    v-if="formattedLaboratorySetting"
                                     class="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-4"
                                 >
                                     <h2 class="mb-4 text-xl font-semibold text-gray-800">Laboratory Reservation</h2>
                                     <ul class="list-inside list-disc space-y-2 text-gray-700">
-                                        <li v-if="value.laboratorySetting.venue"><strong>Venue:</strong> {{ value.laboratorySetting.venue }}</li>
-                                        <li v-if="value.laboratorySetting.allDates && value.laboratorySetting.allDates.length">
+                                        <li v-if="formattedLaboratorySetting.venue"><strong>Venue:</strong> {{ formattedLaboratorySetting.venue }}</li>
+                                        <li v-if="formattedLaboratorySetting.hasReservation && formattedLaboratorySetting.formattedDates && formattedLaboratorySetting.formattedDates.length">
                                             <strong>Requested Dates/Times:</strong>
                                             <ul class="list-inside list-circle ml-4 space-y-1">
-                                                <li v-for="(dateEntry, index) in value.laboratorySetting.allDates" :key="index">
-                                                    Dates:
-                                                    <template v-if="dateEntry.ranged">
-                                                        {{ new Date(dateEntry.requestDates[0]).toLocaleDateString() }} to {{ new Date(dateEntry.requestDates[1]).toLocaleDateString() }}
-                                                    </template>
-                                                    <template v-else>
-                                                        {{ dateEntry.requestDates.map(d => new Date(d).toLocaleDateString()).join(', ') }}
-                                                    </template><br>
-                                                    Time: {{ dateEntry.startTime.hours }}:{{ String(dateEntry.startTime.minutes).padStart(2, '0') }} - {{ dateEntry.endTime.hours }}:{{ String(dateEntry.endTime.minutes).padStart(2, '0') }}<br>
-                                                    Ranged: {{ dateEntry.ranged ? 'Yes' : 'No' }}
+                                                <li v-for="(dateEntry, index) in formattedLaboratorySetting.formattedDates" :key="index">
+                                                    Dates: {{ dateEntry.datesString }}<br>
+                                                    Time: {{ dateEntry.startTime }} - {{ dateEntry.endTime }}<br>
+                                                    Ranged: {{ dateEntry.ranged }}
                                                 </li>
                                             </ul>
+                                        </li>
+                                        <li v-else-if="formattedLaboratorySetting.message">
+                                            {{ formattedLaboratorySetting.message }}
                                         </li>
                                     </ul>
                                 </div>
