@@ -14,41 +14,23 @@ definePageMeta({ layout: "forms-pages" });
 const user = inject("user");
 
 const value = ref();
+const labReservationRef = ref(null);
+const labVenue = ref(null);
+const labCustomLocation = ref(null);
 
-const formattedLaboratorySetting = computed(() => {
-    if (value.value && value.value.laboratorySetting) {
-        const labSetting = value.value.laboratorySetting;
-        const result = {
-            venue: labSetting.venue,
-            hasReservation: labSetting.hasLaboratoryReservation === 'true'
-        };
 
-        if (result.hasReservation) {
-            result.formattedDates = labSetting.allDates.map(dateEntry => {
-                let datesString;
-                if (dateEntry.ranged) {
-                    datesString = `${new Date(dateEntry.requestDates[0]).toLocaleDateString()} to ${new Date(dateEntry.requestDates[1]).toLocaleDateString()}`;
-                } else {
-                    datesString = dateEntry.requestDates.map(d => new Date(d).toLocaleDateString()).join(', ');
-                }
-                return {
-                    datesString,
-                    startTime: `${dateEntry.startTime.hours}:${String(dateEntry.startTime.minutes).padStart(2, '0')}`,
-                    endTime: `${dateEntry.endTime.hours}:${String(dateEntry.endTime.minutes).padStart(2, '0')}`,
-                    ranged: dateEntry.ranged ? 'Yes' : 'No'
-                };
-            });
-        } else if (labSetting.venue) {
-            result.message = "A laboratory reservation will be made for the venue.";
-        } else {
-            result.message = `No laboratory reservation made. CUSTOM LOCATION: ${labSetting.customLocation}`;
-        }
-        return result;
-    }
-    return null;
-});
+
+
 
 async function submitHandler(formValues) {
+    // Ensure venue and customLocation are updated in formValues
+    if (labVenue.value) {
+        formValues.data.laboratorySetting.venue = labVenue.value;
+    }
+    if (labCustomLocation.value) {
+        formValues.data.laboratorySetting.customLocation = labCustomLocation.value;
+    }
+
     // Save response to database
     const requestId = await useFetch("/api/forms/save-requests", {
         method: "POST",
@@ -120,8 +102,7 @@ function downloadOrdinaryPDF() {
                 :actions="false"
                 name="requestData"
                 use-local-storage
-                @submit="submitHandler"
-                @keydown.enter.prevent
+                @submit="submitHandler" @keydown.enter.prevent
             >
                 <FormKit
                     v-model="value"
@@ -143,7 +124,11 @@ function downloadOrdinaryPDF() {
                         name="laboratorySetting"
                         :classes="{ step: 'md:w-1/2' }"
                     >
-                        <FormsLaboratoryReservation />
+                        <FormsLaboratoryReservation
+                            ref="labReservationRef"
+                            v-model:venue="labVenue"
+                            v-model:customLocation="labCustomLocation"
+                        />
                     </FormKit>
 
                     <FormKit
@@ -188,12 +173,12 @@ function downloadOrdinaryPDF() {
                                 </p>
 
                                 <div
-                                    v-if="formattedLaboratorySetting && formattedLaboratorySetting.hasReservation && formattedLaboratorySetting.formattedDates && formattedLaboratorySetting.formattedDates.length"
+                                    v-if="labReservationRef?.formattedLabSummary && labReservationRef.formattedLabSummary.hasReservation"
                                     class="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-4"
                                 >
                                     <h2 class="mb-4 text-xl font-semibold text-gray-800">Overall Request Dates/Times</h2>
                                     <ul class="list-inside list-disc space-y-2 text-gray-700">
-                                        <li v-for="(dateEntry, index) in formattedLaboratorySetting.formattedDates" :key="index">
+                                        <li v-for="(dateEntry, index) in labReservationRef.formattedLabSummary.formattedDates" :key="index">
                                             Dates: {{ dateEntry.datesString }}<br>
                                             Time: {{ dateEntry.startTime }} - {{ dateEntry.endTime }}<br>
                                             Ranged: {{ dateEntry.ranged }}
@@ -304,24 +289,25 @@ function downloadOrdinaryPDF() {
                                 </div>
                                 
                                 <div
-                                    v-if="formattedLaboratorySetting"
+                                    v-if="labReservationRef?.formattedLabSummary"
                                     class="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-4"
                                 >
                                     <h2 class="mb-4 text-xl font-semibold text-gray-800">Laboratory Reservation</h2>
                                     <ul class="list-inside list-disc space-y-2 text-gray-700">
-                                        <li v-if="formattedLaboratorySetting.venue"><strong>Venue:</strong> {{ formattedLaboratorySetting.venue }}</li>
-                                        <li v-if="formattedLaboratorySetting.hasReservation && formattedLaboratorySetting.formattedDates && formattedLaboratorySetting.formattedDates.length">
+                                        <li v-if="labReservationRef.formattedLabSummary.venue"><strong>Venue:</strong> {{ labReservationRef.formattedLabSummary.venue }}</li>
+                                        <li v-if="labReservationRef.formattedLabSummary.customLocation"><strong>Custom Location:</strong> {{ labReservationRef.formattedLabSummary.customLocation }}</li>
+                                        <li v-if="labReservationRef.formattedLabSummary.formattedDates && labReservationRef.formattedLabSummary.formattedDates.length">
                                             <strong>Requested Dates/Times:</strong>
                                             <ul class="list-inside list-circle ml-4 space-y-1">
-                                                <li v-for="(dateEntry, index) in formattedLaboratorySetting.formattedDates" :key="index">
+                                                <li v-for="(dateEntry, index) in labReservationRef.formattedLabSummary.formattedDates" :key="index">
                                                     Dates: {{ dateEntry.datesString }}<br>
                                                     Time: {{ dateEntry.startTime }} - {{ dateEntry.endTime }}<br>
                                                     Ranged: {{ dateEntry.ranged }}
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li v-else-if="formattedLaboratorySetting.message">
-                                            {{ formattedLaboratorySetting.message }}
+                                        <li v-else-if="labReservationRef.formattedLabSummary.message">
+                                            {{ labReservationRef.formattedLabSummary.message }}
                                         </li>
                                     </ul>
                                 </div>

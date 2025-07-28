@@ -1,5 +1,30 @@
 <script setup>
 const labResStatus = ref();
+const venueRef = ref(null);
+const customLocationRef = ref(null);
+
+const props = defineProps({
+    venue: String,
+    customLocation: String,
+});
+
+const emit = defineEmits(['update:venue', 'update:customLocation']);
+
+watch(() => props.venue, (newVal) => {
+    venueRef.value = newVal;
+}, { immediate: true });
+
+watch(() => props.customLocation, (newVal) => {
+    customLocationRef.value = newVal;
+}, { immediate: true });
+
+watch(venueRef, (newVal) => {
+    emit('update:venue', newVal);
+});
+
+watch(customLocationRef, (newVal) => {
+    emit('update:customLocation', newVal);
+});
 const showLabRes = computed(() => labResStatus.value === "false"); // Manual ! sign idk why it doesn't work
 
 const laboratories = await useFetch("/api/db/forms/getAllLaboratories");
@@ -37,6 +62,50 @@ function addDateTime() {
 function removeDateTime(index) {
     dateTimes.value.splice(index, 1);
 }
+
+const formattedLabSummary = computed(() => {
+    const labSetting = {
+        hasLaboratoryReservation: labResStatus.value,
+        venue: venueRef.value,
+        customLocation: customLocationRef.value,
+        allDates: dateTimes.value
+    };
+
+    const result = {
+        venue: labSetting.venue,
+        customLocation: labSetting.customLocation,
+        hasReservation: labSetting.hasLaboratoryReservation === 'true'
+    };
+
+    if (labSetting.allDates && labSetting.allDates.length) {
+        result.formattedDates = labSetting.allDates.map(dateEntry => {
+            let datesString;
+            if (dateEntry.ranged) {
+                datesString = `${new Date(dateEntry.requestDates[0]).toLocaleDateString()} to ${new Date(dateEntry.requestDates[1]).toLocaleDateString()}`;
+            } else {
+                datesString = dateEntry.requestDates.map(d => new Date(d).toLocaleDateString()).join(', ');
+            }
+            return {
+                datesString,
+                startTime: dateEntry.startTime ? `${dateEntry.startTime.hours}:${String(dateEntry.startTime.minutes).padStart(2, '0')}` : 'N/A',
+                endTime: dateEntry.endTime ? `${dateEntry.endTime.hours}:${String(dateEntry.endTime.minutes).padStart(2, '0')}` : 'N/A',
+                ranged: dateEntry.ranged ? 'Yes' : 'No'
+            };
+        });
+    }
+
+    if (labSetting.hasLaboratoryReservation === 'false') {
+        result.message = "No laboratory reservation made.";
+    } else if (labSetting.hasLaboratoryReservation === 'custom') {
+        result.message = "A custom laboratory reservation will be made.";
+    }
+
+    return result;
+});
+
+defineExpose({
+    formattedLabSummary
+});
 </script>
 
 <template>
@@ -70,6 +139,7 @@ function removeDateTime(index) {
             validation="required"
             placeholder="Select Your Laboratory Room"
             :options="laboratoriesOptions"
+            v-model="venueRef"
         />
         <FormKit
             v-if="labResStatus === 'custom'"
@@ -78,6 +148,7 @@ function removeDateTime(index) {
             name="customLocation"
             placeholder="Enter Custom Location"
             validation="required"
+            v-model="customLocationRef"
         />
         <h3 class="font-bold">Add Reservations</h3>
         <p>
