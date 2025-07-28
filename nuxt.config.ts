@@ -42,15 +42,11 @@ export default defineNuxtConfig({
 
     // NUXT-AUTH CONFIGURATION
     auth: {
-        // The origin is set to the development origin. Change this when deploying to production by setting `origin` in this config before build-time or by exporting `AUTH_ORIGIN` by running `export AUTH_ORIGIN=...`
-        // origin: "http://localhost:3000", // For development only
-        origin: "https://rails-ten.vercel.app/", // For production only
+        isEnabled: process.env.AUTH_ENABLED === "true", // The module is enabled. Change this to disable the module
+        origin: process.env.ORIGIN,
+        
         // (for new networks add .nip.io to URI to https://console.cloud.google.com/apis/credentials?project=rails-382915)
-
-        isEnabled: true, // The module is enabled. Change this to disable the module
-
         enableGlobalAppMiddleware: true, // Whether to add a global authentication middleware that will protect all pages without exclusion
-
         basePath: "/api/auth", // The base path to the authentication endpoints. Change this if you want to add your auth-endpoints at a non-default location
         defaultProvider: "google", // Select the default-provider to use when `signIn` is called. Setting this here will also effect the global middleware behavior: E.g., when you set it to `github` and the user is unauthorized, they will be directly forwarded to the Github OAuth page instead of seeing the app-login page
 
