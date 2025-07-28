@@ -1,6 +1,7 @@
 <script setup>
 import dayjs from "dayjs";
-import downloadPDF from "~/utils/forms/downloadPDF.js";
+import { useDownloader } from '~/composables/useDownloader';
+const { loading, loadingMessage, download } = useDownloader();
 
 const user = inject("user");
 
@@ -303,57 +304,7 @@ async function reviseRequest() {
     updateTable();
 }
 
-async function downloadAll() {
-    const requests = selectedRows.value.map((element) => element.id);
-    let counter = 0;
-    for (const request of requests) {
-        const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
-            method: "POST",
-            body: {
-                id: request,
-            },
-        });
 
-        await downloadPDF(
-            requestPDF.data.value,
-            `${selectedRows.value[counter]["requestor-lastName"]},${selectedRows.value[counter]["requestor-firstName"]}`,
-        );
-        counter += 1;
-    }
-    // try {
-    //     const pdfBuffersRawData = await useFetch(
-    //         "/api/forms/create-pdf-buffers",
-    //         {
-    //             method: "POST",
-    //             body: {
-    //                 id: selectedData.value.id,
-    //             },
-    //         },
-    //     );
-    //     const pdfBuffers = pdfBuffersRawData.data.value;
-
-    //     try {
-    //         downloadPDF(pdfBuffers[0], pdfBuffers[1]);
-    //     } catch (error) {
-    //         console.error("There was an error downloading the pdf: ", error);
-    //     }
-    // } catch (error) {
-    //     console.error("There was an error creating the pdf: ", error);
-    // }
-}
-
-async function downloadRequest() {
-    const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
-        method: "POST",
-        body: {
-            id: selectedData.value.id,
-        },
-    });
-    downloadPDF(
-        requestPDF.data.value,
-        `${selectedData.value["requestor-lastName"]},${selectedData.value["requestor-firstName"]}`,
-    );
-}
 updateTable();
 </script>
 
@@ -530,9 +481,10 @@ updateTable();
                             class="flex flex-row items-center justify-start space-x-3"
                         >
                             <UButton
-                                icon="i-material-symbols-download"
-                                @click="downloadRequest"
-                            />
+                        :label="loading ? loadingMessage : 'Download Request'"
+                        :loading="loading"
+                        @click="download(selectedData.id)"
+                    />
                             <h3
                                 class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                             >

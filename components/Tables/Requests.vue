@@ -1,6 +1,7 @@
 <script setup>
 import dayjs from "dayjs";
-import downloadPDF from "~/utils/forms/downloadPDF.js";
+import { useDownloader } from '~/composables/useDownloader';
+const { loading, loadingMessage, download } = useDownloader();
 
 const user = inject("user");
 
@@ -328,28 +329,7 @@ async function completeRequest() {
     updateTable();
 }
 
-async function downloadAll() {
-    try {
-        const pdfBuffersRawData = await useFetch(
-            "/api/forms/create-pdf-buffers",
-            {
-                method: "POST",
-                body: {
-                    id: selectedData.value.id,
-                },
-            },
-        );
-        const pdfBuffers = pdfBuffersRawData.data.value;
 
-        try {
-            downloadPDF(pdfBuffers[0], pdfBuffers[1]);
-        } catch (error) {
-            console.error("There was an error downloading the pdf: ", error);
-        }
-    } catch (error) {
-        console.error("There was an error creating the pdf: ", error);
-    }
-}
 
 async function closeRequest() {
     await useFetch("/api/user/admin/requests/closeRequest", {
@@ -571,8 +551,9 @@ updateTable();
 
                 <UButton
                     class="mt-3"
-                    label="Download Request"
-                    @click="downloadAll"
+                    :label="loading ? loadingMessage : 'Download Request'"
+                    :loading="loading"
+                    @click="download(selectedData.id)"
                 />
 
                 <!-- Materials Requested -->

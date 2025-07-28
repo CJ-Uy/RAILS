@@ -1,6 +1,7 @@
 <script setup>
 import dayjs from "dayjs";
-import downloadPDF from "~/utils/forms/downloadPDF.js";
+import { useDownloader } from '~/composables/useDownloader';
+const { loading, loadingMessage, download } = useDownloader();
 
 const user = inject("user");
 
@@ -110,18 +111,7 @@ async function navigateToRevision() {
     });
 }
 
-async function downloadRequest() {
-    const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
-        method: "POST",
-        body: {
-            id: selectedData.value.id,
-        },
-    });
-    downloadPDF(
-        requestPDF.data.value,
-        `${selectedData.value["requestor-lastName"]},${selectedData.value["requestor-firstName"]}`,
-    );
-}
+
 
 getAllRequests();
 </script>
@@ -523,9 +513,10 @@ getAllRequests();
                             class="flex flex-row items-center justify-start space-x-3"
                         >
                             <UButton
-                                icon="i-material-symbols-download"
-                                @click="downloadRequest"
-                            />
+                        :label="loading ? loadingMessage : 'Download Request'"
+                        :loading="loading"
+                        @click="download(selectedData.id)"
+                    />
                             <h3
                                 class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                             >

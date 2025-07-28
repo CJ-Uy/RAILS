@@ -21,31 +21,8 @@ async function updateTable() {
     studentRequests.value = requests.data.value;
 }
 
-async function downloadRequest(id) {
-    const pdfBuffersRawData = await useFetch("/api/forms/create-pdf-buffers", {
-        method: "POST",
-        body: { id, requestedForms: [5, 19, 20] },
-    });
-
-    const pdfBuffers = pdfBuffersRawData.data.value[0];
-    downloadPDF(pdfBuffers, pdfBuffersRawData.data.value[1]);
-}
-
-function downloadPDF(pdfBuffers, prefix) {
-    for (const property in pdfBuffers) {
-        const buffer = pdfBuffers[property].data;
-        const url = window.URL.createObjectURL(
-            new Blob([new Uint8Array(buffer).buffer]),
-        );
-        const link = document.createElement("a");
-        link.href = url;
-        const filename = `${prefix}-${property}-Request.pdf`;
-
-        link.setAttribute("download", filename);
-        document.body.appendChild(link);
-        link.click();
-    }
-}
+import { useDownloader } from '~/composables/useDownloader';
+const { loading, loadingMessage, download } = useDownloader();
 
 const editRequestModalIsOpen = ref(false);
 const currentOpenRequest = ref(null);
@@ -167,10 +144,10 @@ async function decline() {
                     </td>
                     <td class="px-2">
                         <UButton
-                            label="Download"
-                            variant="outline"
-                            @click="downloadRequest(request.id)"
-                        />
+                        :label="loading ? loadingMessage : 'Download'"
+                        :loading="loading"
+                        @click="download(request.id)"
+                    />
                     </td>
                 </tr>
             </tbody>
