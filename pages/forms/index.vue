@@ -41,7 +41,7 @@ const formattedLaboratorySetting = computed(() => {
         } else if (labSetting.venue) {
             result.message = "A laboratory reservation will be made for the venue.";
         } else {
-            result.message = "No laboratory reservation made.";
+            result.message = `No laboratory reservation made. CUSTOM LOCATION: ${labSetting.customLocation}`;
         }
         return result;
     }
