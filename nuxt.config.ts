@@ -44,7 +44,7 @@ export default defineNuxtConfig({
     auth: {
         isEnabled: process.env.AUTH_ENABLED === "true", // The module is enabled. Change this to disable the module
         origin: process.env.ORIGIN,
-        
+
         // (for new networks add .nip.io to URI to https://console.cloud.google.com/apis/credentials?project=rails-382915)
         enableGlobalAppMiddleware: true, // Whether to add a global authentication middleware that will protect all pages without exclusion
         basePath: "/api/auth", // The base path to the authentication endpoints. Change this if you want to add your auth-endpoints at a non-default location

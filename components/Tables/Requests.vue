@@ -1,6 +1,6 @@
 <script setup>
 import dayjs from "dayjs";
-import { useDownloader } from '~/composables/useDownloader';
+import { useDownloader } from "~/composables/useDownloader";
 const { loading, loadingMessage, download } = useDownloader();
 
 const user = inject("user");
@@ -329,8 +329,6 @@ async function completeRequest() {
     updateTable();
 }
 
-
-
 async function closeRequest() {
     await useFetch("/api/user/admin/requests/closeRequest", {
         method: "POST",
@@ -459,9 +457,7 @@ updateTable();
                 </div>
                 <div v-if="user.role === 'STUDENT'">
                     <UButton
-                        :label="
-                            loading ? loadingMessage : 'Download Request'
-                        "
+                        :label="loading ? loadingMessage : 'Download Request'"
                         :loading="loading"
                         @click="download(selectedData.id)"
                     />
@@ -561,9 +557,7 @@ updateTable();
                 <div v-if="user.role !== 'STUDENT'">
                     <UButton
                         class="mt-3"
-                        :label="
-                            loading ? loadingMessage : 'Download Request'
-                        "
+                        :label="loading ? loadingMessage : 'Download Request'"
                         :loading="loading"
                         @click="download(selectedData.id)"
                     />

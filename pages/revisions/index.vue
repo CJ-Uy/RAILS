@@ -1,7 +1,7 @@
 <!-- eslint-disable camelcase -->
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
-import { useDownloader } from '~/composables/useDownloader';
+import { useDownloader } from "~/composables/useDownloader";
 const { loading, loadingMessage, download } = useDownloader();
 
 // PAGE META
@@ -151,8 +151,8 @@ async function submitHandler(formValues) {
     });
     // Downloaing pdfs
     if (formValues.data.submission.download === true) {
-            download(formValues.data.submission.id);
-        }
+        download(formValues.data.submission.id);
+    }
 
     await navigateTo("/student");
 

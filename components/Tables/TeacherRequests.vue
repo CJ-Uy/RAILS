@@ -1,6 +1,6 @@
 <script setup>
 import dayjs from "dayjs";
-import { useDownloader } from '~/composables/useDownloader';
+import { useDownloader } from "~/composables/useDownloader";
 const { loading, loadingMessage, download } = useDownloader();
 
 const user = inject("user");
@@ -304,7 +304,6 @@ async function reviseRequest() {
     updateTable();
 }
 
-
 updateTable();
 </script>
 
@@ -481,10 +480,14 @@ updateTable();
                             class="flex flex-row items-center justify-start space-x-3"
                         >
                             <UButton
-                        :label="loading ? loadingMessage : 'Download Request'"
-                        :loading="loading"
-                        @click="download(selectedData.id)"
-                    />
+                                :label="
+                                    loading
+                                        ? loadingMessage
+                                        : 'Download Request'
+                                "
+                                :loading="loading"
+                                @click="download(selectedData.id)"
+                            />
                             <h3
                                 class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                             >

@@ -21,7 +21,7 @@ async function updateTable() {
     studentRequests.value = requests.data.value;
 }
 
-import { useDownloader } from '~/composables/useDownloader';
+import { useDownloader } from "~/composables/useDownloader";
 const { loading, loadingMessage, download } = useDownloader();
 
 const editRequestModalIsOpen = ref(false);
@@ -144,10 +144,10 @@ async function decline() {
                     </td>
                     <td class="px-2">
                         <UButton
-                        :label="loading ? loadingMessage : 'Download'"
-                        :loading="loading"
-                        @click="download(request.id)"
-                    />
+                            :label="loading ? loadingMessage : 'Download'"
+                            :loading="loading"
+                            @click="download(request.id)"
+                        />
                     </td>
                 </tr>
             </tbody>
