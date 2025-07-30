@@ -1,45 +1,93 @@
-# Use node 22 slim image as base image
-FROM node:22-slim as base
+# Stage 1: Build the Nuxt.js application using Debian Bookworm
+FROM node:20-bookworm AS builder
 
-# Create work directory in app folder
+# --- INSTALL BUILD DEPENDENCIES USING APT-GET ---
+RUN apt-get update && apt-get install -y --no-install-recommends openssl
+
 WORKDIR /app
 
-# Copy over package.json files
-COPY package.json /app/
-COPY package-lock.json /app/
+# 1. Copy only package files first
+COPY package.json package-lock.json ./
 
-# Install all dependencies
-RUN npm ci && npm cache clean --force
+# 2. Install ALL dependencies for building
+RUN npm install
 
-# Copy over all files to the work directory
-COPY . /app
+# 3. Copy Prisma schema
+COPY prisma ./prisma
 
-# Build the project
+# 4. Generate Prisma Client. This now generates the Debian engine by default.
+RUN npx prisma generate
+
+# 5. Copy the rest of your application code
+COPY . .
+
+# 6. Build the application
 RUN npm run build
 
-# Use node 22 alpine image as app image
-FROM node:22-alpine as app
 
-# Copy over build files from base image
-COPY --from=base /app/.output /app/.output
+# Stage 2: Create the production image, also using Debian Bookworm
+FROM node:20-bookworm AS runner
 
-# Expose the host and port 3000 to the server
-ENV HOST 0.0.0.0
-EXPOSE 3000
+# Install official dependencies for the browser Puppeteer will download.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libc6 \
+    libcairo2 \
+    libcups2 \
+    libdbus-1-3 \
+    libexpat1 \
+    libfontconfig1 \
+    libgbm1 \
+    libgcc1 \
+    libgconf-2-4 \
+    libgdk-pixbuf2.0-0 \
+    libglib2.0-0 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libstdc++6 \
+    libx11-6 \
+    libx11-xcb1 \
+    libxcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxi6 \
+    libxrandr2 \
+    libxrender1 \
+    libxss1 \
+    libxtst6 \
+    lsb-release \
+    wget \
+    xdg-utils \
+    # Also include OpenSSL for Prisma
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Run the build project with node
-CMD [ "node", "/app/.output/server/index.mjs" ]
+WORKDIR /app
 
-# Use mysql 8.0 image as db image
-FROM mysql:8.0 as db
+COPY package.json package-lock.json ./
 
-# Set a password for the root user
-ENV MYSQL_ROOT_PASSWORD secret
+# Set up a cache directory for Puppeteer's browser download.
+ENV PUPPETEER_CACHE_DIR=/app/puppeteer_cache
 
-# Create a database and a user for the app
-ENV MYSQL_DATABASE rails_db
-ENV MYSQL_USER user
-ENV MYSQL_PASSWORD password
+RUN npm install 
 
-# Expose the port 3306 to the server
-EXPOSE 3306
+# Copy the built application output from the builder stage
+COPY --from=builder /app/.output ./.output
+
+# Copy the prisma schema
+COPY --from=builder /app/prisma ./prisma
+
+EXPOSE $PORT
+
+CMD [ "node", ".output/server/index.mjs" ]

@@ -13,9 +13,10 @@ generator client {
   // previewFeatures = ["fullTextSearch", "fullTextIndex"] // https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-}
+// Needs to be commented out for production
+// generator erd {
+//   provider = "prisma-erd-generator"
+// }
 
 datasource db {
   provider = "mysql"

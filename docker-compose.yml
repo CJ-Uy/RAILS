@@ -1,23 +1,23 @@
-version: "3"
-
 services:
     app:
-        # Build the app image from the Dockerfile
-        build: .
-        # Name the app container as rails
-        container_name: rails
-        # Map the port 3000 of the container to the port 3000 of the host
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: RAILS
         ports:
-            - "3000:3000"
-        # Link the app container to the db container
-        depends_on:
-            - db
-
-    db:
-        # Use the db image from the Dockerfile
-        image: db
-        # Name the db container as mysql-db
-        container_name: mysql-db
-        # Map the port 3306 of the container to the port 3306 of the host
-        ports:
-            - "3306:3306"
+            - "${PORT:-3000}:${PORT:-3000}"
+        environment:
+            - NODE_ENV=production
+            - PORT=${PORT:-3000}
+            - AUTH_SECRET=${AUTH_SECRET}
+            - AUTH_ENABLED=${AUTH_ENABLED}
+            - ORIGIN=${ORIGIN}
+            - NEXTAUTH_URL=${ORIGIN}
+            - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+            - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+            - DATABASE_URL=${DATABASE_URL}
+            - DB_HOST=${DB_HOST}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DB_USER=${DB_USER}
+            - DB_DATABASE=${rails}
+        restart: unless-stopped
