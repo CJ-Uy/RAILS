@@ -807,8 +807,8 @@ updateTable();
                                 reagentRequestsAnnotation !== null ||
                                 laboratoryReservationsAnnotation !== ''
                             "
-                            color="blue"
-                            label="REVISE"
+                            color="orange"
+                            label="SEND BACK FOR REVISION"
                             variant="solid"
                             icon="i-material-symbols-edit"
                             @click="reviseRequest"
