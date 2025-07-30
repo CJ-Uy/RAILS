@@ -243,6 +243,62 @@ getAllRequests();
                             </div>
 
                             <template #footer>
+                                <!-- Has Custom Venue -->
+                                <div
+                                    v-if="request.independentLocation"
+                                    class="p-1 pl-4"
+                                >
+                                    <span class="text-sm font-black">
+                                        CUSTOM Venue:
+                                    </span>
+                                    <div
+                                        class="pl-5 text-sm text-sm font-black text-gray-700"
+                                    >
+                                        {{ request.independentLocation }}
+                                    </div>
+                                    <span class="text-sm font-black">
+                                        Date & Time:
+                                    </span>
+                                    <div
+                                        v-for="(startDate, index) in request[
+                                            'independentDates-startDate'
+                                        ]"
+                                        :key="index"
+                                    >
+                                        <span
+                                            class="pl-5 text-sm text-gray-700"
+                                        >
+                                            {{
+                                                dayjs(startDate).format(
+                                                    "MMM DD, YYYY",
+                                                )
+                                            }}
+                                            -
+                                            {{
+                                                dayjs(
+                                                    request[
+                                                        "independentDates-endDate"
+                                                    ][index],
+                                                ).format("MMM DD, YYYY")
+                                            }}
+                                        </span>
+                                        <div class="pl-8 text-sm text-gray-700">
+                                            {{
+                                                request[
+                                                    "independentTime-startTime"
+                                                ][index]
+                                            }}
+                                            -
+                                            {{
+                                                request[
+                                                    "independentTime-endTime"
+                                                ][index]
+                                            }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Has Laboratory Reservation -->
                                 <div
                                     v-if="
                                         request.laboratoryReservations.length >
@@ -250,9 +306,9 @@ getAllRequests();
                                     "
                                     class="p-1 pl-4"
                                 >
-                                    <span class="text-sm font-black"
-                                        >Venue:</span
-                                    >
+                                    <span class="text-sm font-black">
+                                        Venue:
+                                    </span>
                                     <div
                                         v-for="labReservation in request.laboratoryReservations"
                                         :key="labReservation.id"
@@ -263,9 +319,9 @@ getAllRequests();
                                                 .name
                                         }}
                                     </div>
-                                    <span class="text-sm font-black"
-                                        >Date & Time:</span
-                                    >
+                                    <span class="text-sm font-black">
+                                        Date & Time:
+                                    </span>
                                     <div
                                         v-for="(startDate, index) in request
                                             .laboratoryReservations[0].dates
