@@ -6,8 +6,9 @@ import makeAccountabilityForm from "~/utils/forms/makeAccountabilityForm.js";
 import convertHtmlToPdf from "~/utils/forms/PDFconverter.js";
 
 export default defineEventHandler(async (event) => {
-    const requestId = await readBody(event);
-    const request = await getRequest(requestId);
+    const body = await readBody(event);
+    const id = body.id;
+    const request = await getRequest(body.id);
 
     const pdfBuffers = {};
     let pdfBuffer;
@@ -15,14 +16,14 @@ export default defineEventHandler(async (event) => {
     // Make CID 05 - Laboratory Reservation Form
     if (request.laboratoryReservations.length > 0) {
         pdfBuffer = await convertHtmlToPdf(
-            await makeLaboratoryReservationForm(body),
+            await makeLaboratoryReservationForm(id),
         );
         pdfBuffers.CID05 = pdfBuffer;
     }
 
     // Make CID 19 - Reagent Request Form
     if (request.reagentsRequested.length > 0) {
-        pdfBuffer = await convertHtmlToPdf(await makeReagentRequestForm(body));
+        pdfBuffer = await convertHtmlToPdf(await makeReagentRequestForm(id));
         pdfBuffers.CID19 = pdfBuffer;
     }
 
@@ -31,7 +32,7 @@ export default defineEventHandler(async (event) => {
         request.materialsRequested.length > 0 ||
         request.equipmentRequested.length > 0
     ) {
-        pdfBuffer = await convertHtmlToPdf(await makeAccountabilityForm(body));
+        pdfBuffer = await convertHtmlToPdf(await makeAccountabilityForm(id));
         pdfBuffers.CID20 = pdfBuffer;
     }
 

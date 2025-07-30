@@ -8,14 +8,10 @@ export function useDownloader() {
     async function download(requestId) {
         loading.value = true;
         try {
-            const pdfBuffersRawData = await useFetch(
-                "/api/forms/create-pdf-buffers",
-                {
-                    method: "POST",
-                    body: requestId,
-                },
-            );
-            const pdfBuffers = pdfBuffersRawData.data.value;
+            const pdfBuffers = await $fetch("/api/forms/create-pdf-buffers", {
+                method: "POST",
+                body: { id: requestId },
+            });
 
             try {
                 downloadPDF(pdfBuffers[0], pdfBuffers[1]);

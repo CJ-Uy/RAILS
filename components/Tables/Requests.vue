@@ -557,12 +557,12 @@ updateTable();
 
                 <div v-if="user.role !== 'STUDENT'">
                     <UButton
-                        class="mt-3"
-                        :label="loading ? loadingMessage : 'Download Request'"
-                        :loading="loading"
-                        icon="i-heroicons-arrow-down-tray"
-                        @click="download(selectedData.id)"
-                    />
+                            class="mt-3"
+                            :label="loading ? loadingMessage : 'Download Request'"
+                            :loading="loading"
+                            icon="i-heroicons-arrow-down-tray"
+                            @click="console.log('Download button clicked!', selectedData.id); download(selectedData.id);"
+                        />
                 </div>
 
                 <!-- Custom Venues and Independent times are shown -->
