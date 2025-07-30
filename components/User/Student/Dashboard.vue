@@ -143,10 +143,10 @@ getAllRequests();
             </div>
             <div
                 v-else
-                class="m-auto flex w-[95%] flex-row items-start justify-between"
+                class="m-auto flex w-[95%] flex-col items-start justify-between lg:flex-row"
             >
                 <!-- Display Pending Requests -->
-                <div class="relative w-[31%]">
+                <div class="relative mb-6 w-full lg:mb-0 lg:w-[31%]">
                     <span class="bold mb-[-15px] block text-lg text-gray-500"
                         >Pending</span
                     >
@@ -364,7 +364,7 @@ getAllRequests();
                 </div>
 
                 <!-- Display Approved Requests -->
-                <div class="w-[31%]">
+                <div class="mb-6 w-full lg:mb-0 lg:w-[31%]">
                     <span class="bold mb-[-15px] block text-lg text-gray-500"
                         >Scheduled</span
                     >
@@ -424,7 +424,7 @@ getAllRequests();
                     </div>
                 </div>
                 <!-- Display Requests for Revision -->
-                <div class="w-[31%]">
+                <div class="w-full lg:w-[31%]">
                     <span class="bold mb-[-15px] block text-lg text-gray-500"
                         >Revision Needed</span
                     >
@@ -676,13 +676,13 @@ getAllRequests();
                                 :key="material.id"
                                 class="flex justify-between border-b-2 p-3 text-sm"
                             >
-                                <div class="basis-[180px]">
+                                <div class="flex-1">
                                     {{ material.name }}
                                 </div>
-                                <div class="basis-[120px] text-gray-400">
+                                <div class="flex-1 text-gray-400">
                                     {{ material.description }}
                                 </div>
-                                <div class="basis-[60px]">
+                                <div class="w-[60px] text-right">
                                     x{{ material.quantity }}
                                 </div>
                             </div>
