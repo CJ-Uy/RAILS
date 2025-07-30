@@ -6,8 +6,8 @@ import makeAccountabilityForm from "~/utils/forms/makeAccountabilityForm.js";
 import convertHtmlToPdf from "~/utils/forms/PDFconverter.js";
 
 export default defineEventHandler(async (event) => {
-    const body = await readBody(event);
-    const request = await getRequest(body);
+    const requestId = await readBody(event);
+    const request = await getRequest(requestId);
 
     const pdfBuffers = {};
     let pdfBuffer;

@@ -3,16 +3,6 @@ import "@formkit/themes/genesis";
 
 const user = ref(inject("user"));
 
-const emit = defineEmits([
-    "update:teacherInChargeName",
-    "update:unitName",
-    "update:gradeSectionName",
-]);
-
-const teacherInCharge = ref("");
-const unit = ref("");
-const gradeSection = ref("");
-
 // ----- Dynamic Selections -----
 const schoolYearOptions = ref(
     await makeSelectionOptions("/api/db/forms/getCurrentSchoolYear"),
@@ -44,33 +34,6 @@ async function makeSelectionOptions(url) {
     }
     return options;
 }
-
-watch(teacherInCharge, (newVal) => {
-    const selectedOption = teachersOptions.value.find(
-        (option) => option.value === newVal,
-    );
-    if (selectedOption) {
-        emit("update:teacherInChargeName", selectedOption.label);
-    }
-});
-
-watch(unit, (newVal) => {
-    const selectedOption = unitsOptions.value.find(
-        (option) => option.value === newVal,
-    );
-    if (selectedOption) {
-        emit("update:unitName", selectedOption.label);
-    }
-});
-
-watch(gradeSection, (newVal) => {
-    const selectedOption = gradeSectionsOptions.value.find(
-        (option) => option.value === newVal,
-    );
-    if (selectedOption) {
-        emit("update:gradeSectionName", selectedOption.label);
-    }
-});
 </script>
 
 <template>
@@ -121,7 +84,6 @@ watch(gradeSection, (newVal) => {
             :disabled="true"
         />
         <FormKit
-            v-model="gradeSection"
             type="select"
             label="Grade and Section"
             name="gradeSection"
@@ -130,7 +92,6 @@ watch(gradeSection, (newVal) => {
             :options="gradeSectionsOptions"
         />
         <FormKit
-            v-model="unit"
             type="select"
             label="Unit"
             name="unit"
@@ -152,7 +113,6 @@ watch(gradeSection, (newVal) => {
         />
 
         <FormKit
-            v-model="teacherInCharge"
             type="select"
             name="teacherInCharge"
             label="Teacher in Charge"
@@ -175,4 +135,3 @@ watch(gradeSection, (newVal) => {
         <FormsBasicInfoStudentsList />
     </div>
 </template>
-

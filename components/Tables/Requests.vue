@@ -459,6 +459,7 @@ updateTable();
                     <UButton
                         :label="loading ? loadingMessage : 'Download Request'"
                         :loading="loading"
+                        icon="i-heroicons-arrow-down-tray"
                         @click="download(selectedData.id)"
                     />
                 </div>
@@ -559,6 +560,7 @@ updateTable();
                         class="mt-3"
                         :label="loading ? loadingMessage : 'Download Request'"
                         :loading="loading"
+                        icon="i-heroicons-arrow-down-tray"
                         @click="download(selectedData.id)"
                     />
                 </div>

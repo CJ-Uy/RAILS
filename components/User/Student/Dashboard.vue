@@ -98,6 +98,7 @@ function sortRequest(i) {
 
 const modalIsOpen = ref(false);
 const selectedData = ref();
+const confirmDelete = ref(false);
 function openModal(row) {
     modalIsOpen.value = true;
     selectedData.value = row;
@@ -109,6 +110,23 @@ async function navigateToRevision() {
     await navigateTo({
         path: "/revisions",
     });
+}
+
+async function deleteRequest() {
+    try {
+        await useFetch("/api/user/student/deleteRequest", {
+            method: "POST",
+            body: {
+                requestId: selectedData.value.id,
+            },
+        });
+        modalIsOpen.value = false;
+        confirmDelete.value = false;
+        await getAllRequests(); // Refresh the list of requests
+    } catch (error) {
+        console.error("Error deleting request:", error);
+        // Handle error, maybe show a toast notification
+    }
 }
 
 getAllRequests();
@@ -225,7 +243,13 @@ getAllRequests();
                             </div>
 
                             <template #footer>
-                                <div class="p-1 pl-4">
+                                <div
+                                    v-if="
+                                        request.laboratoryReservations.length >
+                                        0
+                                    "
+                                    class="p-1 pl-4"
+                                >
                                     <span class="text-sm font-black"
                                         >Venue:</span
                                     >
@@ -326,6 +350,10 @@ getAllRequests();
                                     </div>
                                 </div>
                                 <div
+                                    v-if="
+                                        request.laboratoryReservations.length >
+                                        0
+                                    "
                                     class="flex flex-col items-end justify-center p-2 text-xs text-blue-500"
                                 >
                                     <div>
@@ -436,7 +464,13 @@ getAllRequests();
                             </div>
 
                             <template #footer>
-                                <div class="p-1 pl-4">
+                                <div
+                                    v-if="
+                                        request.laboratoryReservations.length >
+                                        0
+                                    "
+                                    class="p-1 pl-4"
+                                >
                                     <span class="text-sm font-black"
                                         >Venue:</span
                                     >
@@ -550,11 +584,24 @@ getAllRequests();
                     {{ selectedData["teacherInCharge-userProfile-firstName"] }}
                 </div>
 
-                <UButton
-                    :label="loading ? loadingMessage : 'Download Request'"
-                    :loading="loading"
-                    @click="download(selectedData.id)"
-                />
+                <div class="flex items-center justify-between">
+                    <UButton
+                        :label="loading ? loadingMessage : 'Download Request'"
+                        :loading="loading"
+                        icon="i-heroicons-arrow-down-tray"
+                        @click="download(selectedData.id)"
+                    />
+                    <UButton
+                        v-if="
+                            sortRequest(selectedData) === 'teacherPending' ||
+                            sortRequest(selectedData) === 'adminPending'
+                        "
+                        color="red"
+                        label="Delete Request"
+                        icon="i-heroicons-trash-20-solid"
+                        @click="confirmDelete = true"
+                    />
+                </div>
 
                 <!-- Materials Requested -->
                 <div class="mt-5">
@@ -701,7 +748,10 @@ getAllRequests();
                     </UCard>
                 </div>
                 <!-- Laboratory Reserved -->
-                <div class="mt-5">
+                <div
+                    v-if="selectedData.laboratoryReservations.length > 0"
+                    class="mt-5"
+                >
                     <UCard>
                         <template #header>
                             <h3
@@ -789,6 +839,35 @@ getAllRequests();
                             icon="i-material-symbols-edit"
                             @click="navigateToRevision()"
                         />
+                    </div>
+                </template>
+            </UCard>
+        </UModal>
+
+        <UModal v-model="confirmDelete">
+            <UCard>
+                <template #header>
+                    <h3
+                        class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                    >
+                        Confirm Deletion
+                    </h3>
+                </template>
+                <p>
+                    Are you sure you want to delete this request? This action
+                    cannot be undone.
+                </p>
+                <template #footer>
+                    <div class="flex justify-end space-x-2">
+                        <UButton
+                            color="gray"
+                            variant="ghost"
+                            @click="confirmDelete = false"
+                            >Cancel</UButton
+                        >
+                        <UButton color="red" @click="deleteRequest"
+                            >Delete</UButton
+                        >
                     </div>
                 </template>
             </UCard>

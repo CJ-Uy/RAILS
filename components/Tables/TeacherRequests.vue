@@ -479,15 +479,6 @@ updateTable();
                         <div
                             class="flex flex-row items-center justify-start space-x-3"
                         >
-                            <UButton
-                                :label="
-                                    loading
-                                        ? loadingMessage
-                                        : 'Download Request'
-                                "
-                                :loading="loading"
-                                @click="download(selectedData.id)"
-                            />
                             <h3
                                 class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                             >
@@ -513,7 +504,7 @@ updateTable();
                     </div>
                 </template>
 
-                <div class="ml-5 font-thin">
+                <div class="mb-5 font-thin">
                     {{ selectedData["requestor-lastName"] }},
                     {{ selectedData["requestor-firstName"] }}<br />
                     {{ selectedData["gradeSection-grade"] }} -
@@ -528,6 +519,13 @@ updateTable();
                     {{ selectedData["teacherInCharge-userProfile-lastName"] }},
                     {{ selectedData["teacherInCharge-userProfile-firstName"] }}
                 </div>
+
+                <UButton
+                    :label="loading ? loadingMessage : 'Download Request'"
+                    :loading="loading"
+                    icon="i-heroicons-arrow-down-tray"
+                    @click="download(selectedData.id)"
+                />
 
                 <!-- Materials Requested -->
                 <div class="mt-5">
@@ -659,7 +657,10 @@ updateTable();
                     </UCard>
                 </div>
                 <!-- Laboratory Reserved -->
-                <div class="mt-5">
+                <div
+                    v-if="selectedData.laboratoryReservations.length > 0"
+                    class="mt-5"
+                >
                     <UCard>
                         <template #header>
                             <h3
@@ -678,7 +679,10 @@ updateTable();
                                 <div class="border-b-2 p-3">
                                     {{ laboratory.laboratoryReserved.name }}
                                 </div>
-                                <div class="border-b-2 p-3 pl-8">
+                                <div
+                                    v-if="laboratory.dates"
+                                    class="border-b-2 p-3 pl-8"
+                                >
                                     <div
                                         v-for="(startDate, index) in laboratory
                                             .dates.startDate"
@@ -739,8 +743,8 @@ updateTable();
                                 reagentRequestsAnnotation !== '' ||
                                 laboratoryReservationsAnnotation !== ''
                             "
-                            color="blue"
-                            label="REVISE"
+                            color="orange"
+                            label="SEND BACK FOR REVISION"
                             variant="solid"
                             icon="i-material-symbols-edit"
                             @click="reviseRequest"

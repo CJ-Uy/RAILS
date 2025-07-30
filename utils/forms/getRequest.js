@@ -3,7 +3,7 @@ import prisma from "../db/prisma.js";
 export default async function getRequest(id) {
     return await prisma.laboratoryRequests.findUnique({
         where: {
-            id: id.id,
+            id: id,
         },
         include: {
             requestor: true,

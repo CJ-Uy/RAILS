@@ -18,12 +18,48 @@ const labReservationRef = ref(null);
 const labVenue = ref(null);
 const labCustomLocation = ref(null);
 
-const teacherInChargeName = ref("");
-const unitName = ref("");
-const gradeSectionName = ref("");
-const venueName = ref("");
+const isModalOpen = ref(false);
+const modalMessage = ref("");
+
+// Fetch all necessary lookup data
+const { data: teachers } = await useAsyncData("teachers", () =>
+    $fetch("/api/db/forms/getAllTeachers"),
+);
+const { data: units } = await useAsyncData("units", () =>
+    $fetch("/api/db/forms/getAllUnits"),
+);
+const { data: gradeSections } = await useAsyncData("gradeSections", () =>
+    $fetch("/api/db/forms/getAllGradeSections"),
+);
+const { data: laboratories } = await useAsyncData("laboratories", () =>
+    $fetch("/api/db/forms/getAllLaboratories"),
+);
+
+// Computed properties for displaying names
+const displayTeacherInChargeName = computed(() => {
+    if (!value.value?.basicInfo?.teacherInCharge || !teachers.value) return "";
+    return teachers.value[value.value.basicInfo.teacherInCharge] || "";
+});
+
+const displayUnitName = computed(() => {
+    if (!value.value?.basicInfo?.unit || !units.value) return "";
+    return units.value[value.value.basicInfo.unit] || "";
+});
+
+const displayGradeSectionName = computed(() => {
+    if (!value.value?.basicInfo?.gradeSection || !gradeSections.value) return "";
+    return gradeSections.value[value.value.basicInfo.gradeSection] || "";
+});
+
+const displayVenueName = computed(() => {
+    if (!value.value?.laboratorySetting?.venue || !laboratories.value) return "";
+    return laboratories.value[value.value.laboratorySetting.venue] || "";
+});
 
 async function submitHandler(formValues) {
+    isModalOpen.value = true;
+    modalMessage.value = "Saving request...";
+
     // Ensure venue and customLocation are updated in formValues
     if (labVenue.value) {
         formValues.data.laboratorySetting.venue = labVenue.value;
@@ -34,13 +70,24 @@ async function submitHandler(formValues) {
     }
 
     // Save response to database
-    const requestId = await useFetch("/api/forms/save-requests", {
+    const { data: newRequest } = await useFetch("/api/forms/save-requests", {
         method: "POST",
         body: { user, formValues },
     });
-    // Downloaing pdfs
+
+    console.log("newRequest after save-requests:", newRequest.value);
+
     if (formValues.data.submission.download === true) {
-        download(formValues.data.submission.id);
+        modalSteps.value[1].status = "loading";
+        if (newRequest.value?.id) {
+            await download(newRequest.value.id);
+            modalSteps.value[1].status = "done";
+            modalSteps.value[2].status = "done";
+        } else {
+            console.error("Request ID is undefined, cannot download PDF.");
+            modalSteps.value[1].status = "error";
+            modalSteps.value[2].status = "error";
+        }
     }
 
     // // Emailing pdfs
@@ -48,6 +95,7 @@ async function submitHandler(formValues) {
     //     // TODO: Make it so they send the info to their email
     // }
 
+    isModalOpen.value = false;
     // Redirect to the home page
     await navigateTo("/redirect");
 }
@@ -119,15 +167,7 @@ function downloadOrdinaryPDF() {
                         name="basicInfo"
                         :classes="{ step: 'md:w-1/2' }"
                     >
-                        <FormsBasicInfo
-                            @update:teacherInChargeName="
-                                (name) => (teacherInChargeName = name)
-                            "
-                            @update:unitName="(name) => (unitName = name)"
-                            @update:gradeSectionName="
-                                (name) => (gradeSectionName = name)
-                            "
-                        />
+                        <FormsBasicInfo />
                     </FormKit>
 
                     <FormKit
@@ -139,7 +179,6 @@ function downloadOrdinaryPDF() {
                             ref="labReservationRef"
                             v-model:venue="labVenue"
                             v-model:customLocation="labCustomLocation"
-                            @update:venueName="(name) => (venueName = name)"
                         />
                     </FormKit>
 
@@ -260,11 +299,11 @@ function downloadOrdinaryPDF() {
                                         </li>
                                         <li v-if="value.basicInfo.gradeSection">
                                             <strong>Grade/Section:</strong>
-                                            {{ gradeSectionName }}
+                                            {{ displayGradeSectionName }}
                                         </li>
                                         <li v-if="value.basicInfo.unit">
                                             <strong>Unit:</strong>
-                                            {{ unitName }}
+                                            {{ displayUnitName }}
                                         </li>
                                         <li v-if="value.basicInfo.subject">
                                             <strong>Subject:</strong>
@@ -287,7 +326,7 @@ function downloadOrdinaryPDF() {
                                         >
                                             <strong>Teacher In Charge:</strong>
                                             {{
-                                                teacherInChargeName
+                                                displayTeacherInChargeName
                                             }}
                                         </li>
                                         <li
@@ -339,7 +378,7 @@ function downloadOrdinaryPDF() {
                                             "
                                         >
                                             <strong>Venue:</strong>
-                                            {{ venueName }}
+                                            {{ displayVenueName }}
                                         </li>
                                         <li
                                             v-if="
@@ -573,6 +612,25 @@ function downloadOrdinaryPDF() {
             </FormKit>
         </div>
     </div>
+
+    <UModal v-model="isModalOpen">
+        <div class="p-4 flex flex-col items-center justify-center">
+            <div v-for="step in modalSteps" :key="step.id" class="flex items-center mb-2">
+                <UIcon :name="getIcon(step.status)" class="w-5 h-5 mr-2" :class="{
+                    'text-blue-500 animate-spin': step.status === 'loading',
+                    'text-green-500': step.status === 'done',
+                    'text-gray-500': step.status === 'pending',
+                    'text-red-500': step.status === 'error',
+                }" />
+                <p :class="{
+                    'font-semibold': step.status === 'loading',
+                    'text-green-600': step.status === 'done',
+                    'text-gray-700': step.status === 'pending',
+                    'text-red-600': step.status === 'error',
+                }">{{ step.message }}</p>
+            </div>
+        </div>
+    </UModal>
 </template>
 
 <style>
@@ -589,4 +647,3 @@ function downloadOrdinaryPDF() {
     justify-content: center;
 }
 </style>
-

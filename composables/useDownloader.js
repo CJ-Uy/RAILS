@@ -12,9 +12,7 @@ export function useDownloader() {
                 "/api/forms/create-pdf-buffers",
                 {
                     method: "POST",
-                    body: {
-                        id: requestId,
-                    },
+                    body: requestId,
                 },
             );
             const pdfBuffers = pdfBuffersRawData.data.value;
