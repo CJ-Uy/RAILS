@@ -117,14 +117,14 @@ const listOfAllColumns = [
 
 <template>
     <div>
-        <TablesRequests
+        <TablesAdminViewOnly
             title="Underway Requests"
             fetch-path="/api/user/admin/requests/getAllUnderwayRequests"
             update-path="/api/user/admin/requests/update"
             :starting-columns="startingColumns"
             :list-of-all-columns="listOfAllColumns"
         >
-        </TablesRequests>
+        </TablesAdminViewOnly>
     </div>
 </template>
 

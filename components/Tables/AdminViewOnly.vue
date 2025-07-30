@@ -633,16 +633,6 @@ updateTable();
                                 </div>
                             </div>
                         </div>
-
-                        <template #footer>
-                            <div class="mb-4">
-                                <UTextarea
-                                    v-model="materialRequestsAnnotation"
-                                    :placeholder="annotationPlaceholder"
-                                    color="blue"
-                                />
-                            </div>
-                        </template>
                     </UCard>
                 </div>
 
@@ -674,16 +664,6 @@ updateTable();
                                 </div>
                             </div>
                         </div>
-
-                        <template #footer>
-                            <div class="mb-4">
-                                <UTextarea
-                                    v-model="equipmentRequestsAnnotation"
-                                    :placeholder="annotationPlaceholder"
-                                    color="blue"
-                                />
-                            </div>
-                        </template>
                     </UCard>
                 </div>
                 <!-- Reagents Requested -->
@@ -714,16 +694,6 @@ updateTable();
                                 </div>
                             </div>
                         </div>
-
-                        <template #footer>
-                            <div class="mb-4">
-                                <UTextarea
-                                    v-model="reagentRequestsAnnotation"
-                                    :placeholder="annotationPlaceholder"
-                                    color="blue"
-                                />
-                            </div>
-                        </template>
                     </UCard>
                 </div>
                 <!-- Laboratory Reserved -->
@@ -779,16 +749,6 @@ updateTable();
                                 </div>
                             </div>
                         </div>
-
-                        <template #footer>
-                            <div class="mb-4">
-                                <UTextarea
-                                    v-model="laboratoryReservationsAnnotation"
-                                    :color="equipmentRequestsAnnotationStyle"
-                                    :placeholder="annotationPlaceholder"
-                                />
-                            </div>
-                        </template>
                     </UCard>
                 </div>
 
@@ -848,9 +808,15 @@ updateTable();
                     </div>
                     <div
                         v-else-if="props.title === 'To Review'"
-                        class="flex flex-row items-center justify-center gap-x-5"
+                        class="flex items-center justify-center"
                     >
                         <UButton
+                            v-if="
+                                materialRequestsAnnotation !== '' ||
+                                equipmentRequestsAnnotation !== '' ||
+                                reagentRequestsAnnotation !== '' ||
+                                laboratoryReservationsAnnotation !== ''
+                            "
                             color="red"
                             label="REQUESTOR NOT CLEARED"
                             variant="solid"
@@ -858,30 +824,30 @@ updateTable();
                             @click="closeRequest"
                         />
                         <UButton
+                            v-else
                             color="blue"
                             label="REQUESTOR CLEARED"
                             variant="solid"
                             icon="i-heroicons-lock-closed"
-                            @click="clearRequestor"
+                            @click="closeRequest"
                         />
                     </div>
                     <div
                         v-else-if="props.title === 'Reviewed Requests'"
-                        class="flex flex-row items-center justify-center gap-x-3"
+                        class="flex items-center justify-center"
                     >
                         <UButton
+                            v-if="
+                                materialRequestsAnnotation !== '' ||
+                                equipmentRequestsAnnotation !== '' ||
+                                reagentRequestsAnnotation !== '' ||
+                                laboratoryReservationsAnnotation !== ''
+                            "
                             color="red"
                             label="UNCLEAR REQUESTOR"
                             variant="solid"
                             icon="i-material-symbols-warning-outline-rounded"
                             @click="closeRequest"
-                        />
-                        <UButton
-                            color="blue"
-                            label="CLEAR REQUESTOR"
-                            variant="solid"
-                            icon="i-material-symbols-person-check-rounded"
-                            @click="clearRequestor"
                         />
                     </div>
                     <div
