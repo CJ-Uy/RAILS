@@ -104,6 +104,7 @@ function openModal(row) {
     selectedData.value = row;
 }
 
+// TODO: make a complete revision system
 async function navigateToRevision() {
     const revisionId = useRevisionId();
     revisionId.value = selectedData.value.id;
@@ -886,15 +887,19 @@ getAllRequests();
                             sortRequest(selectedData) === 'teacherRevision' ||
                             sortRequest(selectedData) === 'adminRevision'
                         "
-                        class="flex items-center justify-center"
+                        class="flex flex-col items-center justify-center"
                     >
                         <UButton
-                            color="blue"
-                            label="REVISE"
+                            color="red"
+                            label="DELETE"
                             variant="solid"
-                            icon="i-material-symbols-edit"
-                            @click="navigateToRevision()"
+                            icon="i-material-symbols-delete-outline"
+                            @click="deleteRequest()"
                         />
+                        <div class="mt-2 italic">
+                            Delete this request and create a new one in NEW
+                            REQUEST
+                        </div>
                     </div>
                 </template>
             </UCard>
