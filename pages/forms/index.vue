@@ -47,12 +47,14 @@ const displayUnitName = computed(() => {
 });
 
 const displayGradeSectionName = computed(() => {
-    if (!value.value?.basicInfo?.gradeSection || !gradeSections.value) return "";
+    if (!value.value?.basicInfo?.gradeSection || !gradeSections.value)
+        return "";
     return gradeSections.value[value.value.basicInfo.gradeSection] || "";
 });
 
 const displayVenueName = computed(() => {
-    if (!value.value?.laboratorySetting?.venue || !laboratories.value) return "";
+    if (!value.value?.laboratorySetting?.venue || !laboratories.value)
+        return "";
     return laboratories.value[value.value.laboratorySetting.venue] || "";
 });
 
@@ -325,9 +327,7 @@ function downloadOrdinaryPDF() {
                                             "
                                         >
                                             <strong>Teacher In Charge:</strong>
-                                            {{
-                                                displayTeacherInChargeName
-                                            }}
+                                            {{ displayTeacherInChargeName }}
                                         </li>
                                         <li
                                             v-if="
@@ -587,7 +587,8 @@ function downloadOrdinaryPDF() {
                                     </ul>
                                 </div>
 
-                                <div class="mt-8">
+                                <!-- TODO: Add support for download after saving (it currently takes too long) -->
+                                <!-- <div class="mt-8">
                                     <FormKit
                                         type="checkbox"
                                         label="Download a copy of my request"
@@ -595,7 +596,7 @@ function downloadOrdinaryPDF() {
                                         :value="false"
                                         label-class="text-gray-700"
                                     />
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
@@ -612,25 +613,6 @@ function downloadOrdinaryPDF() {
             </FormKit>
         </div>
     </div>
-
-    <UModal v-model="isModalOpen">
-        <div class="p-4 flex flex-col items-center justify-center">
-            <div v-for="step in modalSteps" :key="step.id" class="flex items-center mb-2">
-                <UIcon :name="getIcon(step.status)" class="w-5 h-5 mr-2" :class="{
-                    'text-blue-500 animate-spin': step.status === 'loading',
-                    'text-green-500': step.status === 'done',
-                    'text-gray-500': step.status === 'pending',
-                    'text-red-500': step.status === 'error',
-                }" />
-                <p :class="{
-                    'font-semibold': step.status === 'loading',
-                    'text-green-600': step.status === 'done',
-                    'text-gray-700': step.status === 'pending',
-                    'text-red-600': step.status === 'error',
-                }">{{ step.message }}</p>
-            </div>
-        </div>
-    </UModal>
 </template>
 
 <style>

@@ -179,7 +179,7 @@ model Units {
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   name               String
-  frequencyRank      Int                  @unique @default(autoincrement())
+  frequencyRank      Int                  @unique
   teachers           Teachers[]
   laboratoryRequests LaboratoryRequests[]
 
