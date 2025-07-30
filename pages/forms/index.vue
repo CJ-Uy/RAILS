@@ -18,6 +18,11 @@ const labReservationRef = ref(null);
 const labVenue = ref(null);
 const labCustomLocation = ref(null);
 
+const teacherInChargeName = ref("");
+const unitName = ref("");
+const gradeSectionName = ref("");
+const venueName = ref("");
+
 async function submitHandler(formValues) {
     // Ensure venue and customLocation are updated in formValues
     if (labVenue.value) {
@@ -114,7 +119,15 @@ function downloadOrdinaryPDF() {
                         name="basicInfo"
                         :classes="{ step: 'md:w-1/2' }"
                     >
-                        <FormsBasicInfo />
+                        <FormsBasicInfo
+                            @update:teacherInChargeName="
+                                (name) => (teacherInChargeName = name)
+                            "
+                            @update:unitName="(name) => (unitName = name)"
+                            @update:gradeSectionName="
+                                (name) => (gradeSectionName = name)
+                            "
+                        />
                     </FormKit>
 
                     <FormKit
@@ -126,6 +139,7 @@ function downloadOrdinaryPDF() {
                             ref="labReservationRef"
                             v-model:venue="labVenue"
                             v-model:customLocation="labCustomLocation"
+                            @update:venueName="(name) => (venueName = name)"
                         />
                     </FormKit>
 
@@ -246,11 +260,11 @@ function downloadOrdinaryPDF() {
                                         </li>
                                         <li v-if="value.basicInfo.gradeSection">
                                             <strong>Grade/Section:</strong>
-                                            {{ value.basicInfo.gradeSection }}
+                                            {{ gradeSectionName }}
                                         </li>
                                         <li v-if="value.basicInfo.unit">
                                             <strong>Unit:</strong>
-                                            {{ value.basicInfo.unit }}
+                                            {{ unitName }}
                                         </li>
                                         <li v-if="value.basicInfo.subject">
                                             <strong>Subject:</strong>
@@ -273,7 +287,7 @@ function downloadOrdinaryPDF() {
                                         >
                                             <strong>Teacher In Charge:</strong>
                                             {{
-                                                value.basicInfo.teacherInCharge
+                                                teacherInChargeName
                                             }}
                                         </li>
                                         <li
@@ -325,10 +339,7 @@ function downloadOrdinaryPDF() {
                                             "
                                         >
                                             <strong>Venue:</strong>
-                                            {{
-                                                labReservationRef
-                                                    .formattedLabSummary.venue
-                                            }}
+                                            {{ venueName }}
                                         </li>
                                         <li
                                             v-if="
@@ -578,3 +589,4 @@ function downloadOrdinaryPDF() {
     justify-content: center;
 }
 </style>
+

@@ -8,7 +8,11 @@ const props = defineProps({
     customLocation: String,
 });
 
-const emit = defineEmits(["update:venue", "update:customLocation"]);
+const emit = defineEmits([
+    "update:venue",
+    "update:customLocation",
+    "update:venueName",
+]);
 
 watch(
     () => props.venue,
@@ -126,6 +130,15 @@ const formattedLabSummary = computed(() => {
 
 defineExpose({
     formattedLabSummary,
+});
+
+watch(venueRef, (newVal) => {
+    const selectedOption = laboratoriesOptions.value.find(
+        (option) => option.value === newVal,
+    );
+    if (selectedOption) {
+        emit("update:venueName", selectedOption.label);
+    }
 });
 </script>
 
@@ -399,3 +412,4 @@ defineExpose({
     margin-right: 5px;
 }
 </style>
+
