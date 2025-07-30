@@ -527,6 +527,46 @@ updateTable();
                     @click="download(selectedData.id)"
                 />
 
+                <!-- Custom Venues and Independent times are shown -->
+                <div
+                    v-if="selectedData.independentLocation"
+                    class="mt-4 flex flex-col"
+                >
+                    <span class="font-extrabold text-red-500">
+                        NO LABORATORY RESERVATION
+                    </span>
+                    <span class="text-sm font-black"> CUSTOM Venue: </span>
+                    <div class="pl-5 text-sm font-black text-gray-700">
+                        {{ selectedData.independentLocation }}
+                    </div>
+                    <span class="text-sm font-black"> Date & Time: </span>
+                    <div
+                        v-for="(startDate, index) in selectedData[
+                            'independentDates-startDate'
+                        ]"
+                        :key="index"
+                    >
+                        <span class="pl-5 text-sm text-gray-700">
+                            {{ dayjs(startDate).format("MMM DD, YYYY") }}
+                            -
+                            {{
+                                dayjs(
+                                    selectedData["independentDates-endDate"][
+                                        index
+                                    ],
+                                ).format("MMM DD, YYYY")
+                            }}
+                        </span>
+                        <div class="pl-8 text-sm text-gray-700">
+                            {{
+                                selectedData["independentTime-startTime"][index]
+                            }}
+                            -
+                            {{ selectedData["independentTime-endTime"][index] }}
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Materials Requested -->
                 <div class="mt-5">
                     <UCard>
