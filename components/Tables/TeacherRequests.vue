@@ -1,6 +1,7 @@
 <script setup>
 import dayjs from "dayjs";
-import downloadPDF from "~/utils/forms/downloadPDF.js";
+import { useDownloader } from "~/composables/useDownloader";
+const { loading, loadingMessage, download } = useDownloader();
 
 const user = inject("user");
 
@@ -303,57 +304,6 @@ async function reviseRequest() {
     updateTable();
 }
 
-async function downloadAll() {
-    const requests = selectedRows.value.map((element) => element.id);
-    let counter = 0;
-    for (const request of requests) {
-        const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
-            method: "POST",
-            body: {
-                id: request,
-            },
-        });
-
-        await downloadPDF(
-            requestPDF.data.value,
-            `${selectedRows.value[counter]["requestor-lastName"]},${selectedRows.value[counter]["requestor-firstName"]}`,
-        );
-        counter += 1;
-    }
-    // try {
-    //     const pdfBuffersRawData = await useFetch(
-    //         "/api/forms/create-pdf-buffers",
-    //         {
-    //             method: "POST",
-    //             body: {
-    //                 id: selectedData.value.id,
-    //             },
-    //         },
-    //     );
-    //     const pdfBuffers = pdfBuffersRawData.data.value;
-
-    //     try {
-    //         downloadPDF(pdfBuffers[0], pdfBuffers[1]);
-    //     } catch (error) {
-    //         console.error("There was an error downloading the pdf: ", error);
-    //     }
-    // } catch (error) {
-    //     console.error("There was an error creating the pdf: ", error);
-    // }
-}
-
-async function downloadRequest() {
-    const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
-        method: "POST",
-        body: {
-            id: selectedData.value.id,
-        },
-    });
-    downloadPDF(
-        requestPDF.data.value,
-        `${selectedData.value["requestor-lastName"]},${selectedData.value["requestor-firstName"]}`,
-    );
-}
 updateTable();
 </script>
 
@@ -529,10 +479,6 @@ updateTable();
                         <div
                             class="flex flex-row items-center justify-start space-x-3"
                         >
-                            <UButton
-                                icon="i-material-symbols-download"
-                                @click="downloadRequest"
-                            />
                             <h3
                                 class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                             >
@@ -558,7 +504,7 @@ updateTable();
                     </div>
                 </template>
 
-                <div class="ml-5 font-thin">
+                <div class="mb-5 font-thin">
                     {{ selectedData["requestor-lastName"] }},
                     {{ selectedData["requestor-firstName"] }}<br />
                     {{ selectedData["gradeSection-grade"] }} -
@@ -572,6 +518,53 @@ updateTable();
                     <span class="font-bold">Supervising Teacher:</span>
                     {{ selectedData["teacherInCharge-userProfile-lastName"] }},
                     {{ selectedData["teacherInCharge-userProfile-firstName"] }}
+                </div>
+
+                <UButton
+                    :label="loading ? loadingMessage : 'Download Request'"
+                    :loading="loading"
+                    icon="i-heroicons-arrow-down-tray"
+                    @click="download(selectedData.id)"
+                />
+
+                <!-- Custom Venues and Independent times are shown -->
+                <div
+                    v-if="selectedData.independentLocation"
+                    class="mt-4 flex flex-col"
+                >
+                    <span class="font-extrabold text-red-500">
+                        NO LABORATORY RESERVATION
+                    </span>
+                    <span class="text-sm font-black"> CUSTOM Venue: </span>
+                    <div class="pl-5 text-sm font-black text-gray-700">
+                        {{ selectedData.independentLocation }}
+                    </div>
+                    <span class="text-sm font-black"> Date & Time: </span>
+                    <div
+                        v-for="(startDate, index) in selectedData[
+                            'independentDates-startDate'
+                        ]"
+                        :key="index"
+                    >
+                        <span class="pl-5 text-sm text-gray-700">
+                            {{ dayjs(startDate).format("MMM DD, YYYY") }}
+                            -
+                            {{
+                                dayjs(
+                                    selectedData["independentDates-endDate"][
+                                        index
+                                    ],
+                                ).format("MMM DD, YYYY")
+                            }}
+                        </span>
+                        <div class="pl-8 text-sm text-gray-700">
+                            {{
+                                selectedData["independentTime-startTime"][index]
+                            }}
+                            -
+                            {{ selectedData["independentTime-endTime"][index] }}
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Materials Requested -->
@@ -704,7 +697,10 @@ updateTable();
                     </UCard>
                 </div>
                 <!-- Laboratory Reserved -->
-                <div class="mt-5">
+                <div
+                    v-if="selectedData.laboratoryReservations.length > 0"
+                    class="mt-5"
+                >
                     <UCard>
                         <template #header>
                             <h3
@@ -723,7 +719,10 @@ updateTable();
                                 <div class="border-b-2 p-3">
                                     {{ laboratory.laboratoryReserved.name }}
                                 </div>
-                                <div class="border-b-2 p-3 pl-8">
+                                <div
+                                    v-if="laboratory.dates"
+                                    class="border-b-2 p-3 pl-8"
+                                >
                                     <div
                                         v-for="(startDate, index) in laboratory
                                             .dates.startDate"
@@ -784,8 +783,8 @@ updateTable();
                                 reagentRequestsAnnotation !== '' ||
                                 laboratoryReservationsAnnotation !== ''
                             "
-                            color="blue"
-                            label="REVISE"
+                            color="orange"
+                            label="SEND BACK FOR REVISION"
                             variant="solid"
                             icon="i-material-symbols-edit"
                             @click="reviseRequest"

@@ -1,7 +1,8 @@
 <!-- eslint-disable camelcase -->
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
-import downloadPDF from "~/utils/forms/downloadPDF.js";
+import { useDownloader } from "~/composables/useDownloader";
+const { loading, loadingMessage, download } = useDownloader();
 
 // PAGE META
 useHead({
@@ -13,37 +14,81 @@ definePageMeta({ layout: "forms-pages" });
 const user = inject("user");
 
 const value = ref();
+const labReservationRef = ref(null);
+const labVenue = ref(null);
+const labCustomLocation = ref(null);
+
+const isModalOpen = ref(false);
+const modalMessage = ref("");
+
+// Fetch all necessary lookup data
+const { data: teachers } = await useAsyncData("teachers", () =>
+    $fetch("/api/db/forms/getAllTeachers"),
+);
+const { data: units } = await useAsyncData("units", () =>
+    $fetch("/api/db/forms/getAllUnits"),
+);
+const { data: gradeSections } = await useAsyncData("gradeSections", () =>
+    $fetch("/api/db/forms/getAllGradeSections"),
+);
+const { data: laboratories } = await useAsyncData("laboratories", () =>
+    $fetch("/api/db/forms/getAllLaboratories"),
+);
+
+// Computed properties for displaying names
+const displayTeacherInChargeName = computed(() => {
+    if (!value.value?.basicInfo?.teacherInCharge || !teachers.value) return "";
+    return teachers.value[value.value.basicInfo.teacherInCharge] || "";
+});
+
+const displayUnitName = computed(() => {
+    if (!value.value?.basicInfo?.unit || !units.value) return "";
+    return units.value[value.value.basicInfo.unit] || "";
+});
+
+const displayGradeSectionName = computed(() => {
+    if (!value.value?.basicInfo?.gradeSection || !gradeSections.value)
+        return "";
+    return gradeSections.value[value.value.basicInfo.gradeSection] || "";
+});
+
+const displayVenueName = computed(() => {
+    if (!value.value?.laboratorySetting?.venue || !laboratories.value)
+        return "";
+    return laboratories.value[value.value.laboratorySetting.venue] || "";
+});
 
 async function submitHandler(formValues) {
+    isModalOpen.value = true;
+    modalMessage.value = "Saving request...";
+
+    // Ensure venue and customLocation are updated in formValues
+    if (labVenue.value) {
+        formValues.data.laboratorySetting.venue = labVenue.value;
+    }
+    if (labCustomLocation.value) {
+        formValues.data.laboratorySetting.customLocation =
+            labCustomLocation.value;
+    }
+
     // Save response to database
-    const requestId = await useFetch("/api/forms/save-requests", {
+    const { data: newRequest } = await useFetch("/api/forms/save-requests", {
         method: "POST",
         body: { user, formValues },
     });
-    // Downloaing pdfs
+
+    console.log("newRequest after save-requests:", newRequest.value);
+
     if (formValues.data.submission.download === true) {
-        try {
-            const pdfBuffers_rawData = await useFetch(
-                "/api/forms/create-pdf-buffers",
-                {
-                    method: "POST",
-                    body: {
-                        id: requestId.data.value,
-                    },
-                },
-            );
-            const pdfBuffers = pdfBuffers_rawData.data.value;
-            console.log("pdfBuffers: ", pdfBuffers);
-            try {
-                downloadPDF(pdfBuffers[0], pdfBuffers[1]);
-            } catch (error) {
-                console.error(
-                    "There was an error downloading the pdf: ",
-                    error,
-                );
-            }
-        } catch (error) {
-            console.error("There was an error creating the pdf: ", error);
+        modalSteps.value[1].status = "loading";
+        if (newRequest.value?.id) {
+            await download(newRequest.value.id);
+            modalSteps.value[1].status = "done";
+            modalSteps.value[2].status = "done";
+        } else {
+            console.error("Request ID is undefined, cannot download PDF.");
+            modalSteps.value[1].status = "error";
+            modalSteps.value[2].status = "error";
         }
     }
 
@@ -52,6 +97,7 @@ async function submitHandler(formValues) {
     //     // TODO: Make it so they send the info to their email
     // }
 
+    isModalOpen.value = false;
     // Redirect to the home page
     await navigateTo("/redirect");
 }
@@ -131,7 +177,11 @@ function downloadOrdinaryPDF() {
                         name="laboratorySetting"
                         :classes="{ step: 'md:w-1/2' }"
                     >
-                        <FormsLaboratoryReservation />
+                        <FormsLaboratoryReservation
+                            ref="labReservationRef"
+                            v-model:venue="labVenue"
+                            v-model:customLocation="labCustomLocation"
+                        />
                     </FormKit>
 
                     <FormKit
@@ -159,56 +209,404 @@ function downloadOrdinaryPDF() {
                     </FormKit>
 
                     <FormKit type="step" name="submission">
-                        <div class="mx-[20%]">
-                            <h1 class="mb-5 text-3xl text-light-primary">
-                                SUBMISSION REMINDERS
-                            </h1>
-                            <ul class="mb-5 list-disc space-y-2 pl-5 text-lg">
-                                <li>
-                                    Please be sure to review your request in the
-                                    previous steps carefully before submitting.
-                                </li>
-                                <li>
-                                    After submitting, be sure to inform your
-                                    assigned teacher in charge of your
-                                    submission.
-                                </li>
-                                <li>
-                                    If submission does not work, please
-                                    double-check if all markers in each
-                                    reservation in the Laboratory Setting are
-                                    checked. If not, please choose valid times.
-                                </li>
-                                <li>
-                                    If all fails you may download the official
-                                    forms at this
-                                    <a
-                                        class="cursor-pointer text-light-primary underline hover:text-accent-500 active:text-accent-300"
-                                        @click="downloadOrdinaryPDF"
-                                        >link</a
+                        <div class="flex justify-center p-4">
+                            <div
+                                class="w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg"
+                            >
+                                <div class="flex items-center justify-center">
+                                    <h1
+                                        class="mb-6 text-center text-3xl font-bold text-gray-700"
                                     >
-                                    and fill them out physically.
-                                </li>
-                            </ul>
+                                        Final Step: Submit Your Request
+                                    </h1>
+                                </div>
+                                <p class="mb-6 text-center text-gray-600">
+                                    You're just one step away! Please review the
+                                    information below before submitting.
+                                </p>
 
-                            <FormKit
-                                type="checkbox"
-                                label="Download a copy of my request"
-                                name="download"
-                                value="false"
-                            />
+                                <div
+                                    v-if="
+                                        labReservationRef?.formattedLabSummary &&
+                                        labReservationRef.formattedLabSummary
+                                            .hasReservation
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Overall Request Dates/Times
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-for="(
+                                                dateEntry, index
+                                            ) in labReservationRef
+                                                .formattedLabSummary
+                                                .formattedDates"
+                                            :key="index"
+                                        >
+                                            Dates: {{ dateEntry.datesString
+                                            }}<br />
+                                            Time: {{ dateEntry.startTime }} -
+                                            {{ dateEntry.endTime }}<br />
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
+                                    v-if="value && value.basicInfo"
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Basic Information
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li v-if="value.basicInfo.campus">
+                                            <strong>Campus:</strong>
+                                            {{ value.basicInfo.campus }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.schoolYear &&
+                                                value.basicInfo.schoolYear[0]
+                                            "
+                                        >
+                                            <strong>School Year:</strong>
+                                            {{
+                                                value.basicInfo.schoolYear[0]
+                                                    .label
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.firstname ||
+                                                value.basicInfo.lastname
+                                            "
+                                        >
+                                            <strong>Name:</strong>
+                                            {{ value.basicInfo.firstname }}
+                                            {{ value.basicInfo.lastname }}
+                                        </li>
+                                        <li v-if="value.basicInfo.email">
+                                            <strong>Email:</strong>
+                                            {{ value.basicInfo.email }}
+                                        </li>
+                                        <li v-if="value.basicInfo.gradeSection">
+                                            <strong>Grade/Section:</strong>
+                                            {{ displayGradeSectionName }}
+                                        </li>
+                                        <li v-if="value.basicInfo.unit">
+                                            <strong>Unit:</strong>
+                                            {{ displayUnitName }}
+                                        </li>
+                                        <li v-if="value.basicInfo.subject">
+                                            <strong>Subject:</strong>
+                                            {{ value.basicInfo.subject }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.concurrentTopic
+                                            "
+                                        >
+                                            <strong>Concurrent Topic:</strong>
+                                            {{
+                                                value.basicInfo.concurrentTopic
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.teacherInCharge
+                                            "
+                                        >
+                                            <strong>Teacher In Charge:</strong>
+                                            {{ displayTeacherInChargeName }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo.numberOfStudents
+                                            "
+                                        >
+                                            <strong>Number of Students:</strong>
+                                            {{
+                                                value.basicInfo.numberOfStudents
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                value.basicInfo
+                                                    .nameOfStudents &&
+                                                value.basicInfo.nameOfStudents
+                                                    .length
+                                            "
+                                        >
+                                            <strong>Names of Students:</strong>
+                                            {{
+                                                value.basicInfo.nameOfStudents.join(
+                                                    ", ",
+                                                )
+                                            }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
+                                    v-if="
+                                        labReservationRef?.formattedLabSummary
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Laboratory Reservation
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-if="
+                                                labReservationRef
+                                                    .formattedLabSummary.venue
+                                            "
+                                        >
+                                            <strong>Venue:</strong>
+                                            {{ displayVenueName }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                labReservationRef
+                                                    .formattedLabSummary
+                                                    .customLocation
+                                            "
+                                        >
+                                            <strong>Custom Location:</strong>
+                                            {{
+                                                labReservationRef
+                                                    .formattedLabSummary
+                                                    .customLocation
+                                            }}
+                                        </li>
+                                        <li
+                                            v-if="
+                                                labReservationRef
+                                                    .formattedLabSummary
+                                                    .formattedDates &&
+                                                labReservationRef
+                                                    .formattedLabSummary
+                                                    .formattedDates.length
+                                            "
+                                        >
+                                            <strong
+                                                >Requested Dates/Times:</strong
+                                            >
+                                            <ul
+                                                class="list-circle ml-4 list-inside space-y-1"
+                                            >
+                                                <li
+                                                    v-for="(
+                                                        dateEntry, index
+                                                    ) in labReservationRef
+                                                        .formattedLabSummary
+                                                        .formattedDates"
+                                                    :key="index"
+                                                >
+                                                    Dates:
+                                                    {{ dateEntry.datesString
+                                                    }}<br />
+                                                    Time:
+                                                    {{ dateEntry.startTime }} -
+                                                    {{ dateEntry.endTime
+                                                    }}<br />
+                                                    Ranged:
+                                                    {{ dateEntry.ranged }}
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li
+                                            v-else-if="
+                                                labReservationRef
+                                                    .formattedLabSummary.message
+                                            "
+                                        >
+                                            {{
+                                                labReservationRef
+                                                    .formattedLabSummary.message
+                                            }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
+                                    v-if="
+                                        value &&
+                                        value.materials &&
+                                        value.materials.details &&
+                                        value.materials.details.length
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Materials Requested
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-for="(item, index) in value
+                                                .materials.details"
+                                            :key="index"
+                                        >
+                                            <strong>{{ item.itemName }}</strong>
+                                            ({{
+                                                item.description ||
+                                                "No description"
+                                            }}) - Quantity:
+                                            {{ item.requestedQuantity }}
+                                            {{ item.unit }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
+                                    v-if="
+                                        value &&
+                                        value.equipment &&
+                                        value.equipment.details &&
+                                        value.equipment.details.length
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Equipment Requested
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-for="(item, index) in value
+                                                .equipment.details"
+                                            :key="index"
+                                        >
+                                            <strong>{{
+                                                item.equipmentName
+                                            }}</strong>
+                                            ({{
+                                                item.description ||
+                                                "No description"
+                                            }}) - Quantity:
+                                            {{ item.requestedQuantity }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
+                                    v-if="
+                                        value &&
+                                        value.reagents &&
+                                        value.reagents.details &&
+                                        value.reagents.details.length
+                                    "
+                                    class="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-gray-800"
+                                    >
+                                        Reagents Requested
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-2 text-gray-700"
+                                    >
+                                        <li
+                                            v-for="(item, index) in value
+                                                .reagents.details"
+                                            :key="index"
+                                        >
+                                            <strong>{{
+                                                item.chemicalName
+                                            }}</strong>
+                                            ({{
+                                                item.description ||
+                                                "No description"
+                                            }}) - Quantity:
+                                            {{ item.requestedQuantity }}
+                                            {{ item.unit }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div
+                                    class="rounded-lg border border-blue-200 bg-blue-50 p-6"
+                                >
+                                    <h2
+                                        class="mb-4 text-xl font-semibold text-blue-800"
+                                    >
+                                        Submission Reminders
+                                    </h2>
+                                    <ul
+                                        class="list-inside list-disc space-y-3 text-blue-700"
+                                    >
+                                        <li>
+                                            Please be sure to review your
+                                            request in the previous steps
+                                            carefully before submitting.
+                                        </li>
+                                        <li>
+                                            After submitting, be sure to inform
+                                            your assigned teacher in charge of
+                                            your submission.
+                                        </li>
+                                        <li>
+                                            If submission does not work, please
+                                            double-check if all markers in each
+                                            reservation in the Laboratory
+                                            Setting are checked. If not, please
+                                            choose valid times.
+                                        </li>
+                                        <li>
+                                            If all else fails, you may download
+                                            the official forms at this
+                                            <a
+                                                class="cursor-pointer font-semibold text-blue-600 underline hover:text-blue-800"
+                                                @click="downloadOrdinaryPDF"
+                                                >link</a
+                                            >
+                                            and fill them out physically.
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- TODO: Add support for download after saving (it currently takes too long) -->
+                                <!-- <div class="mt-8">
+                                    <FormKit
+                                        type="checkbox"
+                                        label="Download a copy of my request"
+                                        name="download"
+                                        :value="false"
+                                        label-class="text-gray-700"
+                                    />
+                                </div> -->
+                            </div>
                         </div>
-
-                        <!-- <FormKit
-                            type="checkbox"
-                            label="Email a copy of my request"
-                            name="email"
-                            value="false"
-                        /> -->
 
                         <!-- using step slot for submit button-->
                         <template #stepNext>
-                            <FormKit type="submit" label="Submit" />
+                            <FormKit
+                                type="submit"
+                                label="Submit Request"
+                                input-class="!bg-blue-600 !hover:bg-blue-700"
+                            />
                         </template>
                     </FormKit>
                 </FormKit>

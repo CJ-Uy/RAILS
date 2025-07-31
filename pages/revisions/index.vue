@@ -1,7 +1,8 @@
 <!-- eslint-disable camelcase -->
 <!-- nuxt-pdf by sidebase is easiest solution for downloading pdf versions of vue pages -->
 <script setup>
-import downloadPDF from "~/utils/forms/downloadPDF.js";
+import { useDownloader } from "~/composables/useDownloader";
+const { loading, loadingMessage, download } = useDownloader();
 
 // PAGE META
 useHead({
@@ -150,29 +151,7 @@ async function submitHandler(formValues) {
     });
     // Downloaing pdfs
     if (formValues.data.submission.download === true) {
-        try {
-            const pdfBuffers_rawData = await useFetch(
-                "/api/forms/create-pdf-buffers",
-                {
-                    method: "POST",
-                    body: {
-                        id: requestId.data.value,
-                    },
-                },
-            );
-            const pdfBuffers = pdfBuffers_rawData.data.value;
-
-            try {
-                downloadPDF(pdfBuffers[0], pdfBuffers[1]);
-            } catch (error) {
-                console.error(
-                    "There was an error downloading the pdf: ",
-                    error,
-                );
-            }
-        } catch (error) {
-            console.error("There was an error creating the pdf: ", error);
-        }
+        download(formValues.data.submission.id);
     }
 
     await navigateTo("/student");

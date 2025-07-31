@@ -1,6 +1,7 @@
 <script setup>
 import dayjs from "dayjs";
-import downloadPDF from "~/utils/forms/downloadPDF.js";
+import { useDownloader } from "~/composables/useDownloader";
+const { loading, loadingMessage, download } = useDownloader();
 
 const user = inject("user");
 
@@ -97,11 +98,13 @@ function sortRequest(i) {
 
 const modalIsOpen = ref(false);
 const selectedData = ref();
+const confirmDelete = ref(false);
 function openModal(row) {
     modalIsOpen.value = true;
     selectedData.value = row;
 }
 
+// TODO: make a complete revision system
 async function navigateToRevision() {
     const revisionId = useRevisionId();
     revisionId.value = selectedData.value.id;
@@ -110,17 +113,21 @@ async function navigateToRevision() {
     });
 }
 
-async function downloadRequest() {
-    const requestPDF = await useFetch("/api/forms/create-pdf-buffers", {
-        method: "POST",
-        body: {
-            id: selectedData.value.id,
-        },
-    });
-    downloadPDF(
-        requestPDF.data.value,
-        `${selectedData.value["requestor-lastName"]},${selectedData.value["requestor-firstName"]}`,
-    );
+async function deleteRequest() {
+    try {
+        await useFetch("/api/user/student/deleteRequest", {
+            method: "POST",
+            body: {
+                requestId: selectedData.value.id,
+            },
+        });
+        modalIsOpen.value = false;
+        confirmDelete.value = false;
+        await getAllRequests(); // Refresh the list of requests
+    } catch (error) {
+        console.error("Error deleting request:", error);
+        // Handle error, maybe show a toast notification
+    }
 }
 
 getAllRequests();
@@ -137,10 +144,10 @@ getAllRequests();
             </div>
             <div
                 v-else
-                class="m-auto flex w-[95%] flex-row items-start justify-between"
+                class="m-auto flex w-[95%] flex-col items-start justify-between lg:flex-row"
             >
                 <!-- Display Pending Requests -->
-                <div class="relative w-[31%]">
+                <div class="relative mb-6 w-full lg:mb-0 lg:w-[31%]">
                     <span class="bold mb-[-15px] block text-lg text-gray-500"
                         >Pending</span
                     >
@@ -237,10 +244,72 @@ getAllRequests();
                             </div>
 
                             <template #footer>
-                                <div class="p-1 pl-4">
-                                    <span class="text-sm font-black"
-                                        >Venue:</span
+                                <!-- Has Custom Venue -->
+                                <div
+                                    v-if="request.independentLocation"
+                                    class="p-1 pl-4"
+                                >
+                                    <span class="text-sm font-black">
+                                        CUSTOM Venue:
+                                    </span>
+                                    <div
+                                        class="pl-5 text-sm text-sm font-black text-gray-700"
                                     >
+                                        {{ request.independentLocation }}
+                                    </div>
+                                    <span class="text-sm font-black">
+                                        Date & Time:
+                                    </span>
+                                    <div
+                                        v-for="(startDate, index) in request[
+                                            'independentDates-startDate'
+                                        ]"
+                                        :key="index"
+                                    >
+                                        <span
+                                            class="pl-5 text-sm text-gray-700"
+                                        >
+                                            {{
+                                                dayjs(startDate).format(
+                                                    "MMM DD, YYYY",
+                                                )
+                                            }}
+                                            -
+                                            {{
+                                                dayjs(
+                                                    request[
+                                                        "independentDates-endDate"
+                                                    ][index],
+                                                ).format("MMM DD, YYYY")
+                                            }}
+                                        </span>
+                                        <div class="pl-8 text-sm text-gray-700">
+                                            {{
+                                                request[
+                                                    "independentTime-startTime"
+                                                ][index]
+                                            }}
+                                            -
+                                            {{
+                                                request[
+                                                    "independentTime-endTime"
+                                                ][index]
+                                            }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Has Laboratory Reservation -->
+                                <div
+                                    v-if="
+                                        request.laboratoryReservations.length >
+                                        0
+                                    "
+                                    class="p-1 pl-4"
+                                >
+                                    <span class="text-sm font-black">
+                                        Venue:
+                                    </span>
                                     <div
                                         v-for="labReservation in request.laboratoryReservations"
                                         :key="labReservation.id"
@@ -251,9 +320,9 @@ getAllRequests();
                                                 .name
                                         }}
                                     </div>
-                                    <span class="text-sm font-black"
-                                        >Date & Time:</span
-                                    >
+                                    <span class="text-sm font-black">
+                                        Date & Time:
+                                    </span>
                                     <div
                                         v-for="(startDate, index) in request
                                             .laboratoryReservations[0].dates
@@ -296,7 +365,7 @@ getAllRequests();
                 </div>
 
                 <!-- Display Approved Requests -->
-                <div class="w-[31%]">
+                <div class="mb-6 w-full lg:mb-0 lg:w-[31%]">
                     <span class="bold mb-[-15px] block text-lg text-gray-500"
                         >Scheduled</span
                     >
@@ -338,6 +407,10 @@ getAllRequests();
                                     </div>
                                 </div>
                                 <div
+                                    v-if="
+                                        request.laboratoryReservations.length >
+                                        0
+                                    "
                                     class="flex flex-col items-end justify-center p-2 text-xs text-blue-500"
                                 >
                                     <div>
@@ -352,7 +425,7 @@ getAllRequests();
                     </div>
                 </div>
                 <!-- Display Requests for Revision -->
-                <div class="w-[31%]">
+                <div class="w-full lg:w-[31%]">
                     <span class="bold mb-[-15px] block text-lg text-gray-500"
                         >Revision Needed</span
                     >
@@ -448,7 +521,13 @@ getAllRequests();
                             </div>
 
                             <template #footer>
-                                <div class="p-1 pl-4">
+                                <div
+                                    v-if="
+                                        request.laboratoryReservations.length >
+                                        0
+                                    "
+                                    class="p-1 pl-4"
+                                >
                                     <span class="text-sm font-black"
                                         >Venue:</span
                                     >
@@ -522,10 +601,6 @@ getAllRequests();
                         <div
                             class="flex flex-row items-center justify-start space-x-3"
                         >
-                            <UButton
-                                icon="i-material-symbols-download"
-                                @click="downloadRequest"
-                            />
                             <h3
                                 class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
                             >
@@ -550,7 +625,7 @@ getAllRequests();
                     </div>
                 </template>
 
-                <div class="ml-5 font-thin">
+                <div class="mb-5 font-thin">
                     {{ selectedData["requestor-lastName"] }},
                     {{ selectedData["requestor-firstName"] }}<br />
                     {{ selectedData["gradeSection-grade"] }} -
@@ -564,6 +639,25 @@ getAllRequests();
                     <span class="font-bold">Supervising Teacher:</span>
                     {{ selectedData["teacherInCharge-userProfile-lastName"] }},
                     {{ selectedData["teacherInCharge-userProfile-firstName"] }}
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <UButton
+                        :label="loading ? loadingMessage : 'Download Request'"
+                        :loading="loading"
+                        icon="i-heroicons-arrow-down-tray"
+                        @click="download(selectedData.id)"
+                    />
+                    <UButton
+                        v-if="
+                            sortRequest(selectedData) === 'teacherPending' ||
+                            sortRequest(selectedData) === 'adminPending'
+                        "
+                        color="red"
+                        label="Delete Request"
+                        icon="i-heroicons-trash-20-solid"
+                        @click="confirmDelete = true"
+                    />
                 </div>
 
                 <!-- Materials Requested -->
@@ -583,13 +677,13 @@ getAllRequests();
                                 :key="material.id"
                                 class="flex justify-between border-b-2 p-3 text-sm"
                             >
-                                <div class="basis-[180px]">
+                                <div class="flex-1">
                                     {{ material.name }}
                                 </div>
-                                <div class="basis-[120px] text-gray-400">
+                                <div class="flex-1 text-gray-400">
                                     {{ material.description }}
                                 </div>
-                                <div class="basis-[60px]">
+                                <div class="w-[60px] text-right">
                                     x{{ material.quantity }}
                                 </div>
                             </div>
@@ -711,7 +805,10 @@ getAllRequests();
                     </UCard>
                 </div>
                 <!-- Laboratory Reserved -->
-                <div class="mt-5">
+                <div
+                    v-if="selectedData.laboratoryReservations.length > 0"
+                    class="mt-5"
+                >
                     <UCard>
                         <template #header>
                             <h3
@@ -790,15 +887,48 @@ getAllRequests();
                             sortRequest(selectedData) === 'teacherRevision' ||
                             sortRequest(selectedData) === 'adminRevision'
                         "
-                        class="flex items-center justify-center"
+                        class="flex flex-col items-center justify-center"
                     >
                         <UButton
-                            color="blue"
-                            label="REVISE"
+                            color="red"
+                            label="DELETE"
                             variant="solid"
-                            icon="i-material-symbols-edit"
-                            @click="navigateToRevision()"
+                            icon="i-material-symbols-delete-outline"
+                            @click="deleteRequest()"
                         />
+                        <div class="mt-2 italic">
+                            Delete this request and create a new one in NEW
+                            REQUEST
+                        </div>
+                    </div>
+                </template>
+            </UCard>
+        </UModal>
+
+        <UModal v-model="confirmDelete">
+            <UCard>
+                <template #header>
+                    <h3
+                        class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+                    >
+                        Confirm Deletion
+                    </h3>
+                </template>
+                <p>
+                    Are you sure you want to delete this request? This action
+                    cannot be undone.
+                </p>
+                <template #footer>
+                    <div class="flex justify-end space-x-2">
+                        <UButton
+                            color="gray"
+                            variant="ghost"
+                            @click="confirmDelete = false"
+                            >Cancel</UButton
+                        >
+                        <UButton color="red" @click="deleteRequest"
+                            >Delete</UButton
+                        >
                     </div>
                 </template>
             </UCard>
