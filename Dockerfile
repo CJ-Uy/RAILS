@@ -17,7 +17,6 @@ COPY prisma ./prisma
 
 # 4. Generate Prisma Client. This now generates the Debian engine by default.
 RUN npx prisma generate
-RUN npx prisma db push
 
 # 5. Copy the rest of your application code
 COPY . .
